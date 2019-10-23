@@ -18,5 +18,6 @@
     <string name="bdCatalogos">bdER</string>
     <string name="bdPwd">er2018</string>
     <string name="NAMESPACE" translatable="false">http://tempuri.org/</string>
+    <string name="nombreBD" translatable="false">baseLocal.db</string>
 
 </resources>
