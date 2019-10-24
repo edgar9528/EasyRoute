@@ -26,7 +26,7 @@
             android:name="com.tdt.easyroute.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.tdt.easyroute.ConfiguracionActivity"
+            android:name="com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity"
             android:parentActivityName="com.tdt.easyroute.LoginActivity"
             android:windowSoftInputMode="stateHidden">
             <meta-data

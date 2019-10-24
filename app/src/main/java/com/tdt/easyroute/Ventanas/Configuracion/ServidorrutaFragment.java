@@ -1,32 +1,44 @@
-package com.tdt.easyroute;
+package com.tdt.easyroute.Ventanas.Configuracion;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class ConfiguracionActivity extends AppCompatActivity {
+import com.tdt.easyroute.R;
+
+public class ServidorrutaFragment extends Fragment {
 
     EditText et_servidor,et_time;
     Button button_regresar,button_guardar;
     String servidor,time;
 
+
+    public ServidorrutaFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_configuracion);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_servidorruta, container, false);
 
-        this.setTitle("Configuración");
+        Log.d("salida", "SE CREO FAGMENT SERVIDOR|RUTA|UTILIDAD");
 
-        et_servidor = findViewById(R.id.et_servidor);
-        et_time = findViewById(R.id.et_timeout);
+        et_servidor = view.findViewById(R.id.et_servidor);
+        et_time = view.findViewById(R.id.et_timeout);
 
-        button_guardar = findViewById(R.id.button_guardar);
-        button_regresar = findViewById(R.id.button_regresar);
+        button_guardar = view.findViewById(R.id.button_guardar);
+        button_regresar = view.findViewById(R.id.button_regresar);
 
         verificarServidor();
 
@@ -38,26 +50,28 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 if(!servidor.isEmpty()&&!time.isEmpty())
                 {
                     guardarServidor();
-                    Toast.makeText(getApplicationContext(), "Información guardada", Toast.LENGTH_LONG).show();
-                    onBackPressed();
+                    Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_LONG).show();
+                    getActivity().onBackPressed();
                 }
                 else
-                    Toast.makeText(getApplicationContext(), "Rellena todos los campos", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Rellena todos los campos", Toast.LENGTH_LONG).show();
             }
         });
 
         button_regresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                getActivity().onBackPressed();
             }
         });
 
+
+        return view;
     }
 
     public void guardarServidor()
     {
-        SharedPreferences sharedPref = getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("servidor",servidor);
         editor.putString("timeout", time);
@@ -66,7 +80,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
     public void verificarServidor()
     {
-        SharedPreferences sharedPref = getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);
         servidor = sharedPref.getString("servidor","null");
         time =  sharedPref.getString("timeout","null");
 
@@ -75,8 +89,6 @@ public class ConfiguracionActivity extends AppCompatActivity {
             et_servidor.setText(servidor);
             et_time.setText(time);
         }
-
     }
-
 
 }

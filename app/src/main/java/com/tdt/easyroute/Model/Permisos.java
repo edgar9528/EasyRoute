@@ -1,6 +1,8 @@
 package com.tdt.easyroute.Model;
 
-public class Permisos {
+import java.io.Serializable;
+
+public class Permisos implements Serializable {
 
     private int mod_cve_n;
     private String mod_desc_str;

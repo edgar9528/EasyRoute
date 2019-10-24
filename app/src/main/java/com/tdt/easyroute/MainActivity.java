@@ -23,9 +23,11 @@ import android.widget.Toast;
 import com.tdt.easyroute.Adapter.CustomExpandableListAdapter;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
 import com.tdt.easyroute.Interface.NavigationManager;
+import com.tdt.easyroute.Model.Usuario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private String mActivityTitle;
-    private String[] items;
 
     private ExpandableListView expandableListView;
     private ExpandableListAdapter adapter;
@@ -43,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private Map<String,List<String>> lstChild;
     private NavigationManager navigationManager;
 
-
-
-    String usuario,contraseña;
-    int permisos;
+    Usuario usuario;
 
     @Override
     public void onBackPressed() {
@@ -78,10 +75,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
+            Intent intent = getIntent();
+            usuario = (Usuario) intent.getSerializableExtra("usuario");
 
             //init view
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            mActivityTitle= getTitle().toString();
             expandableListView= findViewById(R.id.navList);
             navigationManager= FragmentNavigationManager.getmInstance(this);
 
@@ -101,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setTitle("Categorías|Principal");
 
         }
         catch (Exception e)
@@ -136,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addDrawersItem() {
+
+        //ACCIONES AL ABRIR, CERRAR O INTERACTUAR CON MENÚ
+
         adapter = new CustomExpandableListAdapter(this,lstTitle,lstChild);
         expandableListView.setAdapter(adapter);
 
@@ -195,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
@@ -203,16 +202,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void generarMenu() {
 
-        List<String> title = Arrays.asList("Categorías","Amigos","Perfil");
+        //OPCIONES QUE SE MOSTRARAN EN EL MENU
 
-        List<String> categorias = Arrays.asList("Principal","Acción","Documentales");
-        List<String> amigos = Arrays.asList("Buscar","Mis amigos");
-        List<String> perfil = Arrays.asList("Mis datos","Historial","Cerrar sesión");
+        List<String> title = Arrays.asList("Inicio de día","Inventario","Pedidos","Entregas","Reportes","Clientes","Fin de día","Catálogos","Alm. Vacio");
 
-        lstChild = new TreeMap<>();
-        lstChild.put(title.get(0),categorias);
-        lstChild.put(title.get(1),amigos);
-        lstChild.put(title.get(2),perfil);
+        List<String> iniciodia = Arrays.asList("Inicio día");
+        List<String> inventario = Arrays.asList("Inventario","Carga inicial","Recarga","Devoluciones","Descarga");
+        List<String> pedidos = Arrays.asList("Clientes");
+        List<String> entregas = Arrays.asList("Consigna","Pedido","Devolución");
+        List<String> reportes = Arrays.asList("Arqueo","Ventas día");
+        List<String> clientes = Arrays.asList("Cartera","Ord. Clientes","Busq. Clientes");
+        List<String> findia = Arrays.asList("Sugerido","Transmitir","Borrar datos","Fin de ventas");
+        List<String> catalogos = Arrays.asList("Configuración");
+        List<String> almvacio = Arrays.asList("Vacio");
+
+        lstChild = new LinkedHashMap<>();
+        lstChild.put(title.get(0),iniciodia);
+        lstChild.put(title.get(1),inventario);
+        lstChild.put(title.get(2),pedidos);
+        lstChild.put(title.get(3),entregas);
+        lstChild.put(title.get(4),reportes);
+        lstChild.put(title.get(5),clientes);
+        lstChild.put(title.get(6),findia);
+        lstChild.put(title.get(7),catalogos);
+        lstChild.put(title.get(8),almvacio);
 
         lstTitle= new ArrayList<>(lstChild.keySet());
 
@@ -235,13 +248,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    public void obtenerUsuario()
-    {
-        SharedPreferences sharedPref = getSharedPreferences("LoginPreferences",Context.MODE_PRIVATE);
-        usuario = sharedPref.getString("usuario","null");
-        contraseña = sharedPref.getString("pass","null");
-        permisos = Integer.parseInt( sharedPref.getString("permisos","0") );
-    }
 
 }

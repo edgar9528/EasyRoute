@@ -27,11 +27,11 @@ import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
+import com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity;
 
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
-import java.nio.channels.ClosedByInterruptException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -348,10 +348,16 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
             case "ASESOR DE VENTAS":
             case "SUPERVISOR DE VENTAS":
                 Log.d(TAG,"inicia menu completo");
+                Intent intent = new Intent(this,MainActivity.class);
+                intent.putExtra("usuario", u);
+                startActivity(intent);
                 break;
             default:
                 Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
                 break;
+
+
+
         }
     }
 
