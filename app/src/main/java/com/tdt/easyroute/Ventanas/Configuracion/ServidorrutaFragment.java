@@ -32,7 +32,7 @@ public class ServidorrutaFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_servidorruta, container, false);
 
-        Log.d("salida", "SE CREO FAGMENT SERVIDOR|RUTA|UTILIDAD");
+        //Log.d("salida", "SE CREO FAGMENT SERVIDOR|RUTA|UTILIDAD");
 
         et_servidor = view.findViewById(R.id.et_servidor);
         et_time = view.findViewById(R.id.et_timeout);
@@ -71,7 +71,7 @@ public class ServidorrutaFragment extends Fragment {
 
     public void guardarServidor()
     {
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("ConfiguracionPreferences",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("servidor",servidor);
         editor.putString("timeout", time);
@@ -80,7 +80,7 @@ public class ServidorrutaFragment extends Fragment {
 
     public void verificarServidor()
     {
-        SharedPreferences sharedPref = getActivity().getSharedPreferences("ServidorPreferences",Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("ConfiguracionPreferences",Context.MODE_PRIVATE);
         servidor = sharedPref.getString("servidor","null");
         time =  sharedPref.getString("timeout","null");
 

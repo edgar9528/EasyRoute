@@ -27,7 +27,7 @@ public class UtilidadFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_utilidad, container, false);
         // Inflate the layout for this fragment
 
-        Log.d("salida", "SE CREO FAGMENT utilidad");
+        //Log.d("salida", "SE CREO FAGMENT utilidad");
 
         return view;
     }

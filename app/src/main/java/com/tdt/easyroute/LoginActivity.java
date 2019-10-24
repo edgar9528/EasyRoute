@@ -111,11 +111,15 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                         {
                             if (pass.equals("2663"))
                             {
-                                Log.d("salida","CONFIG FALSE");
+                                Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
+                                intent.putExtra("admin", false);
+                                startActivity(intent);
                             }
                             else
                             {
-                                Log.d("salida","CONFIG TRUE");
+                                Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
+                                intent.putExtra("admin", true);
+                                startActivity(intent);
                             }
                         }
                         else
@@ -185,7 +189,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
                     Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
                     startActivity(intent);
-
                     return super.onDoubleTap(e);
                 }
             });

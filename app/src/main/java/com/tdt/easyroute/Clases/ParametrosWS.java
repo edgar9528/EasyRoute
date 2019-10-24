@@ -14,7 +14,7 @@ public class ParametrosWS {
 
     public ParametrosWS(String METODO, Context context) {
         this.METODO = METODO;
-        SharedPreferences sharedPref = context.getSharedPreferences("ServidorPreferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
         URL= sharedPref.getString("servidor","null");
         TIMEOUT = Integer.parseInt( sharedPref.getString("timeout","0") );
         NAMESPACES = context.getResources().getString(R.string.NAMESPACE);

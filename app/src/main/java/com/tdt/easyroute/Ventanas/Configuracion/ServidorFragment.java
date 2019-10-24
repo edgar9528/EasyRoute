@@ -24,7 +24,7 @@ public class ServidorFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_servidor, container, false);
 
-        Log.d("salida", "SE CREO FAGMENT SERVIDOR");
+        //Log.d("salida", "SE CREO FAGMENT SERVIDOR");
 
         return view;
     }
