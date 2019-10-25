@@ -42,6 +42,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.2'
 
+    implementation 'com.github.MdFarhanRaja:SearchableSpinner:2.0'
+
 }
 
 repositories {

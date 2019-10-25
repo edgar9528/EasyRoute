@@ -13,7 +13,6 @@ import java.util.List;
 
 public class ConvertirRespuesta {
 
-
     public static Usuario getUsuario(SoapObject respuesta)
     {
         Usuario usuario = null;
@@ -79,15 +78,92 @@ public class ConvertirRespuesta {
 
             rutas = new ArrayList<>();
 
+            String cad,clave;
             for (int i = 0; i < canRutas; i++) {
                 InfoRuta infoRuta = new InfoRuta();
                 SoapObject soRuta = (SoapObject) soRutas.getProperty(i);
 
-                Log.d("salida","TAMAÑO: "+soRuta.getPropertyCount());
-                Log.d("salida",soRuta.toString());
+                cad = soRuta.toString();
+                cad = cad.substring(8,cad.length()-2);
 
+
+                String[] propiedades = cad.split(";");
+
+                for(int j=0;j<propiedades.length;j++)
+                {
+                    String[] valores = propiedades[j].split("=");
+                    clave=valores[0].trim();
+                    switch (clave)
+                    {
+                        case "rut_cve_n":
+                            infoRuta.setRut_cve_n(valores[1]);
+                            break;
+                        case "rut_desc_str":
+                            infoRuta.setRut_desc_str(valores[1]);
+                            break;
+                        case "rut_orden_n":
+                            infoRuta.setRut_orden_n(valores[1]);
+                            break;
+                        case "trut_cve_n":
+                            infoRuta.setTrut_cve_n(valores[1]);
+                            break;
+                        case "asesor_cve_str":
+                            infoRuta.setAsesor_cve_str(valores[1]);
+                            break;
+                        case "gerente_cve_str":
+                            infoRuta.setGerente_cve_str(valores[1]);
+                            break;
+                        case "supervisor_cve_str":
+                            infoRuta.setSupervisor_cve_str(valores[1]);
+                            break;
+                        case "est_cve_str":
+                            infoRuta.setEst_cve_str(valores[1]);
+                            break;
+                        case "tco_cve_n":
+                            infoRuta.setTco_cve_n(valores[1]);
+                            break;
+                        case "rut_prev_n":
+                            infoRuta.setRut_prev_n(valores[1]);
+                            break;
+                        case "rut_capcamion_n":
+                            infoRuta.setRut_capcamion_n(valores[1]);
+                            break;
+                        case "rut_idcteesp_n":
+                            infoRuta.setRut_idcteesp_n(valores[1]);
+                            break;
+                        case "rut_tel_str":
+                            infoRuta.setRut_tel_str(valores[1]);
+                            break;
+                        case "rut_invalidafrecuencia_n":
+                            infoRuta.setRut_invalidafrecuencia_n(valores[1]);
+                            break;
+                        case "rut_productividad_n":
+                            infoRuta.setRut_productividad_n(valores[1]);
+                            break;
+                        case "rut_efectividad_n":
+                            infoRuta.setRut_efectividad_n(valores[1]);
+                            break;
+                        case "rut_mayorista_n":
+                            infoRuta.setRut_mayorista_n(valores[1]);
+                            break;
+                        case "rut_fiestasyeventos_n":
+                            infoRuta.setRut_fiestasyeventos_n(valores[1]);
+                            break;
+                        case "rut_auditoria_n":
+                            infoRuta.setRut_auditoria_n(valores[1]);
+                            break;
+                        case "rut_promoce_n":
+                            infoRuta.setRut_promoce_n(valores[1]);
+                            break;
+                    }
+                }
+
+
+                rutas.add(infoRuta);
+
+
+                /*
                 if(soRuta.getPropertyCount()==19) {
-
 
                     infoRuta.setRut_cve_n(soRuta.getProperty("rut_cve_n").toString());
                     infoRuta.setRut_desc_str(soRuta.getProperty("rut_desc_str").toString());
@@ -111,6 +187,9 @@ public class ConvertirRespuesta {
 
                     rutas.add(infoRuta);
                 }
+
+
+                 */
 
                 /*
                 "rut_cve_n"
