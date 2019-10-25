@@ -37,21 +37,27 @@ public class Utils {
         return  text1;
     }
 
-    public static String LeefConfig(String valor, Activity activity)
+    public static String LeefConfig(String valor, Application application)
     {
-        SharedPreferences sharedPref = activity.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = application.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
 
         switch (valor)
         {
             case "servidor":
-                valor = sharedPref.getString("servidor","null");
+                valor = sharedPref.getString("servidor","http://192.168.0.95/EasyRoute.asmx");
+                break;
+            case "timeout":
+                valor = sharedPref.getString("timeout","15000");
+                break;
+            case "empresa":
+                valor = sharedPref.getString("empresa","1");
                 break;
             case "ruta":
                 valor = sharedPref.getString("ruta","0");
                 break;
-            case "timeoute":
-                valor= sharedPref.getString("timeout","null");
-
+            case "imp":
+                valor = sharedPref.getString("imp","COM1");
+                break;
             default:
 
                 break;

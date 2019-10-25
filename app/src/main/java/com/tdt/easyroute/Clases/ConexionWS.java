@@ -22,6 +22,7 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
 
     private Context context;
     private Activity activity;
+    private String conexion="true";
     public AsyncResponse delegate = null;
     public ArrayList<PropertyInfo> propertyInfos = null;
     private ParametrosWS parametrosWS;
@@ -45,6 +46,8 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
     protected SoapObject doInBackground(String... strings) {
 
         SoapObject result = null;
+
+        conexion="true";
 
         try {
             //Metodo al que se accede
@@ -74,14 +77,14 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
                 }
 
             } catch (Exception e) {
-                notificacion("error: "+e.getMessage());
                 Log.d("salida","error: "+e.getMessage());
+                conexion = "Error: "+ e.getMessage();
             }
 
         }catch (Exception e)
         {
-            notificacion("error: "+e.getMessage());
             Log.d("salida","error: "+e.getMessage());
+            conexion = "Error: "+ e.getMessage();
         }
 
         return result;
@@ -100,7 +103,7 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
 
         progreso.dismiss();
 
-        delegate.processFinish(result);
+        delegate.processFinish(result, conexion);
 
     }
 

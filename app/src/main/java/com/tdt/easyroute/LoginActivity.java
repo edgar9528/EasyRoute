@@ -161,6 +161,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                                 conexionWS.delegate = LoginActivity.this;
                                 conexionWS.propertyInfos = propertyInfos;
                                 conexionWS.execute();
+
                             } else {
                                 almacenarInformacion();
                             }
@@ -204,43 +205,39 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
 
     @Override
-    public void processFinish(SoapObject output) {
-        //Recibe la respuesta del servidor
-        rut_cve = "0";
-        rut_cve = Utils.LeefConfig("ruta");
-        if (rut_cve.isEmpty())
-        {
-            rut_cve = "0";
-        }
+    public void processFinish(SoapObject output,String conexion) {
 
-        if(output!=null)
+        if(conexion.equals("true"))
         {
-            Log.d(TAG,"Encontro usuario ws");
-            //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
-            ConvertirRespuesta cr = new ConvertirRespuesta(output);
-            u = cr.getUsuario();
+            if (output != null) {
+                Log.d(TAG, "Encontro usuario ws");
+                //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
 
-            almacenarInformacion();
+                u = ConvertirRespuesta.getUsuario(output);
+
+                almacenarInformacion();
+            } else {
+                Log.d(TAG, "No encontro usuario ws");
+
+                DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
+                SQLiteDatabase bd = databaseHelper.getWritableDatabase();
+
+                if (bd != null) {
+                    String cad = Querys.Trabajo.InsertBitacoraHHSesion;
+                    String con = string.formatSql(cad, user, string.formatSql("INICIO DE SESION V{0}", Utils.Version()), "USUARIO O CONTRASEÑA INVALIDOS", rut_cve, "");
+
+                    bd.execSQL(con);
+                }
+
+                bd.close();
+
+                Log.d(TAG, "usuario o contraseña incorrectos");
+                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
+            }
         }
         else
         {
-            Log.d(TAG,"No encontro usuario ws");
-
-            DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
-            SQLiteDatabase bd = databaseHelper.getWritableDatabase();
-
-            if(bd!=null)
-            {
-                String cad = Querys.Trabajo.InsertBitacoraHHSesion;
-                String con= string.formatSql(cad, user, string.formatSql("INICIO DE SESION V{0}",Utils.Version()),"USUARIO O CONTRASEÑA INVALIDOS",rut_cve,"" );
-
-                bd.execSQL(con);
-            }
-
-            bd.close();
-
-            Log.d(TAG,"usuario o contraseña incorrectos");
-            Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, conexion, Toast.LENGTH_LONG).show();
         }
 
     }
@@ -292,6 +289,15 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
         //se guarda o actualiza la información del usuario en local
         DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
         SQLiteDatabase bd = databaseHelper.getWritableDatabase();
+
+
+        //Recibe la respuesta del servidor
+        rut_cve = "0";
+        rut_cve = Utils.LeefConfig("ruta", getApplication() );
+        if (rut_cve.isEmpty())
+        {
+            rut_cve = "0";
+        }
 
         if(!bloq) {
             guardarUsuario();

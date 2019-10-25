@@ -44,10 +44,18 @@
         </android.support.design.widget.TextInputLayout>
 
 
+        <Button
+            android:id="@+id/button_pruebaWs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prueba webService"
+            android:theme="@style/RaisedButtonDark"
+            android:paddingTop="@dimen/paddingControles"
+            />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:layout_marginTop="@dimen/paddingControles"
             android:layout_marginBottom="@dimen/paddingControles"
             android:background="@color/grey" />
@@ -80,7 +88,7 @@
             </Spinner>
 
             <Button
-                android:id="@+id/button_prueba"
+                android:id="@+id/button_listar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -112,7 +120,7 @@
 
 
             <Button
-                android:id="@+id/button_listar"
+                android:id="@+id/button_pruebaImp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"

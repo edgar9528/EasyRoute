@@ -49,6 +49,11 @@ public class ConfiguracionActivity extends AppCompatActivity {
         if(!admin)
             mnGuardar=false;
 
+
+
+        inicializar();
+
+
         //CONFIGURACION DE LAS TABS
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Servidor, ruta e impresor"));
@@ -79,8 +84,6 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
         //TERMINA CONFIGURACION DE LAS TABS
 
-
-        inicializar();
 
     }
 
@@ -143,21 +146,21 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 Permisos p = null;
                 try
                 {
-                    for(int i=0; i<user.getPermisos().size();i++)
+                    if(user!=null)
                     {
-                        if(user.getPermisos().get(i).getMod_desc_str().equals("CONFIGURACION"))
-                        {
-                            p = user.getPermisos().get(i);
-                            i=user.getPermisos().size();
+                        for (int i = 0; i < user.getPermisos().size(); i++) {
+                            if (user.getPermisos().get(i).getMod_desc_str().equals("CONFIGURACION")) {
+                                p = user.getPermisos().get(i);
+                                i = user.getPermisos().size();
+                            }
                         }
-                    }
 
-                    if (p != null)
-                    {
-                        if (p.getEscritura() > 0)
-                            mnGuardar = true;
-                        else
-                            mnGuardar = false;
+                        if (p != null) {
+                            if (p.getEscritura() > 0)
+                                mnGuardar = true;
+                            else
+                                mnGuardar = false;
+                        }
                     }
                 }
                 catch (Exception e)
@@ -166,8 +169,21 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 }
 
 
-
-
+                if(user!=null)
+                {
+                    if(user.getNombrerol().equals("AUDITORIA"))
+                    {
+                        //BLOQUEA BOTON MENU -> SERVIDOR|SERVIDOR,RUTA
+                    }
+                }
+                else
+                {
+                    if(!admin)
+                    {
+                        //BLOQUEA BOTON MENU -> SERVIDOR,RUTA|UTILIDAD
+                        catalogos=true;
+                    }
+                }
 
             }
 
