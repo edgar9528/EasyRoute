@@ -16,6 +16,7 @@ import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.Model.InfoRuta;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
@@ -30,59 +31,82 @@ public class ConfiguracionActivity extends AppCompatActivity {
     boolean catalogos = false;
     boolean mnGuardar = true;
     boolean crut = false;
+    boolean tabs[];
     String cat="Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas";
 
-    ArrayList<String> rutas_des;
-    ArrayList<String> rutas_cla;
+    ArrayList<InfoRuta> lista_rutas;
+    ArrayList<String> lista_catalogos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
-
         this.setTitle("Configuración");
-        Intent intent = getIntent();
-        user = (Usuario) intent.getSerializableExtra("usuario");
-        admin = intent.getBooleanExtra("admin", false);
-        catalogos = intent.getBooleanExtra("catalogos",false);
 
-        if(!admin)
-            mnGuardar=false;
+        try {
+
+            Intent intent = getIntent();
+            user = (Usuario) intent.getSerializableExtra("usuario");
+            admin = intent.getBooleanExtra("admin", false);
+            catalogos = intent.getBooleanExtra("catalogos", false);
+            tabs = new boolean[3];
+            tabs[0] = true;
+            tabs[1] = true;
+            tabs[2] = true;
+
+            if (!admin)
+                mnGuardar = false;
 
 
+            Log.d("salida", "es admin:" + admin);
 
-        inicializar();
+
+            inicializar();
 
 
-        //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Servidor, ruta e impresor"));
-        tabLayout.addTab(tabLayout.newTab().setText("Servidor"));
-        tabLayout.addTab(tabLayout.newTab().setText("Utilidad"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            //CONFIGURACION DE LAS TABS
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerConfiguracionAdapter adapter = new PagerConfiguracionAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+            if (tabs[0])
+                tabLayout.addTab(tabLayout.newTab().setText("Servidor, ruta e impresor"));
+            if (tabs[1])
+                tabLayout.addTab(tabLayout.newTab().setText("Servidor"));
+            if (tabs[2])
+                tabLayout.addTab(tabLayout.newTab().setText("Utilidad"));
 
-        viewPager.setAdapter(adapter);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            final PagerConfiguracionAdapter adapter = new PagerConfiguracionAdapter
+                    (getSupportFragmentManager(), tabLayout.getTabCount(), tabs);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+            viewPager.setAdapter(adapter);
 
-        //TERMINA CONFIGURACION DE LAS TABS
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+            tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                    //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                }
+            });
+
+            //TERMINA CONFIGURACION DE LAS TABS
+
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.toString());
+        }
 
 
     }
@@ -133,6 +157,8 @@ public class ConfiguracionActivity extends AppCompatActivity {
             {
                 mnGuardar = false;
                 //BLOQUEAR TABS  ServidorRuta, Utilidad
+                tabs[0]=false;
+                tabs[2]=false;
 
                 cat = "CondicionesVenta,Productos,Rutas,ListaPrecios,PrecioProductos,FormasPago,FrecuenciasVisita,Categorias,Familias,Presentaciones,Promociones,PromocionesKit";
                 catalogos();
@@ -140,8 +166,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
             else
             {
                 catalogos();
-                cargarRutas();
-
+                obtenerRutas();
 
                 Permisos p = null;
                 try
@@ -157,9 +182,15 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
                         if (p != null) {
                             if (p.getEscritura() > 0)
+                            {
                                 mnGuardar = true;
+                                Log.d("salida","usuario con permiso de configuracion");
+                            }
                             else
+                            {
                                 mnGuardar = false;
+                                Log.d("salida","usuario sin permiso de configuracion");
+                            }
                         }
                     }
                 }
@@ -168,12 +199,14 @@ public class ConfiguracionActivity extends AppCompatActivity {
                     Log.d("salida","errorPermisos:"+e.toString());
                 }
 
-
                 if(user!=null)
                 {
                     if(user.getNombrerol().equals("AUDITORIA"))
                     {
                         //BLOQUEA BOTON MENU -> SERVIDOR|SERVIDOR,RUTA
+                        tabs[0]=false;
+                        tabs[1]=false;
+                        Log.d("salida","AUDITORIA");
                     }
                 }
                 else
@@ -181,7 +214,16 @@ public class ConfiguracionActivity extends AppCompatActivity {
                     if(!admin)
                     {
                         //BLOQUEA BOTON MENU -> SERVIDOR,RUTA|UTILIDAD
+
+                        tabs[0]=false;
+                        tabs[2]=false;
+
                         catalogos=true;
+                        Log.d("salida","NO ES ADMIN");
+                    }
+                    else
+                    {
+                        Log.d("salida","ES ADMINISTRADOR");
                     }
                 }
 
@@ -199,20 +241,21 @@ public class ConfiguracionActivity extends AppCompatActivity {
     {
         //lvCat.Items.Clear(); donde se muestran los catalogos
         String[] s = cat.split(",");
+        lista_catalogos = new ArrayList<>();
 
-        //AGREGAR LOS ITEMS AL PANEL
+        //AGREGAR LOS CATALOGOS AL ARRAY
         for (int i=0; i<s.length;i++)
         {
-            Log.d("salida"," . "+s[i]+" . ");
+            lista_catalogos.add(s[i]);
         }
+
+        Log.d("salida","Catalogos agregados");
 
     }
 
-    public void cargarRutas()
+    public void obtenerRutas()
     {
         try{
-
-            int k=-1;
 
             DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), getString(R.string.nombreBD), null, 1);
             SQLiteDatabase bd = databaseHelper.getReadableDatabase();
@@ -223,15 +266,17 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
             if (cursor.getCount() >0) {
 
-                rutas_des = new ArrayList<>();
-                rutas_cla = new ArrayList<>();
+                lista_rutas = new ArrayList<>();
 
                 while (cursor.moveToNext()) {
-                    rutas_des.add( cursor.getString(cursor.getColumnIndex("rut_desc_str")) );
-                    rutas_cla.add( cursor.getString(cursor.getColumnIndex("rut_cve_n")) );
+                    InfoRuta infoRuta = new InfoRuta();
+                    infoRuta.setRut_desc_str( cursor.getString(cursor.getColumnIndex("rut_desc_str")) );
+                    infoRuta.setRut_cve_n( cursor.getString(cursor.getColumnIndex("rut_cve_n")));
+                    lista_rutas.add(infoRuta);
                 }
+                Log.d("salida","se encontraron rutas guardadas");
             } else {
-                Log.d("salida", "Cursor sin info");
+                Log.d("salida", "No se encontraron rutas guardadas");
             }
 
             bd.close();
@@ -242,6 +287,16 @@ public class ConfiguracionActivity extends AppCompatActivity {
             Log.d("salida",e.toString());
             Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public ArrayList<InfoRuta> getRutas()
+    {
+        return lista_rutas;
+    }
+
+    public ArrayList<String> getCatalogos()
+    {
+        return lista_catalogos;
     }
 
 

@@ -82,7 +82,7 @@
                     android:id="@+id/et_ruta"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Selecciona una ruta"
+                    android:hint="Seleccionar ruta"
                     android:editable="false"
                     android:focusable="false"
                     />
@@ -94,6 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="Listar"
+                android:layout_gravity="center"
                 android:theme="@style/RaisedButtonDark"
                 />
         </LinearLayout>

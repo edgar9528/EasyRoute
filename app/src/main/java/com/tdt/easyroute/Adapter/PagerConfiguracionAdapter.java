@@ -11,9 +11,11 @@ import com.tdt.easyroute.Ventanas.Configuracion.UtilidadFragment;
 public class PagerConfiguracionAdapter extends FragmentStatePagerAdapter {
 
     int mNumOfTabs;
-    public PagerConfiguracionAdapter(FragmentManager fm, int NumOfTabs) {
+    boolean tabs[];
+    public PagerConfiguracionAdapter(FragmentManager fm, int NumOfTabs, boolean[]tab) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
+        tabs=tab;
     }
 
 
@@ -21,14 +23,20 @@ public class PagerConfiguracionAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                ServidorrutaFragment tab1 = new ServidorrutaFragment();
-                return tab1;
+                if(tabs[0]) {
+                    ServidorrutaFragment tab1 = new ServidorrutaFragment();
+                    return tab1;
+                }
             case 1:
-                ServidorFragment tab2 = new ServidorFragment();
-                return tab2;
+                if(tabs[1]) {
+                    ServidorFragment tab2 = new ServidorFragment();
+                    return tab2;
+                }
             case 2:
-                UtilidadFragment tab3 = new UtilidadFragment();
-                return tab3;
+                if(tabs[2]) {
+                    UtilidadFragment tab3 = new UtilidadFragment();
+                    return tab3;
+                }
             default:
                 return null;
         }

@@ -112,7 +112,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                             if (pass.equals("2663"))
                             {
                                 Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
-                                intent.putExtra("admin", false);
                                 startActivity(intent);
                             }
                             else
@@ -189,6 +188,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                 public boolean onDoubleTap(MotionEvent e) {
 
                     Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
+                    intent.putExtra("admin", true);
                     startActivity(intent);
                     return super.onDoubleTap(e);
                 }

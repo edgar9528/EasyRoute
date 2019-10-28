@@ -78,13 +78,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = getIntent();
             usuario = (Usuario) intent.getSerializableExtra("usuario");
 
+            Log.d("salida","entro aqui0");
+
             //init view
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
             expandableListView= findViewById(R.id.navList);
-            navigationManager= FragmentNavigationManager.getmInstance(this);
+            navigationManager= FragmentNavigationManager.getmInstance(this,this,usuario);
+
+            Log.d("salida","entro aqui1");
 
             View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
             expandableListView.addHeaderView(listHeaderView);
+
+            Log.d("salida","entro aqui2");
 
 
             generarMenu();
@@ -92,18 +98,25 @@ public class MainActivity extends AppCompatActivity {
             addDrawersItem();
             setupDrawer();
 
+            Log.d("salida","entro aqui3");
+
             if(savedInstanceState== null)
             {
+                Log.d("salida","entro aqui if");
                 selectFirsItemAsDefault();
+                Log.d("salida","entro aqui if2");
             }
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
 
+            Log.d("salida","entro aqui4");
+
         }
         catch (Exception e)
         {
             Toast.makeText(getApplicationContext(), "Eror: "+e.toString(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.toString());
         }
 
     }
@@ -245,6 +258,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public Usuario getUsuario()
+    {
+        return usuario;
     }
 
 

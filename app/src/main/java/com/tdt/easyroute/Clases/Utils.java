@@ -1,9 +1,7 @@
 package com.tdt.easyroute.Clases;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -64,6 +62,19 @@ public class Utils {
         }
 
         return valor;
+    }
+
+    public static void CreafConfig(String servidor,String timeout,String empresa, String ruta,String imp, Application app)
+    {
+        SharedPreferences sharedPref = app.getSharedPreferences("ConfiguracionPreferences",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("servidor",servidor);
+        editor.putString("timeout",timeout);
+        editor.putString("empresa",empresa);
+        editor.putString("ruta",ruta);
+        editor.putString("imp",imp);
+
+        editor.apply();
     }
 
     public static String Version()

@@ -6,9 +6,34 @@
     tools:context=".Ventanas.Configuracion.ServidorFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="servidor fragment" />
+        android:layout_height="wrap_content"
+        android:padding="@dimen/paddingGeneral"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="servidor fragment" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/tabla_titulo"
+            />
+
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2">
+        </TableLayout>
+
+    </LinearLayout>
 
 </FrameLayout>
