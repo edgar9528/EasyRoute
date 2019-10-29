@@ -17,7 +17,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.tdt.easyroute.Interface.AsyncResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.tdt.easyroute.Clases.ConexionWS_JSON;
+import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.Interface.AsyncResponseSO;
 import com.tdt.easyroute.Clases.ConexionWS;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
@@ -25,6 +30,7 @@ import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.Model.InfoRuta;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity;
@@ -32,10 +38,11 @@ import com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoginActivity extends AppCompatActivity implements AsyncResponse{
+public class LoginActivity extends AppCompatActivity implements AsyncResponseJSON {
 
     private static String TAG="salida";
     private static String nombreBase;
@@ -142,12 +149,12 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                                 //parametros del metodo
                                 ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
                                 PropertyInfo piUser = new PropertyInfo();
-                                piUser.setName("usuario");
+                                piUser.setName("usuarioJ");
                                 piUser.setValue(user);
                                 propertyInfos.add(piUser);
 
                                 PropertyInfo piPass = new PropertyInfo();
-                                piPass.setName("contrasena");
+                                piPass.setName("contrasenaJ");
                                 piPass.setValue(pass);
                                 propertyInfos.add(piPass);
 
@@ -155,8 +162,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
                                 //MAA0ADMAMgAxAA==
 
                                 //conexion con el metodo
-                                ParametrosWS parametrosWS = new ParametrosWS("ValidarUsuario", getApplicationContext());
-                                ConexionWS conexionWS = new ConexionWS(LoginActivity.this, LoginActivity.this, parametrosWS);
+                                ParametrosWS parametrosWS = new ParametrosWS("ValidarUsuarioJ", getApplicationContext());
+                                ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, LoginActivity.this, parametrosWS);
                                 conexionWS.delegate = LoginActivity.this;
                                 conexionWS.propertyInfos = propertyInfos;
                                 conexionWS.execute();
@@ -197,6 +204,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 //un click
+
                 gestureDetector.onTouchEvent(event);
                 return true;
             }});
@@ -204,43 +212,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
     }
 
 
-    @Override
-    public void processFinish(SoapObject output,String conexion) {
 
-        if(conexion.equals("true"))
-        {
-            if (output != null) {
-                Log.d(TAG, "Encontro usuario ws");
-                //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
-
-                u = ConvertirRespuesta.getUsuario(output);
-
-                almacenarInformacion();
-            } else {
-                Log.d(TAG, "No encontro usuario ws");
-
-                DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
-                SQLiteDatabase bd = databaseHelper.getWritableDatabase();
-
-                if (bd != null) {
-                    String cad = Querys.Trabajo.InsertBitacoraHHSesion;
-                    String con = string.formatSql(cad, user, string.formatSql("INICIO DE SESION V{0}", Utils.Version()), "USUARIO O CONTRASEÑA INVALIDOS", rut_cve, "");
-
-                    bd.execSQL(con);
-                }
-
-                bd.close();
-
-                Log.d(TAG, "usuario o contraseña incorrectos");
-                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
-            }
-        }
-        else
-        {
-            Toast.makeText(this, conexion, Toast.LENGTH_LONG).show();
-        }
-
-    }
 
 
     public void obtenerRoles()
@@ -364,8 +336,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
             default:
                 Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
                 break;
-
-
 
         }
     }
@@ -617,4 +587,45 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse{
 
     }
 
+    @Override
+    public void recibirPeticion(boolean estado, String respuesta) {
+
+        if(estado)
+        {
+            if (respuesta != null) {
+                Log.d(TAG, "Encontro usuario ws");
+                //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
+
+                u = ConvertirRespuesta.getUsuarioJson(respuesta);
+
+                Log.d( "salida","usuario permisos: "+u.getPermisos().get(0).getMod_desc_str() );
+
+                almacenarInformacion();
+            }
+            else
+            {
+                Log.d(TAG, "No encontro usuario ws");
+
+                DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
+                SQLiteDatabase bd = databaseHelper.getWritableDatabase();
+
+                if (bd != null) {
+                    String cad = Querys.Trabajo.InsertBitacoraHHSesion;
+                    String con = string.formatSql(cad, user, string.formatSql("INICIO DE SESION V{0}", Utils.Version()), "USUARIO O CONTRASEÑA INVALIDOS", rut_cve, "");
+
+                    bd.execSQL(con);
+                }
+
+                bd.close();
+
+                Log.d(TAG, "usuario o contraseña incorrectos");
+                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
+        }
+
+    }
 }

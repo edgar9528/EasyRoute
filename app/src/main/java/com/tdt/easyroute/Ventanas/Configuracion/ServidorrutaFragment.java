@@ -12,40 +12,44 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tdt.easyroute.Clases.ConexionWS;
-import com.tdt.easyroute.Clases.Configuracion;
+import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
-import com.tdt.easyroute.Interface.AsyncResponse;
+import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.Interface.AsyncResponseSO;
 import com.tdt.easyroute.Model.InfoRuta;
 import com.tdt.easyroute.R;
 
 import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
 import in.galaxyofandroid.spinerdialog.SpinnerDialog;
 
-public class ServidorrutaFragment extends Fragment implements AsyncResponse {
+public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON {
 
     EditText et_servidor,et_time,et_imp,et_ruta; //edittext
     Button button_salir,button_guardar,button_listar,button_pruWs,button_pruImp; //botones
@@ -95,9 +99,12 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponse {
 
                 if( !ser.isEmpty() && !time.isEmpty() )
                 {
-                    ParametrosWS parametrosWS = new ParametrosWS("ObtenerRutasJ", getActivity().getApplicationContext());
-                    PruebaConexionWS conexionWS = new PruebaConexionWS(getContext(), getActivity(), parametrosWS,ser,time);
-                    conexionWS.execute();
+                    peticion="prueba";
+                    ParametrosWS parametrosWS = new ParametrosWS("Prueba", getActivity().getApplicationContext());
+                    ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), getActivity(), parametrosWS);
+                    ws.delegate = ServidorrutaFragment.this;
+                    ws.propertyInfos=null;
+                    ws.execute();
                 }
                 else
                 {
@@ -165,8 +172,6 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponse {
 
 
 
-
-
         return view;
     }
 
@@ -191,11 +196,49 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponse {
         crut = false;
         peticion="listarRutas";
 
-        ParametrosWS parametrosWS = new ParametrosWS("ObtenerRutas",  getActivity().getApplicationContext());
-        ConexionWS conexionWS = new ConexionWS(getContext(), getActivity(), parametrosWS);
-        conexionWS.delegate = ServidorrutaFragment.this;
-        conexionWS.propertyInfos = null;
-        conexionWS.execute();
+        ParametrosWS parametrosWS = new ParametrosWS("ObtenerRutasJ",  getActivity().getApplicationContext());
+        ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),getActivity(),parametrosWS);
+        conexionWS_json.delegate = ServidorrutaFragment.this;
+        conexionWS_json.propertyInfos=null;
+        conexionWS_json.execute();
+
+    }
+
+    @Override
+    public void recibirPeticion(boolean estado, String respuesta) {
+
+        //Se realizo la conexion con el ws
+        if(estado)
+        {
+            //recibio información
+            if (respuesta != null)
+            {
+                if (peticion.equals("listarRutas"))
+                {
+
+
+                    lista_rutas=null;
+                    lista_rutas = ConvertirRespuesta.getRutasJson(respuesta);
+
+                    guardarRutas();
+                    cargarRutas();
+
+
+                }
+                if(peticion.equals("prueba"))
+                {
+                    Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(), "No se encontro información", Toast.LENGTH_LONG).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(getContext(), respuesta, Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -227,36 +270,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponse {
         return des;
     }
 
-    @Override
-    public void processFinish(SoapObject output, String conexion)
-    {
-        //Se realizo la conexion con el ws
-        if(conexion.equals("true"))
-        {
-            //recibio información
-            if (output != null)
-            {
-                if (peticion.equals("listarRutas"))
-                {
 
-                    lista_rutas=null;
-                    lista_rutas = ConvertirRespuesta.getRutas(output);
-
-                    guardarRutas();
-                    cargarRutas();
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(), "No se encontro información", Toast.LENGTH_LONG).show();
-            }
-        }
-        else
-        {
-            Toast.makeText(getContext(), conexion, Toast.LENGTH_SHORT).show();
-        }
-
-    }
 
     public void guardarRutas()
     {
@@ -278,12 +292,11 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponse {
                         //Log.d("salida","m:"+r.getRut_cve_n()+" "+r.getRut_desc_str()+" "+r.getRut_orden_n()+" "+r.getTrut_cve_n()+" "+r.getAsesor_cve_str()+" "+r.getGerente_cve_str()+" "+r.getSupervisor_cve_str()+" "+r.getEst_cve_str()+" "+r.getTco_cve_n()+" "+r.getRut_prev_n());
 
                         bd.execSQL(string.formatSql(con,r.getRut_cve_n(),r.getRut_desc_str(),r.getRut_orden_n(),r.getTrut_cve_n(),r.getAsesor_cve_str(),r.getGerente_cve_str(),r.getSupervisor_cve_str(),r.getEst_cve_str(),r.getTco_cve_n(),r.getRut_prev_n()));
-                        //Log.d("salida","Ruta guardada: "+i);
+
                     }
                 }
 
                 bd.close();
-
             }
         }
         catch (Exception e)
@@ -329,122 +342,5 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponse {
     }
 
 
-}
-
-
-class PruebaConexionWS extends AsyncTask<String,Integer,Boolean> {
-
-    private Context context;
-    private Activity activity;
-    private String conexion="true";
-    private ParametrosWS parametrosWS;
-    private String servidor;
-    private int time;
-
-    public PruebaConexionWS(Context context, Activity activity, ParametrosWS parametrosWS,String ser,String tim) {
-        this.context = context;
-        this.activity = activity;
-        this.parametrosWS= parametrosWS;
-        this.servidor=ser;
-        this.time= Integer.parseInt(tim) ;
-
-    }
-
-    private ProgressDialog progreso;
-
-    @Override protected void onPreExecute() {
-        progreso = new ProgressDialog(context);
-        progreso.setMessage("Conectando...");
-        progreso.setCancelable(false);
-        progreso.show();
-    }
-
-    @Override
-    protected Boolean doInBackground(String... strings) {
-
-        boolean result=true;
-
-        conexion="true";
-
-        try {
-            //Metodo al que se accede
-            SoapObject Solicitud = new SoapObject(parametrosWS.getNAMESPACES(), parametrosWS.getMETODO());
-
-            SoapSerializationEnvelope Envoltorio = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            Envoltorio.dotNet = true;
-            Envoltorio.setOutputSoapObject(Solicitud);
-            HttpTransportSE TransporteHttp = new HttpTransportSE(servidor,time);
-
-            try {
-
-                TransporteHttp.call(parametrosWS.getSOAP_ACTION(), Envoltorio);
-                SoapPrimitive response = (SoapPrimitive) Envoltorio.getResponse();
-                conexion = response.toString();
-                result=true;
-
-            } catch (Exception e) {
-                Log.d("salida","error1: "+e.getMessage());
-                conexion = "Error: "+ e.getMessage();
-                result=false;
-            }
-
-        }catch (Exception e)
-        {
-            Log.d("salida","error2: "+e.getMessage());
-            conexion = "Error: "+ e.getMessage();
-            result=false;
-        }
-
-        return result;
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
-
-        progreso.setProgress(values[0]);
-    }
-
-    @Override
-    protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
-
-        progreso.dismiss();
-
-        if(result)
-        {
-            notificacion(conexion);
-            Log.d("salida","Prueba correcta");
-            Log.d("salida",conexion);
-
-            ObjectMapper mapper = new ObjectMapper();
-
-            try {
-                List<InfoRuta> participantJsonList = mapper.readValue(conexion, new TypeReference<List<InfoRuta>>(){});
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("salida",e.getMessage());
-            }
-
-
-        }
-        else
-        {
-            notificacion(conexion);
-            Log.d("salida","Error en prueba");
-        }
-
-
-    }
-
-    public void notificacion(final String men)
-    {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(activity, men, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
 }
-

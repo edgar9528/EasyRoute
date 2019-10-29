@@ -7,27 +7,29 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tdt.easyroute.Interface.AsyncResponseJSON;
 import com.tdt.easyroute.Interface.AsyncResponseSO;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 
 
-public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
+public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
 
     private Context context;
     private Activity activity;
-    private String conexion="true";
-    public AsyncResponseSO delegate = null;
+    private String respuesta;
+    public AsyncResponseJSON delegate = null;
     public ArrayList<PropertyInfo> propertyInfos = null;
     private ParametrosWS parametrosWS;
 
-    public ConexionWS(Context context, Activity activity, ParametrosWS parametrosWS) {
+    public ConexionWS_JSON(Context context, Activity activity, ParametrosWS parametrosWS) {
         this.context = context;
         this.activity = activity;
         this.parametrosWS= parametrosWS;
@@ -43,11 +45,10 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
     }
 
     @Override
-    protected SoapObject doInBackground(String... strings) {
+    protected Boolean doInBackground(String... strings) {
 
-        SoapObject result = null;
-
-        conexion="true";
+        boolean result = true;
+        respuesta=null;
 
         try {
             //Metodo al que se accede
@@ -66,25 +67,28 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
             Envoltorio.setOutputSoapObject(Solicitud);
             HttpTransportSE TransporteHttp = new HttpTransportSE(parametrosWS.getURL(),parametrosWS.getTIMEOUT());
 
-            try {
-
+            try
+            {
                 TransporteHttp.call(parametrosWS.getSOAP_ACTION(), Envoltorio);
-                SoapObject response = (SoapObject) Envoltorio.getResponse();
+                SoapPrimitive response = (SoapPrimitive) Envoltorio.getResponse();
 
-                if(response!=null)
+                if(response!=null&& !response.toString().equals("null"))
                 {
-                    result=response;
+                    respuesta = response.toString();
                 }
+                result = true;
 
             } catch (Exception e) {
                 Log.d("salida","error: "+e.getMessage());
-                conexion = "Error: "+ e.getMessage();
+                respuesta = "Error: "+ e.getMessage();
+                result=false;
             }
 
         }catch (Exception e)
         {
             Log.d("salida","error: "+e.getMessage());
-            conexion = "Error: "+ e.getMessage();
+            respuesta = "Error: "+ e.getMessage();
+            result=false;
         }
 
         return result;
@@ -98,21 +102,13 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
     }
 
     @Override
-    protected void onPostExecute(SoapObject result) {
+    protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 
         progreso.dismiss();
 
-        delegate.processFinish(result, conexion);
+        delegate.recibirPeticion(result, respuesta);
 
     }
 
-    public void notificacion(final String men)
-    {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(activity, men, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 }

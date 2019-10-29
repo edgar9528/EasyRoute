@@ -1,13 +1,13 @@
 package com.tdt.easyroute.Clases;
 import android.util.Log;
-import android.util.Property;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tdt.easyroute.Model.InfoRuta;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +64,22 @@ public class ConvertirRespuesta {
         }
 
         return  usuario;
+    }
+
+    public static Usuario getUsuarioJson(String respuesta)
+    {
+        Usuario usuario=null;
+
+        try {
+            usuario = new Gson().fromJson(respuesta, Usuario.class);
+            Log.d("salida","USUARIO CREADO");
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            usuario=null;
+        }
+
+        return usuario;
     }
 
     public static ArrayList<InfoRuta> getRutas(SoapObject respuesta) {
@@ -225,6 +241,26 @@ public class ConvertirRespuesta {
         }
 
         return  rutas;
+    }
+
+    public static ArrayList<InfoRuta> getRutasJson(String respuesta)
+    {
+
+        ArrayList<InfoRuta> rutas=null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<InfoRuta> >(){}.getType();
+            rutas = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            rutas=null;
+        }
+
+        return rutas;
+
     }
 
 
