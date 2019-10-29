@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tdt.easyroute.Clases.ConexionWS;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
@@ -36,7 +38,9 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
 import in.galaxyofandroid.spinerdialog.SpinnerDialog;
@@ -91,7 +95,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponse {
 
                 if( !ser.isEmpty() && !time.isEmpty() )
                 {
-                    ParametrosWS parametrosWS = new ParametrosWS("Prueba", getActivity().getApplicationContext());
+                    ParametrosWS parametrosWS = new ParametrosWS("ObtenerRutasJ", getActivity().getApplicationContext());
                     PruebaConexionWS conexionWS = new PruebaConexionWS(getContext(), getActivity(), parametrosWS,ser,time);
                     conexionWS.execute();
                 }
@@ -379,14 +383,14 @@ class PruebaConexionWS extends AsyncTask<String,Integer,Boolean> {
                 result=true;
 
             } catch (Exception e) {
-                Log.d("salida","error: "+e.getMessage());
+                Log.d("salida","error1: "+e.getMessage());
                 conexion = "Error: "+ e.getMessage();
                 result=false;
             }
 
         }catch (Exception e)
         {
-            Log.d("salida","error: "+e.getMessage());
+            Log.d("salida","error2: "+e.getMessage());
             conexion = "Error: "+ e.getMessage();
             result=false;
         }
@@ -411,6 +415,18 @@ class PruebaConexionWS extends AsyncTask<String,Integer,Boolean> {
         {
             notificacion(conexion);
             Log.d("salida","Prueba correcta");
+            Log.d("salida",conexion);
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                List<InfoRuta> participantJsonList = mapper.readValue(conexion, new TypeReference<List<InfoRuta>>(){});
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("salida",e.getMessage());
+            }
+
+
         }
         else
         {
