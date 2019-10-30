@@ -16,7 +16,7 @@ import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
-import com.tdt.easyroute.ModelTablas.InfoRuta;
+import com.tdt.easyroute.Model.DataTable;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
@@ -34,7 +34,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
     boolean tabs[];
     String cat="Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas";
 
-    ArrayList<InfoRuta> lista_rutas;
+    ArrayList<DataTable.Ruta> lista_rutas;
     ArrayList<String> lista_catalogos;
 
 
@@ -162,6 +162,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 tabs[2]=false;
 
                 cat = "CondicionesVenta,Productos,Rutas,ListaPrecios,PrecioProductos,FormasPago,FrecuenciasVisita,Categorias,Familias,Presentaciones,Promociones,PromocionesKit";
+
                 catalogos();
             }
             else
@@ -270,7 +271,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 lista_rutas = new ArrayList<>();
 
                 while (cursor.moveToNext()) {
-                    InfoRuta infoRuta = new InfoRuta();
+                    DataTable.Ruta infoRuta = new DataTable.Ruta();
                     infoRuta.setRut_desc_str( cursor.getString(cursor.getColumnIndex("rut_desc_str")) );
                     infoRuta.setRut_cve_n( cursor.getString(cursor.getColumnIndex("rut_cve_n")));
                     lista_rutas.add(infoRuta);
@@ -290,7 +291,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
         }
     }
 
-    public ArrayList<InfoRuta> getRutas()
+    public ArrayList<DataTable.Ruta> getRutas()
     {
         return lista_rutas;
     }

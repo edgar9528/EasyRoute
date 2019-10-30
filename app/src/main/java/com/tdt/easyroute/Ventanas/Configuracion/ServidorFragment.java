@@ -1,7 +1,8 @@
 package com.tdt.easyroute.Ventanas.Configuracion;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,14 +11,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.ParametrosWS;
+import com.tdt.easyroute.Model.DataTable;
 import com.tdt.easyroute.R;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ServidorFragment extends Fragment {
@@ -30,6 +42,7 @@ public class ServidorFragment extends Fragment {
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
     ArrayList<String> lista_catalogos;
+    ArrayList<String> metodosWS;
     boolean[] rbSeleccionados;
     Button button_selec,button_deselec,button_sinc;
 
@@ -57,6 +70,28 @@ public class ServidorFragment extends Fragment {
             button_sinc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    metodosWS = new ArrayList<>();
+                    boolean rbSelec=false;
+                    for(int i=0; i<rbSeleccionados.length;i++)
+                    {
+                        if(rbSeleccionados[i])
+                        {
+                            rbSelec=true;
+                            metodosWS.add("Obtener"+lista_catalogos.get(i)+"J");
+                        }
+                    }
+
+                    if(rbSelec)
+                    {
+                        //Descargar información
+                        ConexionWS conexionWS = new ConexionWS(getContext());
+                        conexionWS.execute();
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "Debe seleccionar algun elemento", Toast.LENGTH_SHORT).show();
+                    }
+
 
                 }
             });
@@ -68,6 +103,7 @@ public class ServidorFragment extends Fragment {
         {
             Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.d("salida","Error: "+e.getMessage());
+
         }
 
 
@@ -152,6 +188,156 @@ public class ServidorFragment extends Fragment {
 
         }
     };
+
+
+    private class ConexionWS extends AsyncTask<String,Integer,Boolean> {
+
+        private Context context;
+        private ParametrosWS parametrosWS;
+        private String resultado;
+
+        //Lista de tablas descargadas
+
+        ArrayList<DataTable.Empresa> al_empresas=null;
+        ArrayList<DataTable.Estatus> al_estatus=null;
+        ArrayList<DataTable.Roles> al_roles=null;
+        ArrayList<DataTable.RolesModulos> al_rolesModulos=null;
+        ArrayList<DataTable.Modulos> al_modulos=null;
+        ArrayList<DataTable.Usuarios> al_usuarios=null;
+        ArrayList<DataTable.TipoRuta> al_tipoRutas=null;
+        ArrayList<DataTable.Ruta> al_rutas=null;
+
+        public ConexionWS(Context context) {
+            this.context = context;
+        }
+
+        private ProgressDialog progreso;
+
+        @Override protected void onPreExecute() {
+            progreso = new ProgressDialog(context);
+            progreso.setMessage("Descargando...");
+            progreso.setCancelable(false);
+            progreso.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+
+            boolean result = true;
+            resultado=null;
+
+            try
+            {
+
+                for(int i=0; i<metodosWS.size();i++)
+                {
+
+                    parametrosWS = new ParametrosWS(metodosWS.get(i), getActivity().getApplicationContext());
+                    //Metodo al que se accede
+                    SoapObject Solicitud = new SoapObject(parametrosWS.getNAMESPACES(), parametrosWS.getMETODO());
+
+                    //CONFIGURACION DE LA PETICION
+                    SoapSerializationEnvelope Envoltorio = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                    Envoltorio.dotNet = true;
+                    Envoltorio.setOutputSoapObject(Solicitud);
+                    HttpTransportSE TransporteHttp = new HttpTransportSE(parametrosWS.getURL(), parametrosWS.getTIMEOUT());
+
+                    //SE REALIZA LA PETICIÓN
+                    try {
+                        TransporteHttp.call(parametrosWS.getSOAP_ACTION(), Envoltorio);
+                        SoapPrimitive response = (SoapPrimitive) Envoltorio.getResponse();
+
+                        if (response != null && !response.toString().equals("null")) {
+                            obtenerResultado(response.toString(), parametrosWS.getMETODO());
+                        }
+
+                        result = true;
+
+                    } catch (Exception e) {
+                        Log.d("salida", "error: " + e.getMessage());
+                        result = false;
+                        resultado = "Error: " + e.getMessage();
+                    }
+                }
+
+            }catch (Exception e)
+            {
+                Log.d("salida","error: "+e.getMessage());
+                result=false;
+                resultado= "Error: "+e.getMessage();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            progreso.setProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            progreso.dismiss();
+
+            if(result)
+            {
+                almacenarLocal();
+                Toast.makeText(context, "Información descargada", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(context, resultado, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        private void obtenerResultado(String json, String metodo)
+        {
+            switch (metodo)
+            {
+                case "ObtenerEmpresasJ":
+                    al_empresas = ConvertirRespuesta.getEmpresasJson(json);
+                    break;
+                case "ObtenerEstatusJ":
+                    al_estatus = ConvertirRespuesta.getEstatusJson(json);
+                    break;
+                case "ObtenerRolesJ":
+                    al_roles = ConvertirRespuesta.getRolesJson(json);
+                    break;
+                case "ObtenerRolesModulosJ":
+                    al_rolesModulos = ConvertirRespuesta.getRolesModulosJson(json);
+                    break;
+                case "ObtenerModulosJ":
+                    al_modulos = ConvertirRespuesta.getModulosJson(json);
+                    break;
+                case "ObtenerUsuariosJ":
+                    al_usuarios = ConvertirRespuesta.getUsuariosJson(json);
+                    break;
+                case "ObtenerTipoRutasJ":
+                    al_tipoRutas = ConvertirRespuesta.getTipoRutaJson(json);
+                    break;
+                case "ObtenerRutasJ":
+                    al_rutas = ConvertirRespuesta.getRutasJson(json);
+                    break;
+            }
+
+            Log.d("salida","Descargo: "+metodo);
+
+
+        }
+
+        private void almacenarLocal()
+        {
+
+        }
+
+    }
+
+
 
 
 }

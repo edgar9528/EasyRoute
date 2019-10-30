@@ -16,12 +16,11 @@ import android.widget.Toast;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
-import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
-import com.tdt.easyroute.ModelTablas.InfoRuta;
+import com.tdt.easyroute.Model.DataTable;
 import com.tdt.easyroute.R;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
     String rutaSelec_des,rutaSelec_clv; //variables para obtener la ruta que selecciono el usuario
     String nombreBase,peticion,mensajeET="Clic para seleccionar ruta";
 
-    ArrayList<InfoRuta> lista_rutas=null;
+    ArrayList<DataTable.Ruta> lista_rutas=null;
     ArrayList<String> rutas;
 
     SpinnerDialog spinnerDialog;
@@ -80,8 +79,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                 if( !ser.isEmpty() && !time.isEmpty() )
                 {
                     peticion="prueba";
-                    ParametrosWS parametrosWS = new ParametrosWS("Prueba", getActivity().getApplicationContext());
-                    ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), parametrosWS);
+                    ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), "Prueba");
                     ws.delegate = ServidorrutaFragment.this;
                     ws.propertyInfos=null;
                     ws.execute();
@@ -176,8 +174,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         crut = false;
         peticion="listarRutas";
 
-        ParametrosWS parametrosWS = new ParametrosWS("ObtenerRutasJ",  getActivity().getApplicationContext());
-        ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),parametrosWS);
+        ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),"ObtenerRutasJ");
         conexionWS_json.delegate = ServidorrutaFragment.this;
         conexionWS_json.propertyInfos=null;
         conexionWS_json.execute();
@@ -260,7 +257,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                     Log.d("salida","Eliminar rutas almacenadas");
                     for(int i=0; i<lista_rutas.size();i++)
                     {
-                        InfoRuta r = lista_rutas.get(i);
+                        DataTable.Ruta r = lista_rutas.get(i);
                         String con = Querys.Rutas.InsRutas;
 
                         //Log.d("salida","m:"+r.getRut_cve_n()+" "+r.getRut_desc_str()+" "+r.getRut_orden_n()+" "+r.getTrut_cve_n()+" "+r.getAsesor_cve_str()+" "+r.getGerente_cve_str()+" "+r.getSupervisor_cve_str()+" "+r.getEst_cve_str()+" "+r.getTco_cve_n()+" "+r.getRut_prev_n());

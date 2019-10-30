@@ -23,10 +23,9 @@ public class ConexionWS_SO extends AsyncTask<String,Integer,SoapObject> {
     public ArrayList<PropertyInfo> propertyInfos = null;
     private ParametrosWS parametrosWS;
 
-    public ConexionWS_SO(Context context, ParametrosWS parametrosWS) {
+    public ConexionWS_SO(Context context, String metodo) {
         this.context = context;
-
-        this.parametrosWS= parametrosWS;
+        parametrosWS = new ParametrosWS(metodo, context);
     }
 
     private ProgressDialog progreso;

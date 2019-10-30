@@ -23,9 +23,9 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
     public ArrayList<PropertyInfo> propertyInfos = null;
     private ParametrosWS parametrosWS;
 
-    public ConexionWS_JSON(Context context, ParametrosWS parametrosWS) {
+    public ConexionWS_JSON(Context context, String metodo) {
         this.context = context;
-        this.parametrosWS= parametrosWS;
+        parametrosWS = new ParametrosWS(metodo, context);
     }
 
     private ProgressDialog progreso;

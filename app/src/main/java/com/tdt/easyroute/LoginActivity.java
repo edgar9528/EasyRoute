@@ -154,8 +154,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                                 //MAA0ADMAMgAxAA==
 
                                 //conexion con el metodo
-                                ParametrosWS parametrosWS = new ParametrosWS("ValidarUsuarioJ", getApplicationContext());
-                                ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, parametrosWS);
+                                ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, "ValidarUsuarioJ");
                                 conexionWS.delegate = LoginActivity.this;
                                 conexionWS.propertyInfos = propertyInfos;
                                 conexionWS.execute();
