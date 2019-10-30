@@ -186,8 +186,9 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                 public boolean onDoubleTap(MotionEvent e) {
 
                     Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
-                    intent.putExtra("catalogos", true);
+                    intent.putExtra("admin", true);
                     startActivity(intent);
+
                     return super.onDoubleTap(e);
                 }
             });

@@ -301,6 +301,10 @@ public class ConfiguracionActivity extends AppCompatActivity {
         return lista_catalogos;
     }
 
+    public Configuracion getConf()
+    {
+        return conf;
+    }
 
 
 }
