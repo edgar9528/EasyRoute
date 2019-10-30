@@ -1,10 +1,7 @@
 package com.tdt.easyroute.Ventanas.Configuracion;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,11 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.tdt.easyroute.Clases.ConexionWS;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
@@ -29,22 +21,10 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
-import com.tdt.easyroute.Interface.AsyncResponseSO;
-import com.tdt.easyroute.Model.InfoRuta;
+import com.tdt.easyroute.ModelTablas.InfoRuta;
 import com.tdt.easyroute.R;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
 import in.galaxyofandroid.spinerdialog.SpinnerDialog;
@@ -101,7 +81,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                 {
                     peticion="prueba";
                     ParametrosWS parametrosWS = new ParametrosWS("Prueba", getActivity().getApplicationContext());
-                    ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), getActivity(), parametrosWS);
+                    ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), parametrosWS);
                     ws.delegate = ServidorrutaFragment.this;
                     ws.propertyInfos=null;
                     ws.execute();
@@ -197,7 +177,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         peticion="listarRutas";
 
         ParametrosWS parametrosWS = new ParametrosWS("ObtenerRutasJ",  getActivity().getApplicationContext());
-        ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),getActivity(),parametrosWS);
+        ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),parametrosWS);
         conexionWS_json.delegate = ServidorrutaFragment.this;
         conexionWS_json.propertyInfos=null;
         conexionWS_json.execute();
@@ -215,15 +195,11 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
             {
                 if (peticion.equals("listarRutas"))
                 {
-
-
                     lista_rutas=null;
                     lista_rutas = ConvertirRespuesta.getRutasJson(respuesta);
 
                     guardarRutas();
                     cargarRutas();
-
-
                 }
                 if(peticion.equals("prueba"))
                 {
@@ -270,8 +246,6 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         return des;
     }
 
-
-
     public void guardarRutas()
     {
         try {
@@ -294,6 +268,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                         bd.execSQL(string.formatSql(con,r.getRut_cve_n(),r.getRut_desc_str(),r.getRut_orden_n(),r.getTrut_cve_n(),r.getAsesor_cve_str(),r.getGerente_cve_str(),r.getSupervisor_cve_str(),r.getEst_cve_str(),r.getTco_cve_n(),r.getRut_prev_n()));
 
                     }
+                    Log.d("salida","guardar rutas descargadas");
                 }
 
                 bd.close();

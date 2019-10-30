@@ -1,4 +1,4 @@
-package com.tdt.easyroute.Model;
+package com.tdt.easyroute.ModelTablas;
 
 public class InfoRuta {
 

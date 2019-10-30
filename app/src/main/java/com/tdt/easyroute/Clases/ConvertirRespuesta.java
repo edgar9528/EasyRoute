@@ -3,7 +3,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.tdt.easyroute.Model.InfoRuta;
+import com.tdt.easyroute.ModelTablas.InfoRuta;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import org.ksoap2.serialization.SoapObject;

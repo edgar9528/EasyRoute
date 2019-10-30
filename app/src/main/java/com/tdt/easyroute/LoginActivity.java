@@ -17,28 +17,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
-import com.tdt.easyroute.Interface.AsyncResponseSO;
-import com.tdt.easyroute.Clases.ConexionWS;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
-import com.tdt.easyroute.Model.InfoRuta;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity;
 
 import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
                                 //conexion con el metodo
                                 ParametrosWS parametrosWS = new ParametrosWS("ValidarUsuarioJ", getApplicationContext());
-                                ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, LoginActivity.this, parametrosWS);
+                                ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, parametrosWS);
                                 conexionWS.delegate = LoginActivity.this;
                                 conexionWS.propertyInfos = propertyInfos;
                                 conexionWS.execute();

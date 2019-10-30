@@ -16,7 +16,7 @@ import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
-import com.tdt.easyroute.Model.InfoRuta;
+import com.tdt.easyroute.ModelTablas.InfoRuta;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
@@ -36,6 +36,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
     ArrayList<InfoRuta> lista_rutas;
     ArrayList<String> lista_catalogos;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,6 +299,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
     {
         return lista_catalogos;
     }
+
 
 
 }

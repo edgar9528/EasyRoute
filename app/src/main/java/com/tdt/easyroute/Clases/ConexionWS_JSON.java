@@ -1,15 +1,10 @@
 package com.tdt.easyroute.Clases;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
-import com.tdt.easyroute.Interface.AsyncResponseSO;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -23,15 +18,13 @@ import java.util.ArrayList;
 public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
 
     private Context context;
-    private Activity activity;
     private String respuesta;
     public AsyncResponseJSON delegate = null;
     public ArrayList<PropertyInfo> propertyInfos = null;
     private ParametrosWS parametrosWS;
 
-    public ConexionWS_JSON(Context context, Activity activity, ParametrosWS parametrosWS) {
+    public ConexionWS_JSON(Context context, ParametrosWS parametrosWS) {
         this.context = context;
-        this.activity = activity;
         this.parametrosWS= parametrosWS;
     }
 

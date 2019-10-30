@@ -1,14 +1,10 @@
 package com.tdt.easyroute.Clases;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.tdt.easyroute.Interface.AsyncResponseSO;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -18,18 +14,18 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.util.ArrayList;
 
 
-public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
+public class ConexionWS_SO extends AsyncTask<String,Integer,SoapObject> {
 
     private Context context;
-    private Activity activity;
+
     private String conexion="true";
     public AsyncResponseSO delegate = null;
     public ArrayList<PropertyInfo> propertyInfos = null;
     private ParametrosWS parametrosWS;
 
-    public ConexionWS(Context context, Activity activity, ParametrosWS parametrosWS) {
+    public ConexionWS_SO(Context context, ParametrosWS parametrosWS) {
         this.context = context;
-        this.activity = activity;
+
         this.parametrosWS= parametrosWS;
     }
 
@@ -105,14 +101,5 @@ public class ConexionWS extends AsyncTask<String,Integer,SoapObject> {
 
         delegate.processFinish(result, conexion);
 
-    }
-
-    public void notificacion(final String men)
-    {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(activity, men, Toast.LENGTH_LONG).show();
-            }
-        });
     }
 }

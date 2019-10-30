@@ -7,6 +7,10 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,17 +19,43 @@
         android:orientation="vertical"
         >
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="servidor fragment" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:paddingBottom="@dimen/paddingControles"
+            >
+
+            <Button
+                android:id="@+id/button_selec"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="Seleccionar todo"
+                android:theme="@style/RaisedButtonDark"
+                android:tag="selec"
+                />
+
+            <Button
+                android:id="@+id/button_desSelec"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="Deseleccionar todo"
+                android:theme="@style/RaisedButtonDark"
+                android:tag="deselec"
+                />
+
+        </LinearLayout>
+
+
 
         <include
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             layout="@layout/tabla_titulo"
             />
-
 
         <TableLayout
             android:id="@+id/tableLayout"
@@ -34,6 +64,17 @@
             android:weightSum="2">
         </TableLayout>
 
+
+        <Button
+            android:id="@+id/button_sincronizar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sincronizar"
+            android:theme="@style/RaisedButtonDark"
+         />
+
     </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>
