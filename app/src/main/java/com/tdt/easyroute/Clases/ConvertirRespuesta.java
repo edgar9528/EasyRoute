@@ -393,4 +393,209 @@ public class ConvertirRespuesta {
     }
 
 
+    public static ArrayList<DataTable.CondicionesVenta> getCondicionesVentaJson(String respuesta)
+    {
+        ArrayList<DataTable.CondicionesVenta> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.CondicionesVenta> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTable.Productos> getProductosJson(String respuesta)
+    {
+        ArrayList<DataTable.Productos> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.Productos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTable.ListaPrecios> getListaPreciosJson(String respuesta)
+    {
+        ArrayList<DataTable.ListaPrecios> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.ListaPrecios> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTable.PrecioProductos> getPrecioProductosJson(String respuesta)
+    {
+        ArrayList<DataTable.PrecioProductos> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.PrecioProductos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTable.FormasPago> getFormasPagoJson(String respuesta)
+    {
+        ArrayList<DataTable.FormasPago> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.FormasPago> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+    public static ArrayList<DataTable.FrecuenciasVisita> getFrecuenciasVisitaJson(String respuesta)
+    {
+        ArrayList<DataTable.FrecuenciasVisita> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.FrecuenciasVisita> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTable.Categorias> getCategoriasJson(String respuesta)
+    {
+        ArrayList<DataTable.Categorias> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.Categorias> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTable.Familias> getFamiliasJson(String respuesta)
+    {
+        ArrayList<DataTable.Familias> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.Familias> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTable.Presentaciones> getPresentacionesJson(String respuesta)
+    {
+        ArrayList<DataTable.Presentaciones> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.Presentaciones> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+    public static ArrayList<DataTable.Promociones> getPromocionesJson(String respuesta)
+    {
+        ArrayList<DataTable.Promociones> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.Promociones> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+    public static ArrayList<DataTable.PromocionesKit> getPromocionesKitJson(String respuesta)
+    {
+        ArrayList<DataTable.PromocionesKit> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTable.PromocionesKit> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
 }

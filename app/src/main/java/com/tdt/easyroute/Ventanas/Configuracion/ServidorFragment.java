@@ -206,6 +206,17 @@ public class ServidorFragment extends Fragment {
         ArrayList<DataTable.Usuarios> al_usuarios=null;
         ArrayList<DataTable.TipoRuta> al_tipoRutas=null;
         ArrayList<DataTable.Ruta> al_rutas=null;
+        ArrayList<DataTable.CondicionesVenta> al_condicionesVenta=null;
+        ArrayList<DataTable.Productos> al_productos=null;
+        ArrayList<DataTable.ListaPrecios> al_listaPrecios=null;
+        ArrayList<DataTable.PrecioProductos> al_precioProductos=null;
+        ArrayList<DataTable.FormasPago> al_formasPago=null;
+        ArrayList<DataTable.FrecuenciasVisita> al_frecuenciaVisi=null;
+        ArrayList<DataTable.Categorias> al_categorias=null;
+        ArrayList<DataTable.Familias> al_familias=null;
+        ArrayList<DataTable.Presentaciones> al_presentaciones=null;
+        ArrayList<DataTable.Promociones> al_promociones=null;
+        ArrayList<DataTable.PromocionesKit> al_promocionesKit=null;
 
         public ConexionWS(Context context) {
             this.context = context;
@@ -229,10 +240,10 @@ public class ServidorFragment extends Fragment {
             try
             {
 
-                for(int i=0; i<metodosWS.size();i++)
-                {
+                //for(int i=0; i<metodosWS.size();i++)
+                //{
 
-                    parametrosWS = new ParametrosWS(metodosWS.get(i), getActivity().getApplicationContext());
+                    parametrosWS = new ParametrosWS("ObtenerPromocionesKitJ", getActivity().getApplicationContext());
                     //Metodo al que se accede
                     SoapObject Solicitud = new SoapObject(parametrosWS.getNAMESPACES(), parametrosWS.getMETODO());
 
@@ -258,7 +269,7 @@ public class ServidorFragment extends Fragment {
                         result = false;
                         resultado = "Error: " + e.getMessage();
                     }
-                }
+                //}
 
             }catch (Exception e)
             {
@@ -323,9 +334,43 @@ public class ServidorFragment extends Fragment {
                 case "ObtenerRutasJ":
                     al_rutas = ConvertirRespuesta.getRutasJson(json);
                     break;
+                case "ObtenerCondicionesVentaJ":
+                    al_condicionesVenta = ConvertirRespuesta.getCondicionesVentaJson(json);
+                    break;
+                case "ObtenerProductosJ":
+                    al_productos = ConvertirRespuesta.getProductosJson(json);
+                    break;
+                case "ObtenerListaPreciosJ":
+                    al_listaPrecios = ConvertirRespuesta.getListaPreciosJson(json);
+                    break;
+                case "ObtenerPrecioProductosJ":
+                    al_precioProductos = ConvertirRespuesta.getPrecioProductosJson(json);
+                    break;
+                case "ObtenerFormasPagoJ":
+                    al_formasPago = ConvertirRespuesta.getFormasPagoJson(json);
+                    break;
+                case "ObtenerFrecuenciasVisitaJ":
+                    al_frecuenciaVisi = ConvertirRespuesta.getFrecuenciasVisitaJson(json);
+                    break;
+                case "ObtenerCategoriasJ":
+                    al_categorias = ConvertirRespuesta.getCategoriasJson(json);
+                    break;
+                case "ObtenerFamiliasJ":
+                    al_familias = ConvertirRespuesta.getFamiliasJson(json);
+                    break;
+                case "ObtenerPresentacionesJ":
+                    al_presentaciones = ConvertirRespuesta.getPresentacionesJson(json);
+                    break;
+                case "ObtenerPromocionesJ":
+                    al_promociones = ConvertirRespuesta.getPromocionesJson(json);
+                    break;
+                case "ObtenerPromocionesKitJ":
+                    al_promocionesKit = ConvertirRespuesta.getPromocionesKitJson(json);
+                    break;
+
             }
 
-            Log.d("salida","Descargo: "+metodo);
+
 
 
         }
