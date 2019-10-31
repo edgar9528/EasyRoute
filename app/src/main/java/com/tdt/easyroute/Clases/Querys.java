@@ -304,7 +304,7 @@ public class Querys {
 
                 public static String InsCondicionesVenta = "Insert into CondicionesVenta( " +
                         "cov_cve_n,cov_desc_str,cov_reStringido_n,cov_familias_str,est_cve_str) "+
-                        "values ({0},{1},{2},{3},{4})";
+                        "values ({0},'{1}',{2},'{3}','{4}')";
 
                 public static String DelCondicionesVenta = "delete from CondicionesVenta";
 
@@ -717,7 +717,7 @@ public class Querys {
                 public static String SelListaPrecios = "select lpre_cve_n,lpre_desc_str,est_cve_str,lpre_nota_n from ListaPrecios";
                 public static String DelListaPrecios = "delete from ListaPrecios";
                 public static String InsListaPrecios = "insert into ListaPrecios (lpre_cve_n,lpre_desc_str,est_cve_str," +
-                        "lpre_esbase_n,lpre_base_n,lpre_nota_n) values ({0},{1},{2},{3},{4},{5})";
+                        "lpre_esbase_n,lpre_base_n,lpre_nota_n) values ({0},'{1}','{2}',{3},{4},{5})";
 
                 public static String ListaPreciosPreLpreNota2 = "select s1.lpre_cve_n,s1.lpre_desc_str,s1.prod_cve_n,p.fam_cve_n," +
                         "f.fam_desc_str,p.pres_cve_n,pr.pres_desc_str,s1.prod_sku_str,p.prod_desc_str,cat.cat_desc_str," +
@@ -997,8 +997,8 @@ public class Querys {
                         "prod_factcompra_n,prod_univenta_n,prod_factventa_n,prod_escompuesto_n,prod_manejainv_n, " +
                         "prod_est_str,mar_cve_n,pres_cve_n,prod_ean_str,fam_cve_n,prod_orden_n,prod_vtamismodia_n, " +
                         "prod_vtaefectivo_n,prod_vtavolumen_n,cov_cve_n) " +
-                        "values ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9}," +
-                        "{10},{11},{12},{13},{14},{15},{16},{17},{18},{19}," +
+                        "values ({0},'{1}','{2}','{3}',{4},'{5}',{6},{7},{8},{9}," +
+                        "{10},{11},{12},{13},'{14}',{15},{16},'{17}',{18},{19}," +
                         "{20},{21},{22},{23})";
 
             }
@@ -1053,9 +1053,9 @@ public class Querys {
                         "prom_nivel_n,lpre_cve_n,nvc_cve_n,nvc_cvehl_n,fam_cve_n,seg_cve_n,giro_cve_n," +
                         "tcli_cve_n,lpre_precio_n,lpre_precio2_n,lpre_desc_n,prom_n_n,prom_m_n,prod_regalo_n," +
                         "prod_skureg_str,prom_story_n,prom_proveedor_n,prom_envase_n,prom_kit_n) " +
-                        "values ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}," +
-                        "{11},{12},{13},{14},{15},{16},{17},{18},{19},{20}," +
-                        "{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31})";
+                        "values ({0},'{1}','{2}',{3},'{4}','{5}','{6}','{7}','{8}','{9}','{10}'," +
+                        "{11},'{12}',{13},{14},{15},{16},{17},{18},{19},{20}," +
+                        "{21},{22},{23},{24},{25},{26},'{27}',{28},{29},{30},{31})";
 
                 public static String CreatePromocionesKit = "create table PromocionesKit( " +
                         "prom_cve_n bigint not null, " +
@@ -1072,7 +1072,7 @@ public class Querys {
 
                 public static String InsertPromocionesKit = "insert into promocioneskit(" +
                         "prom_cve_n,prod_cve_n,prod_sku_str,prod_cant_n,lpre_precio_n) values(" +
-                        "{0},{1},{2},{3},{4})";
+                        "{0},{1},'{2}',{3},{4})";
 
             }
 
@@ -1323,7 +1323,7 @@ public class Querys {
                         "trut_cve_n,asesor_cve_str,gerente_cve_str,supervisor_cve_str,est_cve_str,tco_cve_n," +
                         "rut_prev_n,rut_idcteesp_n,rut_invalidafrecuencia_n,rut_productividad_n,rut_tel_str," +
                         "rut_efectividad_n,rut_mayorista_n,rut_fiestasyeventos_n,rut_auditoria_n,rut_promoce_n) " +
-                        "values ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9}," +
+                        "values ({0},'{1}',{2},{3},'{4}','{5}','{6}','{7}',{8},{9}," +
                         "{10},{11},{12},{13},{14},{15},{16},{17},{18})";
             }
 

@@ -306,5 +306,20 @@ public class ConfiguracionActivity extends AppCompatActivity {
         return conf;
     }
 
+    public boolean getCatalogosBool()
+    {
+        return  catalogos;
+    }
+
+    public boolean getCrut()
+    {
+        return crut;
+    }
+
+    public Usuario getUser()
+    {
+        return user;
+    }
+
 
 }
