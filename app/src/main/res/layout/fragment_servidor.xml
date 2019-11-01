@@ -17,6 +17,8 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/paddingGeneral"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         >
 
         <LinearLayout
