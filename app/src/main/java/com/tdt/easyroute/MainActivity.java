@@ -1,9 +1,8 @@
 package com.tdt.easyroute;
 
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
@@ -18,9 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Adapter.CustomExpandableListAdapter;
+import com.tdt.easyroute.Clases.BaseLocal;
+import com.tdt.easyroute.Clases.Configuracion;
+import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.Model.Usuario;
@@ -30,7 +34,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private List<String> lstTitle;
     private Map<String,List<String>> lstChild;
     private NavigationManager navigationManager;
+    List<String> menuMostrar;
+
+    private TextView tv_nombre,tv_ruta;
 
     Usuario usuario;
 
@@ -75,42 +81,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
+            Log.d("salida","ENTRO MAIN ACTIVITY");
             Intent intent = getIntent();
             usuario = (Usuario) intent.getSerializableExtra("usuario");
 
-            Log.d("salida","entro aqui0");
 
             //init view
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
             expandableListView= findViewById(R.id.navList);
             navigationManager= FragmentNavigationManager.getmInstance(this,this,usuario);
 
-            Log.d("salida","entro aqui1");
 
             View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
             expandableListView.addHeaderView(listHeaderView);
 
-            Log.d("salida","entro aqui2");
-
-
-            generarMenu();
+            validarInicio();
+            inicializar();
+            validarVacioMenu();
 
             addDrawersItem();
             setupDrawer();
 
-            Log.d("salida","entro aqui3");
-
             if(savedInstanceState== null)
             {
-                Log.d("salida","entro aqui if");
                 selectFirsItemAsDefault();
-                Log.d("salida","entro aqui if2");
             }
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
 
-            Log.d("salida","entro aqui4");
 
         }
         catch (Exception e)
@@ -122,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //CONFIGURACION DEL MENU
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -174,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 String selectedItem = ( (List) (lstChild.get(lstTitle.get(groupPosition))) )
                         .get(childPosition).toString();
 
-
-                String clave= lstTitle.get(groupPosition)  +"|"+selectedItem;
+                String clave= lstTitle.get(groupPosition)  +" | "+selectedItem;
                 Log.d("Salida", clave);
 
                 getSupportActionBar().setTitle(clave);
@@ -183,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
                 navigationManager.showFragment(clave);
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
+
+                expandableListView.collapseGroup(groupPosition);
 
                 return false;
             }
@@ -213,34 +214,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void generarMenu() {
+    private void validarVacioMenu() {
 
         //OPCIONES QUE SE MOSTRARAN EN EL MENU
 
-        List<String> title = Arrays.asList("Inicio de día","Inventario","Pedidos","Entregas","Reportes","Clientes","Fin de día","Catálogos","Alm. Vacio");
 
-        List<String> iniciodia = Arrays.asList("Inicio día");
-        List<String> inventario = Arrays.asList("Inventario","Carga inicial","Recarga","Devoluciones","Descarga");
+        List<String> title = Arrays.asList("Inicio de día", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
+
+        List<String> iniciodia = Arrays.asList("Inicio");
+        List<String> inventario = Arrays.asList("Inventario", "Carga inicial", "Recarga", "Devoluciones", "Descarga");
         List<String> pedidos = Arrays.asList("Clientes");
-        List<String> entregas = Arrays.asList("Consigna","Pedido","Devolución");
-        List<String> reportes = Arrays.asList("Arqueo","Ventas día");
-        List<String> clientes = Arrays.asList("Cartera","Ord. Clientes","Busq. Clientes");
-        List<String> findia = Arrays.asList("Sugerido","Transmitir","Borrar datos","Fin de ventas");
+        List<String> entregas = Arrays.asList("Consigna", "Pedido", "Devolución");
+        List<String> reportes = Arrays.asList("Arqueo", "Ventas día");
+        List<String> clientes = Arrays.asList("Cartera", "Ord. Clientes", "Busq. Clientes");
+        List<String> findia = Arrays.asList("Sugerido", "Transmitir", "Borrar datos", "Fin de ventas");
         List<String> catalogos = Arrays.asList("Configuración");
-        List<String> almvacio = Arrays.asList("Vacio");
 
         lstChild = new LinkedHashMap<>();
-        lstChild.put(title.get(0),iniciodia);
-        lstChild.put(title.get(1),inventario);
-        lstChild.put(title.get(2),pedidos);
-        lstChild.put(title.get(3),entregas);
-        lstChild.put(title.get(4),reportes);
-        lstChild.put(title.get(5),clientes);
-        lstChild.put(title.get(6),findia);
-        lstChild.put(title.get(7),catalogos);
-        lstChild.put(title.get(8),almvacio);
+        lstChild.put(title.get(0), iniciodia);
+        lstChild.put(title.get(1), inventario);
+        lstChild.put(title.get(2), pedidos);
+        lstChild.put(title.get(3), entregas);
+        lstChild.put(title.get(4), reportes);
+        lstChild.put(title.get(5), clientes);
+        lstChild.put(title.get(6), findia);
+        lstChild.put(title.get(7), catalogos);
 
-        lstTitle= new ArrayList<>(lstChild.keySet());
+        lstTitle = new ArrayList<>(lstChild.keySet());
+
 
     }
 
@@ -260,11 +261,75 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //TERMINA CONFIGURACION DEL MENU
+
+
     public Usuario getUsuario()
     {
         return usuario;
     }
 
+    public void inicializar()
+    {
+        try{
+
+            tv_nombre = findViewById(R.id.textViewNombre);
+            tv_ruta = findViewById(R.id.textViewRuta);
+
+            tv_nombre.setText(usuario.getNombre()+" "+usuario.getAppat());
+
+
+            String rutaCve = Utils.LeefConfig("ruta",getApplication());
+            String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}",rutaCve),getApplicationContext());
+
+            if(rutaDes!=null)
+                tv_ruta.setText("Ruta: "+rutaDes);
+            else
+                tv_ruta.setText("SIN RUTA");
+
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.getMessage());
+        }
+
+
+
+    }
+
+    public void validarInicio()
+    {
+        //menuMostrar = Arrays.asList("Inicio de día", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
+        try
+        {
+            Configuracion conf = null;
+            conf = Utils.ObtenerConf(getApplication());
+
+            if(conf!=null)
+            {
+                menuMostrar = new ArrayList<>();
+                if(conf.getPreventa()!=1)
+                    menuMostrar.add("Inventario");
+
+                menuMostrar.add( "Fin de día");
+                menuMostrar.add( "Reportes" );
+
+                if(!conf.isDescarga())
+                    menuMostrar.add( "Pedidos" );
+            }
+            else
+            {
+                menuMostrar = Arrays.asList("Inicio de día","Reportes");
+            }
+
+
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.getMessage());
+        }
+    }
 
 
 }

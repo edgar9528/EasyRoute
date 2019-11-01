@@ -22,16 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.tdt.easyroute.MainActivity"
             android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name="com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity"
-            android:parentActivityName="com.tdt.easyroute.LoginActivity"
             android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tdt.easyroute.LoginActivity" />
         </activity>
 
 

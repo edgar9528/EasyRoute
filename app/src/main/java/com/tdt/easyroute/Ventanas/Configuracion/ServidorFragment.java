@@ -17,15 +17,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.string;
-import com.tdt.easyroute.Model.DataTable;
+import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
@@ -35,7 +33,6 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ServidorFragment extends Fragment {
@@ -52,7 +49,7 @@ public class ServidorFragment extends Fragment {
     ArrayList<String> lista_catalogos;
     ArrayList<String> metodosWS;
     boolean[] rbSeleccionados;
-    Button button_selec,button_deselec,button_sinc;
+    Button button_selec,button_deselec,button_sinc,button_salir;
     Configuracion conf;
     boolean precioPreventa=false;
     boolean catalogos;
@@ -77,6 +74,7 @@ public class ServidorFragment extends Fragment {
             button_selec = view.findViewById(R.id.button_selec);
             button_deselec = view.findViewById(R.id.button_desSelec);
             button_sinc = view.findViewById(R.id.button_sincronizar);
+            button_salir = view.findViewById(R.id.button_salir);
 
             button_selec.setOnClickListener(btListener);
             button_deselec.setOnClickListener(btListener);
@@ -121,8 +119,12 @@ public class ServidorFragment extends Fragment {
                 }
             });
 
-
-
+            button_salir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().finish();
+                }
+            });
 
         }catch (Exception e)
         {
@@ -239,25 +241,25 @@ public class ServidorFragment extends Fragment {
 
         //Lista de tablas descargadas
 
-        ArrayList<DataTable.Empresa> al_empresas=null;
-        ArrayList<DataTable.Estatus> al_estatus=null;
-        ArrayList<DataTable.Roles> al_roles=null;
-        ArrayList<DataTable.RolesModulos> al_rolesModulos=null;
-        ArrayList<DataTable.Modulos> al_modulos=null;
-        ArrayList<DataTable.Usuarios> al_usuarios=null;
-        ArrayList<DataTable.TipoRuta> al_tipoRutas=null;
-        ArrayList<DataTable.Ruta> al_rutas=null;
-        ArrayList<DataTable.CondicionesVenta> al_condicionesVenta=null;
-        ArrayList<DataTable.Productos> al_productos=null;
-        ArrayList<DataTable.ListaPrecios> al_listaPrecios=null;
-        ArrayList<DataTable.PrecioProductos> al_precioProductos=null;
-        ArrayList<DataTable.FormasPago> al_formasPago=null;
-        ArrayList<DataTable.FrecuenciasVisita> al_frecuenciaVisi=null;
-        ArrayList<DataTable.Categorias> al_categorias=null;
-        ArrayList<DataTable.Familias> al_familias=null;
-        ArrayList<DataTable.Presentaciones> al_presentaciones=null;
-        ArrayList<DataTable.Promociones> al_promociones=null;
-        ArrayList<DataTable.PromocionesKit> al_promocionesKit=null;
+        ArrayList<DataTableWS.Empresa> al_empresas=null;
+        ArrayList<DataTableWS.Estatus> al_estatus=null;
+        ArrayList<DataTableWS.Roles> al_roles=null;
+        ArrayList<DataTableWS.RolesModulos> al_rolesModulos=null;
+        ArrayList<DataTableWS.Modulos> al_modulos=null;
+        ArrayList<DataTableWS.Usuarios> al_usuarios=null;
+        ArrayList<DataTableWS.TipoRuta> al_tipoRutas=null;
+        ArrayList<DataTableWS.Ruta> al_rutas=null;
+        ArrayList<DataTableWS.CondicionesVenta> al_condicionesVenta=null;
+        ArrayList<DataTableWS.Productos> al_productos=null;
+        ArrayList<DataTableWS.ListaPrecios> al_listaPrecios=null;
+        ArrayList<DataTableWS.PrecioProductos> al_precioProductos=null;
+        ArrayList<DataTableWS.FormasPago> al_formasPago=null;
+        ArrayList<DataTableWS.FrecuenciasVisita> al_frecuenciaVisi=null;
+        ArrayList<DataTableWS.Categorias> al_categorias=null;
+        ArrayList<DataTableWS.Familias> al_familias=null;
+        ArrayList<DataTableWS.Presentaciones> al_presentaciones=null;
+        ArrayList<DataTableWS.Promociones> al_promociones=null;
+        ArrayList<DataTableWS.PromocionesKit> al_promocionesKit=null;
 
         public ConexionWS(Context context) {
             this.context = context;
@@ -555,7 +557,7 @@ public class ServidorFragment extends Fragment {
                     db.execSQL(Querys.Rutas.DelRutas);
                     Log.d("salida","eliminar rutas");
 
-                    DataTable.Ruta r;
+                    DataTableWS.Ruta r;
                     for(int i=0; i<al_rutas.size();i++)
                     {
                         r = al_rutas.get(i);
@@ -575,7 +577,7 @@ public class ServidorFragment extends Fragment {
                 {
                     db.execSQL(Querys.CondicionesVenta.DelCondicionesVenta);
                     Log.d("salida","eliminar condiciones venta");
-                    DataTable.CondicionesVenta cv;
+                    DataTableWS.CondicionesVenta cv;
                     for(int i=0; i<al_condicionesVenta.size();i++)
                     {
                         cv = al_condicionesVenta.get(i);
@@ -589,7 +591,7 @@ public class ServidorFragment extends Fragment {
                 {
                     db.execSQL(Querys.Productos.DelProductos);
                     Log.d("salida","eliminar productos");
-                    DataTable.Productos p;
+                    DataTableWS.Productos p;
                     for(int i=0; i<al_productos.size();i++)
                     {
                         p = al_productos.get(i);
@@ -603,7 +605,7 @@ public class ServidorFragment extends Fragment {
                 {
                     db.execSQL(Querys.ListaPrecio.DelListaPrecios);
                     Log.d("salida","eliminar lista precios");
-                    DataTable.ListaPrecios lp;
+                    DataTableWS.ListaPrecios lp;
                     for(int i=0; i<al_listaPrecios.size();i++)
                     {
                         lp = al_listaPrecios.get(i);
@@ -618,7 +620,7 @@ public class ServidorFragment extends Fragment {
                 {
                     db.execSQL(Querys.PrecioProductos.DelPrecioProductos);
                     Log.d("salida","eliminar precio productos");
-                    DataTable.PrecioProductos pp;
+                    DataTableWS.PrecioProductos pp;
                     for(int i=0; i<al_precioProductos.size();i++)
                     {
                         pp = al_precioProductos.get(i);
@@ -693,7 +695,7 @@ public class ServidorFragment extends Fragment {
                 {
                     db.execSQL(Querys.Promociones.DelPromociones);
                     Log.d("salida","eliminar promociones");
-                    DataTable.Promociones p;
+                    DataTableWS.Promociones p;
                     for(int i=0; i<al_promociones.size();i++)
                     {
                         p= al_promociones.get(i);
@@ -708,7 +710,7 @@ public class ServidorFragment extends Fragment {
                 {
                     db.execSQL(Querys.Promociones.DeletePromocionesKit);
                     Log.d("salida","eliminar promociones kid");
-                    DataTable.PromocionesKit p;
+                    DataTableWS.PromocionesKit p;
                     for(int i=0; i<al_promocionesKit.size();i++)
                     {
                         p= al_promocionesKit.get(i);

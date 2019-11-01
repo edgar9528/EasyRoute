@@ -65,13 +65,42 @@
         </TableLayout>
 
 
-        <Button
-            android:id="@+id/button_sincronizar"
+
+
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sincronizar"
-            android:theme="@style/RaisedButtonDark"
-         />
+            android:orientation="horizontal"
+            android:weightSum="10"
+            android:paddingBottom="@dimen/paddingControles"
+            >
+
+            <Button
+                android:id="@+id/button_salir"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="Salir"
+                android:theme="@style/RaisedButtonDark"
+                android:tag="deselec"
+                />
+
+            <Button
+                android:id="@+id/button_sincronizar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="Sincronizar"
+                android:theme="@style/RaisedButtonDark"
+                />
+
+        </LinearLayout>
+
+
+
 
     </LinearLayout>
 

@@ -20,7 +20,7 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
-import com.tdt.easyroute.Model.DataTable;
+import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
     String rutaSelec_des,rutaSelec_clv; //variables para obtener la ruta que selecciono el usuario
     String nombreBase,peticion,mensajeET="Clic para seleccionar ruta";
 
-    ArrayList<DataTable.Ruta> lista_rutas=null;
+    ArrayList<DataTableWS.Ruta> lista_rutas=null;
     ArrayList<String> rutas;
 
     SpinnerDialog spinnerDialog;
@@ -123,7 +123,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         button_salir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                getActivity().finish();
             }
         });
 
@@ -257,7 +257,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                     Log.d("salida","Eliminar rutas almacenadas");
                     for(int i=0; i<lista_rutas.size();i++)
                     {
-                        DataTable.Ruta r = lista_rutas.get(i);
+                        DataTableWS.Ruta r = lista_rutas.get(i);
                         String con = Querys.Rutas.InsRutas;
 
                         //Log.d("salida","m:"+r.getRut_cve_n()+" "+r.getRut_desc_str()+" "+r.getRut_orden_n()+" "+r.getTrut_cve_n()+" "+r.getAsesor_cve_str()+" "+r.getGerente_cve_str()+" "+r.getSupervisor_cve_str()+" "+r.getEst_cve_str()+" "+r.getTco_cve_n()+" "+r.getRut_prev_n());

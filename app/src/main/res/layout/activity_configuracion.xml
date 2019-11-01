@@ -29,16 +29,4 @@
         android:layout_height="match_parent"
         />
 
-    <Button
-        android:id="@+id/Blogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Iniciar sesion"
-        android:theme="@style/RaisedButtonDark"
-        android:layout_gravity="center"
-
-        android:paddingTop="6dp"
-        />
-
-
 </LinearLayout>

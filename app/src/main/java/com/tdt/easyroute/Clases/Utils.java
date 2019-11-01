@@ -134,5 +134,34 @@ public class Utils {
 
     }
 
+    public static boolean getBool(String cad)
+    {
+        boolean var;
+        if(cad.equals("true"))
+        {
+            var = true;
+        }
+        else
+        {
+            var=false;
+        }
+
+        return var;
+    }
+
+    public static String getBoolStr(String cad)
+    {
+        if(cad.equals("true"))
+        {
+            cad="1";
+        }
+        else
+        {
+            cad="0";
+        }
+
+        return cad;
+    }
+
 
 }

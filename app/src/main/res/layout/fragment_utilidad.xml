@@ -5,10 +5,182 @@
     android:layout_height="match_parent"
     tools:context=".Ventanas.Configuracion.UtilidadFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="utilidad fragment" />
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/paddingGeneral"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:paddingBottom="@dimen/paddingControles"
+                >
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                    android:theme="@style/EditTextBlack">
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/et_folio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Folio"
+                        android:singleLine="true"
+                        />
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/button_ver"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Ver"
+                    android:theme="@style/RaisedButtonDark"
+                    android:tag="deselec"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_pagos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Pagos"
+                    android:singleLine="true"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_credito"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Credito"
+                    android:singleLine="true"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="8"
+                android:paddingTop="@dimen/paddingControles"
+                >
+
+                <Button
+                    android:id="@+id/button_realizar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Realizar"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_radia"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="ReAct.Día"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_preventa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Preventa"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_venta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Venta"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="8"
+                android:paddingTop="@dimen/paddingControles"
+                >
+
+                <Button
+                    android:id="@+id/button_rapedido"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="ReAct.Ped"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_aauditoria"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Act.Audit"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_dauditoria"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Des. Audit"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_salir"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Salir"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </FrameLayout>

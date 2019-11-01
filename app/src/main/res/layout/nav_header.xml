@@ -12,7 +12,7 @@
         android:weightSum="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
         >
 
         <ImageView
@@ -20,23 +20,29 @@
             android:src="@drawable/logotdt"
             android:layout_width="70dp"
             android:layout_height="70dp"
-
             />
-        
-
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/textViewNombre"
-        android:paddingTop="10dp"
-        android:text="Edgar Velazquez"
+        android:text="Usuario"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:layout_marginBottom="10dp"
+        android:gravity="left|start"
+        />
+
+    <TextView
+        android:id="@+id/textViewRuta"
+        android:text="Ruta"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:gravity="left|start"
         />
 

@@ -1,6 +1,6 @@
 package com.tdt.easyroute.Model;
 
-public class DataTable {
+public class DataTableWS {
 
     public static class Estatus{
 
