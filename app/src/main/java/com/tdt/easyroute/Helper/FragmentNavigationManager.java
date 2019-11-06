@@ -51,10 +51,11 @@ public class FragmentNavigationManager implements NavigationManager {
         switch (title)
         {
             case "Inicio de día | Inicio":
-                ft= fm.beginTransaction().replace(R.id.container, StartdayFragment.newInstance(title));
+                StartdayFragment startdayFragment= new StartdayFragment();
+                ft= fm.beginTransaction().replace(R.id.container, startdayFragment);
                 break;
 
-            case "Catálogos|Configuración":
+            case "Catálogos | Configuración":
                 esFragment=false;
                 Intent intent = new Intent(activity, ConfiguracionActivity.class);
                 intent.putExtra("catalogos", true);

@@ -28,6 +28,7 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.Model.Usuario;
+import com.tdt.easyroute.Model.Variables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
     private Map<String,List<String>> lstChild;
     private NavigationManager navigationManager;
     List<String> menuMostrar;
-
     private TextView tv_nombre,tv_ruta;
-
     Usuario usuario;
+
+    private Variables.Startday varStarday = new Variables.Startday();
 
     @Override
     public void onBackPressed() {
@@ -331,5 +332,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public Variables.Startday getVarStarday() {
+        return varStarday;
+    }
 
+    public void setVarStarday(Variables.Startday varStarday) {
+        this.varStarday = varStarday;
+    }
 }

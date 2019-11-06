@@ -30,6 +30,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Empresa"
                     android:singleLine="true"
+                    android:focusable="false"
                     />
             </android.support.design.widget.TextInputLayout>
 
@@ -58,6 +59,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Tipo ruta"
                     android:singleLine="true"
+                    android:enabled="false"
                     />
             </android.support.design.widget.TextInputLayout>
 
@@ -87,6 +89,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Fecha"
                     android:singleLine="true"
+                    android:focusable="false"
                     />
             </android.support.design.widget.TextInputLayout>
 

@@ -10,22 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tdt.easyroute.Adapter.PagerIniciodiaAdapter;
+import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
 public class StartdayFragment extends Fragment {
 
-    private static final String KEY_TITLE = null;
-
     public StartdayFragment() {
         // Required empty public constructor
-    }
-
-    public static StartdayFragment newInstance(String param1) {
-        StartdayFragment fragment = new StartdayFragment();
-        Bundle args = new Bundle();
-        args.putString(KEY_TITLE, param1);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -69,9 +60,12 @@ public class StartdayFragment extends Fragment {
         //TERMINA CONFIGURACION DE LAS TABS
 
 
-
-
         return view;
+    }
+
+    public String getUsuarioStarday()
+    {
+        return "edgar";
     }
 
 

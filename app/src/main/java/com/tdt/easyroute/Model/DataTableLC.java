@@ -553,5 +553,57 @@ public class DataTableLC {
             this.trans_fecha_dt = trans_fecha_dt;
         }
     }
+
+    public static class RutaTipo
+    {
+        String rut_desc_str;
+        String trut_desc_str;
+        String trut_cve_n;
+        String rut_cve_n;
+        String asesor_cve_str;
+
+        public RutaTipo() {
+        }
+
+        public String getRut_desc_str() {
+            return rut_desc_str;
+        }
+
+        public void setRut_desc_str(String rut_desc_str) {
+            this.rut_desc_str = rut_desc_str;
+        }
+
+        public String getTrut_desc_str() {
+            return trut_desc_str;
+        }
+
+        public void setTrut_desc_str(String trut_desc_str) {
+            this.trut_desc_str = trut_desc_str;
+        }
+
+        public String getTrut_cve_n() {
+            return trut_cve_n;
+        }
+
+        public void setTrut_cve_n(String trut_cve_n) {
+            this.trut_cve_n = trut_cve_n;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getAsesor_cve_str() {
+            return asesor_cve_str;
+        }
+
+        public void setAsesor_cve_str(String asesor_cve_str) {
+            this.asesor_cve_str = asesor_cve_str;
+        }
+    }
     
 }
