@@ -257,6 +257,8 @@ public class DatosFragment extends Fragment {
         ArrayList<DataTableWS.Clientes> al_clientes=null;
         ArrayList<DataTableWS.Creditos> al_creditos=null;
         ArrayList<DataTableWS.Direcciones> al_direcciones=null;
+        ArrayList<DataTableWS.ClientesVentaMes> al_clientesVenta=null;
+        ArrayList<DataTableWS.Consignas> al_consignas=null;
 
         public ConexionWS(Context context) {
             this.context = context;
@@ -306,45 +308,49 @@ public class DatosFragment extends Fragment {
 
                 for(int i=0; i<metodosWS.size();i++)
                 {
-
-                    parametrosWS = new ParametrosWS(metodosWS.get(i), getActivity().getApplicationContext());
-
-                    //Metodo al que se accede
-                    SoapObject Solicitud = new SoapObject(parametrosWS.getNAMESPACES(), parametrosWS.getMETODO());
-
-                    if(parametrosWS.getMETODO().contains("ObtenerClientes") ||
-                       parametrosWS.getMETODO().contains("ObtenerCreditos") ||
-                       parametrosWS.getMETODO().contains("ObtenerDirecciones") )
+                    if(!metodosWS.get(i).equals("ObtenerLimpiarDatosJ"))
                     {
-                        PropertyInfo piCliente = new PropertyInfo();
-                        piCliente.setName("ruta");
-                        piCliente.setValue(varStartday.getRuta());
-                        Solicitud.addProperty(piCliente);
+                        parametrosWS = new ParametrosWS(metodosWS.get(i), getActivity().getApplicationContext());
 
-                    }
+                        //Metodo al que se accede
+                        SoapObject Solicitud = new SoapObject(parametrosWS.getNAMESPACES(), parametrosWS.getMETODO());
 
-                    //CONFIGURACION DE LA PETICION
-                    SoapSerializationEnvelope Envoltorio = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                    Envoltorio.dotNet = true;
-                    Envoltorio.setOutputSoapObject(Solicitud);
-                    HttpTransportSE TransporteHttp = new HttpTransportSE(parametrosWS.getURL(), parametrosWS.getTIMEOUT());
+                        if (parametrosWS.getMETODO().contains("ObtenerClientes") ||
+                                parametrosWS.getMETODO().contains("ObtenerCreditos") ||
+                                parametrosWS.getMETODO().contains("ObtenerDirecciones") ||
+                                parametrosWS.getMETODO().contains("ClientesVentaMes") ||
+                                parametrosWS.getMETODO().contains("Consignas"))
+                        {
+                            PropertyInfo piCliente = new PropertyInfo();
+                            piCliente.setName("ruta");
+                            piCliente.setValue(varStartday.getRuta());
+                            Solicitud.addProperty(piCliente);
 
-                    //SE REALIZA LA PETICIÓN
-                    try {
-                        TransporteHttp.call(parametrosWS.getSOAP_ACTION(), Envoltorio);
-                        SoapPrimitive response = (SoapPrimitive) Envoltorio.getResponse();
-
-                        if (response != null && !response.toString().equals("null")) {
-                            obtenerResultado(response.toString(), parametrosWS.getMETODO());
                         }
 
-                        result = true;
+                        //CONFIGURACION DE LA PETICION
+                        SoapSerializationEnvelope Envoltorio = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+                        Envoltorio.dotNet = true;
+                        Envoltorio.setOutputSoapObject(Solicitud);
+                        HttpTransportSE TransporteHttp = new HttpTransportSE(parametrosWS.getURL(), parametrosWS.getTIMEOUT());
 
-                    } catch (Exception e) {
-                        Log.d("salida", "error: " + e.getMessage());
-                        result = false;
-                        resultado = "Error: " + e.getMessage();
-                        i=metodosWS.size(); //terminar ciclo
+                        //SE REALIZA LA PETICIÓN
+                        try {
+                            TransporteHttp.call(parametrosWS.getSOAP_ACTION(), Envoltorio);
+                            SoapPrimitive response = (SoapPrimitive) Envoltorio.getResponse();
+
+                            if (response != null && !response.toString().equals("null")) {
+                                obtenerResultado(response.toString(), parametrosWS.getMETODO());
+                            }
+
+                            result = true;
+
+                        } catch (Exception e) {
+                            Log.d("salida", "error: " + e.getMessage());
+                            result = false;
+                            resultado = "Error: " + e.getMessage();
+                            i = metodosWS.size(); //terminar ciclo
+                        }
                     }
                 }
 
@@ -355,8 +361,10 @@ public class DatosFragment extends Fragment {
                 resultado= "Error: "+e.getMessage();
             }
 
-
-            if(result)
+            if(result ||
+                 metodosWS.contains("ObtenerLimpiarDatosJ") ||
+                 metodosWS.contains("ObtenerConsignasJ")||
+                 metodosWS.contains("ObtenerPreventaJ"))
             {
                 almacenarLocal();
             }
@@ -487,17 +495,14 @@ public class DatosFragment extends Fragment {
                 case "ObtenerDireccionesPreventaJ":
                     al_direcciones = ConvertirRespuesta.getDireccionesJson(json);
                     break;
+                case "ObtenerClientesVentaMesJ":
+                    al_clientesVenta = ConvertirRespuesta.getClientesVentaJson(json);
+                case "ObtenerConsignasJ":
+                    al_consignas = ConvertirRespuesta.getConsignasJson(json);
 
             }
 
             Log.d("salida","Descargo de ws: "+metodo);
-
-            if(al_direcciones!=null)
-            {
-                Log.d("salida","tam direcciones: "+al_direcciones.size());
-            }
-
-
         }
 
         private void almacenarLocal()
@@ -505,6 +510,7 @@ public class DatosFragment extends Fragment {
             DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
             SQLiteDatabase db = databaseHelper.getWritableDatabase();
             String consulta;
+
 
             try
             {
@@ -745,7 +751,6 @@ public class DatosFragment extends Fragment {
                     Log.d("salida","agregar promociones");
                 }
 
-
                 if(al_promocionesKit!=null)
                 {
                     db.execSQL(Querys.Promociones.DeletePromocionesKit);
@@ -759,6 +764,113 @@ public class DatosFragment extends Fragment {
                     }
                     Log.d("salida","agregar promociones kid");
                 }
+
+
+                if(metodosWS.contains("ObtenerLimpiarDatosJ"))
+                {
+                    db.execSQL(Querys.Creditos.DeleteCreditos);
+                    db.execSQL(Querys.Pagos.DelPagos);
+                    db.execSQL(Querys.Ventas.DelVentas);
+                    db.execSQL(Querys.VentasDet.DelVentasDet);
+                    db.execSQL(Querys.VentasEnv.DelVentaEnv);
+                    db.execSQL(Querys.BitacoraHH.DelBitacoraHH);
+                    db.execSQL(Querys.Visitas.DelVisitas);
+                    db.execSQL(Querys.Inventario.DelInventario);
+                    db.execSQL(Querys.MovimientosInventario.DelMovimientosInventario);
+                    db.execSQL(Querys.Direcciones.DelDirecciones);
+                    db.execSQL(Querys.FrecuenciaPunteo.DelFrecPun);
+                    db.execSQL(Querys.Sugerido.DelSugerido);
+                    db.execSQL(Querys.Preventa.DelPreventa);
+                    db.execSQL(Querys.Preventa.DelPreventaDet);
+                    db.execSQL(Querys.Preventa.DelPreventaEnv);
+                    db.execSQL(Querys.Preventa.DelPreventaPagos);
+                    db.execSQL(Querys.Preventa.DelVisitaPreventa);
+                    db.execSQL(Querys.ClientesVentaMes.DelClientesVentaMes);
+                    Log.d("salida","Limpiar datos - Información eliminada");
+                }
+
+                if(al_marcas!=null)
+                {
+                    db.execSQL(Querys.Marcas.DelMarcas);
+                    Log.d("salida","Eliminar marcas");
+                    for(int i=0; i<al_marcas.size();i++)
+                    {
+                        db.execSQL( string.formatSql(Querys.Marcas.InsMarcas,al_marcas.get(i).getMar_cve_n(),al_marcas.get(i).getMar_desc_str(),al_marcas.get(i).getEst_cve_str() ) );
+                    }
+                    Log.d("salida","Agregar marcas");
+                }
+
+                if(al_unidades!=null)
+                {
+                    db.execSQL(Querys.Unidades.DelUnidades);
+                    Log.d("salida","Eliminar unidades");
+
+                    for(int i=0; i<al_unidades.size();i++)
+                    {
+                        DataTableWS.Unidades u = al_unidades.get(i);
+                        db.execSQL( string.formatSql(Querys.Unidades.InsUnidades,u.getUni_cve_n(),u.getUni_simbolo_str(),u.getUni_desc_str(), getBool( u.getUni_divisible_n() ) , getBool( u.getUni_pesable_n() ) ,u.getEst_cve_str()) );
+                    }
+                    Log.d("salida","Agregar unidades");
+                }
+
+                if(al_condicionesVenta!=null)
+                {
+                    db.execSQL(Querys.CondicionesVenta.DelCondicionesVenta);
+                    Log.d("salida","Eliminar condiciones venta");
+                    for(int i=0; i<al_condicionesVenta.size();i++)
+                    {
+                        DataTableWS.CondicionesVenta cv = al_condicionesVenta.get(i);
+                        db.execSQL(string.formatSql(Querys.CondicionesVenta.InsCondicionesVenta,cv.getCov_cve_n(),cv.getCov_desc_str(), getBool( cv.getCov_restringido_n() ) ,cv.getCov_familias_str(),cv.getEst_cve_str()));
+                    }
+                    Log.d("salida","Agregar condiciones venta");
+                }
+
+                if(al_nivelCliente!=null)
+                {
+                    db.execSQL(Querys.NivelCliente.DelNivelCliente);
+                    Log.d("salida","Eliminar nivel cliente");
+                    for(int i=0; i<al_nivelCliente.size();i++)
+                    {
+                        DataTableWS.NivelCliente nc = al_nivelCliente.get(i);
+                        db.execSQL(string.formatSql(Querys.NivelCliente.InsNivelCliente,nc.getNvc_cve_n(),nc.getNvc_desc_str(),nc.getEst_cve_str(),nc.getNvc_nivel_n()));
+                    }
+                    Log.d("salida","Agregar nivel cliente");
+                }
+
+                if(al_motivosNoVenta!=null)
+                {
+                    db.execSQL( Querys.MotivosNoVenta.DelMotivosNoVenta );
+                    Log.d("salida","Eliminar motivos no venta");
+                    for(int i=0; i< al_motivosNoVenta.size();i++)
+                    {
+                        db.execSQL( string.formatSql(Querys.MotivosNoVenta.InsMotivosNoVenta,al_motivosNoVenta.get(i).getMnv_cve_n(),al_motivosNoVenta.get(i).getMnv_desc_str()) );
+                    }
+                    Log.d("salida","Agregar motivos no venta");
+                }
+
+                if(al_motivosNoLectura!=null)
+                {
+                    db.execSQL( Querys.MotivosNoLectura.DelMotivosNoLectura);
+                    Log.d("salida","Eliminar motivos no lectura");
+                    for(int i=0; i< al_motivosNoLectura.size();i++)
+                    {
+                        db.execSQL( string.formatSql(Querys.MotivosNoLectura.InsMotivosNoLectura,al_motivosNoLectura.get(i).getMnl_cve_n(),al_motivosNoLectura.get(i).getMnl_desc_str() ) );
+                    }
+                    Log.d("salida","Agregar motivos no lectura");
+                }
+
+                if(al_clientesVenta!=null)
+                {
+                    db.execSQL(Querys.ClientesVentaMes.DelClientesVentaMes);
+                    Log.d("salida","Eliminar clientes venta mes");
+                    for(int i=0; i<al_clientesVenta.size();i++)
+                    {
+                        db.execSQL(string.formatSql(Querys.ClientesVentaMes.InsClientesVentaMes,al_clientesVenta.get(i).getRut_cve_n(),al_clientesVenta.get(i).getCli_cve_n(),al_clientesVenta.get(i).getCvm_vtaacum_n()));
+                    }
+                    Log.d("salida","Agregar clientes venta mes");
+
+                }
+
 
                 db.setTransactionSuccessful();
                 almacenado=true;

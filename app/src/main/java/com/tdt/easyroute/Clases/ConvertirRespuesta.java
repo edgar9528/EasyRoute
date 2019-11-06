@@ -843,6 +843,44 @@ public class ConvertirRespuesta {
     }
 
 
+    public static ArrayList<DataTableWS.ClientesVentaMes> getClientesVentaJson(String respuesta)
+    {
+        ArrayList<DataTableWS.ClientesVentaMes> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.ClientesVentaMes> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
+    public static ArrayList<DataTableWS.Consignas> getConsignasJson(String respuesta)
+    {
+        ArrayList<DataTableWS.Consignas> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.Consignas> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+    }
+
+
 
 
 }

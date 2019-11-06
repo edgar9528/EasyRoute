@@ -2713,5 +2713,415 @@ public class DataTableWS {
             this.dir_fmodificacion_dt = dir_fmodificacion_dt;
         }
     }
+
+    public static class ClientesVentaMes
+    {
+        private String rut_cve_n;
+        private String cli_cve_n;
+        private String cvm_vtaacum_n;
+
+        public ClientesVentaMes() {
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getCvm_vtaacum_n() {
+            return cvm_vtaacum_n;
+        }
+
+        public void setCvm_vtaacum_n(String cvm_vtaacum_n) {
+            this.cvm_vtaacum_n = cvm_vtaacum_n;
+        }
+    }
+    
+    public static class Consignas
+    {
+        private String csgn_cve_str;
+        private String emp_cve_n;
+        private String alm_cve_n;
+        private String cli_cve_n;
+        private String cli_cveext_str;
+        private String rut_cve_n;
+        private String cli_nom_str;
+        private String cli_app_str;
+        private String cli_apm_str;
+        private String cli_tel1_str;
+        private String cli_tel2_str;
+        private String dir_calle_str;
+        private String dir_noext_str;
+        private String dir_noint_str;
+        private String dir_entrecalle1_str;
+        private String dir_entrecalle2_str;
+        private String dir_colonia_str;
+        private String dir_municipio_str;
+        private String dir_estado_str;
+        private String dir_pais_str;
+        private String dir_codigopostal_str;
+        private String dir_referencia_str;
+        private String dir_encargado_str;
+        private String csgn_coordenada_str;
+        private String usu_solicita_str;
+        private String csgn_fsolicitud_dt;
+        private String est_cve_str;
+        private String csgn_finicio_dt;
+        private String csgn_ffin_dt;
+        private String csgn_fcobro_dt;
+        private String csgn_fprorroga_dt;
+        private String usu_autoriza_str;
+        private String csgn_fautorizacion_dt;
+        private String csgn_identificacion_str;
+        private String csgn_compdom_str;
+        private String csgn_pagare_str;
+        private String usu_modifica_str;
+        private String csgn_fmodificacion_dt;
+        private String csgn_montopagare_n;
+        private String csgn_observaciones_str;
+        private String csgn_entrega_n;
+
+        public Consignas() {
+        }
+
+        public String getCsgn_cve_str() {
+            return csgn_cve_str;
+        }
+
+        public void setCsgn_cve_str(String csgn_cve_str) {
+            this.csgn_cve_str = csgn_cve_str;
+        }
+
+        public String getEmp_cve_n() {
+            return emp_cve_n;
+        }
+
+        public void setEmp_cve_n(String emp_cve_n) {
+            this.emp_cve_n = emp_cve_n;
+        }
+
+        public String getAlm_cve_n() {
+            return alm_cve_n;
+        }
+
+        public void setAlm_cve_n(String alm_cve_n) {
+            this.alm_cve_n = alm_cve_n;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getCli_nom_str() {
+            return cli_nom_str;
+        }
+
+        public void setCli_nom_str(String cli_nom_str) {
+            this.cli_nom_str = cli_nom_str;
+        }
+
+        public String getCli_app_str() {
+            return cli_app_str;
+        }
+
+        public void setCli_app_str(String cli_app_str) {
+            this.cli_app_str = cli_app_str;
+        }
+
+        public String getCli_apm_str() {
+            return cli_apm_str;
+        }
+
+        public void setCli_apm_str(String cli_apm_str) {
+            this.cli_apm_str = cli_apm_str;
+        }
+
+        public String getCli_tel1_str() {
+            return cli_tel1_str;
+        }
+
+        public void setCli_tel1_str(String cli_tel1_str) {
+            this.cli_tel1_str = cli_tel1_str;
+        }
+
+        public String getCli_tel2_str() {
+            return cli_tel2_str;
+        }
+
+        public void setCli_tel2_str(String cli_tel2_str) {
+            this.cli_tel2_str = cli_tel2_str;
+        }
+
+        public String getDir_calle_str() {
+            return dir_calle_str;
+        }
+
+        public void setDir_calle_str(String dir_calle_str) {
+            this.dir_calle_str = dir_calle_str;
+        }
+
+        public String getDir_noext_str() {
+            return dir_noext_str;
+        }
+
+        public void setDir_noext_str(String dir_noext_str) {
+            this.dir_noext_str = dir_noext_str;
+        }
+
+        public String getDir_noint_str() {
+            return dir_noint_str;
+        }
+
+        public void setDir_noint_str(String dir_noint_str) {
+            this.dir_noint_str = dir_noint_str;
+        }
+
+        public String getDir_entrecalle1_str() {
+            return dir_entrecalle1_str;
+        }
+
+        public void setDir_entrecalle1_str(String dir_entrecalle1_str) {
+            this.dir_entrecalle1_str = dir_entrecalle1_str;
+        }
+
+        public String getDir_entrecalle2_str() {
+            return dir_entrecalle2_str;
+        }
+
+        public void setDir_entrecalle2_str(String dir_entrecalle2_str) {
+            this.dir_entrecalle2_str = dir_entrecalle2_str;
+        }
+
+        public String getDir_colonia_str() {
+            return dir_colonia_str;
+        }
+
+        public void setDir_colonia_str(String dir_colonia_str) {
+            this.dir_colonia_str = dir_colonia_str;
+        }
+
+        public String getDir_municipio_str() {
+            return dir_municipio_str;
+        }
+
+        public void setDir_municipio_str(String dir_municipio_str) {
+            this.dir_municipio_str = dir_municipio_str;
+        }
+
+        public String getDir_estado_str() {
+            return dir_estado_str;
+        }
+
+        public void setDir_estado_str(String dir_estado_str) {
+            this.dir_estado_str = dir_estado_str;
+        }
+
+        public String getDir_pais_str() {
+            return dir_pais_str;
+        }
+
+        public void setDir_pais_str(String dir_pais_str) {
+            this.dir_pais_str = dir_pais_str;
+        }
+
+        public String getDir_codigopostal_str() {
+            return dir_codigopostal_str;
+        }
+
+        public void setDir_codigopostal_str(String dir_codigopostal_str) {
+            this.dir_codigopostal_str = dir_codigopostal_str;
+        }
+
+        public String getDir_referencia_str() {
+            return dir_referencia_str;
+        }
+
+        public void setDir_referencia_str(String dir_referencia_str) {
+            this.dir_referencia_str = dir_referencia_str;
+        }
+
+        public String getDir_encargado_str() {
+            return dir_encargado_str;
+        }
+
+        public void setDir_encargado_str(String dir_encargado_str) {
+            this.dir_encargado_str = dir_encargado_str;
+        }
+
+        public String getCsgn_coordenada_str() {
+            return csgn_coordenada_str;
+        }
+
+        public void setCsgn_coordenada_str(String csgn_coordenada_str) {
+            this.csgn_coordenada_str = csgn_coordenada_str;
+        }
+
+        public String getUsu_solicita_str() {
+            return usu_solicita_str;
+        }
+
+        public void setUsu_solicita_str(String usu_solicita_str) {
+            this.usu_solicita_str = usu_solicita_str;
+        }
+
+        public String getCsgn_fsolicitud_dt() {
+            return csgn_fsolicitud_dt;
+        }
+
+        public void setCsgn_fsolicitud_dt(String csgn_fsolicitud_dt) {
+            this.csgn_fsolicitud_dt = csgn_fsolicitud_dt;
+        }
+
+        public String getEst_cve_str() {
+            return est_cve_str;
+        }
+
+        public void setEst_cve_str(String est_cve_str) {
+            this.est_cve_str = est_cve_str;
+        }
+
+        public String getCsgn_finicio_dt() {
+            return csgn_finicio_dt;
+        }
+
+        public void setCsgn_finicio_dt(String csgn_finicio_dt) {
+            this.csgn_finicio_dt = csgn_finicio_dt;
+        }
+
+        public String getCsgn_ffin_dt() {
+            return csgn_ffin_dt;
+        }
+
+        public void setCsgn_ffin_dt(String csgn_ffin_dt) {
+            this.csgn_ffin_dt = csgn_ffin_dt;
+        }
+
+        public String getCsgn_fcobro_dt() {
+            return csgn_fcobro_dt;
+        }
+
+        public void setCsgn_fcobro_dt(String csgn_fcobro_dt) {
+            this.csgn_fcobro_dt = csgn_fcobro_dt;
+        }
+
+        public String getCsgn_fprorroga_dt() {
+            return csgn_fprorroga_dt;
+        }
+
+        public void setCsgn_fprorroga_dt(String csgn_fprorroga_dt) {
+            this.csgn_fprorroga_dt = csgn_fprorroga_dt;
+        }
+
+        public String getUsu_autoriza_str() {
+            return usu_autoriza_str;
+        }
+
+        public void setUsu_autoriza_str(String usu_autoriza_str) {
+            this.usu_autoriza_str = usu_autoriza_str;
+        }
+
+        public String getCsgn_fautorizacion_dt() {
+            return csgn_fautorizacion_dt;
+        }
+
+        public void setCsgn_fautorizacion_dt(String csgn_fautorizacion_dt) {
+            this.csgn_fautorizacion_dt = csgn_fautorizacion_dt;
+        }
+
+        public String getCsgn_identificacion_str() {
+            return csgn_identificacion_str;
+        }
+
+        public void setCsgn_identificacion_str(String csgn_identificacion_str) {
+            this.csgn_identificacion_str = csgn_identificacion_str;
+        }
+
+        public String getCsgn_compdom_str() {
+            return csgn_compdom_str;
+        }
+
+        public void setCsgn_compdom_str(String csgn_compdom_str) {
+            this.csgn_compdom_str = csgn_compdom_str;
+        }
+
+        public String getCsgn_pagare_str() {
+            return csgn_pagare_str;
+        }
+
+        public void setCsgn_pagare_str(String csgn_pagare_str) {
+            this.csgn_pagare_str = csgn_pagare_str;
+        }
+
+        public String getUsu_modifica_str() {
+            return usu_modifica_str;
+        }
+
+        public void setUsu_modifica_str(String usu_modifica_str) {
+            this.usu_modifica_str = usu_modifica_str;
+        }
+
+        public String getCsgn_fmodificacion_dt() {
+            return csgn_fmodificacion_dt;
+        }
+
+        public void setCsgn_fmodificacion_dt(String csgn_fmodificacion_dt) {
+            this.csgn_fmodificacion_dt = csgn_fmodificacion_dt;
+        }
+
+        public String getCsgn_montopagare_n() {
+            return csgn_montopagare_n;
+        }
+
+        public void setCsgn_montopagare_n(String csgn_montopagare_n) {
+            this.csgn_montopagare_n = csgn_montopagare_n;
+        }
+
+        public String getCsgn_observaciones_str() {
+            return csgn_observaciones_str;
+        }
+
+        public void setCsgn_observaciones_str(String csgn_observaciones_str) {
+            this.csgn_observaciones_str = csgn_observaciones_str;
+        }
+
+        public String getCsgn_entrega_n() {
+            return csgn_entrega_n;
+        }
+
+        public void setCsgn_entrega_n(String csgn_entrega_n) {
+            this.csgn_entrega_n = csgn_entrega_n;
+        }
+    }
     
 }

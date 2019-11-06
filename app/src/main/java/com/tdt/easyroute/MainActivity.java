@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     private void selectFirsItemAsDefault() {
         if(navigationManager!= null)
         {
-            String firtsItem = "Categorías|Principal";
+            String firtsItem = "Inicio de día | Inicio";
             navigationManager.showFragment(firtsItem);
             getSupportActionBar().setTitle(firtsItem);
         }
