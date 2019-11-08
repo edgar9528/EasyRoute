@@ -876,7 +876,23 @@ public class ConvertirRespuesta {
             Log.d("salida","error gson: "+e.toString());
             al=null;
         }
+        return al;
+    }
 
+    public static ArrayList<DataTableWS.ConsignasDet> getConsignasDetJson(String respuesta)
+    {
+        ArrayList<DataTableWS.ConsignasDet> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.ConsignasDet> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
         return al;
     }
 

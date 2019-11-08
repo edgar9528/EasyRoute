@@ -55,6 +55,7 @@ public class ServidorFragment extends Fragment {
     boolean catalogos;
     boolean crut;
     Usuario user;
+    String[] arr_estadoCat;
 
 
 
@@ -148,26 +149,11 @@ public class ServidorFragment extends Fragment {
             crut = activity.getCrut();
             user = activity.getUser();
             nombreBase = getActivity().getString( R.string.nombreBD );
+
             rbSeleccionados = new boolean[lista_catalogos.size()]; //para saber que rb estan seleccionados porque son dinamicos
+            arr_estadoCat = new String[lista_catalogos.size()];
 
-            tableLayout = (TableLayout) viewGral.findViewById(R.id.tableLayout);
-            tableLayout.removeAllViews();
-            TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
-
-            for (int i = 0; i < lista_catalogos.size(); i++) {
-                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
-
-                RadioButton rb = tr.findViewById(R.id.tabla_radio);
-                rb.setId(i);
-                rb.setTag(i);
-                rb.setOnClickListener(rbListener);
-
-                ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(lista_catalogos.get(i));
-                ((TextView) tr.findViewById(R.id.tabla_estado)).setText("ok");
-
-                tableLayout.addView(tr);
-            }
-
+            mostrarCatalogos();
 
             //OBTENER SI ES PRECIO PREVENTA O NO
             precioPreventa=false;
@@ -184,6 +170,28 @@ public class ServidorFragment extends Fragment {
             Log.d("salida","Error: "+e.getMessage());
         }
 
+    }
+
+    public void mostrarCatalogos()
+    {
+        tableLayout = (TableLayout) viewGral.findViewById(R.id.tableLayout);
+        tableLayout.removeAllViews();
+        TableRow tr;
+
+        for (int i = 0; i < lista_catalogos.size(); i++) {
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
+
+            RadioButton rb = tr.findViewById(R.id.tabla_radio);
+            rb.setId(i);
+            rb.setTag(i);
+            rb.setOnClickListener(rbListener);
+
+            ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(lista_catalogos.get(i));
+            ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
+
+            tableLayout.addView(tr);
+            rbSeleccionados[i]=false;
+        }
     }
 
 
@@ -328,6 +336,12 @@ public class ServidorFragment extends Fragment {
                         if (response != null && !response.toString().equals("null")) {
                             obtenerResultado(response.toString(), parametrosWS.getMETODO());
                         }
+                        else
+                        {
+                            String cat = parametrosWS.getMETODO().replace("Obtener","");
+                            cat = cat.replace("J","");
+                            actualizaEstado(cat,false);
+                        }
 
                         result = true;
 
@@ -378,13 +392,54 @@ public class ServidorFragment extends Fragment {
                 else
                 {
                     Toast.makeText(context, resultado, Toast.LENGTH_SHORT).show();
+                    actualizaEstadoError();
                 }
             }
             else
             {
                 Toast.makeText(context, resultado, Toast.LENGTH_SHORT).show();
+                actualizaEstadoError();
             }
 
+            mostrarCatalogos();
+
+        }
+
+        private void actualizaEstado(String cat, boolean est)
+        {
+            for(int i=0; i<lista_catalogos.size();i++)
+            {
+                if(lista_catalogos.get(i).equals(cat))
+                {
+                    if(est)
+                    {
+                        arr_estadoCat[i] = "Descargado";
+                    }
+                    else
+                    {
+                        arr_estadoCat[i] = "Sin datos";
+                    }
+                    i=lista_catalogos.size(); //finaliza ciclo
+                }
+            }
+        }
+
+        private void actualizaEstadoError()
+        {
+            for(int i=0; i<metodosWS.size();i++)
+            {
+                String cat = metodosWS.get(i).replace("Obtener","");
+                cat = cat.replace("J","");
+
+                for(int j=0; j<lista_catalogos.size();j++)
+                {
+                    if(lista_catalogos.get(j).equals(cat))
+                    {
+                        arr_estadoCat[j] = "Error";
+                        j=lista_catalogos.size(); //finaliza ciclo
+                    }
+                }
+            }
         }
 
         private void obtenerResultado(String json, String metodo)
@@ -469,255 +524,329 @@ public class ServidorFragment extends Fragment {
 
                 if(al_empresas!=null)
                 {
-                    db.execSQL(Querys.Empresas.DelEmpresas);
-                    Log.d("salida","eliminar empresa");
-                    for(int i=0; i<al_empresas.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.Empresas.InsEmpresas, al_empresas.get(i).getEmp_cve_n(), al_empresas.get(i).getEmp_nom_str(),al_empresas.get(i).getEmp_contacto_str(),al_empresas.get(i).getEmp_rfc_str(),al_empresas.get(i).getEmp_colonia_str(),al_empresas.get(i).getEmp_ciudad_str(),al_empresas.get(i).getEmp_telefono1_str(),al_empresas.get(i).getEst_cve_str() );
-                        db.execSQL(consulta);
+                    if(al_empresas.size()>0) {
+                        db.execSQL(Querys.Empresas.DelEmpresas);
+                        Log.d("salida", "eliminar empresa");
+                        for (int i = 0; i < al_empresas.size(); i++) {
+                            consulta = string.formatSql(Querys.Empresas.InsEmpresas, al_empresas.get(i).getEmp_cve_n(), al_empresas.get(i).getEmp_nom_str(), al_empresas.get(i).getEmp_contacto_str(), al_empresas.get(i).getEmp_rfc_str(), al_empresas.get(i).getEmp_colonia_str(), al_empresas.get(i).getEmp_ciudad_str(), al_empresas.get(i).getEmp_telefono1_str(), al_empresas.get(i).getEst_cve_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar empresas");
+                        actualizaEstado("Empresas",true);
                     }
-                    Log.d("salida","agregar empresas");
+                    else
+                        actualizaEstado("Empresas",false);
                 }
 
                 if(al_estatus!=null)
                 {
-                    db.execSQL(Querys.Estatus.DelEstatus);
-                    Log.d("salida","eliminar estatus");
-                    for(int i=0; i<al_estatus.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.Estatus.InsEstatus, al_estatus.get(i).getEst_cve_str(), al_estatus.get(i).getEst_desc_str(), getBool(al_estatus.get(i).getEst_usu_n()), getBool(al_estatus.get(i).getEst_ped_n()), getBool(al_estatus.get(i).getEst_prod_n()), getBool(al_estatus.get(i).getEst_prov_n())   );
-                        db.execSQL(consulta);
+                    if(al_estatus.size()>0) {
+                        db.execSQL(Querys.Estatus.DelEstatus);
+                        Log.d("salida", "eliminar estatus");
+                        for (int i = 0; i < al_estatus.size(); i++) {
+                            consulta = string.formatSql(Querys.Estatus.InsEstatus, al_estatus.get(i).getEst_cve_str(), al_estatus.get(i).getEst_desc_str(), getBool(al_estatus.get(i).getEst_usu_n()), getBool(al_estatus.get(i).getEst_ped_n()), getBool(al_estatus.get(i).getEst_prod_n()), getBool(al_estatus.get(i).getEst_prov_n()));
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar estatus");
+                        actualizaEstado("Estatus",true);
                     }
-                    Log.d("salida","agregar estatus");
+                    else
+                        actualizaEstado("Estatus",false);
                 }
 
                 if(al_roles!=null)
                 {
-                    db.execSQL(Querys.Roles.DelRoles);
-                    Log.d("salida","eliminar roles");
-                    for(int i=0; i<al_roles.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.Roles.InsRoles, al_roles.get(i).getRol_cve_n(),al_roles.get(i).getRol_desc_str(),al_roles.get(i).getRol_esadmin_n(),al_roles.get(i).getEst_cve_str()   );
-                        db.execSQL(consulta);
+                    if(al_roles.size()>0) {
+                        db.execSQL(Querys.Roles.DelRoles);
+                        Log.d("salida", "eliminar roles");
+                        for (int i = 0; i < al_roles.size(); i++) {
+                            consulta = string.formatSql(Querys.Roles.InsRoles, al_roles.get(i).getRol_cve_n(), al_roles.get(i).getRol_desc_str(), al_roles.get(i).getRol_esadmin_n(), al_roles.get(i).getEst_cve_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar roles");
+                        actualizaEstado("Roles",true);
                     }
-                    Log.d("salida","agregar roles");
+                    else
+                        actualizaEstado("Roles",false);
                 }
 
                 if(al_rolesModulos!=null)
                 {
-                    db.execSQL(Querys.RolesModulos.DelRolesModulos);
-                    Log.d("salida","eliminar rolesModulos");
-                    for(int i=0; i<al_rolesModulos.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.RolesModulos.InsRolesModulos, al_rolesModulos.get(i).getRol_cve_n(),al_rolesModulos.get(i).getMod_cve_n(),al_rolesModulos.get(i).getRm_lectura_n(),al_rolesModulos.get(i).getRm_escritura_n(),al_rolesModulos.get(i).getRm_modificacion_n(),al_rolesModulos.get(i).getRm_eliminacion_n()  );
-                        db.execSQL(consulta);
+                    if(al_rolesModulos.size()>0) {
+                        db.execSQL(Querys.RolesModulos.DelRolesModulos);
+                        Log.d("salida", "eliminar rolesModulos");
+                        for (int i = 0; i < al_rolesModulos.size(); i++) {
+                            consulta = string.formatSql(Querys.RolesModulos.InsRolesModulos, al_rolesModulos.get(i).getRol_cve_n(), al_rolesModulos.get(i).getMod_cve_n(), al_rolesModulos.get(i).getRm_lectura_n(), al_rolesModulos.get(i).getRm_escritura_n(), al_rolesModulos.get(i).getRm_modificacion_n(), al_rolesModulos.get(i).getRm_eliminacion_n());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar rolesModulos");
+                        actualizaEstado("RolesModulos",true);
                     }
-                    Log.d("salida","agregar rolesModulos");
+                    else
+                        actualizaEstado("RolesModulos",false);
                 }
 
                 if(al_modulos!=null)
                 {
-                    db.execSQL(Querys.Modulos.DelModulos);
-                    Log.d("salida","eliminar modulos");
-                    for(int i=0; i<al_modulos.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.Modulos.InsModulos, al_modulos.get(i).getMod_cve_n(), al_modulos.get(i).getMod_desc_str() );
-                        db.execSQL(consulta);
+                    if(al_modulos.size()>0) {
+                        db.execSQL(Querys.Modulos.DelModulos);
+                        Log.d("salida", "eliminar modulos");
+                        for (int i = 0; i < al_modulos.size(); i++) {
+                            consulta = string.formatSql(Querys.Modulos.InsModulos, al_modulos.get(i).getMod_cve_n(), al_modulos.get(i).getMod_desc_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar modulos");
+                        actualizaEstado("Modulos",true);
                     }
-                    Log.d("salida","agregar modulos");
+                    else
+                        actualizaEstado("Modulos",false);
                 }
 
 
                 if(al_usuarios!=null)
                 {
-                    db.execSQL(Querys.Usuarios.DelUsuarios);
-                    Log.d("salida","eliminar usuarios");
-                    for(int i=0; i<al_usuarios.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.Usuarios.InsUsuarios, al_usuarios.get(i).getUsu_cve_str(), al_usuarios.get(i).getUsu_pwd_str(),  al_usuarios.get(i).getUsu_nom_str(), al_usuarios.get(i).getUsu_app_str(),  al_usuarios.get(i).getUsu_apm_str(), al_usuarios.get(i).getRol_cve_n(), al_usuarios.get(i).getEst_cve_str(), al_usuarios.get(i).getUsu_bloqueado_n(), al_usuarios.get(i).getUsu_fbloqueo_dt()  );
-                        db.execSQL(consulta);
+                    if(al_usuarios.size()>0) {
+                        db.execSQL(Querys.Usuarios.DelUsuarios);
+                        Log.d("salida", "eliminar usuarios");
+                        for (int i = 0; i < al_usuarios.size(); i++) {
+                            consulta = string.formatSql(Querys.Usuarios.InsUsuarios, al_usuarios.get(i).getUsu_cve_str(), al_usuarios.get(i).getUsu_pwd_str(), al_usuarios.get(i).getUsu_nom_str(), al_usuarios.get(i).getUsu_app_str(), al_usuarios.get(i).getUsu_apm_str(), al_usuarios.get(i).getRol_cve_n(), al_usuarios.get(i).getEst_cve_str(), al_usuarios.get(i).getUsu_bloqueado_n(), al_usuarios.get(i).getUsu_fbloqueo_dt());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar usuarios");
+                        actualizaEstado("Usuarios",true);
                     }
-                    Log.d("salida","agregar usuarios");
+                    else
+                        actualizaEstado("Usuarios",false);
                 }
 
                 if(al_tipoRutas!=null)
                 {
-                    db.execSQL(Querys.TipoRutas.DelTipoRutas);
-                    Log.d("salida","eliminar tipo rutas");
-                    for(int i=0; i<al_tipoRutas.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.TipoRutas.InsTipoRutas, al_tipoRutas.get(i).getTrut_cve_n(), al_tipoRutas.get(i).getTrut_desc_str(), al_tipoRutas.get(i).getEst_cve_str()  );
-                        db.execSQL(consulta);
+                    if(al_tipoRutas.size()>0) {
+                        db.execSQL(Querys.TipoRutas.DelTipoRutas);
+                        Log.d("salida", "eliminar tipo rutas");
+                        for (int i = 0; i < al_tipoRutas.size(); i++) {
+                            consulta = string.formatSql(Querys.TipoRutas.InsTipoRutas, al_tipoRutas.get(i).getTrut_cve_n(), al_tipoRutas.get(i).getTrut_desc_str(), al_tipoRutas.get(i).getEst_cve_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar  tipo rutas");
+                        actualizaEstado("TipoRutas",true);
                     }
-                    Log.d("salida","agregar  tipo rutas");
+                    else
+                        actualizaEstado("TipoRutas",false);
                 }
 
                 if(al_rutas!=null)
                 {
-                    db.execSQL(Querys.Rutas.DelRutas);
-                    Log.d("salida","eliminar rutas");
+                    if(al_rutas.size()>0) {
+                        db.execSQL(Querys.Rutas.DelRutas);
+                        Log.d("salida", "eliminar rutas");
 
-                    DataTableWS.Ruta r;
-                    for(int i=0; i<al_rutas.size();i++)
-                    {
-                        r = al_rutas.get(i);
-                        consulta = string.formatSql(Querys.Rutas.InsRutas3, r.getRut_cve_n(),r.getRut_desc_str(),r.getRut_orden_n(),r.getTrut_cve_n(),r.getAsesor_cve_str(),r.getGerente_cve_str(),r.getSupervisor_cve_str(),r.getEst_cve_str(),r.getTco_cve_n(), r.getRut_prev_n(),r.getRut_idcteesp_n(), getBool( r.getRut_invalidafrecuencia_n() ) ,r.getRut_productividad_n(),r.getRut_tel_str(),r.getRut_efectividad_n(), getBool( r.getRut_mayorista_n() ), getBool( r.getRut_fiestasyeventos_n() ), getBool( r.getRut_auditoria_n() ) , getBool( r.getRut_promoce_n() )  );
-                        db.execSQL(consulta);
+                        DataTableWS.Ruta r;
+                        for (int i = 0; i < al_rutas.size(); i++) {
+                            r = al_rutas.get(i);
+                            consulta = string.formatSql(Querys.Rutas.InsRutas3, r.getRut_cve_n(), r.getRut_desc_str(), r.getRut_orden_n(), r.getTrut_cve_n(), r.getAsesor_cve_str(), r.getGerente_cve_str(), r.getSupervisor_cve_str(), r.getEst_cve_str(), r.getTco_cve_n(), r.getRut_prev_n(), r.getRut_idcteesp_n(), getBool(r.getRut_invalidafrecuencia_n()), r.getRut_productividad_n(), r.getRut_tel_str(), r.getRut_efectividad_n(), getBool(r.getRut_mayorista_n()), getBool(r.getRut_fiestasyeventos_n()), getBool(r.getRut_auditoria_n()), getBool(r.getRut_promoce_n()));
+                            db.execSQL(consulta);
+                        }
+
+                        if (!catalogos)
+                            crut = true;
+                        Log.d("salida", "agregar rutas");
+                        actualizaEstado("Rutas",true);
                     }
-
-                    if(!catalogos)
-                        crut = true;
-
-
-                    Log.d("salida","agregar rutas");
+                    else
+                        actualizaEstado("Rutas",false);
                 }
 
 
                 if(al_condicionesVenta!=null)
                 {
-                    db.execSQL(Querys.CondicionesVenta.DelCondicionesVenta);
-                    Log.d("salida","eliminar condiciones venta");
-                    DataTableWS.CondicionesVenta cv;
-                    for(int i=0; i<al_condicionesVenta.size();i++)
-                    {
-                        cv = al_condicionesVenta.get(i);
-                        consulta = string.formatSql(Querys.CondicionesVenta.InsCondicionesVenta, cv.getCov_cve_n(),cv.getCov_desc_str(), getBool( cv.getCov_restringido_n() ),cv.getCov_familias_str(),cv.getEst_cve_str()  );
-                        db.execSQL(consulta);
+                    if(al_condicionesVenta.size()>0) {
+                        db.execSQL(Querys.CondicionesVenta.DelCondicionesVenta);
+                        Log.d("salida", "eliminar condiciones venta");
+                        DataTableWS.CondicionesVenta cv;
+                        for (int i = 0; i < al_condicionesVenta.size(); i++) {
+                            cv = al_condicionesVenta.get(i);
+                            consulta = string.formatSql(Querys.CondicionesVenta.InsCondicionesVenta, cv.getCov_cve_n(), cv.getCov_desc_str(), getBool(cv.getCov_restringido_n()), cv.getCov_familias_str(), cv.getEst_cve_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar condiciones venta");
+                        actualizaEstado("CondicionesVenta",true);
                     }
-                    Log.d("salida","agregar condiciones venta");
+                    else
+                        actualizaEstado("CondicionesVenta",false);
                 }
 
                 if(al_productos!=null)
                 {
-                    db.execSQL(Querys.Productos.DelProductos);
-                    Log.d("salida","eliminar productos");
-                    DataTableWS.Productos p;
-                    for(int i=0; i<al_productos.size();i++)
-                    {
-                        p = al_productos.get(i);
-                        consulta = string.formatSql(Querys.Productos.InsProductos,p.getProd_cve_n(),p.getProd_sku_str(),p.getProd_desc_str(),p.getProd_dscc_str(),p.getCat_cve_n(),p.getRetor_cve_str(), getBool( p.getProd_reqenv_n() ) ,p.getId_envase_n(),p.getProd_unicompra_n(),p.getProd_factcompra_n(),p.getProd_univenta_n(),p.getProd_factventa_n(), getBool( p.getProd_escompuesto_n() ) ,  getBool( p.getProd_manejainv_n() ),p.getProd_est_str(),p.getMar_cve_n(),p.getPres_cve_n(),p.getProd_ean_str(),p.getFam_cve_n(),p.getProd_orden_n(), getBool( p.getProd_vtamismodia_n() ) , getBool( p.getProd_vtaefectivo_n() ) , getBool( p.getProd_vtavolumen_n() ) ,p.getCov_cve_n());
-                        db.execSQL(consulta);
+                    if(al_productos.size()>0) {
+                        db.execSQL(Querys.Productos.DelProductos);
+                        Log.d("salida", "eliminar productos");
+                        DataTableWS.Productos p;
+                        for (int i = 0; i < al_productos.size(); i++) {
+                            p = al_productos.get(i);
+                            consulta = string.formatSql(Querys.Productos.InsProductos, p.getProd_cve_n(), p.getProd_sku_str(), p.getProd_desc_str(), p.getProd_dscc_str(), p.getCat_cve_n(), p.getRetor_cve_str(), getBool(p.getProd_reqenv_n()), p.getId_envase_n(), p.getProd_unicompra_n(), p.getProd_factcompra_n(), p.getProd_univenta_n(), p.getProd_factventa_n(), getBool(p.getProd_escompuesto_n()), getBool(p.getProd_manejainv_n()), p.getProd_est_str(), p.getMar_cve_n(), p.getPres_cve_n(), p.getProd_ean_str(), p.getFam_cve_n(), p.getProd_orden_n(), getBool(p.getProd_vtamismodia_n()), getBool(p.getProd_vtaefectivo_n()), getBool(p.getProd_vtavolumen_n()), p.getCov_cve_n());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar productos");
+                        actualizaEstado("Productos",true);
                     }
-                    Log.d("salida","agregar productos");
+                    else
+                        actualizaEstado("Productos",false);
                 }
 
                 if(al_listaPrecios!=null)
                 {
-                    db.execSQL(Querys.ListaPrecio.DelListaPrecios);
-                    Log.d("salida","eliminar lista precios");
-                    DataTableWS.ListaPrecios lp;
-                    for(int i=0; i<al_listaPrecios.size();i++)
-                    {
-                        lp = al_listaPrecios.get(i);
-                        consulta = string.formatSql(Querys.ListaPrecio.InsListaPrecios,lp.getLpre_cve_n(),lp.getLpre_desc_str(),lp.getEst_cve_str(), getBool( lp.getLpre_esbase_n() ) ,lp.getLpre_base_n(), getBool( lp.getLpre_nota_n() ) );
-                        db.execSQL(consulta);
+                    if(al_listaPrecios.size()>0) {
+                        db.execSQL(Querys.ListaPrecio.DelListaPrecios);
+                        Log.d("salida", "eliminar lista precios");
+                        DataTableWS.ListaPrecios lp;
+                        for (int i = 0; i < al_listaPrecios.size(); i++) {
+                            lp = al_listaPrecios.get(i);
+                            consulta = string.formatSql(Querys.ListaPrecio.InsListaPrecios, lp.getLpre_cve_n(), lp.getLpre_desc_str(), lp.getEst_cve_str(), getBool(lp.getLpre_esbase_n()), lp.getLpre_base_n(), getBool(lp.getLpre_nota_n()));
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar lista precios");
+                        actualizaEstado("ListaPrecios",true);
                     }
-                    Log.d("salida","agregar lista precios");
+                    else
+                        actualizaEstado("ListaPrecios",false);
                 }
 
 
                 if(al_precioProductos!=null)
                 {
-                    db.execSQL(Querys.PrecioProductos.DelPrecioProductos);
-                    Log.d("salida","eliminar precio productos");
-                    DataTableWS.PrecioProductos pp;
-                    for(int i=0; i<al_precioProductos.size();i++)
-                    {
-                        pp = al_precioProductos.get(i);
-                        consulta = string.formatSql(Querys.PrecioProductos.InsPrecioProductos, pp.getLpre_cve_n(),pp.getProd_cve_n(),pp.getLpre_precio_n(),pp.getLpre_volumen_n() );
-                        db.execSQL(consulta);
+                    if(al_precioProductos.size()>0) {
+                        db.execSQL(Querys.PrecioProductos.DelPrecioProductos);
+                        Log.d("salida", "eliminar precio productos");
+                        DataTableWS.PrecioProductos pp;
+                        for (int i = 0; i < al_precioProductos.size(); i++) {
+                            pp = al_precioProductos.get(i);
+                            consulta = string.formatSql(Querys.PrecioProductos.InsPrecioProductos, pp.getLpre_cve_n(), pp.getProd_cve_n(), pp.getLpre_precio_n(), pp.getLpre_volumen_n());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar precio productos");
+                        actualizaEstado("PrecioProductos",true);
                     }
-                    Log.d("salida","agregar precio productos");
+                    else
+                        actualizaEstado("PrecioProductos",false);
                 }
 
                 if(al_formasPago!=null)
                 {
-                    db.execSQL(Querys.FormasPago.DelFormasPago);
-                    Log.d("salida","eliminar formas de pago");
-                    for(int i=0; i<al_formasPago.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.FormasPago.InsFormasPago, al_formasPago.get(i).getFpag_cve_n(), al_formasPago.get(i).getFpag_desc_str(), getBool( al_formasPago.get(i).getFpag_reqbanco_n() ) , getBool( al_formasPago.get(i).getFpag_reqreferencia_n() ) ,al_formasPago.get(i).getEst_cve_str() );
-                        db.execSQL(consulta);
+                    if(al_formasPago.size()>0) {
+                        db.execSQL(Querys.FormasPago.DelFormasPago);
+                        Log.d("salida", "eliminar formas de pago");
+                        for (int i = 0; i < al_formasPago.size(); i++) {
+                            consulta = string.formatSql(Querys.FormasPago.InsFormasPago, al_formasPago.get(i).getFpag_cve_n(), al_formasPago.get(i).getFpag_desc_str(), getBool(al_formasPago.get(i).getFpag_reqbanco_n()), getBool(al_formasPago.get(i).getFpag_reqreferencia_n()), al_formasPago.get(i).getEst_cve_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar formas pago");
+                        actualizaEstado("FormasPago",true);
                     }
-                    Log.d("salida","agregar formas pago");
+                    else
+                        actualizaEstado("FormasPago",false);
                 }
 
                 if(al_frecuenciaVisi!=null)
                 {
-                    db.execSQL(Querys.FrecuenciasVisita.DelFrecuenciasVisita);
-                    Log.d("salida","eliminar frecuencias visita");
-                    for(int i=0; i<al_frecuenciaVisi.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.FrecuenciasVisita.InsFrecuenciasVisita,al_frecuenciaVisi.get(i).getFrec_cve_n(),al_frecuenciaVisi.get(i).getFrec_desc_str(),al_frecuenciaVisi.get(i).getFrec_dias_n(),al_frecuenciaVisi.get(i).getEst_cve_str());
-                        db.execSQL(consulta);
+                    if(al_frecuenciaVisi.size()>0) {
+                        db.execSQL(Querys.FrecuenciasVisita.DelFrecuenciasVisita);
+                        Log.d("salida", "eliminar frecuencias visita");
+                        for (int i = 0; i < al_frecuenciaVisi.size(); i++) {
+                            consulta = string.formatSql(Querys.FrecuenciasVisita.InsFrecuenciasVisita, al_frecuenciaVisi.get(i).getFrec_cve_n(), al_frecuenciaVisi.get(i).getFrec_desc_str(), al_frecuenciaVisi.get(i).getFrec_dias_n(), al_frecuenciaVisi.get(i).getEst_cve_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar frecuencias visita");
+                        actualizaEstado("FrecuenciasVisita",true);
                     }
-                    Log.d("salida","agregar frecuencias visita");
+                    else
+                        actualizaEstado("FrecuenciasVisita",false);
                 }
 
                 if(al_categorias!=null)
                 {
-                    db.execSQL(Querys.Categorias.DelCategorias);
-                    Log.d("salida","eliminar categorias");
-                    for(int i=0; i<al_categorias.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.Categorias.InsCategorias, al_categorias.get(i).getCat_cve_n(), al_categorias.get(i).getCat_desc_str() );
-                        db.execSQL(consulta);
+                    if(al_categorias.size()>0) {
+                        db.execSQL(Querys.Categorias.DelCategorias);
+                        Log.d("salida", "eliminar categorias");
+                        for (int i = 0; i < al_categorias.size(); i++) {
+                            consulta = string.formatSql(Querys.Categorias.InsCategorias, al_categorias.get(i).getCat_cve_n(), al_categorias.get(i).getCat_desc_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar categorias");
+                        actualizaEstado("Categorias",true);
                     }
-                    Log.d("salida","agregar categorias");
+                    else
+                        actualizaEstado("Categorias",false);
                 }
 
                 if(al_familias!=null)
                 {
-                    db.execSQL(Querys.Familias.DelFamilias);
-                    Log.d("salida","eliminar familias");
-                    for(int i=0; i<al_familias.size();i++)
-                    {
-                        consulta = string.formatSql(Querys.Familias.InsFamilias, al_familias.get(i).getFam_cve_n(), al_familias.get(i).getFam_desc_str(),al_familias.get(i).getFam_orden_n() );
-                        db.execSQL(consulta);
+                    if(al_familias.size()>0) {
+                        db.execSQL(Querys.Familias.DelFamilias);
+                        Log.d("salida", "eliminar familias");
+                        for (int i = 0; i < al_familias.size(); i++) {
+                            consulta = string.formatSql(Querys.Familias.InsFamilias, al_familias.get(i).getFam_cve_n(), al_familias.get(i).getFam_desc_str(), al_familias.get(i).getFam_orden_n());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar familias");
+                        actualizaEstado("Familias",true);
                     }
-                    Log.d("salida","agregar familias");
+                    else
+                        actualizaEstado("Familias",false);
                 }
 
 
                 if(al_presentaciones!=null)
                 {
-                    db.execSQL(Querys.Presentaciones.DelPresentaciones);
-                    Log.d("salida","eliminar presentaciones");
-                    for(int i=0; i<al_presentaciones.size();i++)
-                    {
-                        consulta = string.formatSql( Querys.Presentaciones.InsPresentaciones, al_presentaciones.get(i).getPres_cve_n(), al_presentaciones.get(i).getPres_desc_str(), al_presentaciones.get(i).getPres_hectolitros_n(),al_presentaciones.get(i).getEst_cve_str() );
-                        db.execSQL(consulta);
+                    if(al_presentaciones.size()>0) {
+                        db.execSQL(Querys.Presentaciones.DelPresentaciones);
+                        Log.d("salida", "eliminar presentaciones");
+                        for (int i = 0; i < al_presentaciones.size(); i++) {
+                            consulta = string.formatSql(Querys.Presentaciones.InsPresentaciones, al_presentaciones.get(i).getPres_cve_n(), al_presentaciones.get(i).getPres_desc_str(), al_presentaciones.get(i).getPres_hectolitros_n(), al_presentaciones.get(i).getEst_cve_str());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar presentaciones");
+                        actualizaEstado("Presentaciones",true);
                     }
-                    Log.d("salida","agregar presentaciones");
+                    else
+                        actualizaEstado("Presentaciones",false);
                 }
 
                 if(al_promociones!=null)
                 {
-                    db.execSQL(Querys.Promociones.DelPromociones);
-                    Log.d("salida","eliminar promociones");
-                    DataTableWS.Promociones p;
-                    for(int i=0; i<al_promociones.size();i++)
-                    {
-                        p= al_promociones.get(i);
-                        consulta = string.formatSql( Querys.Promociones.InsPromociones,p.getProm_cve_n(),p.getProm_folio_str(),p.getProm_desc_str(),p.getTprom_cve_n(),p.getProm_falta_dt(),p.getProm_fini_dt(),p.getProm_ffin_dt(),p.getEst_cve_str(),p.getUsu_cve_str(),p.getUsu_modificacion_str(),p.getProm_fmodificacion_dt(),p.getProd_cve_n(),p.getProd_sku_str(),p.getProm_nivel_n(),p.getLpre_cve_n(),p.getNvc_cve_n(),p.getNvc_cvehl_n(),p.getFam_cve_n(),p.getSeg_cve_n(),p.getGiro_cve_n(),p.getTcli_cve_n(),p.getLpre_precio_n(),p.getLpre_precio2_n(),p.getLpre_desc_n(),p.getProm_n_n(),p.getProm_m_n(),p.getProd_regalo_n(),p.getProd_skureg_str(), getBool( p.getProm_story_n() )  , getBool( p.getProm_proveedor_n() ) , getBool( p.getProm_envase_n() ) , getBool( p.getProm_kit_n() ) );
-                        db.execSQL(consulta);
+                    if(al_promociones.size()>0) {
+                        db.execSQL(Querys.Promociones.DelPromociones);
+                        Log.d("salida", "eliminar promociones");
+                        DataTableWS.Promociones p;
+                        for (int i = 0; i < al_promociones.size(); i++) {
+                            p = al_promociones.get(i);
+                            consulta = string.formatSql(Querys.Promociones.InsPromociones, p.getProm_cve_n(), p.getProm_folio_str(), p.getProm_desc_str(), p.getTprom_cve_n(), p.getProm_falta_dt(), p.getProm_fini_dt(), p.getProm_ffin_dt(), p.getEst_cve_str(), p.getUsu_cve_str(), p.getUsu_modificacion_str(), p.getProm_fmodificacion_dt(), p.getProd_cve_n(), p.getProd_sku_str(), p.getProm_nivel_n(), p.getLpre_cve_n(), p.getNvc_cve_n(), p.getNvc_cvehl_n(), p.getFam_cve_n(), p.getSeg_cve_n(), p.getGiro_cve_n(), p.getTcli_cve_n(), p.getLpre_precio_n(), p.getLpre_precio2_n(), p.getLpre_desc_n(), p.getProm_n_n(), p.getProm_m_n(), p.getProd_regalo_n(), p.getProd_skureg_str(), getBool(p.getProm_story_n()), getBool(p.getProm_proveedor_n()), getBool(p.getProm_envase_n()), getBool(p.getProm_kit_n()));
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar promociones");
+                        actualizaEstado("Promociones",true);
                     }
-                    Log.d("salida","agregar promociones");
+                    else
+                        actualizaEstado("Promociones",false);
                 }
 
 
                 if(al_promocionesKit!=null)
                 {
-                    db.execSQL(Querys.Promociones.DeletePromocionesKit);
-                    Log.d("salida","eliminar promociones kid");
-                    DataTableWS.PromocionesKit p;
-                    for(int i=0; i<al_promocionesKit.size();i++)
-                    {
-                        p= al_promocionesKit.get(i);
-                        consulta = string.formatSql( Querys.Promociones.InsertPromocionesKit,p.getProm_cve_n(),p.getProd_cve_n(),p.getProd_sku_str(), p.getProd_cant_n() ,p.getLpre_precio_n());
-                        db.execSQL(consulta);
+                    if(al_promocionesKit.size()>0) {
+                        db.execSQL(Querys.Promociones.DeletePromocionesKit);
+                        Log.d("salida", "eliminar promociones kid");
+                        DataTableWS.PromocionesKit p;
+                        for (int i = 0; i < al_promocionesKit.size(); i++) {
+                            p = al_promocionesKit.get(i);
+                            consulta = string.formatSql(Querys.Promociones.InsertPromocionesKit, p.getProm_cve_n(), p.getProd_cve_n(), p.getProd_sku_str(), p.getProd_cant_n(), p.getLpre_precio_n());
+                            db.execSQL(consulta);
+                        }
+                        Log.d("salida", "agregar promociones kid");
+                        actualizaEstado("PromocionesKit",true);
                     }
-                    Log.d("salida","agregar promociones kid");
+                    else
+                        actualizaEstado("PromocionesKit",false);
                 }
 
                 db.setTransactionSuccessful();

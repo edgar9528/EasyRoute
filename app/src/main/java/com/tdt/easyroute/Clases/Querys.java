@@ -164,19 +164,19 @@ public class Querys {
                         "{43},{44},{45},{46},{47},{48},{49},{50},{51})";
 
                 public static String InsClientes4 = "insert into clientes (cli_cve_n,cli_cveext_str," +
-                        "cli_padre_n,cli_cvepadre_n,cli_razonsocial_str,cli_rfc_str,cli_reqfact_n,cli_nombrenegocio_str," +
-                        "cli_nom_str,cli_app_str,cli_apm_str,cli_fnac_dt,cli_genero_str,lpre_cve_n,nota_cve_n,fpag_cve_n," +
-                        "cli_consigna_n,cli_credito_n,cli_montocredito_n,cli_plazocredito_n,cli_credenvases_n,cli_estcredito_str," +
-                        "cli_fba_n,cli_porcentajefba_n,rut_cve_n,nvc_cve_n,giro_cve_n,cli_email_str,cli_dirfact_n," +
-                        "cli_dirent_n,cli_Tel1_str,cli_tel2_str,emp_cve_n,cli_coordenadaini_str,est_cve_str,tcli_cve_n," +
-                        "cli_lun_n,cli_mar_n,cli_mie_n,cli_jue_n,cli_vie_n,cli_sab_n,cli_dom_n,frec_cve_n," +
+                        "cli_padre_n,cli_cvepadre_n,cli_razonsocial_str,cli_rfc_str,cli_reqfact_n,cli_nombrenegocio_str," +//7
+                        "cli_nom_str,cli_app_str,cli_apm_str,cli_fnac_dt,cli_genero_str,lpre_cve_n,nota_cve_n,fpag_cve_n," +//15
+                        "cli_consigna_n,cli_credito_n,cli_montocredito_n,cli_plazocredito_n,cli_credenvases_n,cli_estcredito_str," +//21
+                        "cli_fba_n,cli_porcentajefba_n,rut_cve_n,nvc_cve_n,giro_cve_n,cli_email_str,cli_dirfact_n," +//28
+                        "cli_dirent_n,cli_Tel1_str,cli_tel2_str,emp_cve_n,cli_coordenadaini_str,est_cve_str,tcli_cve_n," +//35
+                        "cli_lun_n,cli_mar_n,cli_mie_n,cli_jue_n,cli_vie_n,cli_sab_n,cli_dom_n,frec_cve_n," + //43
                         "cli_especial_n,cli_esvallejo_n,npro_cve_n,cli_huixdesc_n,cli_eshuix_n,cli_prospecto_n," +
-                        "cli_invalidafrecuencia_n,cli_invalidagps_n,cli_dobleventa_n,cli_comodato_n,seg_cve_n," +
+                        "cli_invalidafrecuencia_n,cli_invalidagps_n,cli_dobleventa_n,cli_comodato_n,seg_cve_n," +//54
                         "cli_dispersion_n,cli_dispersioncant_n,cli_limitemes_n) " +
-                        "values ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9}," +
-                        "{10},{11},{12},{13},{14},{15},{16},{17},{18},{19}," +
-                        "{20},{21},{22},{23},{24},{25},{26},{27},{28},{29}," +
-                        "{30},{31},{32},{33},{34},{35},{36},{37},{38},{39}," +
+                        "values ({0},'{1}',{2},{3},'{4}','{5}',{6},'{7}','{8}','{9}'," +
+                        "'{10}','{11}','{12}',{13},{14},{15},{16},{17},{18},{19}," +
+                        "{20},'{21}',{22},{23},{24},{25},{26},'{27}',{28},{29}," +
+                        "'{30}','{31}',{32},'{33}','{34}',{35},{36},{37},{38},{39}," +
                         "{40},{41},{42},{43},{44},{45},{46},{47},{48},{49}," +
                         "{50},{51},{52},{53},{54},{55},{56},{57})";
 
@@ -359,19 +359,19 @@ public class Querys {
                         "csgn_observaciones_str nvarchar(1000) NULL, " +
                         "CONSTRAINT PK_Consignas PRIMARY KEY (csgn_cve_str,csgn_entrega_n))";
 
-                public static String InsertConsignas = "INSERT INTO Consignas (csgn_cve_str,csgn_entrega_n, " +
-                        "emp_cve_n,alm_cve_n,cli_cve_n,cli_cveext_str,rut_cve_n " +
-                        ",cli_nom_str,cli_app_str,cli_apm_str,cli_tel1_str,cli_tel2_str,dir_calle_str,dir_noext_str " +
-                        ",dir_noint_str,dir_entrecalle1_str,dir_entrecalle2_str,dir_colonia_str,dir_municipio_str " +
-                        ",dir_estado_str,dir_pais_str,dir_codigopostal_str,dir_referencia_str,dir_encargado_str " +
-                        ",csgn_coordenada_str,usu_solicita_str,csgn_fsolicitud_dt,est_cve_str,csgn_finicio_dt " +
-                        ",csgn_ffin_dt,csgn_fcobro_dt,csgn_fprorroga_dt,usu_autoriza_str,csgn_fautorizacion_dt " +
-                        ",csgn_identificacion_str,csgn_compdom_str,csgn_pagare_str,usu_modifica_str " +
-                        ",csgn_fmodificacion_dt,csgn_montopagare_n,csgn_observaciones_str) " +
-                        "VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9}, " +
-                        "{10},{11},{12},{13},{14},{15},{16},{17},{18},{19}, " +
-                        "{20},{21},{22},{23},{24},{25},{26},{27},{28},{29}, " +
-                        "{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40})";
+                public static String InsertConsignas = "INSERT INTO Consignas (csgn_cve_str,csgn_entrega_n, " + //1
+                        "emp_cve_n,alm_cve_n,cli_cve_n,cli_cveext_str,rut_cve_n " + //6
+                        ",cli_nom_str,cli_app_str,cli_apm_str,cli_tel1_str,cli_tel2_str,dir_calle_str,dir_noext_str " +//13
+                        ",dir_noint_str,dir_entrecalle1_str,dir_entrecalle2_str,dir_colonia_str,dir_municipio_str " +//18
+                        ",dir_estado_str,dir_pais_str,dir_codigopostal_str,dir_referencia_str,dir_encargado_str " +//23
+                        ",csgn_coordenada_str,usu_solicita_str,csgn_fsolicitud_dt,est_cve_str,csgn_finicio_dt " +//28
+                        ",csgn_ffin_dt,csgn_fcobro_dt,csgn_fprorroga_dt,usu_autoriza_str,csgn_fautorizacion_dt " +//33
+                        ",csgn_identificacion_str,csgn_compdom_str,csgn_pagare_str,usu_modifica_str " + //37
+                        ",csgn_fmodificacion_dt,csgn_montopagare_n,csgn_observaciones_str) " + //40
+                        "VALUES ('{0}',{1},{2},{3},{4},'{5}',{6},'{7}','{8}','{9}', " +
+                        "'{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}', " +
+                        "'{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}', " +
+                        "'{30}','{31}','{32}','{33}','{34}','{35}','{36}','{37}','{38}',{39},'{40}')";
 
                 public static String DeleteConsignas = "Delete from consignas";
 
@@ -390,7 +390,7 @@ public class Querys {
                 public static String InsertConsignasDet = "INSERT INTO ConsignasEntregaDet (" +
                         "csgn_cve_str,csgn_entrega_n,prod_cve_n,prod_sku_str,prod_cant_n,prod_vendido_n," +
                         "prod_devuelto_n,prod_danado_n,prod_pagado_n) " +
-                        "VALUES ({0},{1},{2},{3},{4},{5},{6},{7},{8})";
+                        "VALUES ('{0}',{1},{2},'{3}',{4},{5},{6},{7},{8})";
 
                 public static String DeleteConsignasDet = "delete from consignasentregadet";
             }
@@ -462,11 +462,11 @@ public class Querys {
 
                 public static String InsDirecciones2 = "Insert into Direcciones(dir_cve_n,cli_cve_n," +
                         "dir_alias_str,dir_calle_str,dir_noext_str,dir_noint_str,dir_entrecalle1_str," +
-                        "dir_entrecalle2_str,dir_colonia_str,dir_municipio_str,dir_estado_str,dir_pais_str," +
-                        "dir_codigopostal_str,dir_referencia_str,est_cve_str,usu_cve_str,dir_falta_dt," +
+                        "dir_entrecalle2_str,dir_colonia_str,dir_municipio_str,dir_estado_str,dir_pais_str," +//11
+                        "dir_codigopostal_str,dir_referencia_str,est_cve_str,usu_cve_str,dir_falta_dt," +//16
                         "dir_tel1_str,dir_tel2_str,dir_encargado_str,dir_coordenada_str) values ({0},{1}," +
-                        "{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}," +
-                        "{12},{13},{14},{15},{16},{17},{18},{19},{20})";
+                        "'{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}'," +
+                        "'{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}')";
 
             }
 
@@ -1385,7 +1385,7 @@ public class Querys {
                         "usu_cve_str,cred_fecha_dt,cred_descripcion_str,cred_vencimiento_dt,cred_monto_n," +
                         "cred_abono_n,cred_engestoria_n,cred_esenvase_n,cred_especial_n,prod_cve_n,prod_sku_str,prod_precio_n,prod_cant_n," +
                         "prod_cantabono_n,trans_est_n,trans_fecha_dt) values ('{0}',{1}," +
-                        "'{2}',{3},'{4}',{5},{6}," +
+                        "'{2}','{3}','{4}','{5}',{6}," +
                         "{7},{8},{9},{10},{11},'{15}',{12},{13},{14},3,null)";
 
                 public static String InsCreditosPago = "insert into Creditos(cred_referencia_str,cli_cve_n," +

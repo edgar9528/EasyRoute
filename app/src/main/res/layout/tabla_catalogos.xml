@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:weightSum="4"
+    android:weightSum="6"
     >
 
 
@@ -11,7 +11,7 @@
         android:id="@+id/tabla_radio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="5dp"
         android:checked="false"
         android:layout_weight="1"
         />
@@ -23,7 +23,7 @@
         android:textStyle="bold"
         android:maxLines="10"
         android:layout_column="1"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:text="Catálogo"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
@@ -42,7 +42,7 @@
         android:gravity="center_vertical"
         android:maxLines="10"
         android:layout_column="2"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:text="Estado"
         android:textColor="@color/colorPrimaryDark"
         />

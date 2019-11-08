@@ -3124,4 +3124,92 @@ public class DataTableWS {
         }
     }
     
+    public static class ConsignasDet
+    {
+        private String csgn_cve_str;
+        private String csgn_entrega_n;
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_cant_n;
+        private String prod_vendido_n;
+        private String prod_devuelto_n;
+        private String prod_danado_n;
+        private String prod_pagado_n;
+
+        public ConsignasDet() {
+        }
+
+        public String getCsgn_cve_str() {
+            return csgn_cve_str;
+        }
+
+        public void setCsgn_cve_str(String csgn_cve_str) {
+            this.csgn_cve_str = csgn_cve_str;
+        }
+
+        public String getCsgn_entrega_n() {
+            return csgn_entrega_n;
+        }
+
+        public void setCsgn_entrega_n(String csgn_entrega_n) {
+            this.csgn_entrega_n = csgn_entrega_n;
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_cant_n() {
+            return prod_cant_n;
+        }
+
+        public void setProd_cant_n(String prod_cant_n) {
+            this.prod_cant_n = prod_cant_n;
+        }
+
+        public String getProd_vendido_n() {
+            return prod_vendido_n;
+        }
+
+        public void setProd_vendido_n(String prod_vendido_n) {
+            this.prod_vendido_n = prod_vendido_n;
+        }
+
+        public String getProd_devuelto_n() {
+            return prod_devuelto_n;
+        }
+
+        public void setProd_devuelto_n(String prod_devuelto_n) {
+            this.prod_devuelto_n = prod_devuelto_n;
+        }
+
+        public String getProd_danado_n() {
+            return prod_danado_n;
+        }
+
+        public void setProd_danado_n(String prod_danado_n) {
+            this.prod_danado_n = prod_danado_n;
+        }
+
+        public String getProd_pagado_n() {
+            return prod_pagado_n;
+        }
+
+        public void setProd_pagado_n(String prod_pagado_n) {
+            this.prod_pagado_n = prod_pagado_n;
+        }
+    }
+    
 }
