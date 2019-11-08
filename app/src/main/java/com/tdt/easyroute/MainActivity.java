@@ -40,17 +40,19 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
     private ExpandableListView expandableListView;
     private ExpandableListAdapter adapter;
     private List<String> lstTitle;
     private Map<String,List<String>> lstChild;
     private NavigationManager navigationManager;
+    private int ultimoGrupo=-1;
+
+
     List<String> menuMostrar;
     private TextView tv_nombre,tv_ruta;
     Usuario usuario;
 
-    private Variables.Startday varStarday = new Variables.Startday();
+    private Variables.Startday varStartday = new Variables.Startday();
 
     @Override
     public void onBackPressed() {
@@ -158,13 +160,17 @@ public class MainActivity extends AppCompatActivity {
             public void onGroupExpand(int groupPosition) {
                 //set title for toolbar
                 //getSupportActionBar().setTitle(lstTitle.get(groupPosition).toString());
+                if(ultimoGrupo!=-1)
+                    expandableListView.collapseGroup(ultimoGrupo);
+
+                ultimoGrupo=groupPosition;
             }
         });
 
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {
-                //getSupportActionBar().setTitle("Inicio");
+                ultimoGrupo=-1;
             }
         });
 
@@ -184,12 +190,12 @@ public class MainActivity extends AppCompatActivity {
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
 
+                ultimoGrupo=-1;
                 expandableListView.collapseGroup(groupPosition);
 
                 return false;
             }
         });
-
     }
 
     private void setupDrawer() {
@@ -218,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
     private void validarVacioMenu() {
 
         //OPCIONES QUE SE MOSTRARAN EN EL MENU
-
 
         List<String> title = Arrays.asList("Inicio de día", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
 
@@ -264,11 +269,6 @@ public class MainActivity extends AppCompatActivity {
 
     //TERMINA CONFIGURACION DEL MENU
 
-
-    public Usuario getUsuario()
-    {
-        return usuario;
-    }
 
     public void inicializar()
     {
@@ -332,11 +332,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public Variables.Startday getVarStarday() {
-        return varStarday;
+    //VARIABLES COMPARTIDAS ENTRE FRAGMENTS
+
+    public Usuario getUsuario()
+    {
+        return usuario;
     }
 
-    public void setVarStarday(Variables.Startday varStarday) {
-        this.varStarday = varStarday;
+    public Variables.Startday getVarStartday() {
+        return varStartday;
+    }
+    public void setVarStartday(Variables.Startday varStarday) {
+        this.varStartday = varStarday;
     }
 }

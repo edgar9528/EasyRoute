@@ -275,7 +275,7 @@ public class Querys {
 
                 public static String InsertConfiguracion = "Insert into ConfiguracionHH(rut_cve_n,emp_cve_n,usu_cve_str," +
                         "camion_str,km_inicial_n,conf_fechainicio_dt,conf_preventa_n,est_cve_str) values (" +
-                        "{0},{1},'{2}','{3}',{4},getdate(),{5},'A')";
+                        "{0},{1},'{2}','{3}',{4},datetime('now','localtime'),{5},'A')";
 
                 public static String ReactivarPedidos = "update configuracionHH set conf_descarga_dt=null where est_cve_str='A' ";
 

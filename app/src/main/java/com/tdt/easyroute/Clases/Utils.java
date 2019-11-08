@@ -163,5 +163,11 @@ public class Utils {
         return cad;
     }
 
+    public static String PositionStr()
+    {
+        String posicion = "20.945,-97.406389";
+        return posicion;
+    }
+
 
 }

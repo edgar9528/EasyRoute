@@ -75,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Vendedor"
                     android:singleLine="true"
+                    android:focusable="false"
                     />
             </android.support.design.widget.TextInputLayout>
 
@@ -143,20 +144,20 @@
                 >
 
                 <Button
-                    android:id="@+id/button_realizar"
+                    android:id="@+id/button_salir"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Realizar"
+                    android:text="Salir"
                     android:theme="@style/ButtonDarkSmall"
                     />
 
                 <Button
-                    android:id="@+id/button_radia"
+                    android:id="@+id/button_validar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="ReAct.Día"
+                    android:text="Validar"
                     android:theme="@style/ButtonDarkSmall"
                     />
 

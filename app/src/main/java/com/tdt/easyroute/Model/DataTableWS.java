@@ -3211,5 +3211,38 @@ public class DataTableWS {
             this.prod_pagado_n = prod_pagado_n;
         }
     }
+
+    public static class RetValInicioDia{
+        String ret;
+        String msj;
+        String ds;
+
+        public RetValInicioDia() {
+        }
+
+        public String getRet() {
+            return ret;
+        }
+
+        public void setRet(String ret) {
+            this.ret = ret;
+        }
+
+        public String getMsj() {
+            return msj;
+        }
+
+        public void setMsj(String msj) {
+            this.msj = msj;
+        }
+
+        public String getDs() {
+            return ds;
+        }
+
+        public void setDs(String ds) {
+            this.ds = ds;
+        }
+    }
     
 }

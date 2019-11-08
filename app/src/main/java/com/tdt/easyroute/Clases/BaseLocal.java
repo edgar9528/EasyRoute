@@ -26,7 +26,7 @@ public class BaseLocal {
             Cursor cursor = bd.rawQuery(consulta, null);
 
             if(cursor.getCount()>0)
-                Log.d("salida","encontro info en la bd");
+                Log.d("salida","encontro info en la bd (Base local) "+consulta);
 
             json = cur2Json(cursor);
 
@@ -44,15 +44,20 @@ public class BaseLocal {
 
     public static void Insert(String consulta,Context context)
     {
+        try {
+            String nombreBase = context.getString(R.string.nombreBD);
 
-        String nombreBase = context.getString( R.string.nombreBD );
+            DatabaseHelper databaseHelper = new DatabaseHelper(context, nombreBase, null, 1);
+            SQLiteDatabase bd = databaseHelper.getWritableDatabase();
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(context, nombreBase, null, 1);
-        SQLiteDatabase bd = databaseHelper.getWritableDatabase();
+            bd.execSQL(consulta);
 
-        bd.execSQL(consulta);
-
-        bd.close();
+            bd.close();
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error BASELOCAL INSERT "+ e.getMessage());
+        }
 
     }
 

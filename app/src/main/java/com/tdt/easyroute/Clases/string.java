@@ -27,4 +27,21 @@ public class string {
         return  consulta;
 
     }
+
+    public static boolean CamposLlenos (String[] edittext)
+    {
+        boolean llenos=true;
+
+        for(int i=0; i<edittext.length;i++)
+        {
+            if(edittext[i].isEmpty())
+            {
+                llenos=false;
+                i=edittext.length;
+            }
+        }
+
+        return llenos;
+
+    }
 }

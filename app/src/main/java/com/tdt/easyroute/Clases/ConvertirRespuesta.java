@@ -356,7 +356,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.Usuarios> getUsuariosJson(String respuesta)
     {
         ArrayList<DataTableWS.Usuarios> al =null;
@@ -896,6 +895,22 @@ public class ConvertirRespuesta {
         return al;
     }
 
+
+    public static DataTableWS.RetValInicioDia getRetValInicioDiaJson(String respuesta)
+    {
+        DataTableWS.RetValInicioDia dt=null;
+
+        try {
+            dt = new Gson().fromJson(respuesta,DataTableWS.RetValInicioDia.class);
+            Log.d("salida","USUARIO CREADO");
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            dt=null;
+        }
+
+        return dt;
+    }
 
 
 

@@ -160,7 +160,7 @@ public class DatosFragment extends Fragment {
         if(metodosWS!=null)
             metodosWS.clear();
         metodosWS = new ArrayList<>();
-        actulizarStartday();
+        getStartday();
         boolean rbSelec=false;
         for(int i=0; i<rbSeleccionados.length;i++)
         {
@@ -206,11 +206,17 @@ public class DatosFragment extends Fragment {
         }
     }
 
-    private void actulizarStartday()
+    private void getStartday()
     {
         MainActivity mainActivity = (MainActivity) getActivity();
-        varStartday = mainActivity.getVarStarday();
+        varStartday = mainActivity.getVarStartday();
         Log.d("salida", "RUTA: " + varStartday.getRuta() +" "+varStartday.getTipoRuta());
+    }
+
+    public void setStarday()
+    {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setVarStartday(varStartday);
     }
 
     //seleccionar o deseleccionar radiobutton cuando se le da clic
@@ -413,6 +419,8 @@ public class DatosFragment extends Fragment {
                 if(almacenado)
                 {
                     mostrarCatalogos();
+                    varStartday.setSincro(true);
+                    setStarday(); //actualiza el valor de la variable startday
                     Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
                 }
                 else
