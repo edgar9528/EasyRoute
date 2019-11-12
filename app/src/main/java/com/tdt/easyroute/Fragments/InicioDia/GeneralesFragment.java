@@ -1,12 +1,10 @@
 package com.tdt.easyroute.Fragments.InicioDia;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
-import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;

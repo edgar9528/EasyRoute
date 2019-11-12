@@ -1,15 +1,11 @@
 package com.tdt.easyroute.Adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.tdt.easyroute.Fragments.FragmentCerrar;
 import com.tdt.easyroute.Fragments.InicioDia.DatosFragment;
 import com.tdt.easyroute.Fragments.InicioDia.GeneralesFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorrutaFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.UtilidadFragment;
 
 public class PagerIniciodiaAdapter extends FragmentStatePagerAdapter {
 

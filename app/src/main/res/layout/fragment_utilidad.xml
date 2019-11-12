@@ -27,19 +27,19 @@
                 android:paddingBottom="@dimen/paddingControles"
                 >
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
                     android:theme="@style/EditTextBlack">
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_folio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Folio"
                         android:singleLine="true"
                         />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/button_ver"
@@ -55,32 +55,32 @@
             </LinearLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_pagos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Pagos"
                     android:singleLine="true"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_credito"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Credito"
                     android:singleLine="true"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <LinearLayout

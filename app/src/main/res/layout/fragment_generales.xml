@@ -20,11 +20,11 @@
             android:focusableInTouchMode="true"
             >
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_empresa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -32,14 +32,14 @@
                     android:singleLine="true"
                     android:focusable="false"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_ruta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,13 +47,13 @@
                     android:singleLine="true"
                     android:focusable="false"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_truta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -61,15 +61,15 @@
                     android:singleLine="true"
                     android:enabled="false"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_vendedor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,14 +77,14 @@
                     android:singleLine="true"
                     android:focusable="false"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_fecha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,46 +92,46 @@
                     android:singleLine="true"
                     android:focusable="false"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_hora"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Hora"
                     android:singleLine="true"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_camion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Camión"
                     android:singleLine="true"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/EditTextBlack">
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_kilometraje"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Kilometraje"
                     android:singleLine="true"
                     />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
 

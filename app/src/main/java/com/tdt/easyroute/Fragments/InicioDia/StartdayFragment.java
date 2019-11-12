@@ -1,16 +1,15 @@
 package com.tdt.easyroute.Fragments.InicioDia;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.tdt.easyroute.Adapter.PagerIniciodiaAdapter;
-import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
 public class StartdayFragment extends Fragment {

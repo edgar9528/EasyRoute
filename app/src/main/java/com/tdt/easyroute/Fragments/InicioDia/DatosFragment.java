@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +26,6 @@ import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.Model.Variables;
 import com.tdt.easyroute.R;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorFragment;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -35,10 +34,8 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class DatosFragment extends Fragment {

@@ -1,6 +1,6 @@
 package com.tdt.easyroute.Ventanas;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +26,6 @@ public class PruebasActivity extends AppCompatActivity {
                 Toast.makeText(PruebasActivity.this, "SOY LA PRUEBA", Toast.LENGTH_SHORT).show();
             }
         });
-        
+
     }
 }
