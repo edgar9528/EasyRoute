@@ -28,6 +28,7 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity;
+import com.tdt.easyroute.Ventanas.PruebasActivity;
 
 import org.ksoap2.serialization.PropertyInfo;
 
@@ -196,6 +197,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 //un click
+                Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
+                startActivity(intent);
 
                 gestureDetector.onTouchEvent(event);
                 return true;

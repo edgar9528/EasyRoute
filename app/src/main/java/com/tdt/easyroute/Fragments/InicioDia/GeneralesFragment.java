@@ -358,7 +358,6 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         BaseLocal.Insert("update ConfiguracionHH set est_cve_str='I'",getContext());
 
         String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta,empresa,campos[3],campos[6],campos[7],tiporuta_cve);
-
         BaseLocal.Insert(consulta,getContext());
 
         BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta,coordenda),getContext());
