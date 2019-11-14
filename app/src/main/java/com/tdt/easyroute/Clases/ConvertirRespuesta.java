@@ -902,7 +902,6 @@ public class ConvertirRespuesta {
 
         try {
             dt = new Gson().fromJson(respuesta,DataTableWS.RetValInicioDia.class);
-            Log.d("salida","USUARIO CREADO");
         }catch (Exception e)
         {
             Log.d("salida","error gson: "+e.toString());

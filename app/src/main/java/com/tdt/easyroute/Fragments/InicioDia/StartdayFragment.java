@@ -35,7 +35,7 @@ public class StartdayFragment extends Fragment {
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
 
-        final PagerIniciodiaAdapter adapter = new PagerIniciodiaAdapter(getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerIniciodiaAdapter adapter = new PagerIniciodiaAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
 
@@ -58,14 +58,13 @@ public class StartdayFragment extends Fragment {
 
         //TERMINA CONFIGURACION DE LAS TABS
 
-
         return view;
     }
 
-    public String getUsuarioStarday()
-    {
-        return "edgar";
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
     }
-
-
 }

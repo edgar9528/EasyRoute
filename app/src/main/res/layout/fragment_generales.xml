@@ -79,7 +79,6 @@
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,6 +103,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Hora"
                     android:singleLine="true"
+                    android:focusable="false"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,6 +130,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Kilometraje"
                     android:singleLine="true"
+                    android:inputType="number"
+                    android:digits="0123456789"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 

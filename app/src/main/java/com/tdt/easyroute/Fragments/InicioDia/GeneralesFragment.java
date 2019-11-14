@@ -1,10 +1,19 @@
 package com.tdt.easyroute.Fragments.InicioDia;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +34,7 @@ import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.Model.Usuario;
-import com.tdt.easyroute.Model.Variables;
+import com.tdt.easyroute.ViewModel.StartdayVM;
 import com.tdt.easyroute.R;
 
 import org.ksoap2.serialization.PropertyInfo;
@@ -50,10 +59,23 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
     Usuario user;
     String[] campos;
 
-    Variables.Startday varStarday = new Variables.Startday();
+    String latLon;
+
+    boolean sincro=false;
+
+    Handler handler=null;
+    Runnable myRunnable;
+
+    private StartdayVM startdayVM;
 
     public GeneralesFragment() {
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        startdayVM = ViewModelProviders.of( getParentFragment()).get(StartdayVM.class);
     }
 
     @Override
@@ -62,6 +84,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         View view = inflater.inflate(R.layout.fragment_generales, container, false);
         // Inflate the layout for this fragment
         MainActivity mainActivity = (MainActivity) getActivity();
+
         user = mainActivity.getUsuario();
 
         et_empresa = view.findViewById(R.id.et_empresa);
@@ -73,6 +96,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         et_camion = view.findViewById(R.id.et_camion);
         et_km = view.findViewById(R.id.et_kilometraje);
         bt_validar = view.findViewById(R.id.button_validar);
+        bt_salir = view.findViewById(R.id.button_salir);
 
         inicializar();
 
@@ -96,15 +120,6 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
-        et_fecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                peticion="Fecha";
-                ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(),"HoraActual");
-                conexionWS.delegate = GeneralesFragment.this;
-                conexionWS.execute();
-            }
-        });
 
         bt_validar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,9 +128,27 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
+        bt_salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        startdayVM.getSincro().observe(getParentFragment(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean s) {
+                sincro=s;
+                Log.d("salida","Boolean sincro: "+sincro);
+            }
+        });
+
     }
 
     private void inicializar()
@@ -125,6 +158,40 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         buscarEmpresaRuta();
         obtenerRutas();
         obtenerEmpresas();
+
+        mostrarFechaHora();
+
+    }
+
+    private void mostrarFechaHora()
+    {
+        et_fecha.setText(Utils.FechaLocal());
+
+        handler = new Handler();
+
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                et_hora.setText(Utils.HoraLocal());
+                handler.postDelayed(this, 1000);
+                //Log.d("salida",et_hora.getText().toString());
+            }
+        };
+
+        handler.post(myRunnable);
+
+        //h= new Handler();
+        /*h.post(new Runnable() {
+            @Override
+            public void run() {
+
+                et_hora.setText(Utils.HoraLocal());
+                Log.d("salida",et_hora.getText().toString());
+
+                h.postDelayed(this, 1000);
+            }
+        });*/
+
     }
 
     private void buscarEmpresaRuta()
@@ -151,11 +218,12 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                 et_tRuta.setText(dt_rutaTipo.getTrut_desc_str());
                 tipoRuta = dt_rutaTipo.getTrut_desc_str();
                 tiporuta_cve = dt_rutaTipo.getRut_cve_n();
+
             }
 
-            varStarday.setRuta(ruta);
-            varStarday.setTipoRuta(tipoRuta);
-            setStarday();
+            actualizaCatalogos();
+            startdayVM.setTipoRuta(tipoRuta);
+            startdayVM.setRuta(ruta);
 
         }catch (Exception e)
         {
@@ -163,6 +231,19 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             Log.d("salida","Error: "+e.getMessage());
         }
 
+    }
+
+    private void actualizaCatalogos()
+    {
+        String catalogos="LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas," +
+                "Marcas,Unidades,CondicionesVenta,Productos,ListaPrecios,PrecioProductos,NivelCliente,FormasPago," +
+                "FrecuenciasVisita,MotivosNoVenta,MotivosNoLectura,Categorias,Familias,Presentaciones,Clientes," +
+                "Creditos,Direcciones,ClientesVentaMes,Promociones,PromocionesKit,Consignas";
+
+        if(tipoRuta.equals("REPARTO"))
+            catalogos += ",Preventa";
+
+        startdayVM.setCatalogos(catalogos);
     }
 
     private void obtenerRutas()
@@ -204,9 +285,10 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         tipoRuta = lista_rutas.get(i).getTrut_desc_str();
         tiporuta_cve = lista_rutas.get(i).getRut_cve_n();
 
-        varStarday.setRuta(ruta);
-        varStarday.setTipoRuta(tipoRuta);
-        setStarday();
+        startdayVM.setTipoRuta(tipoRuta);
+        startdayVM.setRuta(ruta);
+
+        actualizaCatalogos();
 
     }
 
@@ -249,6 +331,41 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
+    private void obtenerUbicacion()
+    {
+        try {
+
+            final MainActivity mainActivity = (MainActivity) getActivity();
+            final String[] ubi = new String[1];
+            final ProgressDialog progress = new ProgressDialog(getContext());
+            progress.setTitle("Actualizando");
+            progress.setMessage("Por favor espere");
+            progress.show();
+            progress.setCancelable(false);
+
+            mainActivity.enableLocationUpdates();
+
+            ubi[0] = mainActivity.getLatLon();
+            Log.d("salida", "Ubicacion anterior: " + ubi[0]);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress.cancel();
+                    mainActivity.disableLocationUpdates();
+                    ubi[0] = mainActivity.getLatLon();
+                    crearConfiguracion(ubi[0]);
+                }
+            }, 3000);
+
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
     private void validar()
     {
         campos[0]=et_empresa.getText().toString();
@@ -262,34 +379,9 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
         if(string.CamposLlenos(campos))
         {
-            getStarday();
-            if(varStarday.getSincro())
+            if(sincro)
             {
-                peticion="InicioDia";
-
-                //parametros del metodo
-                ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
-                PropertyInfo pi_ruta = new PropertyInfo();
-                pi_ruta.setName("ruta");
-                pi_ruta.setValue(ruta);
-                propertyInfos.add(pi_ruta);
-
-                PropertyInfo pi_usu = new PropertyInfo();
-                pi_usu.setName("usu");
-                pi_usu.setValue(user.getUsuario());
-                propertyInfos.add(pi_usu);
-
-                PropertyInfo pi_version = new PropertyInfo();
-                pi_version.setName("version");
-                pi_version.setValue(Utils.Version());
-                propertyInfos.add(pi_version);
-
-                Log.d("salida",ruta+" "+user.getUsuario()+" "+Utils.Version());
-
-                ConexionWS_JSON conexionWSJ = new ConexionWS_JSON(getContext(),"InicioDiaJ");
-                conexionWSJ.propertyInfos= propertyInfos;
-                conexionWSJ.delegate = GeneralesFragment.this;
-                conexionWSJ.execute();
+                peticionFecha();
             }
             else
                 Toast.makeText(getContext(), "No ha realizado la sincronizacion", Toast.LENGTH_SHORT).show();
@@ -300,6 +392,43 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
     }
 
+    private void peticionFecha()
+    {
+        //obtener fecha
+        peticion="Fecha";
+        ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(),"HoraActual");
+        conexionWS.delegate = GeneralesFragment.this;
+        conexionWS.execute();
+    }
+
+    private void peticionInicioDia()
+    {
+        peticion="InicioDia";
+
+        //parametros del metodo
+        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+        PropertyInfo pi_ruta = new PropertyInfo();
+        pi_ruta.setName("ruta");
+        pi_ruta.setValue(ruta);
+        propertyInfos.add(pi_ruta);
+
+        PropertyInfo pi_usu = new PropertyInfo();
+        pi_usu.setName("usu");
+        pi_usu.setValue(user.getUsuario());
+        propertyInfos.add(pi_usu);
+
+        PropertyInfo pi_version = new PropertyInfo();
+        pi_version.setName("version");
+        pi_version.setValue(Utils.Version());
+        propertyInfos.add(pi_version);
+
+        Log.d("salida",ruta+" "+user.getUsuario()+" "+Utils.Version());
+
+        ConexionWS_JSON conexionWSJ = new ConexionWS_JSON(getContext(),"InicioDiaJ");
+        conexionWSJ.propertyInfos= propertyInfos;
+        conexionWSJ.delegate = GeneralesFragment.this;
+        conexionWSJ.execute();
+    }
 
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
@@ -311,8 +440,19 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             {
                 if(peticion.equals("Fecha"))
                 {
-                    et_fecha.setText(respuesta);
+                    String fechaLocal = et_fecha.getText().toString() +" "+et_hora.getText().toString();
+                    String fechaWS = Utils.FechaWS(respuesta);
+
+                    if(Utils.FechasIguales(fechaLocal,fechaWS))
+                    {
+                        peticionInicioDia();
+                    }
+                    else
+                    {
+                        fechaIncorrecta();
+                    }
                 }
+                else
                 if(peticion.equals("InicioDia"))
                 {
                     DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
@@ -321,7 +461,8 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                     {
                         if(retVal.getRet().equals("true"))
                         {
-                            crearConfiguracion();
+                            //UNA VEZ QUE SE OBTIENE LA UBICACION, SE CREA LA CONGIFURACION HH
+                            obtenerUbicacion();
                         }
                         else
                         {
@@ -343,12 +484,29 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             Toast.makeText(getContext(), respuesta, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void fechaIncorrecta()
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+        dialogo1.setTitle("Aviso");
+        dialogo1.setMessage("Para continuar debe configurar correctamente la fecha/hora del dispositivo");
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton("Configurar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                startActivity(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS));
+            }
+        });
+        dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+            }
+        });
+        dialogo1.show();
 
     }
 
-    public void crearConfiguracion()
+    public void crearConfiguracion(String posicion)
     {
-        String coordenda = Utils.PositionStr();
 
         BaseLocal.Insert(Querys.Inventario.DesactivaCarga,getContext());
 
@@ -357,22 +515,17 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta,empresa,campos[3],campos[6],campos[7],tiporuta_cve);
         BaseLocal.Insert(consulta,getContext());
 
-        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta,coordenda),getContext());
+        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta,posicion),getContext());
 
+        Log.d("salida","Configuracaion HH creada");
         Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_SHORT).show();
 
     }
 
-    public void setStarday()
-    {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setVarStartday(varStarday);
-    }
-
-    public void getStarday()
-    {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        varStarday = mainActivity.getVarStartday();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        handler.removeCallbacks(myRunnable);
     }
 
 }

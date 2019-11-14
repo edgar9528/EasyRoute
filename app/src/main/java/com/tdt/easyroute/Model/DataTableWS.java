@@ -3212,6 +3212,203 @@ public class DataTableWS {
         }
     }
 
+    public static class VisitaPreventa
+    {
+        private String visp_folio_str;
+        private String cli_cve_n;
+        private String rut_cve_n;
+        private String visp_fecha_dt;
+        private String visp_coordenada_str;
+        private String usu_cve_str;
+        private String trans_est_n;
+        private String trans_fecha_dt;
+
+        public String getVisp_folio_str() {
+            return visp_folio_str;
+        }
+
+        public void setVisp_folio_str(String visp_folio_str) {
+            this.visp_folio_str = visp_folio_str;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getVisp_fecha_dt() {
+            return visp_fecha_dt;
+        }
+
+        public void setVisp_fecha_dt(String visp_fecha_dt) {
+            this.visp_fecha_dt = visp_fecha_dt;
+        }
+
+        public String getVisp_coordenada_str() {
+            return visp_coordenada_str;
+        }
+
+        public void setVisp_coordenada_str(String visp_coordenada_str) {
+            this.visp_coordenada_str = visp_coordenada_str;
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getTrans_est_n() {
+            return trans_est_n;
+        }
+
+        public void setTrans_est_n(String trans_est_n) {
+            this.trans_est_n = trans_est_n;
+        }
+
+        public String getTrans_fecha_dt() {
+            return trans_fecha_dt;
+        }
+
+        public void setTrans_fecha_dt(String trans_fecha_dt) {
+            this.trans_fecha_dt = trans_fecha_dt;
+        }
+    }
+
+    public static class Preventa
+    {
+        private String prev_folio_str;
+        private String cli_cve_n;
+        private String rut_cve_n;
+        private String prev_fecha_dt;
+        private String lpre_cve_n;
+        private String dir_cve_n;
+        private String usu_cve_str;
+        private String prev_coordenada_str;
+        private String prev_condicionada_n;
+        private String trans_est_n;
+        private String trans_fecha_dt;
+        private String rut_repcve_n;
+        private String prev_comentario_str;
+
+        public String getPrev_folio_str() {
+            return prev_folio_str;
+        }
+
+        public void setPrev_folio_str(String prev_folio_str) {
+            this.prev_folio_str = prev_folio_str;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getPrev_fecha_dt() {
+            return prev_fecha_dt;
+        }
+
+        public void setPrev_fecha_dt(String prev_fecha_dt) {
+            this.prev_fecha_dt = prev_fecha_dt;
+        }
+
+        public String getLpre_cve_n() {
+            return lpre_cve_n;
+        }
+
+        public void setLpre_cve_n(String lpre_cve_n) {
+            this.lpre_cve_n = lpre_cve_n;
+        }
+
+        public String getDir_cve_n() {
+            return dir_cve_n;
+        }
+
+        public void setDir_cve_n(String dir_cve_n) {
+            this.dir_cve_n = dir_cve_n;
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getPrev_coordenada_str() {
+            return prev_coordenada_str;
+        }
+
+        public void setPrev_coordenada_str(String prev_coordenada_str) {
+            this.prev_coordenada_str = prev_coordenada_str;
+        }
+
+        public String getPrev_condicionada_n() {
+            return prev_condicionada_n;
+        }
+
+        public void setPrev_condicionada_n(String prev_condicionada_n) {
+            this.prev_condicionada_n = prev_condicionada_n;
+        }
+
+        public String getTrans_est_n() {
+            return trans_est_n;
+        }
+
+        public void setTrans_est_n(String trans_est_n) {
+            this.trans_est_n = trans_est_n;
+        }
+
+        public String getTrans_fecha_dt() {
+            return trans_fecha_dt;
+        }
+
+        public void setTrans_fecha_dt(String trans_fecha_dt) {
+            this.trans_fecha_dt = trans_fecha_dt;
+        }
+
+        public String getRut_repcve_n() {
+            return rut_repcve_n;
+        }
+
+        public void setRut_repcve_n(String rut_repcve_n) {
+            this.rut_repcve_n = rut_repcve_n;
+        }
+
+        public String getPrev_comentario_str() {
+            return prev_comentario_str;
+        }
+
+        public void setPrev_comentario_str(String prev_comentario_str) {
+            this.prev_comentario_str = prev_comentario_str;
+        }
+    }
+
     public static class RetValInicioDia{
         String ret;
         String msj;

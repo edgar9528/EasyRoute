@@ -1,15 +1,22 @@
 package com.tdt.easyroute;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +27,17 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.tdt.easyroute.Adapter.CustomExpandableListAdapter;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
@@ -28,15 +46,15 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.Model.Usuario;
-import com.tdt.easyroute.Model.Variables;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks,
+        LocationListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -52,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView tv_nombre,tv_ruta;
     Usuario usuario;
 
-    private Variables.Startday varStartday = new Variables.Startday();
+    //region VARIABLES PARA UBICACION
+    private static final String LOGTAG = "android-localizacion";
+    private static final int PETICION_PERMISO_LOCALIZACION = 101;
+    private static final int PETICION_CONFIG_UBICACION = 201;
+    private GoogleApiClient apiClient;
+    private LocationRequest locRequest;
+    String latLon=null;
+    //endregion
 
     @Override
     public void onBackPressed() {
@@ -88,12 +113,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = getIntent();
             usuario = (Usuario) intent.getSerializableExtra("usuario");
 
-
             //init view
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
             expandableListView= findViewById(R.id.navList);
             navigationManager= FragmentNavigationManager.getmInstance(this,this,usuario);
-
 
             View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
             expandableListView.addHeaderView(listHeaderView);
@@ -113,6 +136,15 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
 
+
+            //CONFIGURACION DE UBICACION
+
+            //Construcción cliente API Google
+            apiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this, this)
+                    .addConnectionCallbacks(this)
+                    .addApi(LocationServices.API)
+                    .build();
 
         }
         catch (Exception e)
@@ -295,8 +327,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("salida","Error: "+e.getMessage());
         }
 
-
-
     }
 
     public void validarInicio()
@@ -324,7 +354,6 @@ public class MainActivity extends AppCompatActivity {
                 menuMostrar = Arrays.asList("Inicio de día","Reportes");
             }
 
-
         }catch (Exception e)
         {
             Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -333,16 +362,181 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //VARIABLES COMPARTIDAS ENTRE FRAGMENTS
-
     public Usuario getUsuario()
     {
         return usuario;
     }
 
-    public Variables.Startday getVarStartday() {
-        return varStartday;
+
+    //region Obtener ubicación actual
+
+    public String getLatLon()
+    {
+        return latLon;
     }
-    public void setVarStartday(Variables.Startday varStarday) {
-        this.varStartday = varStarday;
+
+    public void enableLocationUpdates() {
+
+        locRequest = new LocationRequest();
+        locRequest.setInterval(2000);
+        locRequest.setFastestInterval(1000);
+        locRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest locSettingsRequest =
+                new LocationSettingsRequest.Builder()
+                        .addLocationRequest(locRequest)
+                        .build();
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(
+                        apiClient, locSettingsRequest);
+
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult locationSettingsResult) {
+                final Status status = locationSettingsResult.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+
+                        Log.i(LOGTAG, "Configuración correcta");
+                        startLocationUpdates();
+
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        try {
+                            Log.i(LOGTAG, "Se requiere actuación del usuario");
+                            status.startResolutionForResult(MainActivity.this, PETICION_CONFIG_UBICACION);
+                        } catch (IntentSender.SendIntentException e) {
+                            //BLOQUEAR OPCIONES POR UBICACION
+                            Log.i(LOGTAG, "Error al intentar solucionar configuración de ubicación");
+                        }
+
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(LOGTAG, "No se puede cumplir la configuración de ubicación necesaria");
+                        //BLOQUEAR OPCIONES POR UBICACION
+                        break;
+                }
+            }
+        });
+
+        Log.d("salida","Se ha activado la ubicacion");
     }
+
+    public void disableLocationUpdates() {
+
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                apiClient, this);
+
+        Log.d("salida","Se ha desactivado la ubicacion");
+
+    }
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            //Ojo: estamos suponiendo que ya tenemos concedido el permiso.
+            //Sería recomendable implementar la posible petición en caso de no tenerlo.
+
+            Log.i(LOGTAG, "Inicio de recepción de ubicaciones");
+
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    apiClient, locRequest, MainActivity.this);
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        //Se ha producido un error que no se puede resolver automáticamente
+        //y la conexión con los Google Play Services no se ha establecido.
+
+        Log.e(LOGTAG, "Error grave al conectar con Google Play Services");
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        //Conectado correctamente a Google Play Services
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PETICION_PERMISO_LOCALIZACION);
+        } else {
+
+            Location lastLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+
+            updateUI(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //Se ha interrumpido la conexión con Google Play Services
+
+        Log.e(LOGTAG, "Se ha interrumpido la conexión con Google Play Services");
+    }
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            latLon = loc.getLatitude()+","+loc.getLongitude();
+        } else {
+            latLon = null;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PETICION_PERMISO_LOCALIZACION) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                //Permiso concedido
+
+                @SuppressWarnings("MissingPermission")
+                Location lastLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+
+                updateUI(lastLocation);
+
+            } else {
+                //Permiso denegado:
+                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
+
+                Log.e(LOGTAG, "Permiso denegado");
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PETICION_CONFIG_UBICACION:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        startLocationUpdates();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Log.i(LOGTAG, "El usuario no ha realizado los cambios de configuración necesarios");
+                        //BLOQUEAR OPCIONES POR UBICACION
+                        break;
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        Log.i(LOGTAG, "Recibida nueva ubicación!");
+        //Mostramos la nueva ubicación recibida
+        updateUI(location);
+    }
+
+
+    //endregion
+
 }

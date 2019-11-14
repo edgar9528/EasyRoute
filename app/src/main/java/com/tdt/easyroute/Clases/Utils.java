@@ -1,16 +1,24 @@
 package com.tdt.easyroute.Clases;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
+import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
 
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.R;
 
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.Callable;
 
 public class Utils {
 
@@ -149,24 +157,69 @@ public class Utils {
         return var;
     }
 
-    public static String getBoolStr(String cad)
-    {
-        if(cad.equals("true"))
-        {
-            cad="1";
-        }
-        else
-        {
-            cad="0";
-        }
-
-        return cad;
-    }
-
     public static String PositionStr()
     {
         String posicion = "20.945,-97.406389";
         return posicion;
+    }
+
+    public static String FechaLocal()
+    {
+        Date d = new Date();
+        CharSequence s = DateFormat.format("yyyy-MM-dd", d.getTime());
+        return s.toString();
+    }
+
+    public static String HoraLocal()
+    {
+        Date d = new Date();
+        CharSequence s = DateFormat.format("HH:mm:ss", d.getTime());
+        return s.toString();
+    }
+
+    public static String FechaWS(String fechaWS)
+    {
+        String fecha="";
+        String originalStringFormat = "yyyy-MM-dd'T'HH:mm:ss";
+        String desiredStringFormat = "yyyy-MM-dd HH:mm:ss";
+
+        SimpleDateFormat readingFormat = new SimpleDateFormat(originalStringFormat);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(desiredStringFormat);
+
+        try {
+            Date date = readingFormat.parse(fechaWS);
+            fecha = outputFormat.format(date);
+
+        } catch (Exception e) {
+            Log.d("salida","Error: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return fecha;
+    }
+
+    public static boolean FechasIguales(String local, String ws) {
+        boolean iguales = false;
+
+        try {
+
+            local = local.substring(0,local.length()-3);
+            ws = ws.substring(0,ws.length()-3);
+
+            if(local.equals(ws))
+                iguales=true;
+            else
+                iguales=false;
+
+            Log.d("salida","tlo: "+local);
+            Log.d("salida","tws: "+ws);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","FechasIguales: "+e.getMessage());
+            iguales=false;
+        }
+
+        return iguales;
     }
 
 

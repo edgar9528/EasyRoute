@@ -5,12 +5,19 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -22,11 +29,9 @@ import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.string;
-import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableWS;
-import com.tdt.easyroute.Model.Variables;
+import com.tdt.easyroute.ViewModel.StartdayVM;
 import com.tdt.easyroute.R;
-
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -40,15 +45,10 @@ import java.util.Date;
 
 public class DatosFragment extends Fragment {
 
-    String catalogos="LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas," +
-            "Marcas,Unidades,CondicionesVenta,Productos,ListaPrecios,PrecioProductos,NivelCliente,FormasPago," +
-            "FrecuenciasVisita,MotivosNoVenta,MotivosNoLectura,Categorias,Familias,Presentaciones,Clientes," +
-            "Creditos,Direcciones,ClientesVentaMes,Promociones,PromocionesKit,Consignas";
+    String catalogos;
 
     ArrayList<String> al_catalogos;
     String[] arr_estadoCat;
-
-    Variables.Startday varStartday;
 
     Button b_sincronizar,b_selec,b_deselec;
 
@@ -57,9 +57,16 @@ public class DatosFragment extends Fragment {
     LayoutInflater layoutInflater;
     View viewGral;
 
-    String nombreBase;
+    String nombreBase,tipoRuta,ruta;
     ArrayList<String> metodosWS;
 
+    StartdayVM startdayVM;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        startdayVM = ViewModelProviders.of(getParentFragment()).get(StartdayVM.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,8 +81,8 @@ public class DatosFragment extends Fragment {
         b_sincronizar = view.findViewById(R.id.button_sincronizar);
 
         nombreBase = getActivity().getString( R.string.nombreBD );
-        obtenerCatalogos();
-        mostrarCatalogos();
+        //obtenerCatalogos();
+        //mostrarCatalogos(); movideos al ViewModel
 
         b_sincronizar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +117,35 @@ public class DatosFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        startdayVM.getCatalogos().observe(getParentFragment(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                catalogos = s;
+                obtenerCatalogos();
+                mostrarCatalogos();
+            }
+        });
+
+        startdayVM.getTipoRuta().observe(getParentFragment(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                tipoRuta=s;
+            }
+        });
+
+        startdayVM.getRuta().observe(getParentFragment(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                ruta=s;
+            }
+        });
+
+
     }
 
     private void obtenerCatalogos()
@@ -151,13 +187,11 @@ public class DatosFragment extends Fragment {
 
     }
 
-
     private void sincronizar()
     {
         if(metodosWS!=null)
             metodosWS.clear();
         metodosWS = new ArrayList<>();
-        getStartday();
         boolean rbSelec=false;
         for(int i=0; i<rbSeleccionados.length;i++)
         {
@@ -165,7 +199,7 @@ public class DatosFragment extends Fragment {
             {
                 rbSelec=true;
 
-                if(varStartday.getTipoRuta().equals("PREVENTA"))
+                if(tipoRuta.equals("PREVENTA"))
                 {
                     switch (al_catalogos.get(i))
                     {
@@ -203,18 +237,6 @@ public class DatosFragment extends Fragment {
         }
     }
 
-    private void getStartday()
-    {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        varStartday = mainActivity.getVarStartday();
-        Log.d("salida", "RUTA: " + varStartday.getRuta() +" "+varStartday.getTipoRuta());
-    }
-
-    public void setStarday()
-    {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setVarStartday(varStartday);
-    }
 
     //seleccionar o deseleccionar radiobutton cuando se le da clic
     private View.OnClickListener rbListener = new View.OnClickListener() {
@@ -341,7 +363,7 @@ public class DatosFragment extends Fragment {
                         {
                             PropertyInfo piCliente = new PropertyInfo();
                             piCliente.setName("ruta");
-                            piCliente.setValue(varStartday.getRuta());
+                            piCliente.setValue(ruta);
                             Solicitud.addProperty(piCliente);
 
                         }
@@ -416,18 +438,19 @@ public class DatosFragment extends Fragment {
                 if(almacenado)
                 {
                     mostrarCatalogos();
-                    varStartday.setSincro(true);
-                    setStarday(); //actualiza el valor de la variable startday
+                    startdayVM.setSincro(true); //actualiza el valor de la variable startday
                     Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(context, resultado, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, resultado, Toast.LENGTH_LONG).show();
+                    startdayVM.setSincro(false);
                 }
             }
             else
             {
-                Toast.makeText(context, resultado, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, resultado, Toast.LENGTH_LONG).show();
+                startdayVM.setSincro(false);
             }
 
         }
@@ -1187,8 +1210,5 @@ public class DatosFragment extends Fragment {
         }
 
     }
-
-
-
 
 }

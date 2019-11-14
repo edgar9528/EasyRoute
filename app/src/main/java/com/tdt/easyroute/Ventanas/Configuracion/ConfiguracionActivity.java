@@ -81,6 +81,8 @@ public class ConfiguracionActivity extends AppCompatActivity {
             final PagerConfiguracionAdapter adapter = new PagerConfiguracionAdapter
                     (getSupportFragmentManager(), tabLayout.getTabCount(), tabs);
 
+            viewPager.setOffscreenPageLimit(3);
+
             viewPager.setAdapter(adapter);
 
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

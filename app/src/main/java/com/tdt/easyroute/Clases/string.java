@@ -1,10 +1,12 @@
 package com.tdt.easyroute.Clases;
 
+import android.util.Log;
+
 public class string {
 
     public static String formatSql(String consulta, String... parametros)
     {
-        String ant="",des="";
+        String ant="",des="",palabra,c="'",p1,p2;
         int con=0;
 
         do {
@@ -13,8 +15,15 @@ public class string {
                     ant = consulta.substring(0, i);
                 }
 
+
                 if (consulta.charAt(i) == '}') {
                     des = consulta.substring(i + 1);
+
+                    if(parametros[con]!=null && parametros[con].contains(c)) //Agregada por problema del apostrofe en nombres
+                    {
+                        parametros[con]=parametros[con].replace(c,"''");
+                    }
+
                     consulta = ant + parametros[con] + des;
 
                     break; //se termina el ciclo

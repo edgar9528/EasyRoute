@@ -196,8 +196,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 //un click
-                Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
-                startActivity(intent);
 
                 gestureDetector.onTouchEvent(event);
                 return true;
