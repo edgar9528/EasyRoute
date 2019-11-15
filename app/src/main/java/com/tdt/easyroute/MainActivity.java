@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         try {
             Log.d("salida","ENTRO MAIN ACTIVITY");
             Intent intent = getIntent();
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void selectFirsItemAsDefault() {
         if(navigationManager!= null)
         {
-            String firtsItem = "Inicio de día | Inicio";
+            String firtsItem = "Inventario | Carga inicial";
             navigationManager.showFragment(firtsItem);
             getSupportActionBar().setTitle(firtsItem);
         }

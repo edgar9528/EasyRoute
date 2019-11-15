@@ -22,6 +22,8 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
     public AsyncResponseJSON delegate = null;
     public ArrayList<PropertyInfo> propertyInfos = null;
     private ParametrosWS parametrosWS;
+    public String servidor;
+    public int timeout=0;
 
     public ConexionWS_JSON(Context context, String metodo) {
         this.context = context;
@@ -42,6 +44,12 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
 
         boolean result = true;
         respuesta=null;
+
+        if(timeout!=0) //ESTO ES EN CASO DE HACER LA PRUEBA DEL SERVIDOR
+        {
+            parametrosWS.setURL(servidor);
+            parametrosWS.setTIMEOUT(timeout);
+        }
 
         try {
             //Metodo al que se accede

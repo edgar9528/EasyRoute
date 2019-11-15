@@ -57,10 +57,11 @@ public class DatosFragment extends Fragment {
     LayoutInflater layoutInflater;
     View viewGral;
 
-    String nombreBase,tipoRuta,ruta;
+    String nombreBase,tipoRuta,ruta_cve;
     ArrayList<String> metodosWS;
 
     StartdayVM startdayVM;
+    boolean actualizoRutaEmpresa=false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,7 +142,7 @@ public class DatosFragment extends Fragment {
         startdayVM.getRuta().observe(getParentFragment(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                ruta=s;
+                ruta_cve=s;
             }
         });
 
@@ -266,7 +267,7 @@ public class DatosFragment extends Fragment {
         private String resultado;
         boolean almacenado=false;
 
-        //Lista de tablas descargadas
+        //region Lista de arrayList para descargar
 
         ArrayList<DataTableWS.Empresa> al_empresas=null;
         ArrayList<DataTableWS.Estatus> al_estatus=null;
@@ -299,33 +300,18 @@ public class DatosFragment extends Fragment {
         String consignas=null;
         ArrayList<DataTableWS.Consignas> al_consignas=null;
         ArrayList<DataTableWS.ConsignasDet> al_consignasDet=null;
+        ArrayList<DataTableWS.VisitaPreventa> al_visitaPreventa=null;
+        String preventa=null;
+        ArrayList<DataTableWS.Preventa> al_preventa=null;
+        ArrayList<DataTableWS.PreventaDet> al_preventaDet=null;
+        ArrayList<DataTableWS.PreventaEnv> al_preventaEnv=null;
+        ArrayList<DataTableWS.PreventaPagos> al_preventaPagos=null;
+
+        //endregion
 
         public ConexionWS(Context context) {
             this.context = context;
-
-            al_empresas=null;
-            al_estatus=null;
-            al_roles=null;
-            al_rolesModulos=null;
-            al_modulos=null;
-            al_usuarios=null;
-            al_tipoRutas=null;
-            al_rutas=null;
-            al_condicionesVenta=null;
-            al_productos=null;
-            al_listaPrecios=null;
-            al_precioProductos=null;
-            al_formasPago=null;
-            al_frecuenciaVisi=null;
-            al_categorias=null;
-            al_familias=null;
-            al_presentaciones=null;
-            al_promociones=null;
-            al_promocionesKit=null;
-
             almacenado=false;
-
-
         }
 
         private ProgressDialog progreso;
@@ -345,7 +331,6 @@ public class DatosFragment extends Fragment {
 
             try
             {
-
                 for(int i=0; i<metodosWS.size();i++)
                 {
                     if(!metodosWS.get(i).equals("ObtenerLimpiarDatosJ"))
@@ -359,12 +344,15 @@ public class DatosFragment extends Fragment {
                                 parametrosWS.getMETODO().contains("ObtenerCreditos") ||
                                 parametrosWS.getMETODO().contains("ObtenerDirecciones") ||
                                 parametrosWS.getMETODO().contains("ClientesVentaMes") ||
-                                parametrosWS.getMETODO().contains("Consignas"))
+                                parametrosWS.getMETODO().contains("Consignas") ||
+                                parametrosWS.getMETODO().contains("Preventa"))
                         {
                             PropertyInfo piCliente = new PropertyInfo();
                             piCliente.setName("ruta");
-                            piCliente.setValue(ruta);
+                            piCliente.setValue(ruta_cve);
                             Solicitud.addProperty(piCliente);
+
+                            Log.d("salida","RUTA BUSCADA EN WS: "+ruta_cve);
 
                         }
 
@@ -438,6 +426,11 @@ public class DatosFragment extends Fragment {
                 if(almacenado)
                 {
                     mostrarCatalogos();
+                    if(actualizoRutaEmpresa)
+                    {
+                        startdayVM.setActualizoRutaEmpresa(true);
+                        actualizoRutaEmpresa=false;
+                    }
                     startdayVM.setSincro(true); //actualiza el valor de la variable startday
                     Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
                 }
@@ -552,6 +545,8 @@ public class DatosFragment extends Fragment {
                 case "ObtenerConsignasJ":
                     consignas=json;
                     break;
+                case "ObtenerPreventaJ":
+                    preventa=json;
             }
 
             Log.d("salida","Descargo de ws: "+metodo);
@@ -605,6 +600,7 @@ public class DatosFragment extends Fragment {
                         }
                         Log.d("salida", "agregar empresas");
                         actualizaEstado("Empresas",true);
+                        actualizoRutaEmpresa=true;
                     }
                     else
                     {
@@ -704,6 +700,7 @@ public class DatosFragment extends Fragment {
                         }
                         Log.d("salida", "agregar  tipo rutas");
                         actualizaEstado("TipoRutas",true);
+                        actualizoRutaEmpresa=true;
                     }
                     else
                         actualizaEstado("TipoRutas",false);
@@ -723,6 +720,7 @@ public class DatosFragment extends Fragment {
                         }
                         Log.d("salida", "agregar rutas");
                         actualizaEstado("Rutas",true);
+                        actualizoRutaEmpresa=true;
                     }
                     else
                         actualizaEstado("Rutas",false);
@@ -1138,6 +1136,76 @@ public class DatosFragment extends Fragment {
                         actualizaEstado("Consignas",false);
                 }
 
+                if(preventa!=null)
+                {
+                    String[] tablas = preventa.split("\\|");
+
+                    al_visitaPreventa = ConvertirRespuesta.getVisitaPreventaJson(tablas[0]);
+                    al_preventa = ConvertirRespuesta.getPreventaJson(tablas[1]);
+                    al_preventaDet = ConvertirRespuesta.getPreventaDetJson(tablas[2]);
+                    al_preventaEnv = ConvertirRespuesta.getPreventaEnvJson(tablas[3]);
+                    al_preventaPagos = ConvertirRespuesta.getPreventaPagosJson(tablas[4]);
+
+                    if(al_visitaPreventa.size()>0)
+                    {
+                        db.execSQL(Querys.Preventa.DelVisitaPreventa);
+                        Log.d("salida","Eliminar consignas/detalles");
+
+                        DataTableWS.VisitaPreventa vp;
+                        for(int i=0; i<al_visitaPreventa.size();i++)
+                        {
+                            vp= al_visitaPreventa.get(i);
+                            consulta= Querys.Preventa.InsertVisitaPrev2;
+                            db.execSQL( string.formatSql(consulta, vp.getVisp_folio_str(),vp.getCli_cve_n(),vp.getRut_cve_n(),getDate( vp.getVisp_fecha_dt()),vp.getVisp_coordenada_str(),vp.getUsu_cve_str() ) );
+                        }
+
+                        db.execSQL(Querys.Preventa.DelPreventa);
+                        DataTableWS.Preventa p;
+                        for(int i=0; i<al_preventa.size();i++)
+                        {
+                            p = al_preventa.get(i);
+                            consulta= Querys.Preventa.InsPreventaSinc;
+                            db.execSQL(string.formatSql(consulta, p.getPrev_folio_str(),p.getCli_cve_n(),p.getRut_cve_n(), getDate( p.getPrev_fecha_dt() ), p.getLpre_cve_n(),p.getDir_cve_n(),p.getUsu_cve_str(),p.getPrev_coordenada_str()   ));
+                        }
+
+
+                        db.execSQL(Querys.Preventa.DelPreventaDet);
+                        DataTableWS.PreventaDet pd;
+                        for(int i=0; i<al_preventaDet.size();i++)
+                        {
+                            consulta= Querys.Preventa.InsPreventaDet2;
+                            pd=al_preventaDet.get(i);
+                            db.execSQL(string.formatSql(consulta, pd.getPrev_folio_str(),pd.getPrev_num_n(),pd.getProd_cve_n(),pd.getProd_sku_str(),pd.getProd_envase_n(),pd.getProd_cant_n(),pd.getLpre_base_n(),
+                                                                  pd.getLpre_cliente_n(),pd.getLpre_promo_n(),pd.getLpre_precio_n(),pd.getProd_promo_n(),pd.getProm_cve_n(),pd.getProd_subtotal_n(),pd.getPrev_kit_n()));
+                        }
+
+                        db.execSQL(Querys.Preventa.DelPreventaEnv);
+                        DataTableWS.PreventaEnv pe;
+                        for(int i=0; i<al_preventaEnv.size();i++)
+                        {
+                            pe = al_preventaEnv.get(i);
+                            consulta= Querys.Preventa.InsPreventaEnv2;
+
+                            db.execSQL(string.formatSql(consulta, pe.getPrev_folio_str(),pe.getProd_cve_n(),pe.getProd_sku_str(), pe.getProd_inicial_n(), pe.getProd_cargo_n(), pe.getProd_abono_n(),pe.getProd_regalo_n(),pe.getProd_venta_n(),
+                                                                  pe.getProd_final_n(),pe.getLpre_base_n(),pe.getLpre_precio_n()));
+                        }
+
+                        db.execSQL(Querys.Preventa.DelPreventaPagos);
+                        DataTableWS.PreventaPagos pp;
+                        for(int i=0; i<al_preventaPagos.size();i++)
+                        {
+                            pp= al_preventaPagos.get(i);
+                            consulta = Querys.Preventa.InsPreventaPagos2;
+                            db.execSQL(string.formatSql(consulta, pp.getPrev_folio_str(),pp.getPpag_num_n(),pp.getPpag_cobranza_n(),pp.getFpag_cve_n(),pp.getFpag_cant_n() ));
+                        }
+
+                        Log.d("salida","Agregar preventas");
+                        actualizaEstado("Preventa",true);
+                    }
+                    else
+                        actualizaEstado("Preventa",false);
+
+                }
 
                 db.setTransactionSuccessful();
                 almacenado=true;

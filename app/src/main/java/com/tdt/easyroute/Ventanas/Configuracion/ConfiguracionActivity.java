@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class ConfiguracionActivity extends AppCompatActivity {
 
     Configuracion conf=null;
-    Usuario user;
+    Usuario user=null;
     boolean admin=false;
     boolean catalogos = false;
     boolean mnGuardar = true;
@@ -118,7 +118,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
     {
 
         try {
-            conf = Utils.ObtenerConf(getApplication());
+            conf = Utils.ObtenerConf2(getApplication());
 
             if (conf == null) {
                 Log.d("salida", "conf es null");

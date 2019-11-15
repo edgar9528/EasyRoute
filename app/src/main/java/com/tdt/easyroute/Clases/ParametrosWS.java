@@ -14,11 +14,10 @@ public class ParametrosWS {
 
     public ParametrosWS(String METODO, Context context) {
         this.METODO = METODO;
-        SharedPreferences sharedPref = context.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
-        URL= sharedPref.getString("servidor","null");
-        TIMEOUT = Integer.parseInt( sharedPref.getString("timeout","0") );
+        URL= Utils.LeefConfig("servidor",context);
+        TIMEOUT = Integer.parseInt(Utils.LeefConfig("timeout",context) );
         NAMESPACES = context.getResources().getString(R.string.NAMESPACE);
-        SOAP_ACTION=context.getResources().getString(R.string.NAMESPACE) + METODO;
+        SOAP_ACTION= context.getResources().getString(R.string.NAMESPACE) + METODO;
     }
 
     public int getTIMEOUT() {

@@ -7,8 +7,9 @@ public class StartdayVM extends ViewModel {
 
     private MutableLiveData<String> catalogos = new MutableLiveData<>();
     private MutableLiveData<String> tipoRuta = new MutableLiveData<>();
-    private MutableLiveData<String> ruta = new MutableLiveData<>();
+    private MutableLiveData<String> ruta_cve = new MutableLiveData<>();
     private MutableLiveData<Boolean> sincro = new MutableLiveData<>();
+    private MutableLiveData<Boolean> actualizoRutaEmpresa = new MutableLiveData<>();
 
     public void setCatalogos(String catalogos) {
         this.catalogos.setValue(catalogos);
@@ -27,11 +28,11 @@ public class StartdayVM extends ViewModel {
     }
 
     public LiveData<String> getRuta() {
-        return ruta;
+        return ruta_cve;
     }
 
     public void setRuta(String ruta) {
-        this.ruta.setValue( ruta );
+        this.ruta_cve.setValue( ruta );
     }
 
     public void setSincro(Boolean sincro) {
@@ -41,6 +42,16 @@ public class StartdayVM extends ViewModel {
     public LiveData<Boolean> getSincro() {
         return sincro;
     }
+
+    public void setActualizoRutaEmpresa(Boolean actualizo) {
+        this.actualizoRutaEmpresa.setValue( actualizo );
+    }
+
+    public LiveData<Boolean> getActualizoRutaEmpresa() {
+        return actualizoRutaEmpresa;
+    }
+
+
 
 
 }

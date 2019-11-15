@@ -565,11 +565,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         try
         {
             DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
-
             SQLiteDatabase db = databaseHelper.getWritableDatabase();
-            Log.d("salida","bd creada");
             db.close();
-
         }catch (Exception e)
         {
             Log.d("salida",e.toString());

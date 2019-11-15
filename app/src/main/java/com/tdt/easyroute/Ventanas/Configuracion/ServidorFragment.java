@@ -50,7 +50,7 @@ public class ServidorFragment extends Fragment {
     ArrayList<String> metodosWS;
     boolean[] rbSeleccionados;
     Button button_selec,button_deselec,button_sinc,button_salir;
-    Configuracion conf;
+    Configuracion conf=null;
     boolean precioPreventa=false;
     boolean catalogos;
     boolean crut;

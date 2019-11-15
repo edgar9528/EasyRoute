@@ -33,7 +33,6 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
     EditText et_servidor,et_time,et_imp,et_ruta; //edittext
     Button button_salir,button_guardar,button_listar,button_pruWs,button_pruImp; //botones
     String servidor,time,empresa,ruta,imp; //variables a almacenar
-    String rutaSelec_des,rutaSelec_clv; //variables para obtener la ruta que selecciono el usuario
     String nombreBase,peticion,mensajeET="Clic para seleccionar ruta";
 
     ArrayList<DataTableWS.Ruta> lista_rutas=null;
@@ -73,15 +72,17 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
             @Override
             public void onClick(View view) {
 
-                String ser =et_servidor.getText().toString();
-                String time = et_time.getText().toString();
+                servidor =et_servidor.getText().toString();
+                time = et_time.getText().toString();
 
-                if( !ser.isEmpty() && !time.isEmpty() )
+                if( !servidor.isEmpty() && !time.isEmpty() )
                 {
                     peticion="prueba";
                     ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), "Prueba");
                     ws.delegate = ServidorrutaFragment.this;
                     ws.propertyInfos=null;
+                    ws.servidor = servidor;
+                    ws.timeout = Integer.parseInt(time);
                     ws.execute();
                 }
                 else
@@ -102,13 +103,12 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                 Log.d("salida","COINCIDIO:|"+et_ruta.getText()+"|"+mensajeET+"|");
                 if(et_ruta.getText().toString().equals(mensajeET))
                 {
-                    ruta="";
+                    ruta="0";
                 }
                 else
                 {
                     ruta= getCveRuta( et_ruta.getText().toString());
                 }
-
 
                 if(!servidor.isEmpty()&&!time.isEmpty()&&!ruta.isEmpty()&&!imp.isEmpty())
                 {
@@ -172,12 +172,25 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
     public void listarRutas()
     {
         crut = false;
-        peticion="listarRutas";
 
-        ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),"ObtenerRutasJ");
-        conexionWS_json.delegate = ServidorrutaFragment.this;
-        conexionWS_json.propertyInfos=null;
-        conexionWS_json.execute();
+        servidor = et_servidor.getText().toString();
+        time = et_time.getText().toString();
+
+
+        if( !servidor.isEmpty() && !time.isEmpty() )
+        {
+            peticion="listarRutas";
+            ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),"ObtenerRutasJ");
+            conexionWS_json.delegate = ServidorrutaFragment.this;
+            conexionWS_json.propertyInfos=null;
+            conexionWS_json.servidor = servidor;
+            conexionWS_json.timeout = Integer.parseInt(time);
+            conexionWS_json.execute();
+        }
+        else
+        {
+            Toast.makeText(getContext(), "Ingresa un servidor y TimeOut", Toast.LENGTH_LONG).show();
+        }
 
     }
 

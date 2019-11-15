@@ -46,25 +46,23 @@ import in.galaxyofandroid.spinerdialog.SpinnerDialog;
 
 public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
-    EditText et_empresa, et_ruta, et_tRuta, et_vendedor, et_fecha,et_hora,et_camion,et_km;
-    Button bt_validar,bt_salir;
+    private EditText et_empresa, et_ruta, et_tRuta, et_vendedor, et_fecha,et_hora,et_camion,et_km;
+    private Button bt_validar,bt_salir;
 
-    ArrayList<DataTableLC.RutaTipo> lista_rutas;
-    ArrayList<DataTableWS.Empresa> lista_empresas;
-    DataTableWS.Empresa dt_empresa;
-    DataTableLC.RutaTipo dt_rutaTipo;
-    ArrayList<String> rutas,empresas;
-    SpinnerDialog sdRutas,sdEmpresas;
-    String peticion,tipoRuta,ruta,empresa,tiporuta_cve;
-    Usuario user;
-    String[] campos;
-
-    String latLon;
+    private ArrayList<DataTableLC.RutaTipo> lista_rutas;
+    private ArrayList<DataTableWS.Empresa> lista_empresas;
+    private DataTableWS.Empresa dt_empresa;
+    private DataTableLC.RutaTipo dt_rutaTipo;
+    private ArrayList<String> rutas,empresas;
+    private SpinnerDialog sdRutas,sdEmpresas;
+    private String peticion,tipoRuta="",ruta_cve="",empresa_cve="",tiporuta_cve="";
+    private Usuario user;
+    private String[] campos;
 
     boolean sincro=false;
 
-    Handler handler=null;
-    Runnable myRunnable;
+    private Handler handler=null;
+    private Runnable myRunnable;
 
     private StartdayVM startdayVM;
 
@@ -98,6 +96,9 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         bt_validar = view.findViewById(R.id.button_validar);
         bt_salir = view.findViewById(R.id.button_salir);
 
+        campos = new String[8];
+        et_vendedor.setText(user.getUsuario());
+        mostrarFechaHora();
         inicializar();
 
         et_empresa.setOnClickListener(new View.OnClickListener() {
@@ -149,18 +150,25 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
+        startdayVM.getActualizoRutaEmpresa().observe(getParentFragment(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean s) {
+                if(s)
+                {
+                    inicializar();
+                    startdayVM.setActualizoRutaEmpresa(false);
+                }
+
+            }
+        });
+
     }
 
     private void inicializar()
     {
-        campos = new String[8];
-        et_vendedor.setText(user.getUsuario());
         buscarEmpresaRuta();
         obtenerRutas();
         obtenerEmpresas();
-
-        mostrarFechaHora();
-
     }
 
     private void mostrarFechaHora()
@@ -174,56 +182,41 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             public void run() {
                 et_hora.setText(Utils.HoraLocal());
                 handler.postDelayed(this, 1000);
-                //Log.d("salida",et_hora.getText().toString());
             }
         };
 
         handler.post(myRunnable);
-
-        //h= new Handler();
-        /*h.post(new Runnable() {
-            @Override
-            public void run() {
-
-                et_hora.setText(Utils.HoraLocal());
-                Log.d("salida",et_hora.getText().toString());
-
-                h.postDelayed(this, 1000);
-            }
-        });*/
-
     }
 
     private void buscarEmpresaRuta()
     {
         try {
-            String emp = Utils.LeefConfig("empresa", getActivity().getApplication());
-            String rut = Utils.LeefConfig("ruta", getActivity().getApplication());
-            ruta = rut;
-            String json = BaseLocal.Select("Select emp_nom_str from empresas where emp_cve_n=" + emp, getContext());
-            if (ConvertirRespuesta.getEmpresasJson(json) != null) {
+            empresa_cve = Utils.LeefConfig("empresa", getActivity().getApplication());
+            ruta_cve = Utils.LeefConfig("ruta", getActivity().getApplication());
+
+            String json = BaseLocal.Select("Select emp_nom_str from empresas where emp_cve_n=" + empresa_cve, getContext());
+            if (ConvertirRespuesta.getEmpresasJson(json).size()>0) {
                 dt_empresa = ConvertirRespuesta.getEmpresasJson(json).get(0);
                 et_empresa.setText(dt_empresa.getEmp_nom_str());
-                empresa = emp;
-
-                Log.d("salida","emp: "+empresa);
             }
 
-            json = BaseLocal.Select("Select r.rut_desc_str,tr.trut_desc_str,r.trut_cve_n,r.rut_cve_n,asesor_cve_str from rutas r inner join tiporutas tr on r.trut_cve_n=tr.trut_cve_n where rut_cve_n=" + rut, getContext());
+            json = BaseLocal.Select("Select r.rut_desc_str,tr.trut_desc_str,r.trut_cve_n,r.rut_cve_n,asesor_cve_str from rutas r inner join tiporutas tr on r.trut_cve_n=tr.trut_cve_n where rut_cve_n=" + ruta_cve, getContext());
 
 
-            if (ConvertirRespuesta.getRutaTipoJson(json) != null) {
+            if (ConvertirRespuesta.getRutaTipoJson(json).size()>0) {
                 dt_rutaTipo = ConvertirRespuesta.getRutaTipoJson(json).get(0);
-                et_ruta.setText(dt_rutaTipo.getRut_desc_str());
-                et_tRuta.setText(dt_rutaTipo.getTrut_desc_str());
+
                 tipoRuta = dt_rutaTipo.getTrut_desc_str();
                 tiporuta_cve = dt_rutaTipo.getRut_cve_n();
 
+                et_ruta.setText(dt_rutaTipo.getRut_desc_str());
+                et_tRuta.setText(tipoRuta);
             }
 
-            actualizaCatalogos();
             startdayVM.setTipoRuta(tipoRuta);
-            startdayVM.setRuta(ruta);
+            startdayVM.setRuta(ruta_cve);
+
+            actualizaCatalogos();
 
         }catch (Exception e)
         {
@@ -281,12 +274,14 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         et_ruta.setText(lista_rutas.get(i).getRut_desc_str());
         et_tRuta.setText(lista_rutas.get(i).getTrut_desc_str());
 
-        ruta= lista_rutas.get(i).getRut_cve_n();
+        ruta_cve= lista_rutas.get(i).getRut_cve_n();
         tipoRuta = lista_rutas.get(i).getTrut_desc_str();
         tiporuta_cve = lista_rutas.get(i).getRut_cve_n();
 
         startdayVM.setTipoRuta(tipoRuta);
-        startdayVM.setRuta(ruta);
+        startdayVM.setRuta(ruta_cve);
+
+        Log.d("salida","Ruta seleccionada: "+ruta_cve+" "+tipoRuta);
 
         actualizaCatalogos();
 
@@ -294,7 +289,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
     private void obtenerEmpresas()
     {
-        String con = "Select *from empresas where est_cve_str='A'";
+        String con = "Select * from empresas where est_cve_str='A'";
         String json = BaseLocal.Select(con,getContext());
         lista_empresas = ConvertirRespuesta.getEmpresasJson(json);
 
@@ -320,7 +315,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                     {
                         if(lista_empresas.get(i).getEmp_nom_str().equals(item))
                         {
-                            empresa = lista_empresas.get(i).getEmp_cve_n();
+                            empresa_cve = lista_empresas.get(i).getEmp_cve_n();
                         }
                     }
 
@@ -355,6 +350,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                     progress.cancel();
                     mainActivity.disableLocationUpdates();
                     ubi[0] = mainActivity.getLatLon();
+                    Log.d("salida", "Ubicacion nueva: " + ubi[0]);
                     crearConfiguracion(ubi[0]);
                 }
             }, 3000);
@@ -409,7 +405,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
         PropertyInfo pi_ruta = new PropertyInfo();
         pi_ruta.setName("ruta");
-        pi_ruta.setValue(ruta);
+        pi_ruta.setValue(ruta_cve);
         propertyInfos.add(pi_ruta);
 
         PropertyInfo pi_usu = new PropertyInfo();
@@ -422,7 +418,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         pi_version.setValue(Utils.Version());
         propertyInfos.add(pi_version);
 
-        Log.d("salida",ruta+" "+user.getUsuario()+" "+Utils.Version());
+        Log.d("salida",ruta_cve+" "+user.getUsuario()+" "+Utils.Version());
 
         ConexionWS_JSON conexionWSJ = new ConexionWS_JSON(getContext(),"InicioDiaJ");
         conexionWSJ.propertyInfos= propertyInfos;
@@ -512,10 +508,10 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
         BaseLocal.Insert("update ConfiguracionHH set est_cve_str='I'",getContext());
 
-        String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta,empresa,campos[3],campos[6],campos[7],tiporuta_cve);
+        String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta_cve,empresa_cve,campos[3],campos[6],campos[7],tiporuta_cve);
         BaseLocal.Insert(consulta,getContext());
 
-        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta,posicion),getContext());
+        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta_cve,posicion),getContext());
 
         Log.d("salida","Configuracaion HH creada");
         Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_SHORT).show();

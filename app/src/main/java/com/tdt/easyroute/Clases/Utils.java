@@ -43,9 +43,9 @@ public class Utils {
         return  text1;
     }
 
-    public static String LeefConfig(String valor, Application application)
+    public static String LeefConfig(String valor, Context context)
     {
-        SharedPreferences sharedPref = application.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
 
         switch (valor)
         {
@@ -95,7 +95,6 @@ public class Utils {
     public static Configuracion ObtenerConf(Application app)
     {
         Configuracion cf=null;
-
         try {
 
             DatabaseHelper databaseHelper = new DatabaseHelper(app, app.getString(R.string.nombreBD), null, 1);
@@ -105,12 +104,11 @@ public class Utils {
             Cursor cursor = bd.rawQuery(qry, null);
 
             if (cursor.getCount() >0) {
-                Log.d("salida", "cursor con info, se crea configuracion = null");
+                Log.d("salida", "cursor con info, existe ConfiguracionHH");
 
                 cf = new Configuracion();
 
                 while (cursor.moveToNext()) {
-                    Log.d("salida", "se llena la info");
                     cf = new Configuracion();
 
                     cf.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("conf_cve_n"))));
@@ -119,10 +117,9 @@ public class Utils {
                     cf.setAuditoria(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("conf_auditoria_n"))));
                     cf.setUsuario(cursor.getString(cursor.getColumnIndex("usu_cve_str")));
 
-                    if (cursor.getString(cursor.getColumnIndex("conf_descarga_dt")) != null)
+                    if (cursor.getString(cursor.getColumnIndex("conf_descarga_dt")) != null) {
                         cf.setDescarga(true);
-
-                    Log.d("salida","VER QUE IMPRIME NULL: "+cursor.getColumnIndex("conf_descarga_dt"));
+                    }
 
                 }
             } else {
@@ -139,7 +136,47 @@ public class Utils {
             Log.d("salida","error utils"+e.toString());
             return cf;
         }
+    }
 
+    public static Configuracion ObtenerConf2(Application app)
+    {
+        Configuracion cf=null;
+        try {
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(app, app.getString(R.string.nombreBD), null, 1);
+            SQLiteDatabase bd = databaseHelper.getReadableDatabase();
+
+            String qry = "Select * from ConfiguracionHH where est_cve_str='A'";
+            Cursor cursor = bd.rawQuery(qry, null);
+
+            if (cursor.getCount() >0) {
+                Log.d("salida", "cursor con info, existe ConfiguracionHH 2");
+
+                cf = new Configuracion();
+
+                while (cursor.moveToNext()) {
+                    cf = new Configuracion();
+
+                    cf.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("conf_cve_n"))));
+                    cf.setRuta(Integer.parseInt(cursor.getString(cursor.getColumnIndex("rut_cve_n"))));
+                    cf.setPreventa(Integer.parseInt(cursor.getString(cursor.getColumnIndex("conf_preventa_n"))));
+                    cf.setUsuario(cursor.getString(cursor.getColumnIndex("usu_cve_str")));
+
+                }
+            } else {
+                cf = null;
+                Log.d("salida", "Cursor sin info, configuracion = null");
+            }
+
+            bd.close();
+
+            return cf;
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error utils"+e.toString());
+            return cf;
+        }
     }
 
     public static boolean getBool(String cad)
@@ -155,12 +192,6 @@ public class Utils {
         }
 
         return var;
-    }
-
-    public static String PositionStr()
-    {
-        String posicion = "20.945,-97.406389";
-        return posicion;
     }
 
     public static String FechaLocal()

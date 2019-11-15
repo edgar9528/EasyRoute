@@ -36,7 +36,7 @@ public class UtilidadFragment extends Fragment {
     String folio;
 
     Usuario user;
-    Configuracion conf;
+    Configuracion conf=null;
 
 
     public UtilidadFragment() {
@@ -137,9 +137,7 @@ public class UtilidadFragment extends Fragment {
             });
 
 
-
             inicializar();
-
 
 
         }catch (Exception e)
@@ -149,6 +147,13 @@ public class UtilidadFragment extends Fragment {
         }
 
         return view;
+    }
+
+    public void inicializar()
+    {
+        ConfiguracionActivity activity = (ConfiguracionActivity) getActivity();
+        user = activity.getUser();
+        conf = activity.getConf(); //obtener la configuracion
     }
 
     public void realizar()
@@ -200,12 +205,6 @@ public class UtilidadFragment extends Fragment {
         }
     }
 
-    public void inicializar()
-    {
-        ConfiguracionActivity activity = (ConfiguracionActivity) getActivity();
-        user = activity.getUser();
-        conf = activity.getConf(); //obtener la configuracion
-    }
 
     public void ver_click()
     {

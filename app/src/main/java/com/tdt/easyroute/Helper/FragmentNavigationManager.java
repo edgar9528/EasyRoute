@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.tdt.easyroute.BuildConfig;
 import com.tdt.easyroute.Fragments.FragmentCerrar;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
+import com.tdt.easyroute.Fragments.Inventario.Carga2Fragment;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.Usuario;
@@ -53,6 +54,10 @@ public class FragmentNavigationManager implements NavigationManager {
             case "Inicio de día | Inicio":
                 StartdayFragment startdayFragment= new StartdayFragment();
                 ft= fm.beginTransaction().replace(R.id.container, startdayFragment);
+                break;
+
+            case "Inventario | Carga inicial":
+                ft= fm.beginTransaction().replace(R.id.container,Carga2Fragment.newInstance(false,false));
                 break;
 
             case "Catálogos | Configuración":

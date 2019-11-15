@@ -912,5 +912,125 @@ public class ConvertirRespuesta {
     }
 
 
+    public static ArrayList<DataTableWS.VisitaPreventa> getVisitaPreventaJson(String respuesta)
+    {
+        ArrayList<DataTableWS.VisitaPreventa> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.VisitaPreventa> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.Preventa> getPreventaJson(String respuesta)
+    {
+        ArrayList<DataTableWS.Preventa> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.Preventa> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.PreventaDet> getPreventaDetJson(String respuesta)
+    {
+        ArrayList<DataTableWS.PreventaDet> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.PreventaDet> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.PreventaEnv> getPreventaEnvJson(String respuesta)
+    {
+        ArrayList<DataTableWS.PreventaEnv> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.PreventaEnv> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.PreventaPagos> getPreventaPagosJson(String respuesta)
+    {
+        ArrayList<DataTableWS.PreventaPagos> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.PreventaPagos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.Recargas> getRecargasJson(String respuesta)
+    {
+        ArrayList<DataTableWS.Recargas> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.Recargas> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.RecargasDet> getRecargasDetJson(String respuesta)
+    {
+        ArrayList<DataTableWS.RecargasDet> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.RecargasDet> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
 
 }

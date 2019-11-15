@@ -1096,8 +1096,8 @@ public class Querys {
                         "{2},convert(datetime,'{3}',126),'{4}','{5}')";
 
                 public static String InsertVisitaPrev2 = "insert into visitapreventa(visp_folio_str," +
-                        "cli_cve_n,rut_cve_n,visp_fecha_dt,visp_coordenada_str,usu_cve_str) values ({0},{1}," +
-                        "{2},{3},{4},{5})";
+                        "cli_cve_n,rut_cve_n,visp_fecha_dt,visp_coordenada_str,usu_cve_str) values ('{0}',{1}," +
+                        "{2},'{3}','{4}','{5}')";
 
                 public static String UpdateVisitaReparto = "update visitapreventa set trans_est_n=1 where visp_folio_str='{0}'";
 
@@ -1138,7 +1138,7 @@ public class Querys {
 
                 public static String InsPreventaSinc = "insert into preventa(prev_folio_str," +
                         "cli_cve_n,rut_cve_n,prev_fecha_dt,lpre_cve_n,dir_cve_n,usu_cve_str," +
-                        "prev_coordenada_str) values ({0},{1},{2},{3},{4},{5},{6},{7})";
+                        "prev_coordenada_str) values ('{0}',{1},{2},'{3}',{4},{5},'{6}','{7}')";
 
                 public static String DelPreventa = "delete from Preventa";
 
@@ -1169,7 +1169,7 @@ public class Querys {
                 public static String InsPreventaDet2 = "insert into preventadet(prev_folio_str," +
                         "prev_num_n,prod_cve_n,prod_sku_str,prod_envase_n,prod_cant_n,lpre_base_n," +
                         "lpre_cliente_n,lpre_promo_n,lpre_precio_n,prod_promo_n,prom_cve_n,prod_subtotal_n," +
-                        "prev_kit_n) values ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})";
+                        "prev_kit_n) values ('{0}',{1},{2},'{3}',{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})";
 
                 public static String PreventaEnv ="CREATE TABLE PreventaEnv( " +
                         "prev_folio_str nvarchar(50) NOT NULL, " +
@@ -1195,7 +1195,7 @@ public class Querys {
 
                 public static String InsPreventaEnv2 = "insert into preventaenv(prev_folio_str," +
                         "prod_cve_n,prod_sku_str,prod_inicial_n,prod_cargo_n,prod_abono_n,prod_regalo_n,prod_venta_n," +
-                        "prod_final_n,lpre_base_n,lpre_precio_n) values ({0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10})";
+                        "prod_final_n,lpre_base_n,lpre_precio_n) values ('{0}',{1},'{2}',{3},{4},{5},{6},{7},{8},{9},{10})";
 
                 public static String PreventaPagos = "CREATE TABLE PreventaPagos( " +
                         "prev_folio_str nvarchar(50) NOT NULL, " +
@@ -1211,7 +1211,7 @@ public class Querys {
                         " values ('{0}',{1},{2},{3},{4})";
 
                 public static String InsPreventaPagos2 = "insert into PreventaPagos(prev_folio_str," +
-                        "ppag_num_n,ppag_cobranza_n,fpag_cve_n,fpag_cant_n) values ({0},{1},{2},{3},{4})";
+                        "ppag_num_n,ppag_cobranza_n,fpag_cve_n,fpag_cant_n) values ('{0}',{1},{2},{3},{4})";
 
                 public static String ObtenerEnvasePreventa = "select s1.prod_cve_n,s1.prod_sku_str,coalesce(s2.prod_precio_n,s1.lpre_precio_n) prod_precio_n,coalesce(s2.prod_cant_n,0.0)prod_cant_n, " +
                         "coalesce(s2.prod_cantabono_n,0.0) prod_cantabono_n,coalesce(s2.prod_saldo_n,0.0) prod_saldo_n,coalesce(s2.prod_abono_n,0.0) prod_abono_n, " +

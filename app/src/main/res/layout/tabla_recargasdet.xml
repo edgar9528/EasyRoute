@@ -1,0 +1,71 @@
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="10"
+    >
+
+
+    <TextView
+        android:id="@+id/t_rec_cve_n"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:layout_weight="2"
+        android:text="rCve"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/t_prod_cve_n"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:layout_weight="1"
+        android:text="cve"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/t_prod_sku_str"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:layout_weight="2"
+        android:text="Sku"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/t_prod_desc_str"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:layout_weight="3"
+        android:text="Des"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/t_prod_cant_n"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:layout_weight="2"
+        android:text="Cant"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+
+</TableRow>
