@@ -10,6 +10,7 @@
     <color name="fondo">#f1eeee</color>
     <color name="titulo">#2048c9</color>
     <color name="negro">#000</color>
+    <color name="blanco">#ffffff</color>
     <color name="grey">#E5E5E5</color>
 
 </resources>

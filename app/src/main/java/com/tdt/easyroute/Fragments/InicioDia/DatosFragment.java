@@ -28,7 +28,9 @@ import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
+import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.ViewModel.StartdayVM;
 import com.tdt.easyroute.R;
@@ -50,7 +52,8 @@ public class DatosFragment extends Fragment {
     ArrayList<String> al_catalogos;
     String[] arr_estadoCat;
 
-    Button b_sincronizar,b_selec,b_deselec;
+
+    Button b_sincronizar,b_selec,b_deselec,b_salir;
 
     boolean[] rbSeleccionados;
     TableLayout tableLayout;
@@ -80,10 +83,9 @@ public class DatosFragment extends Fragment {
         b_selec = view.findViewById(R.id.button_selec);
         b_deselec = view.findViewById(R.id.button_desSelec);
         b_sincronizar = view.findViewById(R.id.button_sincronizar);
+        b_salir = view.findViewById(R.id.button_salir);
 
         nombreBase = getActivity().getString( R.string.nombreBD );
-        //obtenerCatalogos();
-        //mostrarCatalogos(); movideos al ViewModel
 
         b_sincronizar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,9 +115,17 @@ public class DatosFragment extends Fragment {
                     RadioButton rb = (RadioButton) viewGral.findViewWithTag(i);
                     rb.setChecked( false );
                 }
-
             }
         });
+
+        b_salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.RegresarInicio(getActivity());
+            }
+        });
+
+
 
         return view;
     }
@@ -167,23 +177,26 @@ public class DatosFragment extends Fragment {
     private void mostrarCatalogos()
     {
 
-        tableLayout = (TableLayout) viewGral.findViewById(R.id.tableLayout);
-        tableLayout.removeAllViews();
-        TableRow tr;
+        if( !Boolean.getBoolean(String.valueOf(startdayVM.getActualizoRutaEmpresa()))  ) {
 
-        for (int i = 0; i < al_catalogos.size(); i++) {
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
+            tableLayout = (TableLayout) viewGral.findViewById(R.id.tableLayout);
+            tableLayout.removeAllViews();
+            TableRow tr;
 
-            RadioButton rb = tr.findViewById(R.id.tabla_radio);
-            rb.setId(i);
-            rb.setTag(i);
-            rb.setOnClickListener(rbListener);
+            for (int i = 0; i < al_catalogos.size(); i++) {
+                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
 
-            ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(al_catalogos.get(i));
-            ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
+                RadioButton rb = tr.findViewById(R.id.tabla_radio);
+                rb.setId(i);
+                rb.setTag(i);
+                rb.setOnClickListener(rbListener);
 
-            tableLayout.addView(tr);
-            rbSeleccionados[i]=false;
+                ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(al_catalogos.get(i));
+                ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
+
+                tableLayout.addView(tr);
+                rbSeleccionados[i] = false;
+            }
         }
 
     }
@@ -426,12 +439,19 @@ public class DatosFragment extends Fragment {
                 if(almacenado)
                 {
                     mostrarCatalogos();
+
+
                     if(actualizoRutaEmpresa)
                     {
                         startdayVM.setActualizoRutaEmpresa(true);
                         actualizoRutaEmpresa=false;
                     }
+
+
+
                     startdayVM.setSincro(true); //actualiza el valor de la variable startday
+
+
                     Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
                 }
                 else

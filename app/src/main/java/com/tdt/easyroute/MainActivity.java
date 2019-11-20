@@ -300,6 +300,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return super.onOptionsItemSelected(item);
     }
 
+    public void regresarInicio()
+    {
+        getSupportActionBar().setTitle("Inicio");
+        navigationManager.showFragment("Inicio");
+    }
+
     //TERMINA CONFIGURACION DEL MENU
 
 

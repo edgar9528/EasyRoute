@@ -100,6 +100,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         et_vendedor.setText(user.getUsuario());
         mostrarFechaHora();
         inicializar();
+        actualizaCatalogos();
 
         et_empresa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +133,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         bt_salir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Utils.RegresarInicio(getActivity());
             }
         });
 
@@ -156,7 +157,6 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                 if(s)
                 {
                     inicializar();
-                    startdayVM.setActualizoRutaEmpresa(false);
                 }
 
             }
@@ -216,8 +216,6 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             startdayVM.setTipoRuta(tipoRuta);
             startdayVM.setRuta(ruta_cve);
 
-            actualizaCatalogos();
-
         }catch (Exception e)
         {
             Toast.makeText(getContext(), "Error al buscar datos de empresa y ruta: "+e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -228,15 +226,17 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
     private void actualizaCatalogos()
     {
-        String catalogos="LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas," +
+
+        String catalogos = "LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas," +
                 "Marcas,Unidades,CondicionesVenta,Productos,ListaPrecios,PrecioProductos,NivelCliente,FormasPago," +
                 "FrecuenciasVisita,MotivosNoVenta,MotivosNoLectura,Categorias,Familias,Presentaciones,Clientes," +
                 "Creditos,Direcciones,ClientesVentaMes,Promociones,PromocionesKit,Consignas";
 
-        if(tipoRuta.equals("REPARTO"))
+        if (tipoRuta.equals("REPARTO"))
             catalogos += ",Preventa";
 
         startdayVM.setCatalogos(catalogos);
+
     }
 
     private void obtenerRutas()
@@ -280,6 +280,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
         startdayVM.setTipoRuta(tipoRuta);
         startdayVM.setRuta(ruta_cve);
+        startdayVM.setSincro(false);
 
         Log.d("salida","Ruta seleccionada: "+ruta_cve+" "+tipoRuta);
 

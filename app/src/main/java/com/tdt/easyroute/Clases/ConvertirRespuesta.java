@@ -1031,6 +1031,92 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.EnvaseAut> getEnvaseAutJson(String respuesta)
+    {
+        ArrayList<DataTableLC.EnvaseAut> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.EnvaseAut> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.InvP> getInvPJson(String respuesta)
+    {
+        ArrayList<DataTableLC.InvP> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.InvP> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.Inv> getInvJson(String respuesta)
+    {
+        ArrayList<DataTableLC.Inv> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Inv> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+    public static ArrayList<DataTableLC.Inventario> getInventarioJson(String respuesta)
+    {
+        ArrayList<DataTableLC.Inventario> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Inventario> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+    public static ArrayList<DataTableLC.DtEnv> getDtEnvJson(String respuesta)
+    {
+        ArrayList<DataTableLC.DtEnv> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.DtEnv> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
 
 
 }

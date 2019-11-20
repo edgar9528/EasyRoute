@@ -54,7 +54,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="rec_cve"
+                        android:text="Clave"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
                     <TextView
@@ -78,7 +78,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="rec_folio"
+                        android:text="Folio"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
                     <TextView
@@ -102,7 +102,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="rec_falta"
+                        android:text="Fecha"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
                     <TextView
@@ -126,7 +126,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="usu_solicita"
+                        android:text="Solicito"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
                     <TextView
@@ -150,7 +150,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="rec_observaciones"
+                        android:text="Observación"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="18sp" />
                     <TextView
@@ -200,7 +200,7 @@
                     />
 
                 <Button
-                    android:id="@+id/button_sincronizar"
+                    android:id="@+id/button_aplicar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"

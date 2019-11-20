@@ -605,5 +605,382 @@ public class DataTableLC {
             this.asesor_cve_str = asesor_cve_str;
         }
     }
+
+    public static class EnvaseAut
+    {
+        String prod_cve_n;
+        String prod_sku_str;
+        String prod_cant_n;
+
+        public EnvaseAut() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_cant_n() {
+            return prod_cant_n;
+        }
+
+        public void setProd_cant_n(String prod_cant_n) {
+            this.prod_cant_n = prod_cant_n;
+        }
+    }
+
+    public static class InvP
+    {
+        String prod_cve_n;
+        String prod_sku_str;
+        String prod_desc_str;
+        String prod_cant_n;
+        String prod_sug_n;
+        String cat_desc_str;
+        String id_envase_n;
+        String prod_devuelto_n;
+        String prod_cancelado_n;
+        String prod_recuperado_n;
+        String prod_prestado_n;
+        String prod_vtamismodia_n;
+        String fam_orden_n;
+        String prod_orden_n;
+        String lpre_precio_n;
+
+        public InvP() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_desc_str() {
+            return prod_desc_str;
+        }
+
+        public void setProd_desc_str(String prod_desc_str) {
+            this.prod_desc_str = prod_desc_str;
+        }
+
+        public String getProd_cant_n() {
+            return prod_cant_n;
+        }
+
+        public void setProd_cant_n(String prod_cant_n) {
+            this.prod_cant_n = prod_cant_n;
+        }
+
+        public String getProd_sug_n() {
+            return prod_sug_n;
+        }
+
+        public void setProd_sug_n(String prod_sug_n) {
+            this.prod_sug_n = prod_sug_n;
+        }
+
+        public String getCat_desc_str() {
+            return cat_desc_str;
+        }
+
+        public void setCat_desc_str(String cat_desc_str) {
+            this.cat_desc_str = cat_desc_str;
+        }
+
+        public String getId_envase_n() {
+            return id_envase_n;
+        }
+
+        public void setId_envase_n(String id_envase_n) {
+            this.id_envase_n = id_envase_n;
+        }
+
+        public String getProd_devuelto_n() {
+            return prod_devuelto_n;
+        }
+
+        public void setProd_devuelto_n(String prod_devuelto_n) {
+            this.prod_devuelto_n = prod_devuelto_n;
+        }
+
+        public String getProd_cancelado_n() {
+            return prod_cancelado_n;
+        }
+
+        public void setProd_cancelado_n(String prod_cancelado_n) {
+            this.prod_cancelado_n = prod_cancelado_n;
+        }
+
+        public String getProd_recuperado_n() {
+            return prod_recuperado_n;
+        }
+
+        public void setProd_recuperado_n(String prod_recuperado_n) {
+            this.prod_recuperado_n = prod_recuperado_n;
+        }
+
+        public String getProd_prestado_n() {
+            return prod_prestado_n;
+        }
+
+        public void setProd_prestado_n(String prod_prestado_n) {
+            this.prod_prestado_n = prod_prestado_n;
+        }
+
+        public String getProd_vtamismodia_n() {
+            return prod_vtamismodia_n;
+        }
+
+        public void setProd_vtamismodia_n(String prod_vtamismodia_n) {
+            this.prod_vtamismodia_n = prod_vtamismodia_n;
+        }
+
+        public String getFam_orden_n() {
+            return fam_orden_n;
+        }
+
+        public void setFam_orden_n(String fam_orden_n) {
+            this.fam_orden_n = fam_orden_n;
+        }
+
+        public String getProd_orden_n() {
+            return prod_orden_n;
+        }
+
+        public void setProd_orden_n(String prod_orden_n) {
+            this.prod_orden_n = prod_orden_n;
+        }
+
+        public String getLpre_precio_n() {
+            return lpre_precio_n;
+        }
+
+        public void setLpre_precio_n(String lpre_precio_n) {
+            this.lpre_precio_n = lpre_precio_n;
+        }
+    }
+    
+    public static class Inv
+    {
+        String rut_cve_n;
+        String prod_cve_n;
+        String prod_cant_n;
+        String inv_devuelto_n;
+        String inv_cancelado_n;
+        String inv_prestado_n;
+        String inv_recuperado_n;
+        String fam_orden_n;
+        String prod_orden_n;
+
+        public Inv() {
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_cant_n() {
+            return prod_cant_n;
+        }
+
+        public void setProd_cant_n(String prod_cant_n) {
+            this.prod_cant_n = prod_cant_n;
+        }
+
+        public String getInv_devuelto_n() {
+            return inv_devuelto_n;
+        }
+
+        public void setInv_devuelto_n(String inv_devuelto_n) {
+            this.inv_devuelto_n = inv_devuelto_n;
+        }
+
+        public String getInv_cancelado_n() {
+            return inv_cancelado_n;
+        }
+
+        public void setInv_cancelado_n(String inv_cancelado_n) {
+            this.inv_cancelado_n = inv_cancelado_n;
+        }
+
+        public String getInv_prestado_n() {
+            return inv_prestado_n;
+        }
+
+        public void setInv_prestado_n(String inv_prestado_n) {
+            this.inv_prestado_n = inv_prestado_n;
+        }
+
+        public String getInv_recuperado_n() {
+            return inv_recuperado_n;
+        }
+
+        public void setInv_recuperado_n(String inv_recuperado_n) {
+            this.inv_recuperado_n = inv_recuperado_n;
+        }
+
+        public String getFam_orden_n() {
+            return fam_orden_n;
+        }
+
+        public void setFam_orden_n(String fam_orden_n) {
+            this.fam_orden_n = fam_orden_n;
+        }
+
+        public String getProd_orden_n() {
+            return prod_orden_n;
+        }
+
+        public void setProd_orden_n(String prod_orden_n) {
+            this.prod_orden_n = prod_orden_n;
+        }
+    }
+    
+    public static class Inventario
+    {
+        private String rut_cve_n;
+        private String prod_cve_n;
+        private String inv_inicial_n;
+        private String inv_vendido_n;
+        private String inv_devuelto_n;
+        private String inv_danado_n;
+        private String inv_recarga_n;
+        private String inv_recuperado_n;
+        private String inv_prestado_n;
+        private String inv_cancelado_n;
+
+        public Inventario() {
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getInv_inicial_n() {
+            return inv_inicial_n;
+        }
+
+        public void setInv_inicial_n(String inv_inicial_n) {
+            this.inv_inicial_n = inv_inicial_n;
+        }
+
+        public String getInv_vendido_n() {
+            return inv_vendido_n;
+        }
+
+        public void setInv_vendido_n(String inv_vendido_n) {
+            this.inv_vendido_n = inv_vendido_n;
+        }
+
+        public String getInv_devuelto_n() {
+            return inv_devuelto_n;
+        }
+
+        public void setInv_devuelto_n(String inv_devuelto_n) {
+            this.inv_devuelto_n = inv_devuelto_n;
+        }
+
+        public String getInv_danado_n() {
+            return inv_danado_n;
+        }
+
+        public void setInv_danado_n(String inv_danado_n) {
+            this.inv_danado_n = inv_danado_n;
+        }
+
+        public String getInv_recarga_n() {
+            return inv_recarga_n;
+        }
+
+        public void setInv_recarga_n(String inv_recarga_n) {
+            this.inv_recarga_n = inv_recarga_n;
+        }
+
+        public String getInv_recuperado_n() {
+            return inv_recuperado_n;
+        }
+
+        public void setInv_recuperado_n(String inv_recuperado_n) {
+            this.inv_recuperado_n = inv_recuperado_n;
+        }
+
+        public String getInv_prestado_n() {
+            return inv_prestado_n;
+        }
+
+        public void setInv_prestado_n(String inv_prestado_n) {
+            this.inv_prestado_n = inv_prestado_n;
+        }
+
+        public String getInv_cancelado_n() {
+            return inv_cancelado_n;
+        }
+
+        public void setInv_cancelado_n(String inv_cancelado_n) {
+            this.inv_cancelado_n = inv_cancelado_n;
+        }
+    }
+
+    public static class DtEnv
+    {
+        private String prod_cve_n;
+
+        public DtEnv() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+    }
     
 }

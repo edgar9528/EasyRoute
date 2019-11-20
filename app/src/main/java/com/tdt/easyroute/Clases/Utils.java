@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Clases;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -251,6 +252,12 @@ public class Utils {
         }
 
         return iguales;
+    }
+
+    public static void RegresarInicio(Activity activity)
+    {
+        MainActivity mainActivity = (MainActivity) activity;
+        mainActivity.regresarInicio();
     }
 
 

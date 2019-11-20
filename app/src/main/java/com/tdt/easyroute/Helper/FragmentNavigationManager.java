@@ -6,9 +6,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.tdt.easyroute.BuildConfig;
-import com.tdt.easyroute.Fragments.FragmentCerrar;
+import com.tdt.easyroute.Fragments.PrincipalFragment;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
 import com.tdt.easyroute.Fragments.Inventario.Carga2Fragment;
+import com.tdt.easyroute.Fragments.Inventario.InventarioFragment;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.Usuario;
@@ -60,6 +61,10 @@ public class FragmentNavigationManager implements NavigationManager {
                 ft= fm.beginTransaction().replace(R.id.container,Carga2Fragment.newInstance(false,false));
                 break;
 
+            case "Inventario | Inventario":
+                ft= fm.beginTransaction().replace(R.id.container, InventarioFragment.newInstance(usuario,false));
+                break;
+
             case "Catálogos | Configuración":
                 esFragment=false;
                 Intent intent = new Intent(activity, ConfiguracionActivity.class);
@@ -68,7 +73,9 @@ public class FragmentNavigationManager implements NavigationManager {
                 activity.startActivity(intent);
                 break;
             default:
-                 ft= fm.beginTransaction().replace(R.id.container,FragmentCerrar.newInstance(title));
+                PrincipalFragment fragmentPrincipal = new PrincipalFragment();
+                ft= fm.beginTransaction().replace(R.id.container,fragmentPrincipal);
+                 //ft= fm.beginTransaction().replace(R.id.container, PrincipalFragment.newInstance(title));
                  break;
         }
 
