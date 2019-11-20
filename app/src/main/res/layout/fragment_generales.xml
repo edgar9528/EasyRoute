@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Vendedor"
                     android:singleLine="true"
-                    android:focusable="false"
+                    android:enabled="false"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Fecha"
                     android:singleLine="true"
-                    android:focusable="false"
+                    android:enabled="false"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Hora"
                     android:singleLine="true"
-                    android:focusable="false"
+                    android:enabled="false"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 

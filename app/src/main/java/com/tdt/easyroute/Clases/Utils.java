@@ -86,6 +86,30 @@ public class Utils {
         editor.apply();
     }
 
+    public static void ActualizaConf(String config,String valor,Context context)
+    {
+        SharedPreferences sharedPref = context.getSharedPreferences("ConfiguracionPreferences",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        switch (config)
+        {
+            case "servidor":
+                editor.putString("servidor",valor);
+                break;
+            case "timeout":
+                editor.putString("timeout",valor);
+                break;
+            case "empresa":
+                editor.putString("empresa",valor);
+                break;
+            case "ruta":
+                editor.putString("ruta",valor);
+                break;
+        }
+
+        editor.apply();
+    }
+
     public static String Version()
     {
         String version = "1.0.1";

@@ -169,6 +169,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         recargas = new ArrayList<>();
         recargas.add("Seleccione una carga");
         sp_recargas.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, recargas));
+
+        buscarRecargas();
     }
 
     public void buscarRecargas()
@@ -407,19 +409,18 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     public void procesarRecarga()
     {
+        String consulta ="Select p.prod_cve_n from productos p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE' and p.prod_cve_n not in (Select p.prod_cve_n from inventario p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE')";
+        String res= BaseLocal.Select(consulta,getContext());
+
+        ArrayList<DataTableLC.DtEnv> dtEnvs;
+        dtEnvs = ConvertirRespuesta.getDtEnvJson(res);
+
         DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         try
         {
             db.beginTransaction();
-
-            ArrayList<DataTableLC.DtEnv> dtEnvs;
-
-            String consulta ="Select p.prod_cve_n from productos p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE' and p.prod_cve_n not in (Select p.prod_cve_n from inventario p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE')";
-            String res= BaseLocal.Select(consulta,getContext());
-
-            dtEnvs = ConvertirRespuesta.getDtEnvJson(res);
 
             if(dtEnvs!=null&&dtEnvs.size()>0)
             {
@@ -432,11 +433,11 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
             db.setTransactionSuccessful();
 
-            Toast.makeText(getContext(), mensaje + " completada con exito.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), mensaje + " completada con exito.", Toast.LENGTH_LONG).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
             Log.d("salida", "Error: "+e.getMessage() );
         }
         finally
@@ -459,11 +460,10 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
                 if(peticion.equals("Recargas"))
                 {
                     al_recargas = ConvertirRespuesta.getRecargasJson(respuesta);
-                    Log.d("salida","entro aqui 1 ");
+
                     if(al_recargas.size()>0)
                     {
                         llenarSpinnerRecargas();
-                        Log.d("salida","entro aqui 2 ");
                     }
                 }
                 else

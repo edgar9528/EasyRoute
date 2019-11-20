@@ -82,7 +82,6 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         View view = inflater.inflate(R.layout.fragment_generales, container, false);
         // Inflate the layout for this fragment
         MainActivity mainActivity = (MainActivity) getActivity();
-
         user = mainActivity.getUsuario();
 
         et_empresa = view.findViewById(R.id.et_empresa);
@@ -515,6 +514,11 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta_cve,posicion),getContext());
 
         Log.d("salida","Configuracaion HH creada");
+
+        Utils.ActualizaConf("ruta",ruta_cve,getContext());
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.inicializar();
+
         Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_SHORT).show();
 
     }
