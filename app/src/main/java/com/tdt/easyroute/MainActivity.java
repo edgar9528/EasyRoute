@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void selectFirsItemAsDefault() {
         if(navigationManager!= null)
         {
-            String firtsItem = "Inventario | Carga inicial";
+            String firtsItem = "Inicio";
             navigationManager.showFragment(firtsItem);
             getSupportActionBar().setTitle(firtsItem);
         }

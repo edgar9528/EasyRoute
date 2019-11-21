@@ -521,6 +521,8 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
         Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_SHORT).show();
 
+        Utils.RegresarInicio(getActivity());
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Fragments.Inventario;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
@@ -160,7 +163,6 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
         inicializar();
 
-
         return view;
     }
 
@@ -173,97 +175,13 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         buscarRecargas();
     }
 
-    public void buscarRecargas()
-    {
-        peticion="Recargas";
-        //parametros del metodo
-        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
-        PropertyInfo piUser = new PropertyInfo();
-        piUser.setName("ruta");
-        piUser.setValue(conf.getRuta());
-        propertyInfos.add(piUser);
-
-        PropertyInfo piPass = new PropertyInfo();
-        piPass.setName("recarga");
-        piPass.setValue(recarga?1:0);
-        propertyInfos.add(piPass);
-
-        Log.d("salida","ruta: "+conf.getRuta() +" recarga: "+ String.valueOf( recarga?1:0) );
-
-        //conexion con el metodo
-        ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "ObtenerRecargasJ");
-        conexionWS.delegate = Carga2Fragment.this;
-        conexionWS.propertyInfos = propertyInfos;
-        conexionWS.execute();
-    }
-
-    public void buscarRecargaDet(int indiceRecarga)
-    {
-        //parametros del metodo
-        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
-
-        PropertyInfo piPass = new PropertyInfo();
-        piPass.setName("recarga");
-        piPass.setValue( al_recargas.get(indiceRecarga).getRec_cve_n() );
-        propertyInfos.add(piPass);
-
-        peticion="RecargasDet";
-
-        //conexion con el metodo
-        ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "ObtenerRecargaDetJ");
-        conexionWS.delegate = Carga2Fragment.this;
-        conexionWS.propertyInfos = propertyInfos;
-        conexionWS.execute();
-    }
-
-    public void llenarSpinnerRecargas()
-    {
-        recargas = new ArrayList<>();
-        recargas.add("Seleccione una carga");
-        for(int i=0; i<al_recargas.size();i++)
-            recargas.add((i+1+" - "+al_recargas.get(i).getRec_folio_str()));
-
-        sp_recargas.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, recargas));
-
-    }
-
-    public void mostrarRecarga(int indiceRecarga)
-    {
-        tv1.setText(al_recargas.get(indiceRecarga).getRec_cve_n());
-        tv2.setText(al_recargas.get(indiceRecarga).getRec_folio_str());
-        String fecha = Utils.FechaWS( al_recargas.get(indiceRecarga).getRec_falta_dt() );
-        tv3.setText(fecha);
-        tv4.setText(al_recargas.get(indiceRecarga).getUsu_solicita_str());
-        tv5.setText(al_recargas.get(indiceRecarga).getRec_observaciones_str());
-    }
-
-    public void mostrarRecargaDet()
-    {
-        tableLayout.removeAllViews();
-        TableRow tr;
-        DataTableWS.RecargasDet rd;
-
-        if(al_recargasDet!=null)
-            for(int i=0; i<al_recargasDet.size();i++)
-            {
-                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_recargasdet, null);
-                rd=al_recargasDet.get(i);
-
-                ((TextView) tr.findViewById(R.id.t_prod_sku_str)).setText(rd.getProd_sku_str());
-                ((TextView) tr.findViewById(R.id.t_prod_desc_str)).setText(rd.getProd_desc_str());
-                ((TextView) tr.findViewById(R.id.t_prod_cant_n)).setText(rd.getProd_cant_n());
-
-                tableLayout.addView(tr);
-            }
-    }
-
     public void aplicar()
     {
         if(indiceFolio!=-1)
         {
             folio = al_recargas.get(indiceFolio).getRec_folio_str();
             cve = al_recargas.get(indiceFolio).getRec_cve_n();
-            
+
             if(al_recargasDet!=null&&al_recargasDet.size()>0)
             {
                 String men = string.formatSql( "¿Esta seguro de aplicar la {0} con folio {1}?",mensaje,folio );
@@ -274,7 +192,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
                 dialogo1.setCancelable(false);
                 dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
-                        aplicarCargaInicial();
+                        obtenerUbicacion(); //EN ESTA FUNCION SE LLAMA A aplicarCargaInicial();
                     }
                 });
                 dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -283,11 +201,11 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
                     }
                 });
                 dialogo1.show();
-                
+
             }
             else
                 Toast.makeText(getContext(), "Por favor seleccione una carga con productos para poder continuar.", Toast.LENGTH_SHORT).show();
-            
+
         }
         else
         {
@@ -296,7 +214,43 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     }
 
-    public void aplicarCargaInicial()
+    private void obtenerUbicacion()
+    {
+        try {
+
+            final MainActivity mainActivity = (MainActivity) getActivity();
+            final String[] ubi = new String[1];
+            final ProgressDialog progress = new ProgressDialog(getContext());
+            progress.setTitle("Actualizando");
+            progress.setMessage("Por favor espere");
+            progress.show();
+            progress.setCancelable(false);
+
+            mainActivity.enableLocationUpdates();
+
+            ubi[0] = mainActivity.getLatLon();
+            Log.d("salida", "Ubicacion anterior: " + ubi[0]);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress.cancel();
+                    mainActivity.disableLocationUpdates();
+                    ubi[0] = mainActivity.getLatLon();
+                    Log.d("salida", "Ubicacion nueva: " + ubi[0]);
+                    aplicarCargaInicial(ubi[0]);
+                }
+            }, 3000);
+
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
+    public void aplicarCargaInicial(String ubicacion)
     {
         DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -361,7 +315,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
             rectxt = recarga ? "RECARGA" : "CARGA INICIAL";
 
-            db.execSQL(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion,conf.getUsuario(), rectxt,string.formatSql("FOLIO: {0}",folio), String.valueOf( conf.getRuta() ) , "posicion"));
+            db.execSQL(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion,conf.getUsuario(), rectxt,string.formatSql("FOLIO: {0}",folio), String.valueOf( conf.getRuta() ) , ubicacion));
 
             db.setTransactionSuccessful();
 
@@ -378,8 +332,6 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             db.endTransaction();
             db.close();
         }
-
-
     }
 
     public void peticionProcesarRecarga()
@@ -435,6 +387,11 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
             Toast.makeText(getContext(), mensaje + " completada con exito.", Toast.LENGTH_LONG).show();
 
+            db.endTransaction();
+            db.close();
+
+            Utils.RegresarInicio(getActivity());
+
         }catch (Exception e)
         {
             Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
@@ -442,12 +399,98 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         }
         finally
         {
-            db.endTransaction();
-            db.close();
+            if(db.isOpen())
+            {
+                db.endTransaction();
+                db.close();
+            }
         }
 
     }
 
+    public void buscarRecargas()
+    {
+        peticion="Recargas";
+        //parametros del metodo
+        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+        PropertyInfo piUser = new PropertyInfo();
+        piUser.setName("ruta");
+        piUser.setValue(conf.getRuta());
+        propertyInfos.add(piUser);
+
+        PropertyInfo piPass = new PropertyInfo();
+        piPass.setName("recarga");
+        piPass.setValue(recarga?1:0);
+        propertyInfos.add(piPass);
+
+        Log.d("salida","ruta: "+conf.getRuta() +" recarga: "+ String.valueOf( recarga?1:0) );
+
+        //conexion con el metodo
+        ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "ObtenerRecargasJ");
+        conexionWS.delegate = Carga2Fragment.this;
+        conexionWS.propertyInfos = propertyInfos;
+        conexionWS.execute();
+    }
+
+    public void llenarSpinnerRecargas()
+    {
+        recargas = new ArrayList<>();
+        recargas.add("Seleccione una carga");
+        for(int i=0; i<al_recargas.size();i++)
+            recargas.add((i+1+" - "+al_recargas.get(i).getRec_folio_str()));
+
+        sp_recargas.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, recargas));
+
+    }
+
+    public void mostrarRecarga(int indiceRecarga)
+    {
+        tv1.setText(al_recargas.get(indiceRecarga).getRec_cve_n());
+        tv2.setText(al_recargas.get(indiceRecarga).getRec_folio_str());
+        String fecha = Utils.FechaWS( al_recargas.get(indiceRecarga).getRec_falta_dt() );
+        tv3.setText(fecha);
+        tv4.setText(al_recargas.get(indiceRecarga).getUsu_solicita_str());
+        tv5.setText(al_recargas.get(indiceRecarga).getRec_observaciones_str());
+    }
+
+    public void buscarRecargaDet(int indiceRecarga)
+    {
+        //parametros del metodo
+        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+
+        PropertyInfo piPass = new PropertyInfo();
+        piPass.setName("recarga");
+        piPass.setValue( al_recargas.get(indiceRecarga).getRec_cve_n() );
+        propertyInfos.add(piPass);
+
+        peticion="RecargasDet";
+
+        //conexion con el metodo
+        ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "ObtenerRecargaDetJ");
+        conexionWS.delegate = Carga2Fragment.this;
+        conexionWS.propertyInfos = propertyInfos;
+        conexionWS.execute();
+    }
+
+    public void mostrarRecargaDet()
+    {
+        tableLayout.removeAllViews();
+        TableRow tr;
+        DataTableWS.RecargasDet rd;
+
+        if(al_recargasDet!=null)
+            for(int i=0; i<al_recargasDet.size();i++)
+            {
+                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_recargasdet, null);
+                rd=al_recargasDet.get(i);
+
+                ((TextView) tr.findViewById(R.id.t_prod_sku_str)).setText(rd.getProd_sku_str());
+                ((TextView) tr.findViewById(R.id.t_prod_desc_str)).setText(rd.getProd_desc_str());
+                ((TextView) tr.findViewById(R.id.t_prod_cant_n)).setText(rd.getProd_cant_n());
+
+                tableLayout.addView(tr);
+            }
+    }
 
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
