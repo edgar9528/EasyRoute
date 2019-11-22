@@ -61,6 +61,10 @@ public class FragmentNavigationManager implements NavigationManager {
                 ft= fm.beginTransaction().replace(R.id.container,Carga2Fragment.newInstance(false,false));
                 break;
 
+            case "Inventario | Recarga":
+                ft= fm.beginTransaction().replace(R.id.container,Carga2Fragment.newInstance(true,false));
+                break;
+
             case "Inventario | Inventario":
                 ft= fm.beginTransaction().replace(R.id.container, InventarioFragment.newInstance(usuario,false));
                 break;

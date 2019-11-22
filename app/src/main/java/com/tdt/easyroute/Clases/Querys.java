@@ -620,10 +620,10 @@ public class Querys {
                         "inner join familias f on p.fam_cve_n=f.fam_cve_n " +
                         "where iv.rut_cve_n={0} order by f.fam_orden_n,p.prod_orden_n";
 
-                public static String LayoutInventario = "select p.prod_cve_n,p.prod_sku_str," +
-                        "p.prod_desc_str,0 prod_cant_n,0 prod_sug_n,c.cat_desc_str,id_envase_n,0 prod_devuelto_n," +
-                        "0 prod_cancelado_n,0 prod_recuperado_n,0 prod_prestado_n,p.prod_vtamismodia_n, " +
-                        "f.fam_orden_n,p.prod_orden_n,pp.lpre_precio_n from productos p " +
+                public static String LayoutInventario = "select p.prod_cve_n prod_cve_n,p.prod_sku_str prod_sku_str," +
+                        "p.prod_desc_str prod_desc_str,0 prod_cant_n,0 prod_sug_n,c.cat_desc_str cat_desc_str,id_envase_n,0 prod_devuelto_n," +
+                        "0 prod_cancelado_n,0 prod_recuperado_n,0 prod_prestado_n,p.prod_vtamismodia_n prod_vtamismodia_n, " +
+                        "f.fam_orden_n fam_orden_n,p.prod_orden_n prod_orden_n,pp.lpre_precio_n lpre_precio_n from productos p " +
                         " inner join categorias c on p.cat_cve_n=c.cat_cve_n " +
                         "inner join familias f on p.fam_cve_n=f.fam_cve_n " +
                         "inner join (select * from precioproductos where lpre_cve_n=11) pp " +

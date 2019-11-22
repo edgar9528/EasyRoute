@@ -642,21 +642,22 @@ public class DataTableLC {
 
     public static class InvP
     {
-        String prod_cve_n;
-        String prod_sku_str;
-        String prod_desc_str;
-        String prod_cant_n;
-        String prod_sug_n;
-        String cat_desc_str;
-        String id_envase_n;
-        String prod_devuelto_n;
-        String prod_cancelado_n;
-        String prod_recuperado_n;
-        String prod_prestado_n;
-        String prod_vtamismodia_n;
-        String fam_orden_n;
-        String prod_orden_n;
-        String lpre_precio_n;
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_desc_str;
+        private String prod_cant_n;
+        private String prod_sug_n;
+        private String cat_desc_str;
+        private String id_envase_n;
+        private String prod_devuelto_n;
+        private String prod_cancelado_n;
+        private String prod_recuperado_n;
+        private String prod_prestado_n;
+        private String prod_vtamismodia_n;
+        private String fam_orden_n;
+        private String prod_orden_n;
+        private String lpre_precio_n;
+
 
         public InvP() {
         }

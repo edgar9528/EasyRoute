@@ -97,7 +97,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         if(recarga)
         {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Inventario | Recarga");
-            mensaje="Recargas";
+            mensaje="Recarga";
         }
         else
             mensaje="Carga Inicial";
@@ -138,7 +138,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = sp_recargas.getSelectedItem().toString();
-                if(!item.equals("Seleccione una carga"))
+                if(!item.equals("Seleccione una "+mensaje))
                 {
                     mostrarRecarga(i-1); //menos 1 porque el primero es el mensaje
                     buscarRecargaDet(i-1);
@@ -169,7 +169,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
     public void inicializar()
     {
         recargas = new ArrayList<>();
-        recargas.add("Seleccione una carga");
+        recargas.add("Seleccione una "+mensaje);
         sp_recargas.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, recargas));
 
         buscarRecargas();
@@ -204,12 +204,12 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
             }
             else
-                Toast.makeText(getContext(), "Por favor seleccione una carga con productos para poder continuar.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Por favor seleccione una "+mensaje+" con productos para poder continuar.", Toast.LENGTH_SHORT).show();
 
         }
         else
         {
-            Toast.makeText(getContext(), "Por favor seleccione una carga para poder continuar.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Por favor seleccione una "+mensaje+" para poder continuar.", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -435,7 +435,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
     public void llenarSpinnerRecargas()
     {
         recargas = new ArrayList<>();
-        recargas.add("Seleccione una carga");
+        recargas.add("Seleccione una "+mensaje);
         for(int i=0; i<al_recargas.size();i++)
             recargas.add((i+1+" - "+al_recargas.get(i).getRec_folio_str()));
 
