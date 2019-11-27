@@ -11,12 +11,17 @@ import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tdt.easyroute.MainActivity;
+import com.tdt.easyroute.Model.DataTableLC;
+import com.tdt.easyroute.Model.DataTableWS;
+import com.tdt.easyroute.Model.Modelos;
 import com.tdt.easyroute.R;
 
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -282,6 +287,282 @@ public class Utils {
     {
         MainActivity mainActivity = (MainActivity) activity;
         mainActivity.regresarInicio();
+    }
+
+    public static String CalcularDia(Application application)
+    {
+        String[] dias={"Domingo","Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado"};
+
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        int numeroDia = cal.get(Calendar.DAY_OF_WEEK)-1;
+
+        Configuracion conf = Utils.ObtenerConf(application);
+
+        String filtro = "";
+
+        String dia = dias[numeroDia];
+
+        if(conf.getPreventa()==1)
+        {
+            if(dias[numeroDia].equals("Sábado"))
+            {
+                dia = "Lunes";
+            }
+            else
+                dia= dias[numeroDia+1];
+        }
+
+
+        switch (dia) {
+            case "Lunes":
+                filtro = "cli_lun_n";
+                break;
+            case "Martes":
+                filtro = "cli_mar_n";
+                break;
+            case "Miércoles":
+                filtro = "cli_mie_n";
+                break;
+            case "Jueves":
+                filtro = "cli_jue_n";
+                break;
+            case "Viernes":
+                filtro = "cli_vie_n";
+                break;
+            case "Sábado":
+                filtro = "cli_sab_n";
+                break;
+            case "Domingo":
+                filtro = "cli_dom_n";
+                break;
+        }
+
+        return filtro;
+    }
+
+    public static Modelos.Indicadores ObtenerProductividad(int ruta, Application application)
+    {
+        Modelos.Indicadores ip = new Modelos.Indicadores();
+        ArrayList<DataTableWS.Ruta> Rutas;
+        ArrayList<DataTableLC.Clientes1> clientes;
+        DataTableWS.Ruta cr;
+
+        String WorkDay = CalcularDia(application);
+
+        try
+        {
+
+            String json = BaseLocal.Select(string.formatSql("Select * from rutas where rut_cve_n={0}",String.valueOf(ruta)),application);
+            Rutas = ConvertirRespuesta.getRutasJson(json);
+
+            if(Rutas!=null && Rutas.size()>0)
+            {
+                cr = Rutas.get(0);
+                int calculo;
+
+                ip.setPorcentajeRequerido( Integer.parseInt( cr.getRut_productividad_n() )    );
+                ip.setPorcentajeRequeridoVentas(  Integer.parseInt(  cr.getRut_efectividad_n() ) );
+
+                clientes = ListarClientes(true,application);
+
+                ip.setValorMercado(clientes.size());
+
+
+                //clientes
+                calculo = 0;
+                for(int i=0; i<clientes.size();i++)
+                    if(clientes.get(i).getCli_prospecto_n().equals("0")) calculo++;
+
+                ip.setClientes(calculo);
+
+                //prospectos
+                calculo=0;
+                for(int i=0; i<clientes.size();i++)
+                    if(clientes.get(i).getCli_prospecto_n().equals("1")) calculo++;
+                ip.setProspectos(calculo);
+
+
+                //VisitasRequeridas
+                int vr = (ip.getClientes() * ip.getPorcentajeRequerido()) / 100;
+                if (ip.getClientes() > 0)
+                {
+                    if ((vr * 100 / ip.getClientes()) < ip.getPorcentajeRequerido())
+                        vr++;
+                }
+                else
+                    vr = 0;
+
+                ip.setVisitasRequeridas(vr);
+
+
+                //VentasRequeridas
+                int vtar = (ip.getClientes() * ip.getPorcentajeRequeridoVentas()) / 100;
+                if (ip.getClientes() > 0)
+                {
+                    if ((vtar * 100 / ip.getClientes()) < ip.getPorcentajeRequeridoVentas())
+                        vtar++;
+                }
+                else
+                    vtar = 0;
+                ip.setVentasRequeridas(vtar);
+
+
+                //Calcular productividad
+                ArrayList<DataTableLC.BitacoraHH> bitacora;
+
+                json= BaseLocal.Select( string.formatSql( "select b.* from bitacorahh b inner join clientes c on b.cli_cve_n=c.cli_cve_n where {0}>0",WorkDay ),application );
+                bitacora = ConvertirRespuesta.getBitacoraHHJson(json);
+
+
+                ArrayList<DataTableLC.BitacoraHH> res=null;
+                DataTableLC.BitacoraHH b;
+                for(int i=0; i<clientes.size();i++)
+                {
+                    DataTableLC.Clientes1 r = clientes.get(i);
+
+                    //Con venta
+                    res= new ArrayList<>();
+                    for(int j=0; j<bitacora.size();j++)
+                    {
+                        b= bitacora.get(i);
+                        if( b.getCli_cve_n().equals(r.getCli_cve_n()) && (  b.getBit_comentario_str().equals("VISITA CON VENTA") || b.getBit_comentario_str().equals("VISITA CON PREVENTA") )  )
+                            res.add(b);
+                    }
+
+                    if (res.size() > 0)
+                    {
+                        clientes.get(i).setVisitado("1");
+                        clientes.get(i).setConventa("1");
+                    }
+
+                    //Cobranza
+                    res= new ArrayList<>();
+                    for(int j=0; j<bitacora.size();j++)
+                    {
+                        b= bitacora.get(i);
+                        if( b.getCli_cve_n().equals(r.getCli_cve_n()) &&   b.getBit_comentario_str().equals("VISITA CON COBRANZA")  )
+                            res.add(b);
+                    }
+
+                    if (res.size() > 0)
+                    {
+                        clientes.get(i).setVisitado("1");
+                        clientes.get(i).setConcobranza("1");
+                    }
+
+                    //No Venta
+
+                    res= new ArrayList<>();
+                    for(int j=0; j<bitacora.size();j++)
+                    {
+                        b= bitacora.get(i);
+                        if( b.getCli_cve_n().equals(r.getCli_cve_n()) &&   b.getBit_operacion_str().equals("NO VENTA")  )
+                            res.add(b);
+                    }
+
+                    if (res.size() > 0)
+                    {
+                        clientes.get(i).setVisitado("1");
+                        clientes.get(i).setNoventa("1");
+                    }
+
+                }
+
+
+                //Clientes Visitados
+                calculo=0;
+                for(int i=0; i<clientes.size();i++)
+                    if(clientes.get(i).getCli_prospecto_n().equals("0") &&  Integer.parseInt( clientes.get(i).getVisitado() )>0  ) calculo++;
+                ip.setProspectos(calculo);
+
+                //Clientes con venta
+                calculo=0;
+                for(int i=0; i<clientes.size();i++)
+                    if(clientes.get(i).getCli_prospecto_n().equals("0") &&  Integer.parseInt( clientes.get(i).getConventa() )>0  ) calculo++;
+                ip.setConVenta(calculo);
+
+
+                //Clientes con cobranza
+                calculo=0;
+                for(int i=0; i<clientes.size();i++)
+                    if(clientes.get(i).getCli_prospecto_n().equals("0") &&  Integer.parseInt( clientes.get(i).getConcobranza() )>0  ) calculo++;
+                ip.setConCobranza(calculo);
+
+
+                //Clientes con noventa
+                calculo=0;
+                for(int i=0; i<clientes.size();i++)
+                    if(clientes.get(i).getCli_prospecto_n().equals("0") &&  Integer.parseInt( clientes.get(i).getNoventa() )>0  ) calculo++;
+                ip.setConCobranza(calculo);
+
+                //Prospectos Visitados
+                calculo=0;
+                for(int i=0; i<clientes.size();i++)
+                    if(clientes.get(i).getCli_prospecto_n().equals("1") &&  Integer.parseInt( clientes.get(i).getVisitado() )>0  ) calculo++;
+                ip.setConCobranza(calculo);
+
+
+                if (ip.getClientes() > 0)
+                {
+                    ip.setPorcentajeRealizado( ip.getVisitasClientes()*100 / ip.getClientes()  );
+                    ip.setPorcentajeRealizadoVentas( ip.getConVenta() * 100 / ip.getClientes() );
+                }
+                else
+                {
+                    ip.setPorcentajeRealizado(0);
+                    ip.setPorcentajeRealizadoVentas(0);
+
+                }
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.toString());
+            return null;
+        }
+
+        return ip;
+    }
+
+    public static ArrayList<DataTableLC.Clientes1> ListarClientes(boolean dia, Application application)
+    {
+        Configuracion conf = Utils.ObtenerConf(application);
+
+        String filtro= CalcularDia(application);
+
+        String qry;
+
+        if(dia)
+        {
+            if (conf.getPreventa() == 1)
+                qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_prospecto_n,est_cve_str," +
+                        "0 visitado,0 conventa,0 concobranza,0 noventa from clientes where {0}>0 and rut_cve_n in " +
+                        "(select rut_cve_n from rutas where rut_prev_n={1}) and est_cve_str<>'B' order by {0}", filtro, String.valueOf(conf.getRuta() )  ,filtro);
+            else
+                qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_prospecto_n,est_cve_str," +
+                        "0 visitado,0 conventa,0 concobranza,0 noventa from clientes where {0}>0 and rut_cve_n={1} and est_cve_str<>'B' order by {0}", filtro, String.valueOf(conf.getRuta()),filtro);
+
+        }
+        else
+        {
+            if (conf.getPreventa() == 1)
+                qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_prospecto_n,est_cve_str," +
+                        "0 visitado,0 conventa,0 concobranza,0 noventa from clientes where rut_cve_n in " +
+                        "(select rut_cve_n from rutas where rut_prev_n={1}) est_cve_str<>'B' order by {0}", String.valueOf(conf.getRuta()), filtro );
+            else
+                qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_prospecto_n,est_cve_str," +
+                        "0 visitado,0 conventa,0 concobranza,0 noventa from clientes where rut_cve_n={0}  and est_cve_str<>'B' order by {0}", String.valueOf(conf.getRuta()), filtro);
+        }
+
+        ArrayList<DataTableLC.Clientes1> clientes;
+
+        String json = BaseLocal.Select(qry,application);
+        clientes = ConvertirRespuesta.getClientes1Json(json);
+
+        return clientes;
     }
 
 

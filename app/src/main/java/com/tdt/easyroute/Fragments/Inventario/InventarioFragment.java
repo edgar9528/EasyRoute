@@ -1,14 +1,21 @@
 package com.tdt.easyroute.Fragments.Inventario;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,19 +31,25 @@ import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.LoginActivity;
 import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
+import com.tdt.easyroute.Model.Modelos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
 import org.ksoap2.serialization.PropertyInfo;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
@@ -51,10 +64,15 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     private ArrayList<DataTableLC.InvP> al_invP;
     private ArrayList<DataTableLC.Inv> al_inv;
 
-    String peticion;
+    String peticion,nombreBase;
+
+    ArrayList<DataTableLC.InvP> dtVta = new ArrayList<>();
+    String folio; String idCteEsp = "";
 
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
+
+    private boolean entrarDescarga;
 
     public InventarioFragment() {
         // Required empty public constructor
@@ -79,6 +97,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         button_imprimir = view.findViewById(R.id.button_imprimir);
         button_salir = view.findViewById(R.id.button_salir);
         tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        nombreBase = getActivity().getString( R.string.nombreBD );
 
 
         if(descarga)
@@ -96,6 +115,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         crearEnvaseAut();
         cargarInventario(conf.getRuta());
 
+
         button_imprimir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +130,281 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
+        if(descarga)
+        {
+            validarProductosMismoDia();
+        }
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if( descarga && !entrarDescarga)
+        {
+            //Utils.RegresarInicio(getActivity());
+        }
+    }
+
+    private void validarProductosMismoDia()
+    {
+        float CantVta=0;
+
+        for(int i=0; i<al_invP.size();i++)
+        {
+            if(  Integer.parseInt( al_invP.get(i).getProd_vtamismodia_n() )==1 && Integer.parseInt( al_invP.get(i).getProd_cant_n() )>0   )
+            {
+                dtVta.add(al_invP.get(i));
+                if(al_invP.get(i).getProd_cant_n()!=null)
+                    CantVta+= Float.parseFloat( al_invP.get(i).getProd_cant_n() ) ;
+            }
+        }
+
+        if(dtVta.size()>0)
+        {
+            Toast.makeText(getContext(), string.formatSql("Faltan {0} productos obligatorios por vender. Se generara una venta automatica a clientes especiales.", String.valueOf(CantVta) ), Toast.LENGTH_LONG).show();
+
+            //Obtener la ruta actual
+            DataTableWS.Ruta dtRut = null;
+            String jsonRuta = BaseLocal.Select( string.formatSql("select * from rutas where rut_cve_n={0}", String.valueOf( conf.getRuta() ) ) ,getContext());
+            if(ConvertirRespuesta.getRutasJson(jsonRuta)!=null && ConvertirRespuesta.getRutasJson(jsonRuta).size()>0 )
+                dtRut = ConvertirRespuesta.getRutasJson(jsonRuta).get(0);
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
+            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+            try
+            {
+                String fecha= Utils.FechaLocal().replace("-","");
+                String rut = String.valueOf( conf.getRuta() );
+                String ceros ="";
+                if(rut.length()<3) {
+                    for (int i = rut.length(); i < 3; i++) ceros = ceros.concat("0");
+                    rut = ceros+rut;
+                }
+
+                Cursor cursor = db.rawQuery("select max(ven_folio_str) from ventas", null);
+                if(cursor.moveToFirst() && cursor.getString(0)!=null)
+                {
+                    folio= cursor.getString(0);
+                    folio = folio.substring(11);
+                    folio= String.valueOf(Integer.parseInt(folio) + 1);
+
+                    folio= fecha+rut+folio;
+                }
+                else
+                {
+                    folio= fecha+rut+"001";
+                }
+
+                if(dtRut!=null)
+                {
+                    idCteEsp = dtRut.getRut_idcteesp_n();
+                }
+
+                db.close();
+
+                obtenerUbicacion("VentaAutomatica");
+
+            }catch (Exception e)
+            {
+                Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("salida", "Error: "+e.getMessage() );
+            }
+            finally
+            {
+                db.close();
+            }
+        }
+
+        verficarDescarga();
+
+
+    }
+
+    private void verficarDescarga()
+    {
+        int H = Integer.parseInt(Utils.HoraLocal().substring(0,2)) ;
+
+        if(H<13)
+        {
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+            dialogo1.setTitle("Importante");
+            dialogo1.setMessage("La descarga solo puede realizarse a partir de las 2 de la tarde, ¿Desea continuar?");
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    abrirDescarga();
+                }
+            });
+            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
+            dialogo1.show();
+        }
+        else
+        {
+            abrirDescarga();
+        }
+    }
+
+    private void abrirDescarga()
+    {
+        String[] dias={"Domingo","Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado"};
+
+        Modelos.Indicadores ip;
+
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        String dia = dias[cal.get(Calendar.DAY_OF_WEEK)-1] ;
+        String mensaje="";
+        entrarDescarga=true;
+
+        if(dia.equals("Domingo"))
+        {
+            ip = new Modelos.Indicadores();
+            ip.setPorcentajeRequerido(0);
+            ip.setPorcentajeRealizado(1);
+            ip.setPorcentajeRequeridoVentas(0);
+            ip.setPorcentajeRealizadoVentas(1);
+        }
+        else
+        {
+            ip = Utils.ObtenerProductividad( conf.getRuta(),  getActivity().getApplication());
+        }
+
+        if(ip.getPorcentajeRealizado() < ip.getPorcentajeRequerido())
+        {
+            mensaje = string.formatSql("Te informamos que no has cubierto tu cuota de productividad te faltan {0} visitas para poder realizar tu descarga.", String.valueOf(ip.getVisitasRequeridas() - ip.getVisitasClientes()) ) ;
+            entrarDescarga=false;
+        }
+
+        if(ip.getPorcentajeRealizadoVentas() < ip.getPorcentajeRequeridoVentas())
+        {
+            mensaje = string.formatSql( "Te informamos que no has cubierto tu cuota de efectividad te faltan {0} ventas para poder realizar tu descarga.", String.valueOf(ip.getVentasRequeridas() - ip.getConVenta())  );
+            entrarDescarga=false;
+        }
+
+        if(!entrarDescarga)
+        {
+            Toast.makeText(getContext(),mensaje,Toast.LENGTH_LONG).show();
+            entrarDescarga=false;
+        }
+        else
+        {
+            if(conf.isDescarga())
+            {
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+                dialogo1.setTitle("Importante");
+                dialogo1.setMessage("Ya se realizo una descarga, ¿desea volver a realizarla?");
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        entrarDescarga=true;
+                    }
+                });
+                dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        entrarDescarga=false;
+                    }
+                });
+                dialogo1.show();
+            }
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(descarga && !entrarDescarga)
+        {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.RegresarInicio(getActivity());
+                    Log.d("salida","entro aqui");
+                }
+            }, 300);
+        }
+    }
+
+    public void ventaAutomatica(String coordenada)
+    {
+        DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        try
+        {
+            db.beginTransaction();
+
+            db.execSQL( string.formatSql( Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), idCteEsp,"NO LECTURA","SIN COSTO",coordenada ) );
+            db.execSQL( string.formatSql( Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), idCteEsp,"APERTURA DE CLIENTE","SIN COSTO",coordenada ) );
+
+
+            float subtotal = 0;
+            float subt = 0;
+
+            for(int i=0; i<dtVta.size(); i++)
+            {
+                subt = Float.parseFloat(dtVta.get(i).getProd_cancelado_n()) * Float.parseFloat(dtVta.get(i).getLpre_precio_n());
+                db.execSQL( string.formatSql(Querys.Ventas.InsVentaDet,folio, String.valueOf(i+1),dtVta.get(i).getProd_cve_n(),
+                                            dtVta.get(i).getProd_sku_str(),"0",dtVta.get(i).getProd_cant_n(),"0",dtVta.get(i).getLpre_precio_n(),dtVta.get(i).getLpre_precio_n(),
+                                            "0",dtVta.get(i).getLpre_precio_n(),String.valueOf(subt),"0","0","0","0","0") );
+
+                subtotal+=subt;
+
+                db.execSQL(string.formatSql(Querys.Inventario.ActualizaInvVen, "+", dtVta.get(i).getProd_cant_n(),String.valueOf(conf.getRuta()), dtVta.get(i).getProd_cve_n() ));
+
+                String con = string.formatSql( Querys.Inventario.InsertMovimiento, String.valueOf(conf.getRuta()), dtVta.get(i).getProd_cve_n(),
+                                               idCteEsp, conf.getUsuario(),dtVta.get(i).getProd_cant_n(), dtVta.get(i).getProd_cant_n(),"0",
+                                               String.valueOf(   Float.parseFloat(dtVta.get(i).getProd_cant_n()) - Float.parseFloat(dtVta.get(i).getProd_cant_n())  ),"Vendido ticket: " + folio );
+
+                db.execSQL(con);
+
+            }
+
+            db.execSQL( string.formatSql(Querys.Pagos.InsPago, String.valueOf(conf.getId() ), folio, String.valueOf(subtotal) ,"0","0",
+                                          "null","null","1","","",idCteEsp, String.valueOf(conf.getRuta()),conf.getUsuario(),"0","","0",coordenada) );
+
+
+            String con = string.formatSql(Querys.Ventas.InsVentas2, folio,idCteEsp, String.valueOf(conf.getRuta()),"11","0",conf.getUsuario().toUpperCase(), coordenada,"","","VENTA AUTOMATICA AL DESCARGAR");
+            db.execSQL(con);
+
+            con = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,conf.getUsuario(), String.valueOf(conf.getRuta()),idCteEsp,"CON VENTA","VISITA CON VENTA",coordenada);
+            db.execSQL(con);
+
+            con= string.formatSql( Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf( conf.getRuta()), idCteEsp,"CIERRE CLIENTE","CIERRE CON VENTA", coordenada   );
+            db.execSQL(con);
+
+            con = string.formatSql( Querys.Trabajo.InsertVisita, conf.getUsuario(),idCteEsp,"null","null","CON VENTA","VISITA CON VENTA",coordenada );
+            db.execSQL(con);
+
+            db.setTransactionSuccessful();
+
+
+            Toast.makeText(getContext(), "Venta automática guardada con exito.", Toast.LENGTH_SHORT).show();
+
+            enviarCambios();
+
+            Utils.RegresarInicio(getActivity());
+
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida", "Error: "+e.getMessage() );
+        }
+        finally
+        {
+            db.endTransaction();
+            db.close();
+        }
+
     }
 
     private void crearEnvaseAut()
@@ -373,6 +667,11 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                     if(accion.equals("InsertBitacora"))
                     {
                         BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, conf.getUsuario(), "INVENTARIO", "IMPRESION DE INVENTARIO", String.valueOf( conf.getRuta() ) , ubi[0]),getContext());
+                    }
+                    else
+                    if(accion.equals("VentaAutomatica"))
+                    {
+                        ventaAutomatica(ubi[0]);
                     }
 
                 }

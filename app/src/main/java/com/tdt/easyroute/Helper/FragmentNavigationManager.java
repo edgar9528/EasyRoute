@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.tdt.easyroute.BuildConfig;
+import com.tdt.easyroute.Fragments.Inventario.DevolucionesFragment;
 import com.tdt.easyroute.Fragments.PrincipalFragment;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
 import com.tdt.easyroute.Fragments.Inventario.Carga2Fragment;
@@ -67,6 +68,14 @@ public class FragmentNavigationManager implements NavigationManager {
 
             case "Inventario | Inventario":
                 ft= fm.beginTransaction().replace(R.id.container, InventarioFragment.newInstance(usuario,false));
+                break;
+
+            case "Inventario | Descarga":
+                ft= fm.beginTransaction().replace(R.id.container, InventarioFragment.newInstance(usuario,true));
+                break;
+
+            case "Inventario | Devoluciones":
+                ft= fm.beginTransaction().replace(R.id.container, DevolucionesFragment.newInstance(usuario));
                 break;
 
             case "Catálogos | Configuración":

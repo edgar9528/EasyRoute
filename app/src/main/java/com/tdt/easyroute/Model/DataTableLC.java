@@ -984,4 +984,180 @@ public class DataTableLC {
         }
     }
     
+    public static class BitacoraHH
+    {
+        private String bit_cve_n;
+        private String usu_cve_str;
+        private String rut_cve_n;
+        private String cli_cve_n;
+        private String bit_fecha_dt;
+        private String bit_operacion_str;
+        private String bit_comentario_str;
+        private String bit_coordenada_str;
+        private String trans_est_n;
+        private String trans_fecha_dt;
+
+        public BitacoraHH() {
+        }
+
+        public String getBit_cve_n() {
+            return bit_cve_n;
+        }
+
+        public void setBit_cve_n(String bit_cve_n) {
+            this.bit_cve_n = bit_cve_n;
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getBit_fecha_dt() {
+            return bit_fecha_dt;
+        }
+
+        public void setBit_fecha_dt(String bit_fecha_dt) {
+            this.bit_fecha_dt = bit_fecha_dt;
+        }
+
+        public String getBit_operacion_str() {
+            return bit_operacion_str;
+        }
+
+        public void setBit_operacion_str(String bit_operacion_str) {
+            this.bit_operacion_str = bit_operacion_str;
+        }
+
+        public String getBit_comentario_str() {
+            return bit_comentario_str;
+        }
+
+        public void setBit_comentario_str(String bit_comentario_str) {
+            this.bit_comentario_str = bit_comentario_str;
+        }
+
+        public String getBit_coordenada_str() {
+            return bit_coordenada_str;
+        }
+
+        public void setBit_coordenada_str(String bit_coordenada_str) {
+            this.bit_coordenada_str = bit_coordenada_str;
+        }
+
+        public String getTrans_est_n() {
+            return trans_est_n;
+        }
+
+        public void setTrans_est_n(String trans_est_n) {
+            this.trans_est_n = trans_est_n;
+        }
+
+        public String getTrans_fecha_dt() {
+            return trans_fecha_dt;
+        }
+
+        public void setTrans_fecha_dt(String trans_fecha_dt) {
+            this.trans_fecha_dt = trans_fecha_dt;
+        }
+    }
+
+    public static class Clientes1
+    {
+        private String cli_cve_n;
+        private String cli_cveext_str;
+        private String cli_prospecto_n;
+        private String est_cve_str;
+        private String visitado;
+        private String conventa;
+        private String concobranza;
+        private String noventa;
+
+        public Clientes1() {
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getCli_prospecto_n() {
+            return cli_prospecto_n;
+        }
+
+        public void setCli_prospecto_n(String cli_prospecto_n) {
+            this.cli_prospecto_n = cli_prospecto_n;
+        }
+
+        public String getEst_cve_str() {
+            return est_cve_str;
+        }
+
+        public void setEst_cve_str(String est_cve_str) {
+            this.est_cve_str = est_cve_str;
+        }
+
+        public String getVisitado() {
+            return visitado;
+        }
+
+        public void setVisitado(String visitado) {
+            this.visitado = visitado;
+        }
+
+        public String getConventa() {
+            return conventa;
+        }
+
+        public void setConventa(String conventa) {
+            this.conventa = conventa;
+        }
+
+        public String getConcobranza() {
+            return concobranza;
+        }
+
+        public void setConcobranza(String concobranza) {
+            this.concobranza = concobranza;
+        }
+
+        public String getNoventa() {
+            return noventa;
+        }
+
+        public void setNoventa(String noventa) {
+            this.noventa = noventa;
+        }
+    }
+    
 }

@@ -3,57 +3,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:weightSum="10"
     >
 
     <TextView
-        android:id="@+id/ti_sku"
-        android:layout_width="70dp"
+        android:id="@+id/t_dev_cve_n"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Sku"
+        android:layout_weight="2"
+        android:text="CVE"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
 
     <TextView
-        android:id="@+id/ti_producto"
-        android:layout_width="250dp"
+        android:id="@+id/t_prod_sku_str"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Producto"
-        android:textSize="18sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:paddingRight="10dp"
-        />
-
-    <TextView
-        android:id="@+id/ti_inv"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="Inv."
+        android:layout_weight="2"
+        android:text="SKU"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
 
     <TextView
-        android:id="@+id/ti_dev"
-        android:layout_width="50dp"
+        android:id="@+id/t_prod_desc_str"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Dev."
+        android:layout_weight="4"
+        android:text="Descripción"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
 
     <TextView
-        android:id="@+id/ti_can"
-        android:layout_width="50dp"
+        android:id="@+id/t_prod_cant_n"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Can."
+        android:layout_weight="2"
+        android:text="Cantidad"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
+
 
 </TableRow>

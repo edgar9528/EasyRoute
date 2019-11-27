@@ -800,7 +800,23 @@ public class ConvertirRespuesta {
             Log.d("salida","error gson: "+e.toString());
             al=null;
         }
+        return al;
+    }
 
+    public static ArrayList<DataTableLC.Clientes1> getClientes1Json(String respuesta)
+    {
+        ArrayList<DataTableLC.Clientes1> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Clientes1> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
         return al;
     }
 
@@ -1110,6 +1126,57 @@ public class ConvertirRespuesta {
             Type listType = new TypeToken< ArrayList<DataTableLC.DtEnv> >(){}.getType();
             al = gson.fromJson(respuesta, listType);
 
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.BitacoraHH> getBitacoraHHJson(String respuesta)
+    {
+        ArrayList<DataTableLC.BitacoraHH> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.BitacoraHH> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.Devoluciones> getDevolucionesJson(String respuesta)
+    {
+        ArrayList<DataTableWS.Devoluciones> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.Devoluciones> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableWS.DevolucionesDet> getDevolucionesDetJson(String respuesta)
+    {
+        ArrayList<DataTableWS.DevolucionesDet> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.DevolucionesDet> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
         }catch (Exception e)
         {
             Log.d("salida","error gson: "+e.toString());
