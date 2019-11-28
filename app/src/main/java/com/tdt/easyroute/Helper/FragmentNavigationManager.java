@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.tdt.easyroute.BuildConfig;
+import com.tdt.easyroute.Fragments.Clientes.Cartera.CarteraFragment;
 import com.tdt.easyroute.Fragments.Inventario.DevolucionesFragment;
 import com.tdt.easyroute.Fragments.PrincipalFragment;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
@@ -78,6 +79,11 @@ public class FragmentNavigationManager implements NavigationManager {
                 ft= fm.beginTransaction().replace(R.id.container, DevolucionesFragment.newInstance(usuario));
                 break;
 
+            case "Clientes | Cartera":
+                CarteraFragment carteraFragment = new CarteraFragment();
+                ft= fm.beginTransaction().replace(R.id.container, carteraFragment);
+                break;
+
             case "Catálogos | Configuración":
                 esFragment=false;
                 Intent intent = new Intent(activity, ConfiguracionActivity.class);
@@ -94,7 +100,6 @@ public class FragmentNavigationManager implements NavigationManager {
 
         if(esFragment)
         {
-
             ft.addToBackStack(null);
             if (false || !BuildConfig.DEBUG)
                 ft.commitAllowingStateLoss();

@@ -1159,5 +1159,137 @@ public class DataTableLC {
             this.noventa = noventa;
         }
     }
+
+    public static class ClientesSaldo
+    {
+        private String cli_cve_n;
+        private String cli_cveext_str;
+        private String cli_nombrenegocio_str;
+        private String cli_razonsocial_str;
+        private double cred_monto_n;
+        private double pag_abono_n;
+        private double saldo;
+
+        public ClientesSaldo() {
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getCli_nombrenegocio_str() {
+            return cli_nombrenegocio_str;
+        }
+
+        public void setCli_nombrenegocio_str(String cli_nombrenegocio_str) {
+            this.cli_nombrenegocio_str = cli_nombrenegocio_str;
+        }
+
+        public String getCli_razonsocial_str() {
+            return cli_razonsocial_str;
+        }
+
+        public void setCli_razonsocial_str(String cli_razonsocial_str) {
+            this.cli_razonsocial_str = cli_razonsocial_str;
+        }
+
+        public double getCred_monto_n() {
+            return cred_monto_n;
+        }
+
+        public void setCred_monto_n(double cred_monto_n) {
+            this.cred_monto_n = cred_monto_n;
+        }
+
+        public double getPag_abono_n() {
+            return pag_abono_n;
+        }
+
+        public void setPag_abono_n(double pag_abono_n) {
+            this.pag_abono_n = pag_abono_n;
+        }
+
+        public double getSaldo() {
+            return saldo;
+        }
+
+        public void setSaldo(double saldo) {
+            this.saldo = saldo;
+        }
+    }
+
+    public static class Saldos
+    {
+
+        private String cli_cve_n;
+        private String cli_cveext_str;
+        private String cred_referencia_str;
+        private String cred_monto_n;
+        private String abono;
+        private String saldo;
+
+        public Saldos() {
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getCred_referencia_str() {
+            return cred_referencia_str;
+        }
+
+        public void setCred_referencia_str(String cred_referencia_str) {
+            this.cred_referencia_str = cred_referencia_str;
+        }
+
+        public String getCred_monto_n() {
+            return cred_monto_n;
+        }
+
+        public void setCred_monto_n(String cred_monto_n) {
+            this.cred_monto_n = cred_monto_n;
+        }
+
+        public String getAbono() {
+            return abono;
+        }
+
+        public void setAbono(String abono) {
+            this.abono = abono;
+        }
+
+        public String getSaldo() {
+            return saldo;
+        }
+
+        public void setSaldo(String saldo) {
+            this.saldo = saldo;
+        }
+    }
     
 }

@@ -1,11 +1,8 @@
 package com.tdt.easyroute.Fragments.Inventario;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
-import android.icu.text.UnicodeSetSpanner;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -26,7 +23,6 @@ import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
-import com.tdt.easyroute.Clases.ConexionWSsync;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
@@ -42,7 +38,6 @@ import com.tdt.easyroute.R;
 import org.ksoap2.serialization.PropertyInfo;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class DevolucionesFragment extends Fragment implements AsyncResponseJSON {
 
@@ -388,7 +383,6 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                     db.endTransaction();
                     db.close();
                 }
-
 
                 String js= BaseLocal.Select( "Select p.prod_cve_n from productos p inner join categorias c on p.cat_cve_n=c.cat_cve_n " +
                         "where c.cat_desc_str='ENVASE' and p.prod_cve_n not in " +

@@ -927,7 +927,6 @@ public class ConvertirRespuesta {
         return dt;
     }
 
-
     public static ArrayList<DataTableWS.VisitaPreventa> getVisitaPreventaJson(String respuesta)
     {
         ArrayList<DataTableWS.VisitaPreventa> al =null;
@@ -1184,6 +1183,44 @@ public class ConvertirRespuesta {
         }
         return al;
     }
+
+    public static ArrayList<DataTableLC.ClientesSaldo> getClientesSaldoJson(String respuesta)
+    {
+        ArrayList<DataTableLC.ClientesSaldo> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.ClientesSaldo> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+    public static ArrayList<DataTableLC.Saldos> getSaldosJson(String respuesta)
+    {
+        ArrayList<DataTableLC.Saldos> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Saldos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
 
 
 }

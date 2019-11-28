@@ -130,7 +130,16 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         button_salir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.RegresarInicio(getActivity());
+                if (cautivo)
+                {
+                    if(al_recargas!=null && al_recargas.size()>0 )
+                        Toast.makeText(getContext(), "Debe de aceptar todas las recargas para poder salir y continuar", Toast.LENGTH_SHORT).show();
+                    else
+                        Utils.RegresarInicio(getActivity());
+                }
+                else
+                    Utils.RegresarInicio(getActivity());
+
             }
         });
 
@@ -390,7 +399,10 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             db.endTransaction();
             db.close();
 
-            Utils.RegresarInicio(getActivity());
+            if(!cautivo)
+                Utils.RegresarInicio(getActivity());
+            else
+                buscarRecargas();
 
         }catch (Exception e)
         {

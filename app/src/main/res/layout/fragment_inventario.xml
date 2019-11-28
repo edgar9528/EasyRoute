@@ -25,9 +25,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-
-
-
                 <HorizontalScrollView
                     android:id="@+id/horizontalView"
                     android:layout_height="wrap_content"

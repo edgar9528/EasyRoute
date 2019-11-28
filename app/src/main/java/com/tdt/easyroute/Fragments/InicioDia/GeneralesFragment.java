@@ -155,7 +155,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             public void onChanged(Boolean s) {
                 if(s)
                 {
-                    inicializar();
+                    //inicializar(); comentado porque cambiaba la ruta/empresa seleccionada al sincronizar
                 }
 
             }

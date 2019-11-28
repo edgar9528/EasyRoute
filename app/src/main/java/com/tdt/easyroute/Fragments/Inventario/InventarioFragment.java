@@ -228,7 +228,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     {
         int H = Integer.parseInt(Utils.HoraLocal().substring(0,2)) ;
 
-        if(H<13)
+        if(H<14)
         {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle("Importante");
@@ -261,8 +261,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         Calendar cal= Calendar.getInstance();
         cal.setTime(new Date());
         String dia = dias[cal.get(Calendar.DAY_OF_WEEK)-1] ;
-        String mensaje="";
-        entrarDescarga=true;
+
 
         if(dia.equals("Domingo"))
         {
@@ -277,24 +276,25 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             ip = Utils.ObtenerProductividad( conf.getRuta(),  getActivity().getApplication());
         }
 
+
+        String mensaje="";
+        entrarDescarga=true;
+
         if(ip.getPorcentajeRealizado() < ip.getPorcentajeRequerido())
         {
             mensaje = string.formatSql("Te informamos que no has cubierto tu cuota de productividad te faltan {0} visitas para poder realizar tu descarga.", String.valueOf(ip.getVisitasRequeridas() - ip.getVisitasClientes()) ) ;
-            entrarDescarga=false;
-        }
-
-        if(ip.getPorcentajeRealizadoVentas() < ip.getPorcentajeRequeridoVentas())
-        {
-            mensaje = string.formatSql( "Te informamos que no has cubierto tu cuota de efectividad te faltan {0} ventas para poder realizar tu descarga.", String.valueOf(ip.getVentasRequeridas() - ip.getConVenta())  );
-            entrarDescarga=false;
-        }
-
-        if(!entrarDescarga)
-        {
             Toast.makeText(getContext(),mensaje,Toast.LENGTH_LONG).show();
             entrarDescarga=false;
         }
         else
+        if(ip.getPorcentajeRealizadoVentas() < ip.getPorcentajeRequeridoVentas())
+        {
+            mensaje = string.formatSql( "Te informamos que no has cubierto tu cuota de efectividad te faltan {0} ventas para poder realizar tu descarga.", String.valueOf(ip.getVentasRequeridas() - ip.getConVenta())  );
+            Toast.makeText(getContext(),mensaje,Toast.LENGTH_LONG).show();
+            entrarDescarga=false;
+        }
+
+        if(entrarDescarga)
         {
             if(conf.isDescarga())
             {

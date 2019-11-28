@@ -20,6 +20,7 @@ import com.tdt.easyroute.Model.Modelos;
 import com.tdt.easyroute.R;
 
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -563,6 +564,12 @@ public class Utils {
         clientes = ConvertirRespuesta.getClientes1Json(json);
 
         return clientes;
+    }
+
+    public static String numFormat(double numero)
+    {
+        DecimalFormat df = new DecimalFormat("#.00");
+        return df.format(numero);
     }
 
 
