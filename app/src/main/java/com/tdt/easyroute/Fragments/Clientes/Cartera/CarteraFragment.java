@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class CarteraFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
                 //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
             }
             @Override
@@ -61,12 +63,12 @@ public class CarteraFragment extends Fragment {
 
     public void goClientesFragment()
     {
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(0);
     }
 
     public void goSaldosFragment()
     {
-        viewPager.setCurrentItem(2);
+        viewPager.setCurrentItem(1);
     }
 
 }

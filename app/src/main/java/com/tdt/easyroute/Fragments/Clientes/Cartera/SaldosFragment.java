@@ -1,8 +1,6 @@
 package com.tdt.easyroute.Fragments.Clientes.Cartera;
 
-import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -34,6 +33,8 @@ public class SaldosFragment extends Fragment {
 
     private ClientesVM clientesVM;
     private CarteraFragment fragment;
+    private TextView tv_cliente;
+    private Button b_imprimir,b_salir;
 
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
@@ -55,10 +56,27 @@ public class SaldosFragment extends Fragment {
         layoutInflater = inflater;
 
         tableLayout = view.findViewById(R.id.tableLayout);
+        tv_cliente = view.findViewById(R.id.tv_cliente);
+        b_imprimir = view.findViewById(R.id.button_imprimir);
+        b_salir = view.findViewById(R.id.button_salir);
 
+        b_imprimir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                regresar();
+            }
+        });
+
+        b_salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.RegresarInicio(getActivity());
+            }
+        });
+
+        tv_cliente.setText("Saldo cliente: $0.00");
 
         mostrarTitulo();
-
 
         return view;
     }
@@ -127,21 +145,34 @@ public class SaldosFragment extends Fragment {
         mostrarTitulo();
         TableRow tr;
 
+        double rsc= 0;
+
         for(int i=0; i<dgSaldos.size();i++)
         {
             tr = (TableRow) layoutInflater.inflate(R.layout.tabla_saldos, null);
             DataTableLC.Saldos s = dgSaldos.get(i);
 
+            double saldo = Double.parseDouble( s.getCred_monto_n() ) - Double.parseDouble(s.getAbono()) ;
+            rsc += saldo;
+
             ((TextView) tr.findViewById(R.id.t_cliente)).setText(s.getCli_cve_n());
             ((TextView) tr.findViewById(R.id.t_credito)).setText(s.getCred_referencia_str());
-            ((TextView) tr.findViewById(R.id.t_monto)).setText(s.getCred_monto_n());
-            ((TextView) tr.findViewById(R.id.t_abono)).setText(s.getAbono());
-            ((TextView) tr.findViewById(R.id.t_saldo)).setText(s.getSaldo());
+            ((TextView) tr.findViewById(R.id.t_monto)).setText("$"+ Utils.strToNum( s.getCred_monto_n()) );
+            ((TextView) tr.findViewById(R.id.t_abono)).setText("$"+ Utils.strToNum( s.getAbono() ) );
+            ((TextView) tr.findViewById(R.id.t_saldo)).setText("$"+ Utils.numFormat( saldo ) );
 
             tableLayout.addView(tr);
         }
 
+        tv_cliente.setText("Saldo cliente: $"+Utils.numFormat(rsc));
+
     }
+
+    private void regresar()
+    {
+        fragment.goClientesFragment();
+    }
+
 
 
 }

@@ -572,5 +572,18 @@ public class Utils {
         return df.format(numero);
     }
 
+    public static String strToNum(String numeroStr)
+    {
+        try {
+            double numero = Double.parseDouble(numeroStr);
+            DecimalFormat df = new DecimalFormat("#.00");
+            return df.format(numero);
+        }
+        catch (Exception e)
+        {
+            return "";
+        }
+    }
+
 
 }
