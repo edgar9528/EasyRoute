@@ -1,0 +1,38 @@
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/t_idExt"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="Id Ext"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/t_Negocio"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="Negocio"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/t_Razon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="Razon social"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+
+</TableRow>
