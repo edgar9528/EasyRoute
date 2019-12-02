@@ -1097,7 +1097,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableLC.Inventario> getInventarioJson(String respuesta)
     {
         ArrayList<DataTableLC.Inventario> al =null;
@@ -1114,7 +1113,6 @@ public class ConvertirRespuesta {
         }
         return al;
     }
-
 
     public static ArrayList<DataTableLC.DtEnv> getDtEnvJson(String respuesta)
     {
@@ -1202,7 +1200,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableLC.Saldos> getSaldosJson(String respuesta)
     {
         ArrayList<DataTableLC.Saldos> al =null;
@@ -1220,6 +1217,46 @@ public class ConvertirRespuesta {
         }
         return al;
     }
+
+
+    public static ArrayList<DataTableLC.PreventaPagos> getPreventaPagosLCJson(String respuesta)
+    {
+        ArrayList<DataTableLC.PreventaPagos> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.PreventaPagos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.Creditos> getCreditos2Json(String respuesta)
+    {
+        ArrayList<DataTableLC.Creditos> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Creditos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+
+        return al;
+
+    }
+
+
+
 
 
 

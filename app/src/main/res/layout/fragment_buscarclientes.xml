@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="38"
+            android:layout_weight="35"
             android:orientation="vertical"
 
             >
@@ -33,7 +33,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6"
+                    android:layout_weight="4"
                     android:theme="@style/EditTextBlack">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_filtro"
@@ -53,6 +53,17 @@
                     android:theme="@style/ButtonDarkSmall"
                     android:layout_gravity="center"
                     />
+
+                <Button
+                    android:id="@+id/button_borrar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Borrar"
+                    android:theme="@style/ButtonDarkSmall"
+                    android:layout_gravity="center"
+                    />
+
             </LinearLayout>
 
 
@@ -74,7 +85,7 @@
                     />
 
                 <Button
-                    android:id="@+id/button_activar"
+                    android:id="@+id/button_actualizar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -89,7 +100,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="17"
+            android:layout_weight="20"
             android:orientation="vertical"
 
             >
@@ -152,7 +163,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Validar"
+                    android:text="Seleccionar"
                     android:theme="@style/ButtonDarkSmall"
                     />
 

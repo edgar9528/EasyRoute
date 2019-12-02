@@ -1291,5 +1291,66 @@ public class DataTableLC {
             this.saldo = saldo;
         }
     }
+
+    public static class PreventaPagos
+    {
+        String prev_folio_str;
+        String ppag_num_n;
+        String ppag_cobranza_n;
+        String fpag_cve_n;
+        String fpag_cant_n;
+        String fpag_desc_str;
+
+        public PreventaPagos() {
+        }
+
+        public String getPrev_folio_str() {
+            return prev_folio_str;
+        }
+
+        public void setPrev_folio_str(String prev_folio_str) {
+            this.prev_folio_str = prev_folio_str;
+        }
+
+        public String getPpag_num_n() {
+            return ppag_num_n;
+        }
+
+        public void setPpag_num_n(String ppag_num_n) {
+            this.ppag_num_n = ppag_num_n;
+        }
+
+        public String getPpag_cobranza_n() {
+            return ppag_cobranza_n;
+        }
+
+        public void setPpag_cobranza_n(String ppag_cobranza_n) {
+            this.ppag_cobranza_n = ppag_cobranza_n;
+        }
+
+        public String getFpag_cve_n() {
+            return fpag_cve_n;
+        }
+
+        public void setFpag_cve_n(String fpag_cve_n) {
+            this.fpag_cve_n = fpag_cve_n;
+        }
+
+        public String getFpag_cant_n() {
+            return fpag_cant_n;
+        }
+
+        public void setFpag_cant_n(String fpag_cant_n) {
+            this.fpag_cant_n = fpag_cant_n;
+        }
+
+        public String getFpag_desc_str() {
+            return fpag_desc_str;
+        }
+
+        public void setFpag_desc_str(String fpag_desc_str) {
+            this.fpag_desc_str = fpag_desc_str;
+        }
+    }
     
 }

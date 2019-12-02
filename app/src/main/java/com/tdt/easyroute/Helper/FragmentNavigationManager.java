@@ -99,8 +99,7 @@ public class FragmentNavigationManager implements NavigationManager {
             default:
                 PrincipalFragment fragmentPrincipal = new PrincipalFragment();
                 ft= fm.beginTransaction().replace(R.id.container,fragmentPrincipal);
-                 //ft= fm.beginTransaction().replace(R.id.container, PrincipalFragment.newInstance(title));
-                 break;
+                break;
         }
 
         if(esFragment)

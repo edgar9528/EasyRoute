@@ -1163,7 +1163,6 @@ public class DataTableWS {
             this.est_cve_str = est_cve_str;
         }
     }
-    
 
     public static class Promociones
     {
