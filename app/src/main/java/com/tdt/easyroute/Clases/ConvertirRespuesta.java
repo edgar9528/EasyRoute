@@ -803,6 +803,23 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableWS.Clientes2> getClientes2Json(String respuesta)
+    {
+        ArrayList<DataTableWS.Clientes2> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.Clientes2> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
     public static ArrayList<DataTableLC.Clientes1> getClientes1Json(String respuesta)
     {
         ArrayList<DataTableLC.Clientes1> al =null;
@@ -985,6 +1002,24 @@ public class ConvertirRespuesta {
 
             Gson gson = new Gson();
             Type listType = new TypeToken< ArrayList<DataTableWS.PreventaEnv> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+    public static ArrayList<DataTableWS.PreventaEnv2> getPreventaEnv2Json(String respuesta)
+    {
+        ArrayList<DataTableWS.PreventaEnv2> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableWS.PreventaEnv2> >(){}.getType();
             al = gson.fromJson(respuesta, listType);
 
         }catch (Exception e)

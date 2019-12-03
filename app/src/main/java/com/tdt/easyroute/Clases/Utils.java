@@ -20,6 +20,7 @@ import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.Model.Modelos;
 import com.tdt.easyroute.Model.Preventa;
 import com.tdt.easyroute.Model.PreventaDet;
+import com.tdt.easyroute.Model.PreventaEnvase;
 import com.tdt.easyroute.Model.PreventaPagos;
 import com.tdt.easyroute.Model.VisitaPrev;
 import com.tdt.easyroute.R;
@@ -557,12 +558,12 @@ public class Utils {
 
         String json;
 
+        DataTableWS.Clientes rcli=null;
+
         try
         {
             json= BaseLocal.Select(string.formatSql("select * from clientes where cli_cve_n={0}", String.valueOf(cliente)),context);
             ArrayList<DataTableWS.Clientes> dtCli = ConvertirRespuesta.getClientesJson(json);
-
-            DataTableWS.Clientes rcli;
 
             if(dtCli!=null&&dtCli.size()>0)
                 rcli = dtCli.get(0);
@@ -688,20 +689,82 @@ public class Utils {
                          Double.parseDouble( rp.getProd_cantabono_n() ),  Byte.parseByte(rp.getTrans_est_n()) ,
                          rp.getTrans_fecha_dt() );
                 }
-
-
             }
 
 
+            if(vis.Preventas!=null)
+            {
+                consulta = string.formatSql("Select * from preventaenv where prev_folio_str='{0}'", vis.Preventas[0].prev_folio_str);
+                json = BaseLocal.Select(consulta,context);
+                ArrayList<DataTableWS.PreventaEnv> dtEnvPrev = ConvertirRespuesta.getPreventaEnvJson(json);
+
+                if(dtEnvPrev!=null && dtEnvPrev.size()>0)
+                {
+                    vis.setEnvase(new PreventaEnvase[dtEnvPrev.size()]);
+
+                    for(int j=0; j<dtEnvPrev.size();j++)
+                    {
+                        DataTableWS.PreventaEnv rp = dtEnvPrev.get(j);
+
+                        vis.Envase[j] = new PreventaEnvase(rp.getPrev_folio_str() , Long.parseLong( rp.getProd_cve_n() )  ,
+                             rp.getProd_sku_str(), Double.parseDouble( rp.getProd_inicial_n()) , Double.parseDouble(rp.getProd_cargo_n())  ,
+                             Double.parseDouble( rp.getProd_abono_n() ),  Double.parseDouble( rp.getProd_regalo_n() ) , Double.parseDouble( rp.getProd_venta_n() )  ,
+                             Double.parseDouble( rp.getProd_final_n() ), Double.parseDouble( rp.getLpre_base_n() )  , Double.parseDouble( rp.getLpre_precio_n() ) ) ;
+                    }
+                }
+            }
+            else
+            {
+                consulta= string.formatSql("select '0' prev_folio_str ,s1.prod_cve_n,s1.prod_sku_str," +
+                        "coalesce(s2.prod_precio_n,s1.lpre_precio_n) lpre_base_n,s1.lpre_precio_n," +
+                        "coalesce(s2.prod_cant_n,0.0)prod_inicial_n,coalesce(s2.prod_cantabono_n,0.0) prod_cantabono_n, " +
+                        "coalesce(s2.prod_saldo_n,0.0) prod_saldo_n,coalesce(s2.prod_abono_n,0.0) prod_abono_n, " +
+                        "coalesce(s2.prod_venta_n,0.0) prod_venta_n,coalesce(s2.prod_cargo_n,0.0) prod_cargo_n  from " +
+                        "(select p.prod_cve_n,p.prod_sku_str,pp.lpre_precio_n from productos p inner join categorias c " +
+                        "on p.cat_cve_n=c.cat_cve_n inner join precioproductos pp " +
+                        "on p.prod_cve_n=pp.prod_cve_n where c.cat_desc_str='ENVASE' and pp.lpre_cve_n={1}) s1 left join (" +
+                        "select prod_cve_n,prod_sku_str,max(prod_precio_n) prod_precio_n,sum(prod_cant_n) prod_cant_n," +
+                        "sum(prod_cantabono_n) prod_cantabono_n,sum(prod_cant_n-prod_cantabono_n) prod_saldo_n,0.0 prod_abono_n," +
+                        "0.0 prod_venta_n,0.0 prod_cargo_n from creditos where cli_cve_n={0} and cred_esenvase_n=1  " +
+                        "group by prod_cve_n,prod_sku_str ) s2 on s1.prod_cve_n=s2.prod_cve_n", String.valueOf( cliente ) , String.valueOf( rcli.getLpre_cve_n() ) );
+
+                json = BaseLocal.Select(consulta,context);
+
+                ArrayList<DataTableWS.PreventaEnv2> dtEnvPrev = ConvertirRespuesta.getPreventaEnv2Json(json);
+
+                if(dtEnvPrev!=null && dtEnvPrev.size()>0)
+                {
+                    for(int i=0; i<dtEnvPrev.size();i++)
+                    {
+                        DataTableWS.PreventaEnv2 p = dtEnvPrev.get(i);
+
+                        double proFin = Double.parseDouble( p.getProd_saldo_n() ) + Double.parseDouble( p.getProd_cargo_n() ) - Double.parseDouble( p.getProd_abono_n() ) - Double.parseDouble( p.getProd_venta_n());
+
+                        double proSub = proFin * Double.parseDouble(p.getLpre_precio_n());
+
+                        dtEnvPrev.get(i).setProd_final_n( String.valueOf(proFin) );
+                        dtEnvPrev.get(i).setProd_subtotal_n( String.valueOf(proSub) );
+                    }
 
 
+                    for(int j=0; j<dtEnvPrev.size();j++)
+                    {
+                        DataTableWS.PreventaEnv2 rp = dtEnvPrev.get(j);
+
+                        vis.Envase[j] = new PreventaEnvase(rp.getPrev_folio_str() , Long.parseLong( rp.getProd_cve_n() )  ,
+                                rp.getProd_sku_str(), Double.parseDouble( rp.getProd_inicial_n()) , Double.parseDouble(rp.getProd_cargo_n())  ,
+                                Double.parseDouble( rp.getProd_abono_n() ),  /*Double.parseDouble( rp.getProd_regalo_n() )*/ 0 , Double.parseDouble( rp.getProd_venta_n() )  ,
+                                Double.parseDouble( rp.getProd_final_n() ), Double.parseDouble( rp.getLpre_base_n() )  , Double.parseDouble( rp.getLpre_precio_n() ) ) ;
+                    }
+                }
+            }
 
 
         }
         catch (Exception e)
         {
-            Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(context, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error Utils ObtenerVisitaPrevBebidas: "+e.getMessage());
+            Toast.makeText(context, "Error Utils ObtenerVisitaPrevBebidas: "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         return vis;

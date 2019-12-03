@@ -1,10 +1,12 @@
 package com.tdt.easyroute.Fragments.Clientes;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +19,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.BaseLocal;
+import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.ParametrosWS;
+import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
+
+import org.ksoap2.serialization.PropertyInfo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -109,6 +117,13 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
             @Override
             public void onClick(View view) {
                 seleccionar(cli_cve_nSelec);
+            }
+        });
+
+        button_act.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actualizaCliente();
             }
         });
 
@@ -300,7 +315,7 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
                 //pinta de azul la fila y actualiza la cve de la fila seccionada
                 tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
                 cli_cve_nSelec=tag;
-                Log.d("salida","Un clic: "+cli_cve_nSelec);
+
             }
 
         }
@@ -315,10 +330,9 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
             {
                 DataTableWS.Clientes rc=null;
 
-                for(int i=0; i<bsClientes.size(); i++)
-                    if(bsClientes.get(i).getCli_cve_n().equals(cli_cve_nSelec))
-                        rc= bsClientes.get(i);
-
+                for(int i=0; i<dgClientes.size(); i++)
+                    if(dgClientes.get(i).getCli_cve_n().equals(cli_cve_nSelec))
+                        rc= dgClientes.get(i);
 
                 String cliente = rc.getCli_cve_n();
                 String IdExt = rc.getCli_cveext_str();
@@ -343,23 +357,247 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
 
     private void seleccionar(String cle_cve_n)
     {
-        if(!cle_cve_n.isEmpty())
+        try {
+
+            String consulta, json;
+            if (!cle_cve_n.isEmpty())
+            {
+                DataTableWS.Clientes dgCliente = null;
+
+                for (int i = 0; i < dgClientes.size(); i++)
+                    if (dgClientes.get(i).getCli_cve_n().equals(cli_cve_nSelec))
+                        dgCliente = dgClientes.get(i);
+
+
+                String cliente = dgCliente.getCli_cve_n();
+                String IdExt = dgCliente.getCli_cveext_str();
+
+                boolean cli_especial_n = Utils.getBool(dgCliente.getCli_especial_n());
+
+                ArrayList<DataTableWS.Clientes2> dtca = null;
+                DataTableWS.Clientes2 rc = null;
+
+                consulta = string.formatSql("select c.*,r.rut_invalidafrecuencia_n from clientes c  left join rutas r on c.rut_cve_n=r.rut_cve_n where c.cli_cve_n={1}", cliente);
+                json = BaseLocal.Select(consulta, getContext());
+
+                Log.d("salida",json);
+
+                dtca = ConvertirRespuesta.getClientes2Json(json);
+
+                if (dtca != null) {
+                    rc = dtca.get(0);
+                }
+
+                if (Utils.getBool(rc.getCli_invalidafrecuencia_n()))
+                {
+                    consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS", "{0}");
+                    obtenerUbicacion(consulta);
+                } else if (Utils.getBool(rc.getRut_invalidafrecuencia_n()))
+                {
+                    consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS NIVEL RUTA", "{0}");
+                    obtenerUbicacion(consulta);
+                }
+                else
+                {
+                    if (conf.isAuditoria())
+                    {
+                        consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR AUDITORIA", "{0}");
+                        obtenerUbicacion(consulta);
+                    } else {
+
+                        int diaVisitar = 0;
+                        switch (Day) {
+                            case "cli_lun_n":
+                                diaVisitar = Integer.parseInt(rc.getCli_lun_n());
+                                break;
+                            case "cli_mar_n":
+                                diaVisitar = Integer.parseInt(rc.getCli_mar_n());
+                                break;
+                            case "cli_mie_n":
+                                diaVisitar = Integer.parseInt(rc.getCli_mie_n());
+                                break;
+                            case "cli_jue_n":
+                                diaVisitar = Integer.parseInt(rc.getCli_jue_n());
+                                break;
+                            case "cli_vie_n":
+                                diaVisitar = Integer.parseInt(rc.getCli_vie_n());
+                                break;
+                            case "cli_sab_n":
+                                diaVisitar = Integer.parseInt(rc.getCli_sab_n());
+                                break;
+                            case "cli_dom_n":
+                                diaVisitar = Integer.parseInt(rc.getCli_dom_n());
+                                break;
+                        }
+
+                        if (diaVisitar <= 0) {
+                            consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "EL CLIENTE NO SE VISITA HOY", "{0}");
+                            obtenerUbicacion(consulta);
+                            Toast.makeText(getContext(), "El cliente no se visita hoy", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                }
+
+                Utils.RegresarInicio(getActivity());
+
+            } else {
+                Toast.makeText(getContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+            }
+
+        }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Cliente: "+cle_cve_n, Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(getContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+            Log.d( "salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void peticionClientes()
+    private void obtenerUbicacion(final String consulta)
     {
+        try {
 
+            final MainActivity mainActivity = (MainActivity) getActivity();
+            final String[] ubi = new String[1];
+            final ProgressDialog progress = new ProgressDialog(getContext());
+            progress.setTitle("Actualizando");
+            progress.setMessage("Por favor espere");
+            progress.show();
+            progress.setCancelable(false);
+
+            mainActivity.enableLocationUpdates();
+
+            ubi[0] = mainActivity.getLatLon();
+            Log.d("salida", "Ubicacion anterior: " + ubi[0]);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress.cancel();
+                    mainActivity.disableLocationUpdates();
+                    ubi[0] = mainActivity.getLatLon();
+                    Log.d("salida", "Ubicacion nueva: " + ubi[0]);
+
+                    BaseLocal.Insert( string.formatSql(consulta, ubi[0])  ,getContext());
+                }
+            }, 3000);
+
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
+
+    private void actualizaCliente()
+    {
+        try {
+
+            if (!cli_cve_nSelec.isEmpty())
+            {
+
+                DataTableWS.Clientes dgCliente = null;
+
+                for (int i = 0; i < dgClientes.size(); i++)
+                    if (dgClientes.get(i).getCli_cve_n().equals(cli_cve_nSelec))
+                        dgCliente = dgClientes.get(i);
+
+
+                String cliente = dgCliente.getCli_cve_n();
+                String IdExt = dgCliente.getCli_cveext_str();
+
+
+                ArrayList<PropertyInfo> propertyInfos  =new ArrayList<>();
+
+                PropertyInfo pi = new PropertyInfo();
+                pi.setName("IdCliente");
+                pi.setValue(cliente);
+                propertyInfos.add(pi);
+
+                ConexionWS_JSON cws = new ConexionWS_JSON(getContext(),"ActualizarClienteJ");
+                cws.propertyInfos = propertyInfos;
+                cws.delegate = BuscarclientesFragment.this;
+                cws.execute();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+            }
+
+        }catch (Exception e)
+        {
+            Log.d( "salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
 
+        if(estado)
+        {
+            if (respuesta != null)
+            {
+                ArrayList<DataTableWS.Clientes> clientes;
+                clientes = ConvertirRespuesta.getClientesJson(respuesta);
+
+                if(clientes!=null && clientes.size()>0)
+                {
+                    DataTableWS.Clientes r = clientes.get(0);
+
+                    try {
+
+                        String consulta=string.formatSql(Querys.Clientes.UpClientes4, r.getCli_cveext_str() , getBool( r.getCli_padre_n() ),
+                                                                    r.getCli_cvepadre_n(),r.getCli_razonsocial_str(), r.getCli_rfc_Str() , getBool( r.getCli_reqfact_n() ) ,r.getCli_nombrenegocio_str(),
+                                                                    r.getCli_nom_str(), r.getCli_app_str(),r.getCli_apm_str(),r.getCli_fnac_dt(), r.getCli_genero_str(),r.getLpre_cve_n(),
+                                                                    r.getNota_cve_n(), r.getFpag_cve_n(), getBool( r.getCli_consigna_n() ) , getBool( r.getCli_credito_n() ) ,r.getCli_montocredito_n(),
+                                                                    r.getCli_plazocredito_n(),r.getCli_credenvases_n(),r.getCli_estcredito_str(), getBool( r.getCli_fba_n()) ,
+                                                                    r.getCli_porcentajefba_n(),r.getRut_cve_n(),r.getNvc_cve_n(),r.getGiro_cve_n(),r.getCli_email_str(),
+                                                                    r.getCli_dirfact_n(), r.getCli_dirent_n(), r.getCli_Tel1_str(),r.getCli_tel2_str(),r.getEmp_cve_n(),
+                                                                    r.getCli_coordenadaini_str(),r.getEst_cve_str(),r.getTcli_cve_n(),r.getCli_lun_n(),
+                                                                    r.getCli_mar_n(), r.getCli_mie_n(), r.getCli_jue_n(), r.getCli_vie_n(),r.getCli_sab_n(),r.getCli_dom_n(),
+                                                                    r.getFrec_cve_n(), getBool( r.getCli_especial_n() ) , getBool( r.getCli_esvallejo_n() ) , r.getNpro_cve_n(),r.getCli_huixdesc_n(),
+                                                                    getBool( r.getCli_eshuix_n() ) , getBool( r.getCli_prospecto_n() ) , getBool( r.getCli_invalidafrecuencia_n() ) , getBool( r.getCli_invalidagps_n() ) ,
+                                                                    getBool( r.getCli_dobleventa_n() ), getBool(r.getCli_comodato_n()) , r.getSeg_cve_n(), getBool( r.getCli_dispersion_n() ) ,
+                                                                    r.getCli_dispersioncant_n(), r.getCli_limitemes_n(), r.getCli_cve_n());
+
+                        BaseLocal.Insert( consulta,getContext());
+
+                        Toast.makeText(getContext(), "Cliente actualizado", Toast.LENGTH_SHORT).show();
+                        Utils.RegresarInicio(getActivity());
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.d("salida", "Error: "+e.getMessage());
+                        Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(), "No se encontro el cliente", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String getBool(String cad)
+    {
+        try {
+            if (cad.equals("true")) {
+                cad = "1";
+            } else {
+                cad = "0";
+            }
+            return cad;
+        }catch (Exception e)
+        {
+            return "0";
+        }
     }
 }

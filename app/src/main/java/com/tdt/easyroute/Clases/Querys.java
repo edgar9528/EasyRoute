@@ -214,14 +214,14 @@ public class Querys {
                         "cli_eshuix_n={45},cli_prospecto_n={46},cli_invalidafrecuencia_n={47},cli_invalidagps_n={48}," +
                         "cli_dobleventa_n={49},cli_comodato_n={50},seg_cve_n={51} where cli_cve_n={0}";
 
-                public static String UpClientes4 = "update clientes set cli_cveext_str={1},cli_padre_n={2}," +
-                        "cli_cvepadre_n={3},cli_razonsocial_str={4},cli_rfc_str={5},cli_reqfact_n={6},cli_nombrenegocio_str={7}," +
-                        "cli_nom_str={8},cli_app_str={9},cli_apm_str={10},cli_fnac_dt={11},cli_genero_str={12},lpre_cve_n={13}," +
+                public static String UpClientes4 = "update clientes set cli_cveext_str='{1}',cli_padre_n={2}," +
+                        "cli_cvepadre_n={3},cli_razonsocial_str='{4}',cli_rfc_str='{5}',cli_reqfact_n={6},cli_nombrenegocio_str='{7}'," +
+                        "cli_nom_str='{8}',cli_app_str='{9}',cli_apm_str='{10}',cli_fnac_dt='{11}',cli_genero_str='{12}',lpre_cve_n={13}," +
                         "nota_cve_n={14},fpag_cve_n={15},cli_consigna_n={16},cli_credito_n={17},cli_montocredito_n={18}," +
-                        "cli_plazocredito_n={19},cli_credenvases_n={20},cli_estcredito_str={21},cli_fba_n={22}," +
-                        "cli_porcentajefba_n={23},rut_cve_n={24},nvc_cve_n={25},giro_cve_n={26},cli_email_str={27}," +
-                        "cli_dirfact_n={28},cli_dirent_n={29},cli_Tel1_str={30},cli_tel2_str={31},emp_cve_n={32}," +
-                        "cli_coordenadaini_str={33},est_cve_str={34},tcli_cve_n={35},cli_lun_n={36}," +
+                        "cli_plazocredito_n={19},cli_credenvases_n={20},cli_estcredito_str='{21}',cli_fba_n={22}," +
+                        "cli_porcentajefba_n={23},rut_cve_n={24},nvc_cve_n={25},giro_cve_n={26},cli_email_str='{27}'," +
+                        "cli_dirfact_n={28},cli_dirent_n={29},cli_Tel1_str='{30}',cli_tel2_str='{31}',emp_cve_n={32}," +
+                        "cli_coordenadaini_str='{33}',est_cve_str='{34}',tcli_cve_n={35},cli_lun_n={36}," +
                         "cli_mar_n={37},cli_mie_n={38}, cli_jue_n={39},cli_vie_n={40},cli_sab_n={41},cli_dom_n={42}," +
                         "frec_cve_n={43},cli_especial_n={44},cli_esvallejo_n={45},npro_cve_n={46},cli_huixdesc_n={47}," +
                         "cli_eshuix_n={48},cli_prospecto_n={49},cli_invalidafrecuencia_n={50},cli_invalidagps_n={51}," +
