@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.tdt.easyroute.BuildConfig;
 import com.tdt.easyroute.Fragments.Clientes.BuscarclientesFragment;
 import com.tdt.easyroute.Fragments.Clientes.Cartera.CarteraFragment;
+import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.OrdenacliFragment;
 import com.tdt.easyroute.Fragments.Inventario.DevolucionesFragment;
 import com.tdt.easyroute.Fragments.PrincipalFragment;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
@@ -87,6 +88,10 @@ public class FragmentNavigationManager implements NavigationManager {
 
             case "Clientes | Busq. Clientes":
                 ft= fm.beginTransaction().replace(R.id.container, BuscarclientesFragment.newInstance(true));
+                break;
+
+            case "Clientes | Ord. Clientes":
+                ft= fm.beginTransaction().replace(R.id.container, OrdenacliFragment.newInstance());
                 break;
 
             case "Catálogos | Configuración":
