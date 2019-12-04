@@ -25,12 +25,15 @@ import com.tdt.easyroute.Model.PreventaPagos;
 import com.tdt.easyroute.Model.VisitaPrev;
 import com.tdt.easyroute.R;
 
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public class Utils {
@@ -327,6 +330,28 @@ public class Utils {
         }
 
         return filtro;
+    }
+
+    public static int diaActualL_D()
+    {
+        //regresa el numero de dia, comenzando de lunes a domingo
+        String[] d ={"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+        List<String> dias = Arrays.asList(d);
+
+        String[] dB ={"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado","Domingo"};
+        List<String> diasB = Arrays.asList(dB);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int numeroDia = cal.get(Calendar.DAY_OF_WEEK) - 1;
+
+
+
+        String dia = dias.get(numeroDia);
+
+        Log.d("salida","dia actual: "+dia);
+
+        return diasB.indexOf(dia);
     }
 
     public static Modelos.Indicadores ObtenerProductividad(int ruta, Application application) {

@@ -1352,5 +1352,163 @@ public class DataTableLC {
             this.fpag_desc_str = fpag_desc_str;
         }
     }
+
+    public static class FrecPunteo
+    {
+        private String cli_cveext_str;
+	    private String sec;
+        private String frec_cve_n;
+        private String est_cve_n;
+        private String coor;
+	    private String diasem;
+
+        public FrecPunteo() {
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getSec() {
+            return sec;
+        }
+
+        public void setSec(String sec) {
+            this.sec = sec;
+        }
+
+        public String getFrec_cve_n() {
+            return frec_cve_n;
+        }
+
+        public void setFrec_cve_n(String frec_cve_n) {
+            this.frec_cve_n = frec_cve_n;
+        }
+
+        public String getEst_cve_n() {
+            return est_cve_n;
+        }
+
+        public void setEst_cve_n(String est_cve_n) {
+            this.est_cve_n = est_cve_n;
+        }
+
+        public String getCoor() {
+            return coor;
+        }
+
+        public void setCoor(String coor) {
+            this.coor = coor;
+        }
+
+        public String getDiasem() {
+            return diasem;
+        }
+
+        public void setDiasem(String diasem) {
+            this.diasem = diasem;
+        }
+    }
+
+    public static class ClientesOrdenar
+    {
+        private String cli_cveext_str;
+        private String sec;
+        private String frec_cve_n; 
+        private String est_cve_n;
+        private String coor; 
+        private String diasem;
+        private String cli_razonsocial_str;
+        private String cli_nombrenegocio_str; 
+        private String frec_desc_str; 
+        private String frec_dias_n;
+
+        public ClientesOrdenar() {
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getSec() {
+            return sec;
+        }
+
+        public void setSec(String sec) {
+            this.sec = sec;
+        }
+
+        public String getFrec_cve_n() {
+            return frec_cve_n;
+        }
+
+        public void setFrec_cve_n(String frec_cve_n) {
+            this.frec_cve_n = frec_cve_n;
+        }
+
+        public String getEst_cve_n() {
+            return est_cve_n;
+        }
+
+        public void setEst_cve_n(String est_cve_n) {
+            this.est_cve_n = est_cve_n;
+        }
+
+        public String getCoor() {
+            return coor;
+        }
+
+        public void setCoor(String coor) {
+            this.coor = coor;
+        }
+
+        public String getDiasem() {
+            return diasem;
+        }
+
+        public void setDiasem(String diasem) {
+            this.diasem = diasem;
+        }
+
+        public String getCli_razonsocial_str() {
+            return cli_razonsocial_str;
+        }
+
+        public void setCli_razonsocial_str(String cli_razonsocial_str) {
+            this.cli_razonsocial_str = cli_razonsocial_str;
+        }
+
+        public String getCli_nombrenegocio_str() {
+            return cli_nombrenegocio_str;
+        }
+
+        public void setCli_nombrenegocio_str(String cli_nombrenegocio_str) {
+            this.cli_nombrenegocio_str = cli_nombrenegocio_str;
+        }
+
+        public String getFrec_desc_str() {
+            return frec_desc_str;
+        }
+
+        public void setFrec_desc_str(String frec_desc_str) {
+            this.frec_desc_str = frec_desc_str;
+        }
+
+        public String getFrec_dias_n() {
+            return frec_dias_n;
+        }
+
+        public void setFrec_dias_n(String frec_dias_n) {
+            this.frec_dias_n = frec_dias_n;
+        }
+    }
     
 }

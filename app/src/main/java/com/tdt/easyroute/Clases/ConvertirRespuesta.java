@@ -83,7 +83,8 @@ public class ConvertirRespuesta {
         return usuario;
     }
 
-    public static ArrayList<DataTableWS.Ruta> getRutas(SoapObject respuesta) {
+    public static ArrayList<DataTableWS.Ruta> getRutas(SoapObject respuesta)
+    {
         ArrayList<DataTableWS.Ruta> rutas =null;
 
         try {
@@ -300,7 +301,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.Roles> getRolesJson(String respuesta)
     {
         ArrayList<DataTableWS.Roles> al =null;
@@ -336,7 +336,6 @@ public class ConvertirRespuesta {
 
         return al;
     }
-
 
     public static ArrayList<DataTableWS.Modulos> getModulosJson(String respuesta)
     {
@@ -392,7 +391,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.CondicionesVenta> getCondicionesVentaJson(String respuesta)
     {
         ArrayList<DataTableWS.CondicionesVenta> al =null;
@@ -410,7 +408,6 @@ public class ConvertirRespuesta {
 
         return al;
     }
-
 
     public static ArrayList<DataTableWS.Productos> getProductosJson(String respuesta)
     {
@@ -430,7 +427,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.ListaPrecios> getListaPreciosJson(String respuesta)
     {
         ArrayList<DataTableWS.ListaPrecios> al =null;
@@ -449,7 +445,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.PrecioProductos> getPrecioProductosJson(String respuesta)
     {
         ArrayList<DataTableWS.PrecioProductos> al =null;
@@ -467,7 +462,6 @@ public class ConvertirRespuesta {
 
         return al;
     }
-
 
     public static ArrayList<DataTableWS.FormasPago> getFormasPagoJson(String respuesta)
     {
@@ -505,7 +499,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.Categorias> getCategoriasJson(String respuesta)
     {
         ArrayList<DataTableWS.Categorias> al =null;
@@ -524,7 +517,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.Familias> getFamiliasJson(String respuesta)
     {
         ArrayList<DataTableWS.Familias> al =null;
@@ -542,7 +534,6 @@ public class ConvertirRespuesta {
 
         return al;
     }
-
 
     public static ArrayList<DataTableWS.Presentaciones> getPresentacionesJson(String respuesta)
     {
@@ -598,7 +589,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableLC.VentasDet> getVentasDetJson(String respuesta)
     {
         ArrayList<DataTableLC.VentasDet> al =null;
@@ -624,7 +614,6 @@ public class ConvertirRespuesta {
             return null;
     }
 
-
     public static DataTableLC.Pagos getPagosJson(String respuesta)
     {
         ArrayList<DataTableLC.Pagos> al =null;
@@ -649,7 +638,6 @@ public class ConvertirRespuesta {
         else
             return null;
     }
-
 
     public static DataTableLC.Creditos getCreditosJson(String respuesta)
     {
@@ -855,7 +843,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.Direcciones> getDireccionesJson(String respuesta)
     {
         ArrayList<DataTableWS.Direcciones> al =null;
@@ -874,7 +861,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableWS.ClientesVentaMes> getClientesVentaJson(String respuesta)
     {
         ArrayList<DataTableWS.ClientesVentaMes> al =null;
@@ -892,7 +878,6 @@ public class ConvertirRespuesta {
 
         return al;
     }
-
 
     public static ArrayList<DataTableWS.Consignas> getConsignasJson(String respuesta)
     {
@@ -927,7 +912,6 @@ public class ConvertirRespuesta {
         }
         return al;
     }
-
 
     public static DataTableWS.RetValInicioDia getRetValInicioDiaJson(String respuesta)
     {
@@ -1011,7 +995,6 @@ public class ConvertirRespuesta {
         }
         return al;
     }
-
 
     public static ArrayList<DataTableWS.PreventaEnv2> getPreventaEnv2Json(String respuesta)
     {
@@ -1253,7 +1236,6 @@ public class ConvertirRespuesta {
         return al;
     }
 
-
     public static ArrayList<DataTableLC.PreventaPagos> getPreventaPagosLCJson(String respuesta)
     {
         ArrayList<DataTableLC.PreventaPagos> al =null;
@@ -1285,14 +1267,42 @@ public class ConvertirRespuesta {
             Log.d("salida","error gson: "+e.toString());
             al=null;
         }
-
         return al;
+    }
 
+    public static ArrayList<DataTableLC.FrecPunteo> getFrecPunteoJson(String respuesta)
+    {
+        ArrayList<DataTableLC.FrecPunteo> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.FrecPunteo> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
     }
 
 
+    public static ArrayList<DataTableLC.ClientesOrdenar> getClientesOrdenarJson(String respuesta)
+    {
+        ArrayList<DataTableLC.ClientesOrdenar> al =null;
+        try {
 
-
-
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.ClientesOrdenar> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
 
 }
