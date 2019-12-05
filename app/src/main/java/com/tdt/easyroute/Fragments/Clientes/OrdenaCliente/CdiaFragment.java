@@ -1,6 +1,7 @@
 package com.tdt.easyroute.Fragments.Clientes.OrdenaCliente;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -40,16 +43,21 @@ import com.tdt.easyroute.ViewModel.StartdayVM;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
-
 public class CdiaFragment extends Fragment {
 
     String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
     String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
+    String clienteSeleccionado="";
 
+    ClientesNodia clientesNodia;
+    ClientesDia clientesDia;
+
+    Button b_buscar, b_quitar, b_editar, b_subir, b_bajar;
     Spinner sp_dias;
 
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
+    View vista;
 
     boolean actualizoItem=false;
 
@@ -68,7 +76,10 @@ public class CdiaFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cdia, container, false);
+        vista=view;
 
+        b_subir = view.findViewById(R.id.b_subir);
+        b_bajar = view.findViewById(R.id.b_bajar);
         sp_dias = view.findViewById(R.id.sp_dia);
         tableLayout = view.findViewById(R.id.tableLayout);
         layoutInflater = inflater;
@@ -94,9 +105,42 @@ public class CdiaFragment extends Fragment {
             }
         });
 
+        b_subir.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                subirItem();
+            }
+        });
 
+        b_bajar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bajarItem();
+            }
+        });
+
+        b_buscar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buscarItem();
+            }
+        });
 
         return  view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ordenaClientesVM.getSelectItemFuera().observe(getParentFragment(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer s) {
+                actualizoItem=true;
+                sp_dias.setSelection(s);
+                Log.d("salida","cambio item fragment fuera: "+s);
+            }
+        });
     }
 
     private void listarClientesNodia(int dia)
@@ -106,6 +150,7 @@ public class CdiaFragment extends Fragment {
         ArrayList<DataTableLC.FrecPunteo> dt2 = null;
         ArrayList<DataTableLC.ClientesOrdenar> clientes=null;
         boolean conDatos=false;
+        clienteSeleccionado="";
 
         json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM = '{0}' and frec_cve_n=0 ", filtro),getContext() ) ;
         dt2 = ConvertirRespuesta.getFrecPunteoJson(json);
@@ -139,7 +184,8 @@ public class CdiaFragment extends Fragment {
             conDatos = true;
         }
 
-        ordenaClientesVM.setClientesNodia( new ClientesNodia(clientes,conDatos,filtro) );
+        clientesNodia = new ClientesNodia(clientes,conDatos,filtro);
+        ordenaClientesVM.setClientesNodia(  clientesNodia );
 
     }
 
@@ -150,6 +196,7 @@ public class CdiaFragment extends Fragment {
         ArrayList<DataTableLC.FrecPunteo> dt2 = null;
         ArrayList<DataTableLC.ClientesOrdenar> clientes=null;
         boolean conDatos=false;
+        clienteSeleccionado="";
 
         json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM ='{0}' ", filtro),getContext() ) ;
         dt2 = ConvertirRespuesta.getFrecPunteoJson(json);
@@ -185,18 +232,24 @@ public class CdiaFragment extends Fragment {
 
         if(conDatos)
         {
-            cargarClientesDia(clientes,filtro,conDatos);
+            clientesDia = new ClientesDia(clientes,conDatos,filtro);
+            cargarClientesDia();
         }
         else
         {
-            cargarClientesDia(clientes,filtro,conDatos);
+            clientesDia = new ClientesDia(clientes,conDatos,filtro);
+            cargarClientesDia();
         }
     }
 
-    private void cargarClientesDia(ArrayList<DataTableLC.ClientesOrdenar> dt, String diasem, boolean conDatos)
+    private void cargarClientesDia()
     {
         try
         {
+            boolean conDatos = clientesDia.isConDatos();
+            ArrayList<DataTableLC.ClientesOrdenar> dt = clientesDia.getClientes();
+            String diasem = clientesDia.getFiltro();
+
             mostrarTitulo();
             int frec=100;
 
@@ -260,22 +313,117 @@ public class CdiaFragment extends Fragment {
         ((TextView) tr.findViewById(R.id.t_coor)).setText( coor );
         ((TextView) tr.findViewById(R.id.t_dia)).setText( dia);
 
+        tr.setTag(cliente);
+        tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
+
+        if(cliente.equals(clienteSeleccionado))
+            tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
         tableLayout.addView(tr);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ordenaClientesVM.getSelectItemFuera().observe(getParentFragment(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer s) {
-                actualizoItem=true;
-                sp_dias.setSelection(s);
-                Log.d("salida","cambio item fragment fuera: "+s);
+    private void bajarItem()
+    {
+        if(!clienteSeleccionado.isEmpty())
+        {
+            int posicion=-1;
+            for(int i=0; i<clientesDia.getClientes().size(); i++)
+            {
+                if( clienteSeleccionado.equals( clientesDia.getClientes().get(i).getCli_cveext_str() ) )
+                {
+                    posicion=i;
+                    i=clientesDia.getClientes().size()+1;
+                }
             }
-        });
 
+            if(posicion<clientesDia.getClientes().size()-1)
+            {
+                DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion);
+                DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion+1);
+
+                clientesDia.getClientes().set(posicion+1, cliUp);
+                clientesDia.getClientes().set(posicion, cliDown);
+
+                cargarClientesDia();
+            }
+        }
+        else
+            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
     }
+
+    private void subirItem()
+    {
+        if(!clienteSeleccionado.isEmpty())
+        {
+            int posicion=-1;
+            for(int i=0; i<clientesDia.getClientes().size(); i++)
+            {
+                if( clienteSeleccionado.equals( clientesDia.getClientes().get(i).getCli_cveext_str() ) )
+                {
+                    posicion=i;
+                    i=clientesDia.getClientes().size()+1;
+                }
+            }
+
+            if(posicion>0)
+            {
+                DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion - 1);
+                DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion);
+
+                clientesDia.getClientes().set(posicion - 1, cliDown);
+                clientesDia.getClientes().set(posicion, cliUp);
+
+                cargarClientesDia();
+            }
+        }
+        else
+            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
+    }
+
+    private void buscarItem()
+    {
+        if(!clienteSeleccionado.equals(tag))
+        {
+            String cliente;
+            String nombre;
+
+            for (int i = 0; i < clientesDia.getClientes().size(); i++)
+            {
+                TableRow row = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
+
+
+                cliente =  ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
+                nombre = clientesDia.getClientes().get(i).getCli_nombrenegocio_str();
+
+
+            }
+            //pinta de azul la fila y actualiza la cve de la fila seccionada
+
+            clienteSeleccionado = tag;
+        }
+    }
+
+    //evento del clic a la fila
+    private View.OnClickListener tableListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            TableRow tr = ((TableRow) view);
+            String tag = (String) tr.getTag(); //se obtiene la fila y tag de la seleccion
+
+            if(!clienteSeleccionado.equals(tag))
+            {
+                for (int i = 0; i < clientesDia.getClientes().size(); i++) {
+                    TableRow row = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
+                    row.setBackgroundColor(Color.WHITE);
+                }
+                //pinta de azul la fila y actualiza la cve de la fila seccionada
+                tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                clienteSeleccionado = tag;
+            }
+        }
+    };
+
+
 
 }

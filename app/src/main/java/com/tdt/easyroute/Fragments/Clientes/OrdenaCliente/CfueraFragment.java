@@ -1,6 +1,7 @@
 package com.tdt.easyroute.Fragments.Clientes.OrdenaCliente;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,9 +36,12 @@ public class CfueraFragment extends Fragment {
 
     String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
     String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
+    String clienteSeleccionado="";
+    ClientesNodia clientesNodia;
 
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
+    View vista;
 
     Spinner sp_dias;
 
@@ -55,6 +59,7 @@ public class CfueraFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_cfuera, container, false);
+        vista=view;
 
         sp_dias = view.findViewById(R.id.sp_dia);
         tableLayout = view.findViewById(R.id.tableLayout);
@@ -86,6 +91,31 @@ public class CfueraFragment extends Fragment {
         return view;
     }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ordenaClientesVM.getClientesNodia().observe(getParentFragment(), new Observer<ClientesNodia>() {
+            @Override
+            public void onChanged(ClientesNodia s) {
+                clientesNodia = s;
+                clienteSeleccionado="";
+                cargarClientesNoDia();
+            }
+        });
+
+        ordenaClientesVM.getSelectItemDia().observe(getParentFragment(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer s) {
+                actualizoItem=true;
+                sp_dias.setSelection(s);
+            }
+        });
+
+    }
+
+
     private void mostrarTitulo()
     {
         tableLayout.removeAllViews();
@@ -105,31 +135,7 @@ public class CfueraFragment extends Fragment {
         tableLayout.addView(tr);
     }
 
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ordenaClientesVM.getClientesNodia().observe(getParentFragment(), new Observer<ClientesNodia>() {
-            @Override
-            public void onChanged(ClientesNodia s) {
-                cargarClientesNoDia(s);
-            }
-        });
-
-        ordenaClientesVM.getSelectItemDia().observe(getParentFragment(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer s) {
-                actualizoItem=true;
-                sp_dias.setSelection(s);
-                Log.d("salida","cambio item fragment dia: "+s);
-            }
-        });
-
-    }
-
-
-    private void cargarClientesNoDia(ClientesNodia clientesNodia)
+    private void cargarClientesNoDia()
     {
         boolean conDatos = clientesNodia.isConDatos();
         String diasem = clientesNodia.getFiltro();
@@ -182,9 +188,32 @@ public class CfueraFragment extends Fragment {
         ((TextView) tr.findViewById(R.id.t_coor)).setText( coor );
         ((TextView) tr.findViewById(R.id.t_dia)).setText( dia);
 
+        tr.setTag(cliente);
+        tr.setOnClickListener(tableListener);
+
         tableLayout.addView(tr);
     }
 
+    //evento del clic a la fila
+    private View.OnClickListener tableListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            TableRow tr = ((TableRow) view);
+            String tag = (String) tr.getTag(); //se obtiene la fila y tag de la seleccion
+
+            if(!clienteSeleccionado.equals(tag))
+            {
+                for (int i = 0; i < clientesNodia.getClientes().size(); i++) {
+                    TableRow row = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
+                    row.setBackgroundColor(Color.WHITE);
+                }
+                //pinta de azul la fila y actualiza la cve de la fila seccionada
+                tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                clienteSeleccionado = tag;
+            }
+        }
+    };
 
 
 }
