@@ -1,9 +1,12 @@
 package com.tdt.easyroute.Fragments.Clientes.OrdenaCliente;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +26,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -33,6 +37,7 @@ import android.widget.Toolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
@@ -47,28 +52,28 @@ public class CdiaFragment extends Fragment {
 
     String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
     String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
-    String clienteSeleccionado="";
+    String clienteSeleccionado="",diaSeleccionado,nombreBase;
 
     ClientesNodia clientesNodia;
     ClientesDia clientesDia;
 
+    EditText et_filtro;
     Button b_buscar, b_quitar, b_editar, b_subir, b_bajar;
     Spinner sp_dias;
 
+    ScrollView scrollView;
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
     View vista;
 
-    boolean actualizoItem=false;
+    boolean cambioFuera=false;
 
     public OrdenaClientesVM ordenaClientesVM;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ordenaClientesVM = ViewModelProviders.of( getParentFragment()).get(OrdenaClientesVM.class);
-
     }
 
     @Override
@@ -78,25 +83,33 @@ public class CdiaFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_cdia, container, false);
         vista=view;
 
+        nombreBase = getContext().getString( R.string.nombreBD );
+
+        et_filtro = view.findViewById(R.id.et_filtro);
         b_subir = view.findViewById(R.id.b_subir);
         b_bajar = view.findViewById(R.id.b_bajar);
+        b_buscar = view.findViewById(R.id.button_buscar);
         sp_dias = view.findViewById(R.id.sp_dia);
+        scrollView = view.findViewById(R.id.scrollView);
         tableLayout = view.findViewById(R.id.tableLayout);
         layoutInflater = inflater;
 
         sp_dias.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, dias));
 
-        int dia = Utils.diaActualL_D();
-        sp_dias.setSelection(dia);
 
         sp_dias.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                listarClientesDia(i);
-                listarClientesNodia(i);
-                if(!actualizoItem)
+
+                diaSeleccionado = diasCve[i];
+
+                if(!cambioFuera)
                     ordenaClientesVM.setSelectItemDia(i);
-                actualizoItem=false;
+                else
+                    cambioFuera=false;
+
+                ConsultarClientes consultarClientes = new ConsultarClientes(i);
+                consultarClientes.execute();
             }
 
             @Override
@@ -122,9 +135,12 @@ public class CdiaFragment extends Fragment {
         b_buscar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                buscarItem();
+                buscarItem(et_filtro.getText().toString());
             }
         });
+
+        int dia = Utils.diaActualL_D();
+        sp_dias.setSelection(dia);
 
         return  view;
     }
@@ -135,12 +151,68 @@ public class CdiaFragment extends Fragment {
 
         ordenaClientesVM.getSelectItemFuera().observe(getParentFragment(), new Observer<Integer>() {
             @Override
-            public void onChanged(Integer s) {
-                actualizoItem=true;
-                sp_dias.setSelection(s);
-                Log.d("salida","cambio item fragment fuera: "+s);
+            public void onChanged(Integer integer) {
+                cambioFuera=true;
+                sp_dias.setSelection(integer);
             }
         });
+
+
+    }
+
+    public class ConsultarClientes extends AsyncTask<Boolean, Integer, Boolean> {
+
+        private ProgressDialog progreso;
+        private int i;
+
+        public ConsultarClientes(int i) {
+            this.i = i;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progreso = new ProgressDialog(getContext());
+            progreso.setMessage("Cargando...");
+            progreso.setCancelable(false);
+            progreso.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Boolean... booleans) {
+            try
+            {
+                listarClientesDia(i);
+                listarClientesNodia(i);
+                return true;
+            }catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progreso.setProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            if(result)
+            {
+                cargarClientesDia();
+                ordenaClientesVM.setClientesNodia(  clientesNodia );
+                guardar();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Error al cargar clientes", Toast.LENGTH_SHORT).show();
+            }
+            progreso.dismiss();
+        }
     }
 
     private void listarClientesNodia(int dia)
@@ -152,7 +224,7 @@ public class CdiaFragment extends Fragment {
         boolean conDatos=false;
         clienteSeleccionado="";
 
-        json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM = '{0}' and frec_cve_n=0 ", filtro),getContext() ) ;
+        json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM = '{0}' and sec=0 ", filtro),getContext() ) ;
         dt2 = ConvertirRespuesta.getFrecPunteoJson(json);
 
         if(dt2==null)
@@ -175,7 +247,7 @@ public class CdiaFragment extends Fragment {
             qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
                     "from frecpunteo fp left join clientes c " +
                     "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
-                    "on fp.sec=fv.frec_cve_n where fp.frec_cve_n=0 and diasem='{0}' order by fp.frec_cve_n",filtro);
+                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec=0 and diasem='{0}' order by fp.frec_cve_n",filtro);
 
             json = BaseLocal.Select(qry,getContext());
 
@@ -184,8 +256,9 @@ public class CdiaFragment extends Fragment {
             conDatos = true;
         }
 
+        Log.d("salida","Clientes fuera Condatos: "+conDatos);
+
         clientesNodia = new ClientesNodia(clientes,conDatos,filtro);
-        ordenaClientesVM.setClientesNodia(  clientesNodia );
 
     }
 
@@ -215,31 +288,27 @@ public class CdiaFragment extends Fragment {
             clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
 
             conDatos = false;
+
         }
         else
         {
             qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
                     "from frecpunteo fp left join clientes c " +
                     "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
-                    "on fp.sec=fv.frec_cve_n where fp.frec_cve_n>0 and diasem='{0}' order by fp.frec_cve_n",filtro);
+                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec>0 and diasem='{0}' order by fp.frec_cve_n",filtro);
 
             json = BaseLocal.Select(qry,getContext());
 
             clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
 
             conDatos = true;
+
+
         }
 
-        if(conDatos)
-        {
-            clientesDia = new ClientesDia(clientes,conDatos,filtro);
-            cargarClientesDia();
-        }
-        else
-        {
-            clientesDia = new ClientesDia(clientes,conDatos,filtro);
-            cargarClientesDia();
-        }
+        Log.d("salida","Clientes dia Condatos: "+conDatos);
+
+        clientesDia = new ClientesDia(clientes,conDatos,filtro);
     }
 
     private void cargarClientesDia()
@@ -253,24 +322,21 @@ public class CdiaFragment extends Fragment {
             mostrarTitulo();
             int frec=100;
 
-            if (conDatos)
+            for(int i=0; i<dt.size();i++)
             {
-                for(int i=0; i<dt.size();i++)
+                if(conDatos)
                 {
                     DataTableLC.ClientesOrdenar r = dt.get(i);
-
                     mostrarClientesDia(r.getCli_cveext_str(),r.getCli_nombrenegocio_str(),r.getSec(),r.getFrec_desc_str(),r.getEst_cve_n(),r.getCoor(),r.getDiasem());
-                    frec = frec + 100;
                 }
-
-            }
-            else
-            {
-                for(int i=0; i<dt.size();i++)
+                else
                 {
-                    DataTableLC.ClientesOrdenar r = dt.get(i);
+                    clientesDia.getClientes().get(i).setSec( String.valueOf( frec ) );
+                    clientesDia.getClientes().get(i).setDiasem( diasem );
+                    clientesDia.getClientes().get(i).setCoor("0");
 
-                    mostrarClientesDia(r.getCli_cveext_str(),r.getCli_nombrenegocio_str(),String.valueOf(frec),r.getFrec_desc_str(),r.getEst_cve_n(),"0",diasem);
+                    DataTableLC.ClientesOrdenar r = dt.get(i);
+                    mostrarClientesDia(r.getCli_cveext_str(),r.getCli_nombrenegocio_str(),r.getSec(),r.getFrec_desc_str(),r.getEst_cve_n(),r.getCoor(),r.getDiasem());
                     frec = frec + 100;
                 }
             }
@@ -380,26 +446,112 @@ public class CdiaFragment extends Fragment {
             Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
     }
 
-    private void buscarItem()
+    private void buscarItem(String palabra)
     {
-        if(!clienteSeleccionado.equals(tag))
-        {
-            String cliente;
-            String nombre;
+        String cliente;
+        String nombre;
+        boolean encontrado=false;
 
-            for (int i = 0; i < clientesDia.getClientes().size(); i++)
-            {
+        if(!palabra.isEmpty()) {
+            for (int i = 0; i < clientesDia.getClientes().size(); i++) {
                 TableRow row = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
 
+                cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
+                nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
+                palabra = palabra.toLowerCase();
 
-                cliente =  ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
-                nombre = clientesDia.getClientes().get(i).getCli_nombrenegocio_str();
+                if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra)) {
+                    for (int j = 0; j < clientesDia.getClientes().size(); j++) {
+                        TableRow tr = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(j).getCli_cveext_str());
+                        tr.setBackgroundColor(Color.WHITE);
+                    }
 
+                    row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    clienteSeleccionado = cliente;
+                    i = clientesDia.getClientes().size();
 
+                    scrollView.scrollTo(0, row.getTop());
+
+                    encontrado = true;
+                }
             }
-            //pinta de azul la fila y actualiza la cve de la fila seccionada
 
-            clienteSeleccionado = tag;
+            if (!encontrado)
+                Toast.makeText(getContext(), "Cliente no encontrado en 'Clientes del dia'", Toast.LENGTH_LONG).show();
+        }
+        else
+            Toast.makeText(getContext(), "Escriba el texto a buscar", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void guardar()
+    {
+        String query,json;
+        String qry;
+
+        ArrayList<DataTableLC.ClientesOrdenar> lvClientes = clientesDia.getClientes();
+        ArrayList<DataTableLC.ClientesOrdenar> lvClientesNoDia = clientesNodia.getClientes();
+
+        try
+        {
+
+            Log.d("salida", "CANTIDAD CLIENTES DIA: "+lvClientes.size());
+
+            for(int i=0; i<lvClientes.size();i++)
+            {
+                qry = "SELECT * FROM FRECPUNTEO WHERE CLI_CVEEXT_STR = '{0}' AND DIASEM= '{1}'";
+
+                DataTableLC.ClientesOrdenar lv = lvClientes.get(i);
+                json= BaseLocal.Select( string.formatSql( qry, lv.getCli_cveext_str(), lv.getDiasem() ) ,getContext());
+                ArrayList<DataTableLC.FrecPunteo> dt = ConvertirRespuesta.getFrecPunteoJson(json);
+
+                if(dt!=null)
+                {
+                    query = "UPDATE FRECPUNTEO SET SEC={0},FREC_CVE_N= {1},EST_CVE_N = '{2}',COOR = '{3}' WHERE CLI_CVEEXT_STR = '{4}' AND DIASEM= '{5}'";
+                    BaseLocal.Insert(string.formatSql(query,lv.getSec(),lv.getFrec_cve_n(),lv.getEst_cve_n(),lv.getCoor(),lv.getCli_cveext_str(),lv.getDiasem()),getContext());
+                    Log.d("salida", "Entro actualizar FRECPUNTEO dia");
+
+                }
+                else
+                {
+                    query = "INSERT INTO FRECPUNTEO (CLI_CVEEXT_STR,SEC,FREC_CVE_N,EST_CVE_N,COOR,DIASEM) VALUES ('{0}',{1},{2},'{3}','{4}','{5}')";
+                    query = string.formatSql( query, lv.getCli_cveext_str(), lv.getSec()  , lv.getFrec_cve_n()  ,lv.getEst_cve_n(),lv.getCoor(),lv.getDiasem() );
+                    BaseLocal.Insert(query,getContext());
+                    Log.d("salida", "Entro ingresar FRECPUNTEO dia");
+                }
+            }
+
+            Log.d("salida", "CANTIDAD CLIENTES NO DIA: "+lvClientesNoDia.size());
+
+            for(int i=0; i<lvClientesNoDia.size();i++)
+            {
+                qry = "SELECT * FROM FRECPUNTEO WHERE CLI_CVEEXT_STR = '{0}' AND DIASEM= '{1}'";
+
+                DataTableLC.ClientesOrdenar lv = lvClientesNoDia.get(i);
+                json= BaseLocal.Select( string.formatSql( qry, lv.getCli_cveext_str(), lv.getDiasem() ) ,getContext());
+                ArrayList<DataTableLC.FrecPunteo> dt = ConvertirRespuesta.getFrecPunteoJson(json);
+
+                Log.d("salida","Freec: "+lvClientesNoDia.get(i).getFrec_cve_n()+ "  Sec: "+lvClientesNoDia.get(i).getSec());
+
+                if(dt!=null)
+                {
+                    query = "UPDATE FRECPUNTEO SET SEC={0},FREC_CVE_N= {1},EST_CVE_N = '{2}',COOR = '{3}' WHERE CLI_CVEEXT_STR = '{4}' AND DIASEM= '{5}'";
+                    BaseLocal.Insert(string.formatSql(query,lv.getSec(),lv.getFrec_cve_n(),lv.getEst_cve_n(),lv.getCoor(),lv.getCli_cveext_str(),lv.getDiasem()),getContext());
+                    Log.d("salida", "Entro actualizar FRECPUNTEO fuera");
+                }
+                else
+                {
+                    query = "INSERT INTO FRECPUNTEO (CLI_CVEEXT_STR,SEC,FREC_CVE_N,EST_CVE_N,COOR,DIASEM) VALUES ('{0}',{1},{2},'{3}','{4}','{5}')";
+                    query = string.formatSql( query, lv.getCli_cveext_str(), lv.getSec(), lv.getFrec_cve_n() ,lv.getEst_cve_n(),lv.getCoor(),lv.getDiasem() );
+                    BaseLocal.Insert(query,getContext());
+                    Log.d("salida", "Entro ingresar FRECPUNTEO fuera");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

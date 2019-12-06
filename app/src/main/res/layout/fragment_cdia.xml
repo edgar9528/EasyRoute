@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Clientes.OrdenaCliente.CdiaFragment">
+    tools:context=".Fragments.Clientes.OrdenaCliente.CdiaFragment"
+    android:fillViewport= "true"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,8 +62,8 @@
 
             </LinearLayout>
 
-
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,15 +74,15 @@
 
 
             <ScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <HorizontalScrollView
                     android:id="@+id/horizontalView"
                     android:layout_height="match_parent"
                     android:scrollbars="horizontal|vertical"
                     android:layout_width="match_parent"
-
                     >
 
                     <TableLayout

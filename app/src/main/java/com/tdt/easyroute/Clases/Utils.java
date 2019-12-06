@@ -429,7 +429,7 @@ public class Utils {
                     //Con venta
                     res = new ArrayList<>();
                     for (int j = 0; j < bitacora.size(); j++) {
-                        b = bitacora.get(i);
+                        b = bitacora.get(j);
                         if (b.getCli_cve_n().equals(r.getCli_cve_n()) && (b.getBit_comentario_str().equals("VISITA CON VENTA") || b.getBit_comentario_str().equals("VISITA CON PREVENTA")))
                             res.add(b);
                     }
@@ -442,7 +442,7 @@ public class Utils {
                     //Cobranza
                     res = new ArrayList<>();
                     for (int j = 0; j < bitacora.size(); j++) {
-                        b = bitacora.get(i);
+                        b = bitacora.get(j);
                         if (b.getCli_cve_n().equals(r.getCli_cve_n()) && b.getBit_comentario_str().equals("VISITA CON COBRANZA"))
                             res.add(b);
                     }
@@ -456,7 +456,7 @@ public class Utils {
 
                     res = new ArrayList<>();
                     for (int j = 0; j < bitacora.size(); j++) {
-                        b = bitacora.get(i);
+                        b = bitacora.get(j);
                         if (b.getCli_cve_n().equals(r.getCli_cve_n()) && b.getBit_operacion_str().equals("NO VENTA"))
                             res.add(b);
                     }

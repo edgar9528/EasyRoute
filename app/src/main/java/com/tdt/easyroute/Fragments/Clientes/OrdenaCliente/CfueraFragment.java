@@ -19,6 +19,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -45,7 +48,11 @@ public class CfueraFragment extends Fragment {
 
     Spinner sp_dias;
 
-    boolean actualizoItem=false;
+    boolean primerCambio=true,cambioDia=false;
+
+    EditText et_filtro;
+    Button b_buscar;
+    ScrollView scrollView;
 
     public OrdenaClientesVM ordenaClientesVM;
 
@@ -61,19 +68,31 @@ public class CfueraFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_cfuera, container, false);
         vista=view;
 
+        et_filtro = view.findViewById(R.id.et_filtro);
+        b_buscar = view.findViewById(R.id.button_buscar);
         sp_dias = view.findViewById(R.id.sp_dia);
         tableLayout = view.findViewById(R.id.tableLayout);
         layoutInflater = inflater;
+        scrollView = view.findViewById(R.id.scrollView);
 
         sp_dias.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, dias));
 
         sp_dias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(!actualizoItem)
-                    ordenaClientesVM.setSelectItemFuera(i);
 
-                actualizoItem=false;
+                if(!primerCambio)
+                {
+                    if(!cambioDia)
+                        ordenaClientesVM.setSelectItemFuera(i);
+                    else
+                        cambioDia=false;
+                }
+                else
+                {
+                    primerCambio=false;
+                }
+
             }
 
             @Override
@@ -82,8 +101,13 @@ public class CfueraFragment extends Fragment {
             }
         });
 
-        int dia = Utils.diaActualL_D();
-        sp_dias.setSelection(dia);
+        b_buscar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buscarItem(et_filtro.getText().toString());
+            }
+        });
+
 
         mostrarTitulo();
 
@@ -107,9 +131,9 @@ public class CfueraFragment extends Fragment {
 
         ordenaClientesVM.getSelectItemDia().observe(getParentFragment(), new Observer<Integer>() {
             @Override
-            public void onChanged(Integer s) {
-                actualizoItem=true;
-                sp_dias.setSelection(s);
+            public void onChanged(Integer integer) {
+                cambioDia=true;
+                sp_dias.setSelection(integer);
             }
         });
 
@@ -144,30 +168,25 @@ public class CfueraFragment extends Fragment {
         try
         {
             mostrarTitulo();
-            int frec=100;
 
-            if (conDatos)
+            for(int i=0; i<dt.size();i++)
             {
-
-                for(int i=0; i<dt.size();i++)
+                if (conDatos)
                 {
                     DataTableLC.ClientesOrdenar r = dt.get(i);
-
-                    mostrarClientesDia(r.getCli_cveext_str(),r.getCli_nombrenegocio_str(),r.getSec(),r.getFrec_desc_str(),r.getEst_cve_n(),r.getCoor(),r.getDiasem());
-                    frec = frec + 100;
+                    mostrarClientesDia(r.getCli_cveext_str(), r.getCli_nombrenegocio_str(), r.getSec(), r.getFrec_desc_str(), r.getEst_cve_n(), r.getCoor(), r.getDiasem());
                 }
-
-            }
-            else
-            {
-
-                for(int i=0; i<dt.size();i++)
+                else
                 {
+                    clientesNodia.getClientes().get(i).setSec("0");
+                    clientesNodia.getClientes().get(i).setDiasem(diasem);
+                    clientesNodia.getClientes().get(i).setCoor("0");
+
                     DataTableLC.ClientesOrdenar r = dt.get(i);
-                    mostrarClientesDia(r.getCli_cveext_str(),r.getCli_nombrenegocio_str(),String.valueOf(frec),r.getFrec_desc_str(),r.getEst_cve_n(),"0",diasem);
-                    frec = frec + 100;
+                    mostrarClientesDia(r.getCli_cveext_str(), r.getCli_nombrenegocio_str(), r.getSec(), r.getFrec_desc_str(), r.getEst_cve_n(), r.getCoor(), r.getDiasem());
                 }
             }
+
         }catch (Exception e)
         {
             Log.d("salida","Error: cargar"+e.getMessage());
@@ -192,6 +211,46 @@ public class CfueraFragment extends Fragment {
         tr.setOnClickListener(tableListener);
 
         tableLayout.addView(tr);
+    }
+
+    private void buscarItem(String palabra)
+    {
+        String cliente;
+        String nombre;
+        boolean encontrado=false;
+
+        if(!palabra.isEmpty()) {
+            for (int i = 0; i < clientesNodia.getClientes().size(); i++) {
+                TableRow row = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
+
+                cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
+                nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
+                palabra = palabra.toLowerCase();
+
+                if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra))
+                {
+                    for (int j = 0; j < clientesNodia.getClientes().size(); j++)
+                    {
+                        TableRow tr = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(j).getCli_cveext_str());
+                        tr.setBackgroundColor(Color.WHITE);
+                    }
+
+                    row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    clienteSeleccionado = cliente;
+                    i = clientesNodia.getClientes().size();
+
+                    scrollView.scrollTo(0, row.getTop());
+
+                    encontrado = true;
+                }
+            }
+
+            if (!encontrado)
+                Toast.makeText(getContext(), "Cliente no encontrado en 'Clientes del dia'", Toast.LENGTH_LONG).show();
+        }
+        else
+            Toast.makeText(getContext(), "Escriba el texto a buscar", Toast.LENGTH_SHORT).show();
+
     }
 
     //evento del clic a la fila

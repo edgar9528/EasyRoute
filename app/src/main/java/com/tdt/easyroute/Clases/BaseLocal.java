@@ -35,7 +35,7 @@ public class BaseLocal {
         }
         catch (Exception e)
         {
-            Log.d("salida","Error baseL: "+e.toString());
+            Log.d("salida","Error baseLocal Select: "+e.toString());
             json=null;
         }
 
@@ -56,7 +56,7 @@ public class BaseLocal {
         }
         catch (Exception e)
         {
-            Log.d("salida","Error BASELOCAL INSERT "+ e.getMessage());
+            Log.d("salida","Error baseLocal Insert "+ e.getMessage());
         }
 
     }
