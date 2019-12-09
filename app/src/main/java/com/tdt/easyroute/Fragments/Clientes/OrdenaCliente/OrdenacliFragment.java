@@ -73,9 +73,12 @@ public class OrdenacliFragment extends Fragment {
 
         //TERMINA CONFIGURACION DE LAS TABS
 
-
-
         return view;
+    }
+
+    public void goClientesDiaFragment()
+    {
+        viewPager.setCurrentItem(0);
     }
 
 }

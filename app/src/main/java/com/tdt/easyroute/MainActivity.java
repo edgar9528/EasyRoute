@@ -368,6 +368,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
+
+
     //VARIABLES COMPARTIDAS ENTRE FRAGMENTS
     public Usuario getUsuario()
     {
@@ -520,7 +522,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
+        switch (requestCode)
+        {
             case PETICION_CONFIG_UBICACION:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
@@ -531,6 +534,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         //BLOQUEAR OPCIONES POR UBICACION
                         break;
                 }
+                break;
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }

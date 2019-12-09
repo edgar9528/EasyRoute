@@ -38,7 +38,6 @@ import java.util.ArrayList;
 public class CfueraFragment extends Fragment {
 
     String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
-    String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
     String clienteSeleccionado="";
     ClientesNodia clientesNodia;
 
@@ -51,7 +50,7 @@ public class CfueraFragment extends Fragment {
     boolean primerCambio=true,cambioDia=false;
 
     EditText et_filtro;
-    Button b_buscar;
+    Button b_buscar,b_agregar;
     ScrollView scrollView;
 
     public OrdenaClientesVM ordenaClientesVM;
@@ -70,6 +69,7 @@ public class CfueraFragment extends Fragment {
 
         et_filtro = view.findViewById(R.id.et_filtro);
         b_buscar = view.findViewById(R.id.button_buscar);
+        b_agregar = view.findViewById(R.id.b_agregar);
         sp_dias = view.findViewById(R.id.sp_dia);
         tableLayout = view.findViewById(R.id.tableLayout);
         layoutInflater = inflater;
@@ -108,6 +108,13 @@ public class CfueraFragment extends Fragment {
             }
         });
 
+        b_agregar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                agregarItem();
+            }
+        });
+
 
         mostrarTitulo();
 
@@ -139,7 +146,6 @@ public class CfueraFragment extends Fragment {
 
     }
 
-
     private void mostrarTitulo()
     {
         tableLayout.removeAllViews();
@@ -164,6 +170,7 @@ public class CfueraFragment extends Fragment {
         boolean conDatos = clientesNodia.isConDatos();
         String diasem = clientesNodia.getFiltro();
         ArrayList<DataTableLC.ClientesOrdenar> dt = clientesNodia.getClientes();
+        clienteSeleccionado="";
 
         try
         {
@@ -251,6 +258,31 @@ public class CfueraFragment extends Fragment {
         else
             Toast.makeText(getContext(), "Escriba el texto a buscar", Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void agregarItem()
+    {
+        if(!clienteSeleccionado.isEmpty())
+        {
+            int indice = getClienteSeleccionado();
+            ordenaClientesVM.setMoverItem(indice);
+        }
+        else
+            Toast.makeText(getContext(), "Seleccion un cliente para mover", Toast.LENGTH_SHORT).show();
+    }
+
+    private int getClienteSeleccionado()
+    {
+        int p=-1;
+        for(int i=0; i<clientesNodia.getClientes().size(); i++)
+        {
+            if( clienteSeleccionado.equals( clientesNodia.getClientes().get(i).getCli_cveext_str() ) )
+            {
+                p=i;
+                i=clientesNodia.getClientes().size()+1;
+            }
+        }
+        return p;
     }
 
     //evento del clic a la fila

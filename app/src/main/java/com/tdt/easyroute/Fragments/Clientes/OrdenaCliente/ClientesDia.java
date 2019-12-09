@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 public class ClientesDia {
 
-    ArrayList<DataTableLC.ClientesOrdenar> clientes = null;
-    boolean conDatos;
-    String filtro;
+    private ArrayList<DataTableLC.ClientesOrdenar> clientes = null;
+    private boolean conDatos;
+    private String filtro;
 
     public ClientesDia(ArrayList<DataTableLC.ClientesOrdenar> clientes, boolean conDatos, String filtro) {
         this.clientes = clientes;

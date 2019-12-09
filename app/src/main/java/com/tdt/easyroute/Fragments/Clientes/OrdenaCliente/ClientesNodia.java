@@ -3,9 +3,9 @@ import com.tdt.easyroute.Model.DataTableLC;
 import java.util.ArrayList;
 public class ClientesNodia {
 
-    ArrayList<DataTableLC.ClientesOrdenar> clientes=null;
-    boolean conDatos;
-    String filtro;
+    private ArrayList<DataTableLC.ClientesOrdenar> clientes=null;
+    private boolean conDatos;
+    private String filtro;
 
     public ClientesNodia(ArrayList<DataTableLC.ClientesOrdenar> clientes, boolean conDatos, String filtro) {
         this.clientes = clientes;

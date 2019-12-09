@@ -1,7 +1,9 @@
 package com.tdt.easyroute.Fragments.Clientes.OrdenaCliente;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -58,13 +60,14 @@ public class CdiaFragment extends Fragment {
     ClientesDia clientesDia;
 
     EditText et_filtro;
-    Button b_buscar, b_quitar, b_editar, b_subir, b_bajar;
+    Button b_buscar, b_quitar, b_editar, b_subir, b_bajar, b_salir,b_enviar;
     Spinner sp_dias;
 
     ScrollView scrollView;
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
     View vista;
+    OrdenacliFragment fragment;
 
     boolean cambioFuera=false;
 
@@ -82,6 +85,7 @@ public class CdiaFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cdia, container, false);
         vista=view;
+        fragment =  (OrdenacliFragment) getParentFragment();
 
         nombreBase = getContext().getString( R.string.nombreBD );
 
@@ -89,6 +93,10 @@ public class CdiaFragment extends Fragment {
         b_subir = view.findViewById(R.id.b_subir);
         b_bajar = view.findViewById(R.id.b_bajar);
         b_buscar = view.findViewById(R.id.button_buscar);
+        b_salir = view.findViewById(R.id.b_salir);
+        b_enviar = view.findViewById(R.id.b_enviar);
+        b_quitar = view.findViewById(R.id.b_quitar);
+        b_editar = view.findViewById(R.id.b_editar);
         sp_dias = view.findViewById(R.id.sp_dia);
         scrollView = view.findViewById(R.id.scrollView);
         tableLayout = view.findViewById(R.id.tableLayout);
@@ -118,6 +126,20 @@ public class CdiaFragment extends Fragment {
             }
         });
 
+        b_salir.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.RegresarInicio(getActivity());
+            }
+        });
+
+        b_quitar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quitarItem();
+            }
+        });
+
         b_subir.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,6 +161,13 @@ public class CdiaFragment extends Fragment {
             }
         });
 
+        b_editar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editarItem();
+            }
+        });
+
         int dia = Utils.diaActualL_D();
         sp_dias.setSelection(dia);
 
@@ -157,10 +186,17 @@ public class CdiaFragment extends Fragment {
             }
         });
 
+        ordenaClientesVM.getMoverItem().observe(getParentFragment(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                agregarItem(integer);
+            }
+        });
+
 
     }
 
-    public class ConsultarClientes extends AsyncTask<Boolean, Integer, Boolean> {
+    private class ConsultarClientes extends AsyncTask<Boolean, Integer, Boolean> {
 
         private ProgressDialog progreso;
         private int i;
@@ -247,7 +283,7 @@ public class CdiaFragment extends Fragment {
             qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
                     "from frecpunteo fp left join clientes c " +
                     "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
-                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec=0 and diasem='{0}' order by fp.frec_cve_n",filtro);
+                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec=0 and diasem='{0}' order by fp.sec",filtro);
 
             json = BaseLocal.Select(qry,getContext());
 
@@ -295,14 +331,13 @@ public class CdiaFragment extends Fragment {
             qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
                     "from frecpunteo fp left join clientes c " +
                     "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
-                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec>0 and diasem='{0}' order by fp.frec_cve_n",filtro);
+                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec>0 and diasem='{0}' order by fp.sec",filtro);
 
             json = BaseLocal.Select(qry,getContext());
 
             clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
 
             conDatos = true;
-
 
         }
 
@@ -392,24 +427,23 @@ public class CdiaFragment extends Fragment {
     {
         if(!clienteSeleccionado.isEmpty())
         {
-            int posicion=-1;
-            for(int i=0; i<clientesDia.getClientes().size(); i++)
-            {
-                if( clienteSeleccionado.equals( clientesDia.getClientes().get(i).getCli_cveext_str() ) )
-                {
-                    posicion=i;
-                    i=clientesDia.getClientes().size()+1;
-                }
-            }
+            int posicion= getClienteSeleccionado();
 
             if(posicion<clientesDia.getClientes().size()-1)
             {
                 DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion);
                 DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion+1);
 
+                String vUp =  cliUp.getSec();
+                String vDown = cliDown.getSec();
+
                 clientesDia.getClientes().set(posicion+1, cliUp);
                 clientesDia.getClientes().set(posicion, cliDown);
 
+                clientesDia.getClientes().get(posicion+1).setSec( vDown  );
+                clientesDia.getClientes().get(posicion).setSec(  vUp );
+
+                actualizarPosicionBase(vUp,vDown,posicion,false);
                 cargarClientesDia();
             }
         }
@@ -421,29 +455,83 @@ public class CdiaFragment extends Fragment {
     {
         if(!clienteSeleccionado.isEmpty())
         {
-            int posicion=-1;
-            for(int i=0; i<clientesDia.getClientes().size(); i++)
-            {
-                if( clienteSeleccionado.equals( clientesDia.getClientes().get(i).getCli_cveext_str() ) )
-                {
-                    posicion=i;
-                    i=clientesDia.getClientes().size()+1;
-                }
-            }
+            int posicion= getClienteSeleccionado();
 
             if(posicion>0)
             {
                 DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion - 1);
                 DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion);
 
+                String vUp =  cliUp.getSec();
+                String vDown = cliDown.getSec();
+
                 clientesDia.getClientes().set(posicion - 1, cliDown);
                 clientesDia.getClientes().set(posicion, cliUp);
 
+                clientesDia.getClientes().get(posicion-1).setSec( vUp  );
+                clientesDia.getClientes().get(posicion).setSec(  vDown );
+
+                actualizarPosicionBase(vUp,vDown,posicion,true);
                 cargarClientesDia();
             }
         }
         else
             Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
+    }
+
+    private int getClienteSeleccionado()
+    {
+        int p=-1;
+        for(int i=0; i<clientesDia.getClientes().size(); i++)
+        {
+            if( clienteSeleccionado.equals( clientesDia.getClientes().get(i).getCli_cveext_str() ) )
+            {
+                p=i;
+                i=clientesDia.getClientes().size()+1;
+            }
+        }
+        return p;
+    }
+
+    private void actualizarPosicionBase(String vUp, String vDown,int posicion, boolean up)
+    {
+        DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        try{
+            db.beginTransaction();
+
+            if(up)
+            {
+                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                        vUp, clientesDia.getClientes().get(posicion-1).getCli_cveext_str(), clientesDia.getClientes().get(posicion-1).getDiasem() ));
+                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                        vDown, clientesDia.getClientes().get(posicion).getCli_cveext_str(), clientesDia.getClientes().get(posicion).getDiasem() ));
+            }
+            else
+            {
+                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                        vDown, clientesDia.getClientes().get(posicion+1).getCli_cveext_str(), clientesDia.getClientes().get(posicion+1).getDiasem() ));
+                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                        vUp, clientesDia.getClientes().get(posicion).getCli_cveext_str(), clientesDia.getClientes().get(posicion).getDiasem() ));
+            }
+
+            db.setTransactionSuccessful();
+
+            Log.d("salida","Posicion actualizada en bd");
+
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.toString());
+            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+            db.close();
+        }
+        finally {
+            db.endTransaction();
+            db.close();
+        }
+
     }
 
     private void buscarItem(String palabra)
@@ -484,6 +572,149 @@ public class CdiaFragment extends Fragment {
 
     }
 
+    private void quitarItem()
+    {
+        if(!clienteSeleccionado.isEmpty())
+        {
+            int posicion = getClienteSeleccionado();
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
+            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+            try{
+                db.beginTransaction();
+
+                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                        "0", clientesDia.getClientes().get(posicion).getCli_cveext_str(), clientesDia.getClientes().get(posicion).getDiasem()) );
+                db.execSQL(string.formatSql("update frecpunteo set sec=sec-100 where sec>={0} and diasem='{1}'",
+                        clientesDia.getClientes().get(posicion).getSec(), clientesDia.getClientes().get(posicion).getDiasem() ));
+
+                db.setTransactionSuccessful();
+
+                String sec;
+                for(int i=posicion; i<clientesDia.getClientes().size();i++)
+                {
+                    sec = String.valueOf( Integer.parseInt( clientesDia.getClientes().get(i).getSec() ) -100 );
+                    clientesDia.getClientes().get(i).setSec( sec );
+                }
+
+                clientesDia.getClientes().get(posicion).setSec("0");
+                clientesNodia.getClientes().add( clientesDia.getClientes().get(posicion) );
+                clientesDia.getClientes().remove(posicion);
+
+                clienteSeleccionado="";
+
+                cargarClientesDia();
+                ordenaClientesVM.setClientesNodia(  clientesNodia );
+
+            }
+            catch (Exception e)
+            {
+                Log.d("salida","Error: "+e.getMessage());
+                Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+                db.endTransaction();
+                db.close();
+            }
+            finally {
+                db.endTransaction();
+                db.close();
+            }
+
+        }
+        else
+            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
+    }
+
+    private void agregarItem(int indice)
+    {
+        if(!clienteSeleccionado.isEmpty())
+        {
+            int posicion = getClienteSeleccionado();
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
+            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+            try{
+                db.beginTransaction();
+
+                db.execSQL(string.formatSql("update frecpunteo set sec=sec+100 where sec>={0} and diasem='{1}'",
+                        clientesDia.getClientes().get(posicion).getSec(),clientesDia.getClientes().get(posicion).getDiasem()));
+                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                        clientesDia.getClientes().get(posicion).getSec(),clientesNodia.getClientes().get(indice).getCli_cveext_str(), clientesNodia.getClientes().get(indice).getDiasem() ));
+
+                db.setTransactionSuccessful();
+
+                clientesNodia.getClientes().get(indice).setSec(  clientesDia.getClientes().get(posicion).getSec()  );
+
+                clientesDia.getClientes().add(posicion, clientesNodia.getClientes().get(indice));
+
+                String sec;
+                for(int i=posicion+1;i<clientesDia.getClientes().size();i++)
+                {
+                    sec = String.valueOf( Integer.parseInt( clientesDia.getClientes().get(i).getSec() ) + 100 );
+                    clientesDia.getClientes().get(i).setSec(  sec     );
+                }
+
+                clientesNodia.getClientes().remove(indice);
+
+                cargarClientesDia();
+                ordenaClientesVM.setClientesNodia(  clientesNodia );
+
+                fragment.goClientesDiaFragment();
+                buscarItem( clientesDia.getClientes().get(posicion).getCli_cveext_str() );
+            }
+            catch (Exception e)
+            {
+                Log.d("salida","Error: "+e.getMessage());
+                Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+                db.endTransaction();
+                db.close();
+            }
+            finally {
+                db.endTransaction();
+                db.close();
+            }
+
+        }
+        else
+            Toast.makeText(getContext(), "Selecciona un cliente del día", Toast.LENGTH_SHORT).show();
+    }
+
+    private void editarItem()
+    {
+        if(!clienteSeleccionado.isEmpty())
+        {
+            int id = getClienteSeleccionado();
+
+            DataTableLC.ClientesOrdenar cli = clientesDia.getClientes().get(id);
+
+            Intent intent = new Intent(getContext(), EditarclienteActivity.class);
+            CamposEditar camposEditar = new CamposEditar( cli.getEst_cve_n(), cli.getFrec_cve_n(), cli.getCoor()  );
+            intent.putExtra("CamposEditar",camposEditar);
+            startActivityForResult(intent,0);
+
+        }
+        else
+            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode== Activity.RESULT_OK)
+        {
+            Log.d("salida","entro aqui 1");
+        }
+        else
+        {
+            Log.d("salida","entro aqui 2");
+        }
+
+        Log.d("salida","entro aqui 3");
+
+
+    }
+
     private void guardar()
     {
         String query,json;
@@ -494,8 +725,8 @@ public class CdiaFragment extends Fragment {
 
         try
         {
-
-            Log.d("salida", "CANTIDAD CLIENTES DIA: "+lvClientes.size());
+            DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
+            SQLiteDatabase bd = databaseHelper.getWritableDatabase();
 
             for(int i=0; i<lvClientes.size();i++)
             {
@@ -508,20 +739,14 @@ public class CdiaFragment extends Fragment {
                 if(dt!=null)
                 {
                     query = "UPDATE FRECPUNTEO SET SEC={0},FREC_CVE_N= {1},EST_CVE_N = '{2}',COOR = '{3}' WHERE CLI_CVEEXT_STR = '{4}' AND DIASEM= '{5}'";
-                    BaseLocal.Insert(string.formatSql(query,lv.getSec(),lv.getFrec_cve_n(),lv.getEst_cve_n(),lv.getCoor(),lv.getCli_cveext_str(),lv.getDiasem()),getContext());
-                    Log.d("salida", "Entro actualizar FRECPUNTEO dia");
-
+                    bd.execSQL( string.formatSql(query,lv.getSec(),lv.getFrec_cve_n(),lv.getEst_cve_n(),lv.getCoor(),lv.getCli_cveext_str(),lv.getDiasem()) );
                 }
                 else
                 {
                     query = "INSERT INTO FRECPUNTEO (CLI_CVEEXT_STR,SEC,FREC_CVE_N,EST_CVE_N,COOR,DIASEM) VALUES ('{0}',{1},{2},'{3}','{4}','{5}')";
-                    query = string.formatSql( query, lv.getCli_cveext_str(), lv.getSec()  , lv.getFrec_cve_n()  ,lv.getEst_cve_n(),lv.getCoor(),lv.getDiasem() );
-                    BaseLocal.Insert(query,getContext());
-                    Log.d("salida", "Entro ingresar FRECPUNTEO dia");
+                    bd.execSQL(string.formatSql( query, lv.getCli_cveext_str(), lv.getSec()  , lv.getFrec_cve_n()  ,lv.getEst_cve_n(),lv.getCoor(),lv.getDiasem() ));
                 }
             }
-
-            Log.d("salida", "CANTIDAD CLIENTES NO DIA: "+lvClientesNoDia.size());
 
             for(int i=0; i<lvClientesNoDia.size();i++)
             {
@@ -531,22 +756,20 @@ public class CdiaFragment extends Fragment {
                 json= BaseLocal.Select( string.formatSql( qry, lv.getCli_cveext_str(), lv.getDiasem() ) ,getContext());
                 ArrayList<DataTableLC.FrecPunteo> dt = ConvertirRespuesta.getFrecPunteoJson(json);
 
-                Log.d("salida","Freec: "+lvClientesNoDia.get(i).getFrec_cve_n()+ "  Sec: "+lvClientesNoDia.get(i).getSec());
-
                 if(dt!=null)
                 {
                     query = "UPDATE FRECPUNTEO SET SEC={0},FREC_CVE_N= {1},EST_CVE_N = '{2}',COOR = '{3}' WHERE CLI_CVEEXT_STR = '{4}' AND DIASEM= '{5}'";
-                    BaseLocal.Insert(string.formatSql(query,lv.getSec(),lv.getFrec_cve_n(),lv.getEst_cve_n(),lv.getCoor(),lv.getCli_cveext_str(),lv.getDiasem()),getContext());
-                    Log.d("salida", "Entro actualizar FRECPUNTEO fuera");
+                    bd.execSQL(string.formatSql(query,lv.getSec(),lv.getFrec_cve_n(),lv.getEst_cve_n(),lv.getCoor(),lv.getCli_cveext_str(),lv.getDiasem()));
                 }
                 else
                 {
                     query = "INSERT INTO FRECPUNTEO (CLI_CVEEXT_STR,SEC,FREC_CVE_N,EST_CVE_N,COOR,DIASEM) VALUES ('{0}',{1},{2},'{3}','{4}','{5}')";
-                    query = string.formatSql( query, lv.getCli_cveext_str(), lv.getSec(), lv.getFrec_cve_n() ,lv.getEst_cve_n(),lv.getCoor(),lv.getDiasem() );
-                    BaseLocal.Insert(query,getContext());
-                    Log.d("salida", "Entro ingresar FRECPUNTEO fuera");
+                    bd.execSQL(  string.formatSql( query, lv.getCli_cveext_str(), lv.getSec(), lv.getFrec_cve_n() ,lv.getEst_cve_n(),lv.getCoor(),lv.getDiasem() )  );
                 }
             }
+
+            bd.close();
+            Log.d("salida","Base de datos actualizada");
         }
         catch (Exception e)
         {
@@ -575,7 +798,5 @@ public class CdiaFragment extends Fragment {
             }
         }
     };
-
-
 
 }

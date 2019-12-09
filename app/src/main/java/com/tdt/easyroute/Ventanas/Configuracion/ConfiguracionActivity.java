@@ -230,9 +230,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
                         Log.d("salida","ES ADMINISTRADOR");
                     }
                 }
-
             }
-
 
         }catch (Exception e)
         {
