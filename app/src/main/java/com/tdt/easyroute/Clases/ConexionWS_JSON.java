@@ -24,13 +24,12 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
     private ParametrosWS parametrosWS;
     public String servidor;
     public int timeout=0;
+    private ProgressDialog progreso;
 
     public ConexionWS_JSON(Context context, String metodo) {
         this.context = context;
         parametrosWS = new ParametrosWS(metodo, context);
     }
-
-    private ProgressDialog progreso;
 
     @Override protected void onPreExecute() {
         progreso = new ProgressDialog(context);

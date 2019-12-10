@@ -7,6 +7,7 @@ public class CamposEditar implements Serializable {
     private String estado;
     private String frecuencia;
     private String coordenadas;
+    private String frecuencia_desc;
 
     public CamposEditar() {
     }
@@ -15,6 +16,14 @@ public class CamposEditar implements Serializable {
         this.estado = estado;
         this.frecuencia = frecuencia;
         this.coordenadas = coordenadas;
+    }
+
+    public String getFrecuencia_desc() {
+        return frecuencia_desc;
+    }
+
+    public void setFrecuencia_desc(String frecuencia_desc) {
+        this.frecuencia_desc = frecuencia_desc;
     }
 
     public String getEstado() {

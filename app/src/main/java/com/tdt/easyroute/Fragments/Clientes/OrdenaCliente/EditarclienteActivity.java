@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -25,6 +26,7 @@ public class EditarclienteActivity extends AppCompatActivity {
     Button b_salir,b_guardar;
     Spinner sp_estado, sp_frecuencia;
     TextView tv_coor;
+    int indice_estado=-1,indice_frecu=-1;
 
     ArrayList<DataTableWS.Estatus> dt_estatus=null;
     ArrayList<String> estadoDesc=null;
@@ -38,7 +40,6 @@ public class EditarclienteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editarcliente);
-        final Intent i = getIntent();
 
         camposEditar= (CamposEditar)getIntent().getExtras().getSerializable("CamposEditar");
 
@@ -51,8 +52,7 @@ public class EditarclienteActivity extends AppCompatActivity {
         b_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setResult(RESULT_OK, i);
-
+                guardar();
             }
         });
 
@@ -63,9 +63,35 @@ public class EditarclienteActivity extends AppCompatActivity {
             }
         });
 
+        sp_estado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                indice_estado = i;
+                Log.d("salida","cambio estado: "+i);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        sp_frecuencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                indice_frecu=i;
+                Log.d("salida","cambio frecuencia: "+i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         obtieneEstados();
         obtieneFrecuencias();
         tv_coor.setText( camposEditar.getCoordenadas() );
+
 
     }
 
@@ -134,8 +160,29 @@ public class EditarclienteActivity extends AppCompatActivity {
         }
     }
 
-    private void guargar()
+    private void guardar()
     {
+
+        try {
+            String estado = dt_estatus.get(indice_estado).getEst_cve_str();
+            String frecuencia = dt_frecuencias.get(indice_frecu).getFrec_cve_n();
+            String frecuencia_des = dt_frecuencias.get(indice_frecu).getFrec_desc_str();
+            String coor = tv_coor.getText().toString();
+
+            camposEditar.setEstado(estado);
+            camposEditar.setFrecuencia(frecuencia);
+            camposEditar.setCoordenadas(coor);
+            camposEditar.setFrecuencia_desc(frecuencia_des);
+
+            Intent i = getIntent();
+            i.putExtra("CamposEditar", camposEditar);
+            setResult(RESULT_OK, i);
+            finish();
+
+        }catch (Exception e)
+        {
+
+        }
 
     }
 }

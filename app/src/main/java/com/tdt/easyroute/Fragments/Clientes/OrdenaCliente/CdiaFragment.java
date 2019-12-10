@@ -703,15 +703,57 @@ public class CdiaFragment extends Fragment {
 
         if(resultCode== Activity.RESULT_OK)
         {
-            Log.d("salida","entro aqui 1");
+            try
+            {
+                CamposEditar camposEditar = (CamposEditar) data.getExtras().getSerializable("CamposEditar");
+                int i = getClienteSeleccionado();
+
+                //actualizar información en la lista
+                clientesDia.getClientes().get(i).setFrec_cve_n(camposEditar.getFrecuencia());
+                clientesDia.getClientes().get(i).setFrec_desc_str(camposEditar.getFrecuencia_desc());
+                clientesDia.getClientes().get(i).setCoor( camposEditar.getCoordenadas() );
+                clientesDia.getClientes().get(i).setEst_cve_n(camposEditar.getEstado());
+
+                DataTableLC.ClientesOrdenar cli = clientesDia.getClientes().get(i);
+
+                //actualizar información que se muestra
+                TableRow row = (TableRow) vista.findViewWithTag(clienteSeleccionado);
+                ((TextView) row.findViewById(R.id.t_frec)).setText(camposEditar.getFrecuencia_desc());
+                ((TextView) row.findViewById(R.id.t_estatus)).setText(camposEditar.getEstado());
+
+                //Actualizar información en la bd
+                String qry = string.formatSql( "SELECT * FROM FRECPUNTEO WHERE CLI_CVEEXT_STR = '{0}' AND DIASEM= '{1}'", cli.getCli_cveext_str(), cli.getDiasem()  );
+
+                ArrayList<DataTableLC.FrecPunteo> dt=null;
+                String json = BaseLocal.Select(qry,getContext());
+                dt = ConvertirRespuesta.getFrecPunteoJson(json);
+
+                if(dt!=null)
+                {
+                    qry = "UPDATE FRECPUNTEO SET SEC={0},FREC_CVE_N= {1},EST_CVE_N = '{2}',COOR = '{3}' WHERE CLI_CVEEXT_STR = '{4}' AND DIASEM= '{5}'";
+                    qry = string.formatSql(qry, cli.getSec(), cli.getFrec_cve_n(), cli.getEst_cve_n(),cli.getCoor(), cli.getCli_cveext_str(), cli.getDiasem() );
+                    BaseLocal.Insert(qry,getContext());
+                }
+                else
+                {
+                    qry = "INSERT INTO FRECPUNTEO VALUES ('{0}',{1},{2},'{3}','{4}','{5}')";
+                    qry = string.formatSql( qry, cli.getCli_cveext_str(), cli.getSec(), cli.getFrec_cve_n(), cli.getEst_cve_n(), cli.getCoor(), cli.getDiasem() );
+
+                    BaseLocal.Insert(qry,getContext());
+                }
+
+                Toast.makeText(getContext(), "Cliente actualizado", Toast.LENGTH_SHORT).show();
+            }
+            catch (Exception e)
+            {
+                Log.d("salida",e.getMessage());
+                Toast.makeText(getContext(), "Error al actualizar cliente", Toast.LENGTH_SHORT).show();
+            }
         }
         else
         {
-            Log.d("salida","entro aqui 2");
+            Toast.makeText(getContext(), "Actualización cancelada", Toast.LENGTH_SHORT).show();
         }
-
-        Log.d("salida","entro aqui 3");
-
 
     }
 
