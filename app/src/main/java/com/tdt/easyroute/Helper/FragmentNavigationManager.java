@@ -56,7 +56,7 @@ public class FragmentNavigationManager implements NavigationManager {
         
         switch (title)
         {
-            case "Inicio de día | Inicio":
+            case "Inicio | Inicio de día":
                 StartdayFragment startdayFragment= new StartdayFragment();
                 ft= fm.beginTransaction().replace(R.id.container, startdayFragment);
                 break;

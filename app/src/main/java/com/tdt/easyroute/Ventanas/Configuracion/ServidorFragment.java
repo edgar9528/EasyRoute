@@ -3,6 +3,7 @@ package com.tdt.easyroute.Ventanas.Configuracion;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -188,6 +189,9 @@ public class ServidorFragment extends Fragment {
 
             ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(lista_catalogos.get(i));
             ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
+
+            ((TextView) tr.findViewById(R.id.tabla_catalogo)).setTypeface(Typeface.DEFAULT);
+            ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
 
             tableLayout.addView(tr);
             rbSeleccionados[i]=false;

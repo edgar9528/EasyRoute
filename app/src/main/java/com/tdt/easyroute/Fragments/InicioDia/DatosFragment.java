@@ -3,6 +3,7 @@ package com.tdt.easyroute.Fragments.InicioDia;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -193,6 +194,9 @@ public class DatosFragment extends Fragment {
 
                 ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(al_catalogos.get(i));
                 ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
+
+                ((TextView) tr.findViewById(R.id.tabla_catalogo)).setTypeface(Typeface.DEFAULT);
+                ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
 
                 tableLayout.addView(tr);
                 rbSeleccionados[i] = false;
@@ -447,10 +451,7 @@ public class DatosFragment extends Fragment {
                         actualizoRutaEmpresa=false;
                     }
 
-
-
                     startdayVM.setSincro(true); //actualiza el valor de la variable startday
-
 
                     Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
                 }

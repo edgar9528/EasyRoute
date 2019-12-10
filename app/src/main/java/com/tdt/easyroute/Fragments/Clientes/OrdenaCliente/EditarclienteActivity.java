@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class EditarclienteActivity extends AppCompatActivity {
 
-    Button b_salir;
+    Button b_salir,b_guardar;
     Spinner sp_estado, sp_frecuencia;
     TextView tv_coor;
 
@@ -43,14 +43,22 @@ public class EditarclienteActivity extends AppCompatActivity {
         camposEditar= (CamposEditar)getIntent().getExtras().getSerializable("CamposEditar");
 
         b_salir = findViewById(R.id.b_salir);
+        b_guardar = findViewById(R.id.b_guardar);
         tv_coor = findViewById(R.id.tv_coor);
         sp_estado = findViewById(R.id.sp_estado);
         sp_frecuencia = findViewById(R.id.sp_frecuencia);
 
-        b_salir.setOnClickListener(new View.OnClickListener() {
+        b_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setResult(RESULT_OK, i);
+
+            }
+        });
+
+        b_salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 finish();
             }
         });
@@ -94,7 +102,6 @@ public class EditarclienteActivity extends AppCompatActivity {
         }
     }
 
-
     private void obtieneFrecuencias()
     {
         String qry = "SELECT frec_cve_n,frec_desc_str FROM frecuenciasvisita";
@@ -125,5 +132,10 @@ public class EditarclienteActivity extends AppCompatActivity {
             Log.d("salida","Error: "+e.getMessage());
             Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void guargar()
+    {
+
     }
 }

@@ -258,9 +258,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         //OPCIONES QUE SE MOSTRARAN EN EL MENU
 
-        List<String> title = Arrays.asList("Inicio de día", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
+        List<String> title = Arrays.asList("Inicio", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
 
-        List<String> iniciodia = Arrays.asList("Inicio");
+        List<String> iniciodia = Arrays.asList("Pantalla principal","Inicio de día");
         List<String> inventario = Arrays.asList("Inventario", "Carga inicial", "Recarga", "Devoluciones", "Descarga");
         List<String> pedidos = Arrays.asList("Clientes");
         List<String> entregas = Arrays.asList("Consigna", "Pedido", "Devolución");
