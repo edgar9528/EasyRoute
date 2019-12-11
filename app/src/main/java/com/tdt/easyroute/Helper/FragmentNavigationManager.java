@@ -9,11 +9,15 @@ import com.tdt.easyroute.BuildConfig;
 import com.tdt.easyroute.Fragments.Clientes.BuscarclientesFragment;
 import com.tdt.easyroute.Fragments.Clientes.Cartera.CarteraFragment;
 import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.OrdenacliFragment;
+import com.tdt.easyroute.Fragments.FinDeDia.FindiaFragment;
+import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.MainsugeridoFragment;
 import com.tdt.easyroute.Fragments.Inventario.DevolucionesFragment;
 import com.tdt.easyroute.Fragments.PrincipalFragment;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
 import com.tdt.easyroute.Fragments.Inventario.Carga2Fragment;
 import com.tdt.easyroute.Fragments.Inventario.InventarioFragment;
+import com.tdt.easyroute.Fragments.Reportes.ArqueoFragment;
+import com.tdt.easyroute.Fragments.Reportes.Venta.ReporteventaFragment;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.Usuario;
@@ -81,6 +85,14 @@ public class FragmentNavigationManager implements NavigationManager {
                 ft= fm.beginTransaction().replace(R.id.container, DevolucionesFragment.newInstance(usuario));
                 break;
 
+            case "Reportes | Arqueo":
+                ft= fm.beginTransaction().replace(R.id.container, ArqueoFragment.newInstance());
+                break;
+
+            case "Reportes | Ventas día":
+                ft= fm.beginTransaction().replace(R.id.container, ReporteventaFragment.newInstance());
+                break;
+
             case "Clientes | Cartera":
                 CarteraFragment carteraFragment = new CarteraFragment();
                 ft= fm.beginTransaction().replace(R.id.container, carteraFragment);
@@ -92,6 +104,22 @@ public class FragmentNavigationManager implements NavigationManager {
 
             case "Clientes | Ord. Clientes":
                 ft= fm.beginTransaction().replace(R.id.container, OrdenacliFragment.newInstance());
+                break;
+
+            case "Fin de día | Sugerido":
+                ft= fm.beginTransaction().replace(R.id.container, MainsugeridoFragment.newInstance(usuario));
+                break;
+
+            case "Fin de día | Transmitir":
+                ft= fm.beginTransaction().replace(R.id.container, FindiaFragment.newInstance(0));
+                break;
+
+            case "Fin de día | Borrar datos":
+                ft= fm.beginTransaction().replace(R.id.container, FindiaFragment.newInstance(1));
+                break;
+
+            case "Fin de día | Fin de ventas":
+                ft= fm.beginTransaction().replace(R.id.container, FindiaFragment.newInstance(2));
                 break;
 
             case "Catálogos | Configuración":

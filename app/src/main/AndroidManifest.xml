@@ -15,7 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Fragments.Clientes.OrdenaCliente.EditarclienteActivity"></activity>
+
+        <activity
+            android:name=".Fragments.Clientes.OrdenaCliente.EditarclienteActivity">
+        </activity>
+
+
         <activity android:name=".Ventanas.PruebasActivity" />
         <activity
             android:name=".LoginActivity"

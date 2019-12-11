@@ -8,6 +8,7 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Adapter.PagerConfiguracionAdapter;
@@ -43,6 +44,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
         this.setTitle("Configuración");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         try {
 
@@ -110,8 +112,17 @@ public class ConfiguracionActivity extends AppCompatActivity {
             Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.d("salida","Error: "+e.toString());
         }
+    }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void inicializar()

@@ -693,6 +693,8 @@ public class CdiaFragment extends Fragment {
             intent.putExtra("CamposEditar",camposEditar);
             startActivityForResult(intent,0);
 
+            //se recibe la respuesta en onActivityResult
+
         }
         else
             Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
@@ -752,6 +754,7 @@ public class CdiaFragment extends Fragment {
         }
         else
         {
+            Log.d("salida","Actualización cancelada");
             Toast.makeText(getContext(), "Actualización cancelada", Toast.LENGTH_SHORT).show();
         }
 

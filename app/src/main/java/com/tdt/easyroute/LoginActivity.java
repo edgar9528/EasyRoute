@@ -1,6 +1,7 @@
 package com.tdt.easyroute;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -99,83 +100,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         button_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try {
-
-                    if (!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty()) {
-                        user = ti_usuario.getText().toString();
-                        pass = ti_contrasena.getText().toString();
-
-                        if ((user.equals("72") && pass.equals("2663")) || (user.equals("72") && pass.equals("23646")))
-                        {
-                            if (pass.equals("2663"))
-                            {
-                                Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
-                                startActivity(intent);
-                            }
-                            else
-                            {
-                                Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
-                                intent.putExtra("admin", true);
-                                startActivity(intent);
-                            }
-                        }
-                        else
-                        {
-                            pass = Utils.Encriptar(ti_contrasena.getText().toString());
-
-                            validaUsuarioLocal();
-
-                            bloq = false;
-
-                            if (u == null) {
-                                bloq = false;
-                            } else {
-                                bloq = (u.getBloqueado() == 1 || !u.getEstatus().equals("H"));
-                            }
-
-                            if (u == null || bloq) {
-
-                                Log.d(TAG, "Entro buscar usuario ws");
-
-                                //parametros del metodo
-                                ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
-                                PropertyInfo piUser = new PropertyInfo();
-                                piUser.setName("usuarioJ");
-                                piUser.setValue(user);
-                                propertyInfos.add(piUser);
-
-                                PropertyInfo piPass = new PropertyInfo();
-                                piPass.setName("contrasenaJ");
-                                piPass.setValue(pass);
-                                propertyInfos.add(piPass);
-
-                                //victore
-                                //MAA0ADMAMgAxAA==
-
-                                //conexion con el metodo
-                                ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, "ValidarUsuarioJ");
-                                conexionWS.delegate = LoginActivity.this;
-                                conexionWS.propertyInfos = propertyInfos;
-                                conexionWS.execute();
-
-                            } else {
-                                almacenarInformacion();
-                            }
-
-                        }
-
-                    }
-                    else
-                        Toast.makeText(LoginActivity.this, "Rellena todos los campos", Toast.LENGTH_LONG).show();
-
-                }catch (Exception e)
-                {
-                    Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.d(TAG,e.getMessage());
-                }
-
-
+                    clickBotonIniciar();
             }
         });
 
@@ -207,7 +132,84 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
     }
 
 
+    public void clickBotonIniciar()
+    {
+        try {
 
+            if (!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty()) {
+                user = ti_usuario.getText().toString();
+                pass = ti_contrasena.getText().toString();
+
+                if ((user.equals("72") && pass.equals("2663")) || (user.equals("72") && pass.equals("23646")))
+                {
+                    if (pass.equals("2663"))
+                    {
+                        Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
+                        intent.putExtra("admin", true);
+                        startActivity(intent);
+                    }
+                }
+                else
+                {
+                    pass = Utils.Encriptar(ti_contrasena.getText().toString());
+
+                    validaUsuarioLocal();
+
+                    bloq = false;
+
+                    if (u == null) {
+                        bloq = false;
+                    } else {
+                        bloq = (u.getBloqueado() == 1 || !u.getEstatus().equals("H"));
+                    }
+
+                    if (u == null || bloq) {
+
+                        Log.d(TAG, "Entro buscar usuario ws");
+
+                        //parametros del metodo
+                        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+                        PropertyInfo piUser = new PropertyInfo();
+                        piUser.setName("usuarioJ");
+                        piUser.setValue(user);
+                        propertyInfos.add(piUser);
+
+                        PropertyInfo piPass = new PropertyInfo();
+                        piPass.setName("contrasenaJ");
+                        piPass.setValue(pass);
+                        propertyInfos.add(piPass);
+
+                        //victore
+                        //MAA0ADMAMgAxAA==
+
+                        //conexion con el metodo
+                        ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, "ValidarUsuarioJ");
+                        conexionWS.delegate = LoginActivity.this;
+                        conexionWS.propertyInfos = propertyInfos;
+                        conexionWS.execute();
+
+                    } else {
+                        almacenarInformacion();
+                    }
+
+                }
+
+            }
+            else
+                Toast.makeText(LoginActivity.this, "Rellena todos los campos", Toast.LENGTH_LONG).show();
+
+        }catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.d(TAG,e.getMessage());
+        }
+
+    }
 
 
     public void obtenerRoles()
@@ -549,9 +551,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                 u.setNombrerol( cursor.getString(1) );
                 u.setEsadmin( Byte.valueOf( cursor.getString(2) ) );
             }
-
             obtenerRoles();
-
         }
         else
         {

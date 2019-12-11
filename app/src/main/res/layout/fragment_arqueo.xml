@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.Reportes.ArqueoFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/paddingGeneral"
+        >
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_ventasDia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ventas del día"
+                android:singleLine="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_ventasConta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ventas contado"
+                android:singleLine="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_ventasCred"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ventas crédito"
+                android:singleLine="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_cobranza"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Cobranza"
+                android:singleLine="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_entrega"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entregar a caja"
+                android:singleLine="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="15dp"
+            android:weightSum="4"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            >
+
+            <Button
+                android:id="@+id/button_salir"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Salir"
+                android:theme="@style/ButtonDarkSmall"
+                />
+
+            <Button
+                android:id="@+id/button_imprimir"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Imprimir"
+                android:theme="@style/ButtonDarkSmall"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

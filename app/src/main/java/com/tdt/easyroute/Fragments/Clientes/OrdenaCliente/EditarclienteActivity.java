@@ -1,10 +1,12 @@
 package com.tdt.easyroute.Fragments.Clientes.OrdenaCliente;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +42,9 @@ public class EditarclienteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editarcliente);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Editar cliente");
 
         camposEditar= (CamposEditar)getIntent().getExtras().getSerializable("CamposEditar");
 
@@ -91,7 +96,6 @@ public class EditarclienteActivity extends AppCompatActivity {
         obtieneEstados();
         obtieneFrecuencias();
         tv_coor.setText( camposEditar.getCoordenadas() );
-
 
     }
 
@@ -184,5 +188,16 @@ public class EditarclienteActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
