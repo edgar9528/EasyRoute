@@ -1,0 +1,17 @@
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/t_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:text="Familia"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+</TableRow>

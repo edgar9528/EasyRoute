@@ -5,9 +5,22 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.FinDeDia.FindiaFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:padding="@dimen/paddingGeneral"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tv_opcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Fragment" />
+
+    </LinearLayout>
 
 </FrameLayout>

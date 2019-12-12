@@ -7,6 +7,11 @@
     <color name="list_item_title">#AAAAAA</color>
     <color name="list_group_title">#809080</color>
 
+    <color name="bgDefault">#FAFAFA</color>
+
+    <color name="colorRedDark">#d60606</color>
+    <color name="colorRedLight">#f24444</color>
+
     <color name="fondo">#f1eeee</color>
     <color name="titulo">#2048c9</color>
     <color name="negro">#000</color>

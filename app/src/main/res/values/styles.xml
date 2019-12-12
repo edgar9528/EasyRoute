@@ -21,6 +21,13 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="ButtonRed" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/colorRedDark</item>
+        <item name="colorControlHighlight">@color/colorRedLight</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 
     <style name="EditTextWhite" parent="TextAppearance.AppCompat">
         <item name="android:textColorHint">@android:color/white</item>

@@ -61,35 +61,6 @@ public class BaseLocal {
 
     }
 
-    private static String cur2Json(Cursor cursor) {
-
-        JSONArray resultSet = new JSONArray();
-        cursor.moveToFirst();
-        while (cursor.isAfterLast() == false) {
-            int totalColumn = cursor.getColumnCount();
-            JSONObject rowObject = new JSONObject();
-            for (int i = 0; i < totalColumn; i++) {
-                if (cursor.getColumnName(i) != null) {
-                    try {
-
-                        if(cursor.getString(i)==null)
-                            rowObject.put(cursor.getColumnName(i), "");
-                        else
-                            rowObject.put(cursor.getColumnName(i), cursor.getString(i));
-
-                    } catch (Exception e) {
-                        Log.d("salida", e.getMessage());
-                    }
-                }
-            }
-            resultSet.put(rowObject);
-            cursor.moveToNext();
-        }
-
-        cursor.close();
-        return resultSet.toString();
-    }
-
     public static String SelectDato(String consulta, Context context)
     {
         String nombreBase = context.getString( R.string.nombreBD );
@@ -119,6 +90,98 @@ public class BaseLocal {
         return datoReturn;
     }
 
+    public static String SelectFrecPunteo(Context context)
+    {
+        String consulta = "Select * from frecpunteo";
+        String nombreBase = context.getString( R.string.nombreBD );
+        String json=null;
+
+        try {
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(context, nombreBase, null, 1);
+            SQLiteDatabase bd = databaseHelper.getReadableDatabase();
+
+            Cursor cursor = bd.rawQuery(consulta, null);
+
+            if(cursor.getCount()>0)
+                Log.d("salida","encontro info en la bd (Base local) "+consulta);
+
+            json = cur2JsonFrec(cursor);
+
+            bd.close();
+
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error baseLocal Select: "+e.toString());
+            json=null;
+        }
+
+        return json;
+    }
+
+    private static String cur2Json(Cursor cursor) {
+
+        JSONArray resultSet = new JSONArray();
+        cursor.moveToFirst();
+        while (cursor.isAfterLast() == false) {
+            int totalColumn = cursor.getColumnCount();
+            JSONObject rowObject = new JSONObject();
+            for (int i = 0; i < totalColumn; i++) {
+                if (cursor.getColumnName(i) != null) {
+                    try {
+
+                        if(cursor.getString(i)==null)
+                            rowObject.put(cursor.getColumnName(i), "");
+                        else
+                            rowObject.put(cursor.getColumnName(i), cursor.getString(i));
+
+                    } catch (Exception e) {
+                        Log.d("salida", e.getMessage());
+                    }
+                }
+            }
+            resultSet.put(rowObject);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return resultSet.toString();
+    }
+
+
+    private static String cur2JsonFrec(Cursor cursor) {
+
+        JSONArray resultSet = new JSONArray();
+        cursor.moveToFirst();
+        while (cursor.isAfterLast() == false) {
+            int totalColumn = cursor.getColumnCount();
+            JSONObject rowObject = new JSONObject();
+
+            int orden[] = {0,2,1,3,4,5};
+
+            for (int i = 0; i < totalColumn; i++) {
+
+                if (cursor.getColumnName(i) != null) {
+                    try {
+
+                        if(cursor.getString(orden[i])==null)
+                            rowObject.put(cursor.getColumnName(i), "");
+                        else
+                            rowObject.put(cursor.getColumnName(i), cursor.getString(orden[i]));
+
+                    } catch (Exception e) {
+                        Log.d("salida", e.getMessage());
+                    }
+                }
+            }
+            resultSet.put(rowObject);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return resultSet.toString();
+    }
 
 
 }

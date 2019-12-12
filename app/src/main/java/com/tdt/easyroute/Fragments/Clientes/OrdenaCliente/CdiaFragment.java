@@ -38,19 +38,25 @@ import android.widget.Toolbar;
 
 import com.google.android.material.tabs.TabLayout;
 import com.tdt.easyroute.Clases.BaseLocal;
+import com.tdt.easyroute.Clases.ConexionWS_JSON;
+import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.Interface.AsyncResponseJSON;
 import com.tdt.easyroute.Model.DataTableLC;
+import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.OrdenaClientesVM;
 import com.tdt.easyroute.ViewModel.StartdayVM;
 
+import org.ksoap2.serialization.PropertyInfo;
+
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
-public class CdiaFragment extends Fragment {
+public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
     String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
     String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
@@ -165,6 +171,13 @@ public class CdiaFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 editarItem();
+            }
+        });
+
+        b_enviar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                enviarFrec();
             }
         });
 
@@ -551,7 +564,7 @@ public class CdiaFragment extends Fragment {
                 if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra)) {
                     for (int j = 0; j < clientesDia.getClientes().size(); j++) {
                         TableRow tr = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(j).getCli_cveext_str());
-                        tr.setBackgroundColor(Color.WHITE);
+                        tr.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                     }
 
                     row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -823,6 +836,49 @@ public class CdiaFragment extends Fragment {
         }
     }
 
+    private void enviarFrec()
+    {
+        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+        String json = BaseLocal.SelectFrecPunteo(getContext());
+        Configuracion conf = Utils.ObtenerConf(getActivity().getApplication());
+
+        PropertyInfo pi1 = new PropertyInfo();
+        pi1.setName("fp");
+        pi1.setValue(json);
+        propertyInfos.add(pi1);
+
+        PropertyInfo pi2 = new PropertyInfo();
+        pi2.setName("ruta");
+        pi2.setValue(conf.getRuta());
+        propertyInfos.add(pi2);
+
+        ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "Sube_FrecuenciaPunteoJ");
+        cws.propertyInfos= propertyInfos;
+        cws.delegate = CdiaFragment.this;
+        cws.execute();
+
+    }
+
+    @Override
+    public void recibirPeticion(boolean estado, String respuesta) {
+        if(estado)
+        {
+            if (respuesta != null)
+            {
+                DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+                Toast.makeText(getContext(), retVal.getMsj(), Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Error al enviar", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+        }
+    }
+
     //evento del clic a la fila
     private View.OnClickListener tableListener = new View.OnClickListener() {
         @Override
@@ -835,7 +891,7 @@ public class CdiaFragment extends Fragment {
             {
                 for (int i = 0; i < clientesDia.getClientes().size(); i++) {
                     TableRow row = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
-                    row.setBackgroundColor(Color.WHITE);
+                    row.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                 }
                 //pinta de azul la fila y actualiza la cve de la fila seccionada
                 tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));

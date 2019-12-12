@@ -1,25 +1,27 @@
 package com.tdt.easyroute.Fragments.FinDeDia.Sugerido;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.tdt.easyroute.Adapter.PagerSugeridoAdapter;
+import com.tdt.easyroute.Clases.Configuracion;
+import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
-
 
 public class MainsugeridoFragment extends Fragment {
 
     private static Usuario user;
+    ViewPager viewPager;
 
     public static MainsugeridoFragment newInstance(Usuario u) {
         MainsugeridoFragment fragment = new MainsugeridoFragment();
@@ -46,9 +48,11 @@ public class MainsugeridoFragment extends Fragment {
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
 
         final PagerSugeridoAdapter adapter = new PagerSugeridoAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+
+        viewPager.setOffscreenPageLimit(3);
 
         viewPager.setAdapter(adapter);
 
@@ -72,7 +76,59 @@ public class MainsugeridoFragment extends Fragment {
         //TERMINA CONFIGURACION DE LAS TABS
 
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                verificarInicio();
+            }
+        }, 150);
+
+
         return view;
+    }
+
+    private void verificarInicio()
+    {
+        Configuracion conf = null;
+        conf = Utils.ObtenerConf(getActivity().getApplication());
+
+        Log.d("salida", "Preventa: "+ conf.getPreventa());
+
+        if ( conf.getPreventa() == 2)
+        {
+            Toast.makeText(getContext(), "Las rutas de reparto no pueden enviar sugerido", Toast.LENGTH_LONG).show();
+            Utils.RegresarInicio(getActivity());
+        }
+        if (conf.getPreventa() == 1)
+        {
+            Toast.makeText(getContext(), "Asegurese de haber transmitido su información antes de enviar el sugerido de su reparto.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public Usuario getUserMainSugerido()
+    {
+        return user;
+    }
+
+    public void goFamilia()
+    {
+        viewPager.setCurrentItem(0);
+    }
+
+    public void goPresentacion()
+    {
+        viewPager.setCurrentItem(1);
+    }
+
+    public void goProducto()
+    {
+        viewPager.setCurrentItem(2);
+    }
+
+    public void goSugerido()
+    {
+        viewPager.setCurrentItem(4);
     }
 
 }

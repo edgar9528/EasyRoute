@@ -187,7 +187,7 @@ public class ClientesFragment extends Fragment {
                 for(int i=0; i<dgCartera.size();i++)
                 {
                     TableRow row = (TableRow)vista.findViewWithTag(dgCartera.get(i).getCli_cve_n());
-                    row.setBackgroundColor(Color.WHITE);
+                    row.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                 }
 
                 //pinta de azul la fila y actualiza la cve de la fila seccionada

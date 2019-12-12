@@ -1305,4 +1305,75 @@ public class ConvertirRespuesta {
         return al;
     }
 
+
+    public static ArrayList<DataTableLC.Productos_Sug> getProductos_SugJson(String respuesta)
+    {
+        ArrayList<DataTableLC.Productos_Sug> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Productos_Sug> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.SugPreventa> getSugPreventaJson(String respuesta)
+    {
+        ArrayList<DataTableLC.SugPreventa> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.SugPreventa> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.Sugerido> getSugeridoJson(String respuesta)
+    {
+        ArrayList<DataTableLC.Sugerido> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Sugerido> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.SugeridoTable> getSugeridoTableJson(String respuesta)
+    {
+        ArrayList<DataTableLC.SugeridoTable> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.SugeridoTable> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+
 }

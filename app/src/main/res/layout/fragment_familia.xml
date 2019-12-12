@@ -5,10 +5,110 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.FinDeDia.Sugerido.FamiliaFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="familia fragment" />
+        android:padding="@dimen/paddingGeneral"
+        android:orientation="vertical"
+        android:weightSum="80"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight ="70"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="6"
+                android:paddingTop="@dimen/paddingControles"
+                >
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:theme="@style/EditTextBlack">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_sku"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="SKU"
+                        android:singleLine="true"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:theme="@style/EditTextBlack">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_cant"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Cantidad"
+                        android:singleLine="true"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/button_buscar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="x"
+                    android:textAlignment="center"
+                    android:theme="@style/ButtonRed"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:orientation="vertical"
+            >
+
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <HorizontalScrollView
+                    android:id="@+id/horizontalView"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal|vertical"
+                    android:layout_width="match_parent"
+                    >
+
+                    <TableLayout
+                        android:id="@+id/tableLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </TableLayout>
+
+                </HorizontalScrollView>
+
+            </ScrollView>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 
 </FrameLayout>

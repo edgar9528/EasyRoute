@@ -239,7 +239,7 @@ public class CfueraFragment extends Fragment {
                     for (int j = 0; j < clientesNodia.getClientes().size(); j++)
                     {
                         TableRow tr = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(j).getCli_cveext_str());
-                        tr.setBackgroundColor(Color.WHITE);
+                        tr.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                     }
 
                     row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -297,7 +297,7 @@ public class CfueraFragment extends Fragment {
             {
                 for (int i = 0; i < clientesNodia.getClientes().size(); i++) {
                     TableRow row = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
-                    row.setBackgroundColor(Color.WHITE);
+                    row.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                 }
                 //pinta de azul la fila y actualiza la cve de la fila seccionada
                 tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
