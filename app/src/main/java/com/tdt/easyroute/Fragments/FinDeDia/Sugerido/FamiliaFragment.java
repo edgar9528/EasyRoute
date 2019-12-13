@@ -178,6 +178,7 @@ public class FamiliaFragment extends Fragment {
             }
 
             calcularEnvase();
+            sugeridoVM.setDgSugerido( dgSugerido );
             fragmentMain.goSugerido();
         }
     }
@@ -225,12 +226,9 @@ public class FamiliaFragment extends Fragment {
                     k = dgSugerido.size()-1;
 
                 }
-
                 dgSugerido.get(k).setProd_sug_n( String.valueOf(o) );
-
             }
         }
-
     }
 
     private void recuperarSugerido()
@@ -270,10 +268,14 @@ public class FamiliaFragment extends Fragment {
                         ri.setCat_desc_str( i2.getCat_desc_str() );
 
                         dgSugerido.add(ri);
+
+                        Log.d("salida","entro a agregar sugerido desde el principio");
+
                     }
                 }
 
                 calcularEnvase();
+                sugeridoVM.setDgSugerido( dgSugerido );
                 fragmentMain.goSugerido();
             }
 

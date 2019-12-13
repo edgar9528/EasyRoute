@@ -51,9 +51,7 @@ public class PresentacionFragment extends Fragment {
 
         layoutInflater = inflater;
         vista=view;
-
         fragmentMain = (MainsugeridoFragment) getParentFragment();
-
         tableLayout = view.findViewById(R.id.tableLayout);
 
 
@@ -74,22 +72,15 @@ public class PresentacionFragment extends Fragment {
         sugeridoVM.getFamilia().observe(getParentFragment(), new Observer< String >() {
             @Override
             public void onChanged(String familia) {
-                obtenerPresentaciones(familia);
-            }
-        });
-
-        /*sugeridoVM.getLvPresentacion().observe(getParentFragment(), new Observer<ArrayList<String>>() {
-            @Override
-            public void onChanged(ArrayList<String> lv_presentacion) {
-                lvPresentacion = lv_presentacion;
+                familiaSelec=familia;
                 obtenerPresentaciones();
             }
-        });*/
+        });
 
     }
 
 
-    private void obtenerPresentaciones(String familia)
+    private void obtenerPresentaciones()
     {
         if(dtProd!=null)
         {
@@ -99,7 +90,7 @@ public class PresentacionFragment extends Fragment {
 
             for (int i = 0; i < dtProd.size(); i++)
             {
-                if (familia.equals(dtProd.get(i).getFam_desc_str()))
+                if (familiaSelec.equals(dtProd.get(i).getFam_desc_str()))
                 {
                     presentacion = dtProd.get(i).getPres_desc_str();
 
@@ -122,27 +113,6 @@ public class PresentacionFragment extends Fragment {
     }
 
 
-    /*
-    private void obtenerPresentaciones()
-    {
-        if(lvPresentacion!=null)
-        {
-            tableLayout.removeAllViews();
-
-            TableRow tr;
-            for(int i=0; i< lvPresentacion.size();i++)
-            {
-                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido1, null);
-                ((TextView) tr.findViewById(R.id.t_titulo)).setText( lvPresentacion.get(i) );
-                tr.setTag(lvPresentacion.get(i));
-                tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
-                tableLayout.addView(tr);
-            }
-        }
-    }
-
-     */
-
     //evento del clic a la fila
     private View.OnClickListener tableListener = new View.OnClickListener() {
         @Override
@@ -160,8 +130,8 @@ public class PresentacionFragment extends Fragment {
             //pinta de azul la fila y actualiza la cve de la fila seccionada
             tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
 
-            //obtenerPresentaciones(presentacion);
-
+            sugeridoVM.setPresentacion(presentacion);
+            fragmentMain.goProducto();
         }
     };
 

@@ -1642,6 +1642,58 @@ public class DataTableLC {
         }
     }
 
+    public static class ProductosTable
+    {
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_desc_str;
+        private String id_envase_n;
+        private String prod_sug_n;
+
+        public ProductosTable() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_desc_str() {
+            return prod_desc_str;
+        }
+
+        public void setProd_desc_str(String prod_desc_str) {
+            this.prod_desc_str = prod_desc_str;
+        }
+
+        public String getId_envase_n() {
+            return id_envase_n;
+        }
+
+        public void setId_envase_n(String id_envase_n) {
+            this.id_envase_n = id_envase_n;
+        }
+
+        public String getProd_sug_n() {
+            return prod_sug_n;
+        }
+
+        public void setProd_sug_n(String prod_sug_n) {
+            this.prod_sug_n = prod_sug_n;
+        }
+    }
+
     public static class SugPreventa
     {
         String prod_cve_n;

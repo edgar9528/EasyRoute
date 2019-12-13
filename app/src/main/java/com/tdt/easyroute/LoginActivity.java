@@ -620,4 +620,5 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         }
 
     }
+
 }

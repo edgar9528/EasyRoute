@@ -18,6 +18,10 @@
             android:layout_height="match_parent"
             android:layout_weight ="70"
             android:orientation="vertical"
+
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+
             >
 
             <LinearLayout
@@ -31,7 +35,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="2"
                     android:theme="@style/EditTextBlack">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_sku"
@@ -58,6 +62,17 @@
 
                 <Button
                     android:id="@+id/button_buscar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="o"
+                    android:textAlignment="center"
+                    android:theme="@style/ButtonDarkSmall"
+                    android:layout_gravity="center"
+                    />
+
+                <Button
+                    android:id="@+id/button_borrar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

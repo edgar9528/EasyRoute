@@ -13,8 +13,20 @@ public class SugeridoVM extends ViewModel {
 
     private final MutableLiveData< ArrayList<DataTableLC.Productos_Sug> > dtProd = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<String>  > lvPresentacion = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.Sugerido> > dgSugerido = new MutableLiveData<>();
+
     private MutableLiveData<String> familia = new MutableLiveData<>();
     private MutableLiveData<String> presentacion = new MutableLiveData<>();
+    private MutableLiveData<String> productoSKU = new MutableLiveData<>();
+
+
+    public void setProductoSKU(String productoSKU) {
+        this.productoSKU.setValue(productoSKU);
+    }
+
+    public LiveData<String> getProductoSKU() {
+        return productoSKU;
+    }
 
     public void setFamilia(String familia) {
         this.familia.setValue(familia);
@@ -40,7 +52,6 @@ public class SugeridoVM extends ViewModel {
         this.lvPresentacion.setValue(lvPresentacion);
     }
 
-
     public LiveData<ArrayList<DataTableLC.Productos_Sug>> getDtProd(){
         return dtProd;
     }
@@ -49,6 +60,12 @@ public class SugeridoVM extends ViewModel {
         this.dtProd.setValue(dtProd);
     }
 
+    public LiveData<ArrayList<DataTableLC.Sugerido>> getDgSugerido(){
+        return dgSugerido;
+    }
 
+    public void setDgSugerido(ArrayList<DataTableLC.Sugerido> dgSugerido){
+        this.dgSugerido.setValue(dgSugerido);
+    }
 
 }
