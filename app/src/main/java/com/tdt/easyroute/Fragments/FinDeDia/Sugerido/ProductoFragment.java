@@ -14,9 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
@@ -29,6 +32,10 @@ public class ProductoFragment extends Fragment {
     ArrayList<DataTableLC.Productos_Sug> dtProd;
     ArrayList<DataTableLC.ProductosTable> lvProductos=null;
     String familiaSelec, presenSelec;
+
+    String[] strBuscar =  new String[2];
+    EditText et_sku,et_cant;
+    Button b_buscar,b_borrar;
 
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
@@ -52,8 +59,43 @@ public class ProductoFragment extends Fragment {
         vista=view;
 
         fragmentMain = (MainsugeridoFragment) getParentFragment();
-
         tableLayout = view.findViewById(R.id.tableLayout);
+
+
+        et_sku = view.findViewById(R.id.et_sku);
+        et_cant = view.findViewById(R.id.et_cant);
+        b_buscar = view.findViewById(R.id.button_buscar);
+        b_borrar = view.findViewById(R.id.button_borrar);
+
+        b_buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String sku = et_sku.getText().toString();
+                String can= et_cant.getText().toString();
+
+                if(!sku.isEmpty())
+                {
+                    strBuscar[0] = sku;
+                    strBuscar[1] = can;
+
+                    et_sku.setText("");
+                    et_cant.setText("");
+
+                    sugeridoVM.setStrBuscar( strBuscar );
+                }
+                else
+                    Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        b_borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sugeridoVM.setBorrar(true);
+            }
+        });
+
 
 
         return view;

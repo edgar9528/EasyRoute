@@ -12,13 +12,40 @@ import java.util.ArrayList;
 public class SugeridoVM extends ViewModel {
 
     private final MutableLiveData< ArrayList<DataTableLC.Productos_Sug> > dtProd = new MutableLiveData<>();
-    private final MutableLiveData< ArrayList<String>  > lvPresentacion = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.Sugerido> > dgSugerido = new MutableLiveData<>();
 
     private MutableLiveData<String> familia = new MutableLiveData<>();
     private MutableLiveData<String> presentacion = new MutableLiveData<>();
     private MutableLiveData<String> productoSKU = new MutableLiveData<>();
+    private MutableLiveData<String> opcion = new MutableLiveData<>();
 
+    private MutableLiveData<String[]> strBuscar = new MutableLiveData<>();
+    private MutableLiveData<Boolean> borrar = new MutableLiveData<>();
+
+    public void setOpcion(String opcion) {
+        this.opcion.setValue(opcion);
+    }
+
+    public LiveData<String> getOpcion() {
+        return opcion;
+    }
+
+    public void setBorrar(Boolean borrar) {
+        this.borrar.setValue(borrar);
+    }
+
+    public LiveData<Boolean> getBorrar() {
+        return borrar;
+    }
+
+
+    public void setStrBuscar(String[] strBuscar) {
+        this.strBuscar.setValue(strBuscar);
+    }
+
+    public LiveData<String[]> getStrBuscar() {
+        return strBuscar;
+    }
 
     public void setProductoSKU(String productoSKU) {
         this.productoSKU.setValue(productoSKU);
@@ -42,14 +69,6 @@ public class SugeridoVM extends ViewModel {
 
     public LiveData<String> getPresentacion() {
         return presentacion;
-    }
-
-    public LiveData<ArrayList<String>> getLvPresentacion(){
-        return lvPresentacion;
-    }
-
-    public void setLvPresentacion(ArrayList<String> lvPresentacion){
-        this.lvPresentacion.setValue(lvPresentacion);
     }
 
     public LiveData<ArrayList<DataTableLC.Productos_Sug>> getDtProd(){

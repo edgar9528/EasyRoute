@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/op_guardar"
+        app:showAsAction="never"
+        android:title="Guardar">
+    </item>
+
+    <item
+        android:id="@+id/op_enviar"
+        app:showAsAction="never"
+        android:title="Enviar">
+    </item>
+
+    <item
+        android:id="@+id/op_imprimir"
+        app:showAsAction="never"
+        android:title="Imprimir">
+    </item>
+
+    <item
+        android:id="@+id/op_salir"
+        app:showAsAction="never"
+        android:title="Salir">
+    </item>
+
+</menu>

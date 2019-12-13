@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if(mDrawerToggle.onOptionsItemSelected(item))
             return true;
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     public void regresarInicio()

@@ -11,8 +11,12 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -49,12 +53,23 @@ public class FamiliaFragment extends Fragment {
     Configuracion conf;
 
     String consulta,json;
+    String[] strBuscar =  new String[2];
+
+    EditText et_sku,et_cant;
+    Button b_buscar,b_borrar;
 
     SugeridoVM sugeridoVM;
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //inflater.inflate(R.menu.main_menu2, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setHasOptionsMenu(true);
         sugeridoVM = ViewModelProviders.of ( getParentFragment() ).get(SugeridoVM.class);
     }
 
@@ -67,12 +82,45 @@ public class FamiliaFragment extends Fragment {
         vista=view;
 
         conf = Utils.ObtenerConf(getActivity().getApplication());
-
         fragmentMain = (MainsugeridoFragment) getParentFragment();
+
+        et_sku = view.findViewById(R.id.et_sku);
+        et_cant = view.findViewById(R.id.et_cant);
+        b_buscar = view.findViewById(R.id.button_buscar);
+        b_borrar = view.findViewById(R.id.button_borrar);
 
         tableLayout = view.findViewById(R.id.tableLayout);
 
         dgSugerido = new ArrayList<>();
+
+        b_buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String sku = et_sku.getText().toString();
+                String can= et_cant.getText().toString();
+
+                if(!sku.isEmpty())
+                {
+                    strBuscar[0] = sku;
+                    strBuscar[1] = can;
+
+                    et_sku.setText("");
+                    et_cant.setText("");
+
+                    sugeridoVM.setStrBuscar( strBuscar );
+                }
+                else
+                    Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        b_borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sugeridoVM.setBorrar(true);
+            }
+        });
 
         cargarProductos();
         obtenerFamilias();
@@ -191,9 +239,9 @@ public class FamiliaFragment extends Fragment {
             {
 
                 int k=-1;
-                double o=0;
+                int o=0;
                 DataTableLC.Sugerido e=null;
-                for(int j=0; j<dgSugerido.size();i++)
+                for(int j=0; j<dgSugerido.size();j++)
                 {
                     if(dgSugerido.get(j).getProd_cve_n().equals(dtProd.get(i).getProd_cve_n()))
                     {
@@ -203,7 +251,7 @@ public class FamiliaFragment extends Fragment {
 
                     if(dgSugerido.get(j).getId_envase_n().equals(  dtProd.get(i).getProd_cve_n()  ))
                     {
-                        o = o + Double.parseDouble(  dgSugerido.get(j).getProd_sug_n()  );
+                        o = o + Integer.parseInt(  dgSugerido.get(j).getProd_sug_n()  );
                     }
 
                 }
@@ -215,12 +263,12 @@ public class FamiliaFragment extends Fragment {
                 else
                 {
                     DataTableLC.Sugerido ri = new DataTableLC.Sugerido();
-                        ri.setProd_cve_n( dtProd.get(i).getProd_cve_n() );
-                        ri.setProd_sku_str( dtProd.get(i).getProd_sku_str() );
-                        ri.setProd_desc_str( dtProd.get(i).getProd_desc_str()  );
-                        ri.setId_envase_n( dtProd.get(i).getId_envase_n() );
-                        ri.setProd_sug_n("0");
-                        ri.setCat_desc_str( dtProd.get(i).getCat_desc_str() );
+                    ri.setProd_cve_n( dtProd.get(i).getProd_cve_n() );
+                    ri.setProd_sku_str( dtProd.get(i).getProd_sku_str() );
+                    ri.setProd_desc_str( dtProd.get(i).getProd_desc_str()  );
+                    ri.setId_envase_n( dtProd.get(i).getId_envase_n() );
+                    ri.setProd_sug_n("0");
+                    ri.setCat_desc_str( dtProd.get(i).getCat_desc_str() );
                     dgSugerido.add(ri);
 
                     k = dgSugerido.size()-1;
@@ -240,14 +288,18 @@ public class FamiliaFragment extends Fragment {
             json = BaseLocal.Select("select * from sugerido", getContext());
             dts = ConvertirRespuesta.getSugeridoTableJson( json );
 
+            Log.d("salida", "entro aqui 1");
+
             if(dts!=null)
             {
+
                 for(int i=0; i<dts.size();i++)
                 {
-                    DataTableLC.SugeridoTable r = dts.get(i);
 
+                    DataTableLC.SugeridoTable r = dts.get(i);
                     DataTableLC.Productos_Sug i2 = null;
-                    for(int j=0; j<dtProd.size();i++)
+
+                    for(int j=0; j<dtProd.size();j++)
                     {
                         if(dtProd.get(j).getProd_cve_n().equals( r.getProd_cve_n() ) )
                         {
@@ -269,20 +321,20 @@ public class FamiliaFragment extends Fragment {
 
                         dgSugerido.add(ri);
 
-                        Log.d("salida","entro a agregar sugerido desde el principio");
-
                     }
                 }
+
 
                 calcularEnvase();
                 sugeridoVM.setDgSugerido( dgSugerido );
                 fragmentMain.goSugerido();
+                Log.d("salida","sugerido creado con exito");
             }
 
         }
         catch (Exception e)
         {
-            Log.d("salida","Error: "+e.getMessage());
+            Log.d("salida","Error cargar sugerido: "+e.getMessage());
             Toast.makeText(getContext(), "Error al cargar sugerido", Toast.LENGTH_SHORT).show();
         }
     }

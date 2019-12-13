@@ -1,12 +1,18 @@
 package com.tdt.easyroute.Fragments.FinDeDia.Sugerido;
 
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,13 +21,17 @@ import com.google.android.material.tabs.TabLayout;
 import com.tdt.easyroute.Adapter.PagerSugeridoAdapter;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.ViewModel.SugeridoVM;
 
 public class MainsugeridoFragment extends Fragment {
 
     private static Usuario user;
     ViewPager viewPager;
+
+    SugeridoVM sugeridoVM;
 
     public static MainsugeridoFragment newInstance(Usuario u) {
         MainsugeridoFragment fragment = new MainsugeridoFragment();
@@ -31,6 +41,18 @@ public class MainsugeridoFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu2, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        sugeridoVM = ViewModelProviders.of ( this ).get(SugeridoVM.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,8 +106,32 @@ public class MainsugeridoFragment extends Fragment {
             }
         }, 150);
 
+        sugeridoVM.setOpcion("Recibiendo información");
+
 
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.op_guardar:
+                sugeridoVM.setOpcion("guardar");
+                return true;
+            case R.id.op_enviar:
+                sugeridoVM.setOpcion("enviar");
+                return true;
+            case R.id.op_imprimir:
+                sugeridoVM.setOpcion("imprimir");
+                return true;
+            case R.id.op_salir:
+                sugeridoVM.setOpcion("salir");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     private void verificarInicio()
