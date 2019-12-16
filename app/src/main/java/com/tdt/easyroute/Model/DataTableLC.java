@@ -1752,5 +1752,75 @@ public class DataTableLC {
             this.prod_sug_n = prod_sug_n;
         }
     }
+
+    public static class ImprimirSugerido
+    {
+        String fam_orden_n;
+        String prod_orden_n;
+        String prod_sku_str;
+        String cat_desc_str;
+        String prod_desc_str;
+        String id_envase_n;
+        String prod_sug_n;
+
+        public ImprimirSugerido() {
+        }
+
+        public String getFam_orden_n() {
+            return fam_orden_n;
+        }
+
+        public void setFam_orden_n(String fam_orden_n) {
+            this.fam_orden_n = fam_orden_n;
+        }
+
+        public String getProd_orden_n() {
+            return prod_orden_n;
+        }
+
+        public void setProd_orden_n(String prod_orden_n) {
+            this.prod_orden_n = prod_orden_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getCat_desc_str() {
+            return cat_desc_str;
+        }
+
+        public void setCat_desc_str(String cat_desc_str) {
+            this.cat_desc_str = cat_desc_str;
+        }
+
+        public String getProd_desc_str() {
+            return prod_desc_str;
+        }
+
+        public void setProd_desc_str(String prod_desc_str) {
+            this.prod_desc_str = prod_desc_str;
+        }
+
+        public String getId_envase_n() {
+            return id_envase_n;
+        }
+
+        public void setId_envase_n(String id_envase_n) {
+            this.id_envase_n = id_envase_n;
+        }
+
+        public String getProd_sug_n() {
+            return prod_sug_n;
+        }
+
+        public void setProd_sug_n(String prod_sug_n) {
+            this.prod_sug_n = prod_sug_n;
+        }
+    }
     
 }

@@ -44,7 +44,6 @@ public class FamiliaFragment extends Fragment {
     ArrayList<DataTableLC.Sugerido> dgSugerido=null;
     ArrayList<String> lvFamilias=null;
 
-
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
     View vista;
@@ -286,14 +285,10 @@ public class FamiliaFragment extends Fragment {
             json = BaseLocal.Select("select * from sugerido", getContext());
             dts = ConvertirRespuesta.getSugeridoTableJson( json );
 
-            Log.d("salida", "entro aqui 1");
-
             if(dts!=null)
             {
-
                 for(int i=0; i<dts.size();i++)
                 {
-
                     DataTableLC.SugeridoTable r = dts.get(i);
                     DataTableLC.Productos_Sug i2 = null;
 
@@ -318,10 +313,8 @@ public class FamiliaFragment extends Fragment {
                         ri.setCat_desc_str( i2.getCat_desc_str() );
 
                         dgSugerido.add(ri);
-
                     }
                 }
-
 
                 calcularEnvase();
                 sugeridoVM.setDgSugerido( dgSugerido );
@@ -345,7 +338,7 @@ public class FamiliaFragment extends Fragment {
             TableRow tr = ((TableRow) view);
             String familia = (String) tr.getTag(); //se obtiene la fila y tag de la seleccion
 
-            //si no coincide, pinta todas de blanca
+            //si no coincide, pinta todas de blanco
             for(int i=0; i<lvFamilias.size();i++)
             {
                 TableRow row = (TableRow)vista.findViewWithTag(lvFamilias.get(i));
@@ -357,7 +350,6 @@ public class FamiliaFragment extends Fragment {
 
             sugeridoVM.setFamilia(familia);
             fragmentMain.goPresentacion();
-
         }
     };
 

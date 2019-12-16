@@ -43,6 +43,7 @@ import com.tdt.easyroute.ViewModel.SugeridoVM;
 import org.ksoap2.serialization.PropertyInfo;
 import org.slf4j.Logger;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
 
 public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
@@ -191,11 +192,11 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
     private void imprimir()
     {
         String mensajeImp = "\n";
+        ArrayList<DataTableWS.Ruta> dtRutas = null;
+        long cerv = 0, env = 0;
 
         try {
-            ArrayList<DataTableWS.Ruta> dtRutas = null;
 
-            long cerv = 0, env = 0;
             String rutaCve = String.valueOf(conf.getRuta());
             String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}", rutaCve), getContext());
 
@@ -266,6 +267,16 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         }
 
 
+        if (conf.getPreventa() == 1 && dtRutas!=null)
+        {
+            for(int i=0; i <dtRutas.size();i++)
+            {
+                Toast.makeText(getContext(), "Ticket impreso", Toast.LENGTH_SHORT).show();
+                imprimirRuta( dtRutas.get(i).getRut_cve_n() );
+            }
+        }
+
+
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
         dialogo1.setTitle("¿Imprimir sugerido?");
         dialogo1.setMessage(mensajeImp);
@@ -283,6 +294,90 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         dialogo1.show();
 
 
+    }
+
+    private void imprimirRuta(String ruta)
+    {
+        try
+        {
+            ArrayList<DataTableLC.ImprimirSugerido> dtVenta = null;
+
+            String menImp="";
+            String rut_des = BaseLocal.SelectDato( string.formatSql("Select rut_desc_str from rutas where rut_cve_n={0}", ruta),getContext() );
+
+            menImp+= "REPARTO: "+rut_des+"\n";
+
+            menImp += string.formatSql("ASESOR: {0} {1} {2}\r\n", user.getNombre(), user.getAppat(), user.getApmat());
+
+
+            String con= string.formatSql("select f.fam_orden_n,p.prod_orden_n,p.prod_sku_str,cat.cat_desc_str,p.prod_desc_str,p.id_envase_n," +
+                    "sum(pd.prod_cant_n) prod_sug_n from preventa pre inner join preventadet pd " +
+                    "on pre.prev_folio_str=pd.prev_folio_str inner join productos p " +
+                    "on pd.prod_cve_n=p.prod_cve_n inner join clientes c " +
+                    "on pre.cli_cve_n=c.cli_cve_n inner join categorias cat " +
+                    "on p.cat_cve_n =cat.cat_cve_n inner join familias f " +
+                    "on p.fam_cve_n=f.fam_cve_n where c.rut_cve_n={0} " +
+                    "group by f.fam_orden_n,p.prod_orden_n,p.prod_sku_str,p.prod_desc_str,p.id_envase_n,cat.cat_desc_str", ruta);
+
+            String json = BaseLocal.Select(con,getContext());
+
+            dtVenta = ConvertirRespuesta.getImprimirSugeridoJson(json);
+
+            menImp += "FECHA IMPRESION: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+
+            menImp += "S U G E R I D O \n\n";
+
+            menImp += string.formatSql("{0} {1} {2} \n", "  SKU  ", "      PRODUCTO      ", "CANT.");
+
+
+            long cerv=0;
+
+            if(dtVenta!=null)
+            {
+                DataTableLC.ImprimirSugerido r;
+                String des;
+                for(int i=0; i<dtVenta.size();i++)
+                {
+                    r = dtVenta.get(i);
+
+                    des = r.getProd_desc_str();
+                    if (des.length() > 20)
+                        des = des.substring(0, 20);
+
+                    if(!r.getCat_desc_str().equals("ENVASE"))
+                        cerv+= Long.parseLong( r.getProd_sug_n() );
+
+                    menImp += string.formatSql("{0} {1} {2} \n", r.getProd_sku_str(),des, r.getProd_sug_n());
+
+                }
+
+            }
+
+            menImp += "\nTOTAL CERVEZA: " + cerv + "\n";
+
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+            dialogo1.setTitle("¿Imprimir sugerido ruta?");
+            dialogo1.setMessage(menImp);
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+
+                }
+            });
+            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    //cancelar();
+                }
+            });
+            dialogo1.show();
+
+
+        }
+        catch (Exception e)
+        {
+            Log.d("salida", "Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error al imprimir sugerido ruta", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void peticionEnviar()

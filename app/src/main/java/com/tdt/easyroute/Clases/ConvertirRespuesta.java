@@ -1374,6 +1374,21 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.ImprimirSugerido> getImprimirSugeridoJson(String respuesta)
+    {
+        ArrayList<DataTableLC.ImprimirSugerido> al =null;
+        try {
 
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.ImprimirSugerido> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
 
 }
