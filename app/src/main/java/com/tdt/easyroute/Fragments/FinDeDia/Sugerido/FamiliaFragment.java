@@ -125,12 +125,10 @@ public class FamiliaFragment extends Fragment {
         cargarProductos();
         obtenerFamilias();
 
-        if(conf.getPreventa()==1)
-        {
+        if(conf.getPreventa()==1) {
             creaSugeridoPrev();
         }
-        else
-        {
+        else {
             recuperarSugerido();
         }
 

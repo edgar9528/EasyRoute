@@ -206,7 +206,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                 dt_rutaTipo = ConvertirRespuesta.getRutaTipoJson(json).get(0);
 
                 tipoRuta = dt_rutaTipo.getTrut_desc_str();
-                tiporuta_cve = dt_rutaTipo.getRut_cve_n();
+                tiporuta_cve = dt_rutaTipo.getTrut_cve_n();
 
                 et_ruta.setText(dt_rutaTipo.getRut_desc_str());
                 et_tRuta.setText(tipoRuta);
@@ -275,7 +275,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
         ruta_cve= lista_rutas.get(i).getRut_cve_n();
         tipoRuta = lista_rutas.get(i).getTrut_desc_str();
-        tiporuta_cve = lista_rutas.get(i).getRut_cve_n();
+        tiporuta_cve = lista_rutas.get(i).getTrut_cve_n();
 
         startdayVM.setTipoRuta(tipoRuta);
         startdayVM.setRuta(ruta_cve);
@@ -508,7 +508,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
         BaseLocal.Insert("update ConfiguracionHH set est_cve_str='I'",getContext());
 
-        String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta_cve,empresa_cve,campos[3],campos[6],campos[7],tiporuta_cve);
+        String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta_cve,empresa_cve,campos[3],campos[6],campos[7], String.valueOf( Integer.parseInt( tiporuta_cve )-1 )  );
         BaseLocal.Insert(consulta,getContext());
 
         BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta_cve,posicion),getContext());

@@ -150,6 +150,7 @@ public class MainsugeridoFragment extends Fragment {
         {
             Toast.makeText(getContext(), "Asegurese de haber transmitido su información antes de enviar el sugerido de su reparto.", Toast.LENGTH_LONG).show();
         }
+
     }
 
     public Usuario getUserMainSugerido()

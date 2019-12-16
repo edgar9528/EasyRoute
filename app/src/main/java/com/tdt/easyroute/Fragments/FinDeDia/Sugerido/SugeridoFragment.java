@@ -1,6 +1,7 @@
 package com.tdt.easyroute.Fragments.FinDeDia.Sugerido;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -23,18 +25,27 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tdt.easyroute.Clases.BaseLocal;
+import com.tdt.easyroute.Clases.ConexionWS_JSON;
+import com.tdt.easyroute.Clases.Configuracion;
+import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.Interface.AsyncResponseJSON;
 import com.tdt.easyroute.Model.DataTableLC;
+import com.tdt.easyroute.Model.DataTableWS;
+import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.SugeridoVM;
 
+import org.ksoap2.serialization.PropertyInfo;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
 
-public class SugeridoFragment extends Fragment {
+public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
 
     ArrayList<DataTableLC.Productos_Sug> dtProd=null;
     ArrayList<DataTableLC.Sugerido> dgSugerido=null;
@@ -43,6 +54,8 @@ public class SugeridoFragment extends Fragment {
     EditText et_sku,et_cant;
     int sugeridoIndice=-1;
     String sugeridoSelec="",nombreBase;
+    Configuracion conf;
+    Usuario user;
 
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
@@ -63,12 +76,16 @@ public class SugeridoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_familia, container, false);
 
+        fragmentMain = (MainsugeridoFragment) getParentFragment();
+
         nombreBase = getContext().getString( R.string.nombreBD );
         dgSugerido = new ArrayList<>();
 
+        conf = Utils.ObtenerConf(getActivity().getApplication());
+        user = fragmentMain.getUserMainSugerido();
+
         layoutInflater = inflater;
         vista=view;
-        fragmentMain = (MainsugeridoFragment) getParentFragment();
         tableLayout = view.findViewById(R.id.tableLayout);
 
         b_buscar = view.findViewById(R.id.button_buscar);
@@ -157,10 +174,10 @@ public class SugeridoFragment extends Fragment {
                         guardar();
                         break;
                     case "enviar":
-                        Log.d("salida","sugerido enviar");
+                        peticionEnviar();
                         break;
                     case "imprimir":
-                        Log.d("salida","sugerido imprimir");
+                        imprimir();
                         break;
                     case "salir":
                         Utils.RegresarInicio(getActivity());
@@ -168,6 +185,154 @@ public class SugeridoFragment extends Fragment {
                 }
             }
         });
+
+    }
+
+    private void imprimir()
+    {
+        String mensajeImp = "\n";
+
+        try {
+            ArrayList<DataTableWS.Ruta> dtRutas = null;
+
+            long cerv = 0, env = 0;
+            String rutaCve = String.valueOf(conf.getRuta());
+            String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}", rutaCve), getContext());
+
+            String json = BaseLocal.SelectDato(string.formatSql("select rut_cve_n from rutas where rut_prev_n={0}", String.valueOf(conf.getRuta())), getContext());
+            dtRutas = ConvertirRespuesta.getRutasJson(json);
+
+            if (dtRutas != null && dtRutas.size() == 0) dtRutas = null;
+
+            if (rutaDes != null)
+                mensajeImp += "Ruta: " + rutaDes + "\n";
+            else
+                mensajeImp += "Ruta: \n";
+
+            mensajeImp += string.formatSql("ASESOR: {0} {1} {2}\r\n", user.getNombre(), user.getAppat(), user.getApmat());
+
+            mensajeImp += "FECHA IMPRESION: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+
+            mensajeImp += "S U G E R I D O \n\n";
+
+            mensajeImp += string.formatSql("{0} {1} {2} \n", "  SKU  ", "      PRODUCTO      ", "CANT.");
+
+            DataTableLC.Sugerido r;
+            String des;
+            for (int i = 0; i < dgSugerido.size(); i++) {
+                r = dgSugerido.get(i);
+
+                if (Double.parseDouble(r.getProd_sug_n()) > 0 && !r.getCat_desc_str().equals("ENVASE")) {
+                    cerv += Long.parseLong(r.getProd_sug_n());
+                    des = r.getProd_desc_str();
+                    if (des.length() > 20)
+                        des = des.substring(0, 20);
+
+                    mensajeImp += string.formatSql("{0}   {1}      {2}\n", r.getProd_sku_str(), des, r.getProd_sug_n());
+                }
+            }
+
+            mensajeImp += "E N V A S E\n";
+
+            mensajeImp += string.formatSql("{0} {1} {2} {3}\n", "  SKU  ", "   ENVASE   ", "LLENO", "VACIO");
+
+
+            for (int i = 0; i < dgSugerido.size(); i++) {
+                r = dgSugerido.get(i);
+
+                if (r.getCat_desc_str().equals("ENVASE")) {
+                    env += Long.parseLong(r.getProd_sug_n());
+                    Double s = 0.0;
+                    for (int j = 0; j < dgSugerido.size(); j++) {
+                        if (dgSugerido.get(j).getId_envase_n().equals(r.getProd_cve_n()))
+                            s = s + Double.parseDouble(dgSugerido.get(j).getProd_sug_n());
+                    }
+
+                    des = r.getProd_desc_str();
+                    if (des.length() > 20)
+                        des = des.substring(0, 20);
+
+                    mensajeImp += string.formatSql("{0}  {1}  {2}  {3}\n", r.getProd_sku_str(), des, String.valueOf(s), "0");
+                }
+            }
+
+            mensajeImp += "\nTOTAL CERVEZA: " + cerv + "\n";
+            mensajeImp += "TOTAL ENVASE: " + env + "\n\n";
+
+        }catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error al imprimir: "+e.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+        dialogo1.setTitle("¿Imprimir sugerido?");
+        dialogo1.setMessage(mensajeImp);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+
+            }
+        });
+        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                //cancelar();
+            }
+        });
+        dialogo1.show();
+
+
+    }
+
+    private void peticionEnviar()
+    {
+
+        try
+        {
+            //guardar();
+
+            String json = BaseLocal.Select("Select * from sugerido",getContext());
+
+            ArrayList<DataTableLC.SugeridoTable> sug = ConvertirRespuesta.getSugeridoTableJson(json);
+
+            if(sug!=null)
+            {
+                ArrayList< PropertyInfo > propertyInfos = new ArrayList<>();
+
+                PropertyInfo pi1 = new PropertyInfo();
+                pi1.setName("dt");
+                pi1.setValue( json );
+                propertyInfos.add(pi1);
+
+                PropertyInfo pi2 = new PropertyInfo();
+                pi2.setName("ruta");
+                pi2.setValue(conf.getRuta());
+                propertyInfos.add(pi2);
+
+                PropertyInfo pi3 = new PropertyInfo();
+                pi3.setName("usu");
+                pi3.setValue(user.getUsuario().toUpperCase());
+                propertyInfos.add(pi3);
+
+                ConexionWS_JSON cws = new ConexionWS_JSON(getContext(),"RecibirSugeridoJ");
+                cws.propertyInfos = propertyInfos;
+                cws.delegate= SugeridoFragment.this;
+                cws.execute();
+
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Sugerido se encuentra vacio", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
 
     }
 
@@ -461,4 +626,45 @@ public class SugeridoFragment extends Fragment {
         }
     };
 
+    @Override
+    public void recibirPeticion(boolean estado, String respuesta)
+    {
+        if(estado)
+        {
+            if (respuesta != null) {
+                //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
+                DataTableWS.RetValInicioDia ret = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+
+                if(ret.getRet().equals("true"))
+                {
+                    if (conf.getPreventa() == 1)
+                    {
+                        BaseLocal.Insert( Querys.ConfiguracionHH.DesactivarPedidos, getContext()  );
+                    }
+                    Toast.makeText(getContext(), "Datos enviados con exito. " + ret.getMsj(), Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    if (conf.getPreventa() == 1 && !conf.isDescarga())
+                    {
+                        if (ret.getMsj().contains("Ya existe una descarga previa de preventa"))
+                        {
+                            BaseLocal.Insert( Querys.ConfiguracionHH.DesactivarPedidos , getContext());
+                        }
+                    }
+                    Toast.makeText(getContext(), "Error al enviar el sugerido al servidor: " + ret.getMsj(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Error al enviar sugerido", Toast.LENGTH_LONG).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+        }
+
+    }
 }
