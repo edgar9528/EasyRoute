@@ -46,6 +46,7 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.Model.Usuario;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private Map<String,List<String>> lstChild;
     private NavigationManager navigationManager;
     private int ultimoGrupo=-1;
+
+    private boolean bloquear=false;
 
 
     List<String> menuMostrar;
@@ -107,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         try {
             Log.d("salida","ENTRO MAIN ACTIVITY");
@@ -156,6 +158,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
+    public void actualizarMenu()
+    {
+        bloquear = true;
+    }
 
     //CONFIGURACION DEL MENU
 
@@ -211,20 +217,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                String selectedItem = ( (List) (lstChild.get(lstTitle.get(groupPosition))) )
+                String selectedItem = ((List) (lstChild.get(lstTitle.get(groupPosition))))
                         .get(childPosition).toString();
 
-                String clave= lstTitle.get(groupPosition)  +" | "+selectedItem;
+                String clave = lstTitle.get(groupPosition) + " | " + selectedItem;
                 Log.d("Salida", clave);
 
                 getSupportActionBar().setTitle(clave);
 
-                navigationManager.showFragment(clave);
+                if(!bloquear) {
+                    navigationManager.showFragment(clave);
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "Opción deshabilitada", Toast.LENGTH_SHORT).show();
+                }
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
 
-                ultimoGrupo=-1;
+                ultimoGrupo = -1;
                 expandableListView.collapseGroup(groupPosition);
+
 
                 return false;
             }

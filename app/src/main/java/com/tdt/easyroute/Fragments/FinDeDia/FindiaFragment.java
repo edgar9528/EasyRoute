@@ -1,23 +1,55 @@
 package com.tdt.easyroute.Fragments.FinDeDia;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tdt.easyroute.Clases.BaseLocal;
+import com.tdt.easyroute.Clases.ConexionWS_JSON;
+import com.tdt.easyroute.Clases.Configuracion;
+import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Querys;
+import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.MainActivity;
+import com.tdt.easyroute.Model.DataTableLC;
+import com.tdt.easyroute.Model.DataTableWS;
+import com.tdt.easyroute.Model.Permisos;
+import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
-public class FindiaFragment extends Fragment {
+import org.ksoap2.serialization.PropertyInfo;
+import org.slf4j.Logger;
+
+import java.util.ArrayList;
+
+public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
     private static int opcion;
 
     TextView tv_opcion;
+    String nombreBase;
+    String peticion="";
+
+    MainActivity mainActivity;
+    Configuracion conf;
+    Usuario user;
 
     public static FindiaFragment newInstance(int op) {
         FindiaFragment fragment = new FindiaFragment();
@@ -32,12 +64,30 @@ public class FindiaFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_findia, container, false);
 
+        mainActivity = (MainActivity) getActivity();
+        user = mainActivity.getUsuario();
+        conf = Utils.ObtenerConf(getActivity().getApplication());
+        nombreBase = getActivity().getString( R.string.nombreBD );
+
         //transmitir 0
         //borrar datos 1
         //fin de ventas 2
 
         tv_opcion = view.findViewById(R.id.tv_opcion);
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                verificarOpcion();
+            }
+        }, 150);
+
+        return view;
+    }
+
+    private void verificarOpcion()
+    {
         switch (opcion)
         {
             case 0:
@@ -48,9 +98,11 @@ public class FindiaFragment extends Fragment {
                 break;
             case 2:
                 finVentas();
+                break;
+            default:
+                Utils.RegresarInicio(getActivity());
+                break;
         }
-
-        return view;
     }
 
     private void transmitir()
@@ -61,12 +113,251 @@ public class FindiaFragment extends Fragment {
     private void borrarDatos()
     {
         tv_opcion.setText("Borrar datos");
+
+        Permisos p = null;
+        Usuario AuxU = null;
+
+        try
+        {
+            if(user.getPermisos() !=null)
+            {
+                for(int i=0; i<user.getPermisos().size();i++)
+                {
+                    if( user.getPermisos().get(i).getMod_desc_str().equals("CONFIGURACION") && user.getPermisos().get(i).getEliminacion()>0)
+                    {
+                        p=user.getPermisos().get(i);
+                    }
+                }
+
+                if(p!=null)
+                {
+                    AuxU=user;
+                }
+            }
+
+            if(AuxU!=null)
+            {
+
+            }
+
+        }catch (Exception e)
+        {
+
+        }
+
     }
 
     private void finVentas()
     {
         tv_opcion.setText("Fin de ventas");
+
+
+        if ((!conf.isDescarga()) && conf.getPreventa()!=1)
+        {
+
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+            dialogo1.setTitle("No ha realizado la descarga.");
+            dialogo1.setMessage("¿Desea finalizar el día?");
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+
+
+                        AlertDialog.Builder dialogo2 = new AlertDialog.Builder(getContext());
+                        dialogo2.setTitle("Al realizar esta acción no podra realizar ninguna venta, cobranza o movimiento alguno.");
+                        dialogo2.setMessage("¿Esta seguro de cerrar la venta?");
+                        dialogo2.setCancelable(false);
+                        dialogo2.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogo1, int id) {
+                                obtenerUbicacion();
+                            }
+                        });
+                        dialogo2.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogo1, int id) {
+                                Utils.RegresarInicio(getActivity());
+                            }
+                        });
+                        dialogo2.show();
+
+                }
+            });
+            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
+            dialogo1.show();
+
+        }
+        else
+        {
+            obtenerUbicacion();
+        }
     }
 
+    private void obtenerUbicacion()
+    {
+        try {
 
+            final MainActivity mainActivity = (MainActivity) getActivity();
+            final String[] ubi = new String[1];
+            final ProgressDialog progress = new ProgressDialog(getContext());
+            progress.setTitle("Actualizando");
+            progress.setMessage("Por favor espere");
+            progress.show();
+            progress.setCancelable(false);
+
+            mainActivity.enableLocationUpdates();
+
+            ubi[0] = mainActivity.getLatLon();
+            Log.d("salida", "Ubicacion anterior: " + ubi[0]);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress.cancel();
+                    mainActivity.disableLocationUpdates();
+                    ubi[0] = mainActivity.getLatLon();
+
+                    finalizarDia(ubi[0]);
+                }
+            }, 3000);
+
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("salida","Error: "+e.getMessage());
+            Utils.RegresarInicio(getActivity());
+        }
+    }
+
+    private void finalizarDia(String position)
+    {
+        DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        String con;
+        try
+        {
+            db.beginTransaction();
+            con = string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion,
+                    conf.getUsuario(), "CIERRE DE DIA", "CIERRE DE DIA", String.valueOf( conf.getRuta() ) , position);
+
+            db.execSQL( con );
+
+            con = "update configuracionHH set conf_fechafin_dt=datetime('now','localtime') where conf_fechafin_dt is null";
+
+            db.execSQL(con);
+
+            db.setTransactionSuccessful();
+
+            Toast.makeText(getContext(), "Cierre de día completo", Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error al cerrar día: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.RegresarInicio(getActivity());
+        }
+        finally
+        {
+            db.endTransaction();
+            db.close();
+        }
+
+        enviarBitacora();
+
+
+    }
+
+    private void enviarBitacora()
+    {
+        try
+        {
+            String ruta = Utils.LeefConfig("ruta",getContext());
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
+            String ds = BaseLocal.Select( "select * from BitacoraHH where trans_est_n=1", getContext() );
+
+            ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+
+            PropertyInfo pi1 = new PropertyInfo();
+            pi1.setName("ds");
+            pi1.setValue(ds);
+            propertyInfos.add(pi1);
+
+            PropertyInfo pi2 = new PropertyInfo();
+            pi2.setName("ruta");
+            pi2.setValue(ruta);
+            propertyInfos.add(pi2);
+
+            peticion="enviarBitacora";
+            ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "RecibirDatosBitacoraJ");
+            cws.delegate = FindiaFragment.this;
+            cws.propertyInfos = propertyInfos;
+            cws.execute();
+
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error al enviar bitacora", Toast.LENGTH_SHORT).show();
+            Utils.RegresarInicio(getActivity());
+        }
+    }
+
+    @Override
+    public void recibirPeticion(boolean estado, String respuesta) {
+
+        if(estado)
+        {
+            //recibio información
+            if (respuesta != null)
+            {
+                if(peticion.equals("enviarBitacora"))
+                {
+                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+
+                    if(retVal!=null)
+                    {
+                        if(retVal.getRet().equals("true"))
+                        {
+                            actualizarBitacora(true);
+                        }
+                        else
+                            actualizarBitacora(false);
+                    }
+                    else
+                    {
+                        actualizarBitacora(false);
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Error transmitir bitacora", Toast.LENGTH_LONG).show();
+                if(peticion.equals("enviarBitacora"))
+                    actualizarBitacora(false);
+            }
+        }
+        else
+        {
+            Toast.makeText(getContext(),"Error transmitir bitacora: "+ respuesta, Toast.LENGTH_SHORT).show();
+            if(peticion.equals("enviarBitacora"))
+                actualizarBitacora(false);
+        }
+    }
+
+    private void actualizarBitacora(boolean enviado)
+    {
+        if(enviado)
+        {
+            // Establecer Bitacora como enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        }
+        else
+        {
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
+        }
+
+        Utils.RegresarInicio(getActivity());
+    }
 }

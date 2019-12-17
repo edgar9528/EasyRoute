@@ -426,6 +426,91 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         conexionWSJ.execute();
     }
 
+
+    private void fechaIncorrecta()
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+        dialogo1.setTitle("Aviso");
+        dialogo1.setMessage("Para continuar debe configurar correctamente la fecha/hora del dispositivo");
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton("Configurar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                startActivity(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS));
+            }
+        });
+        dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+            }
+        });
+        dialogo1.show();
+
+    }
+
+    public void crearConfiguracion(String posicion)
+    {
+
+        BaseLocal.Insert(Querys.Inventario.DesactivaCarga,getContext());
+
+        BaseLocal.Insert("update ConfiguracionHH set est_cve_str='I'",getContext());
+
+        String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta_cve,empresa_cve,campos[3],campos[6],campos[7], String.valueOf( Integer.parseInt( tiporuta_cve )-1 )  );
+        BaseLocal.Insert(consulta,getContext());
+
+        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta_cve,posicion),getContext());
+
+        Log.d("salida","Configuracaion HH creada");
+
+        Utils.ActualizaConf("ruta",ruta_cve,getContext());
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.inicializar();
+
+        Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_SHORT).show();
+
+        enviarBitacora();
+
+    }
+
+    private void enviarBitacora()
+    {
+        try
+        {
+            String ruta = Utils.LeefConfig("ruta",getContext());
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
+            String ds = BaseLocal.Select( "select * from BitacoraHH where trans_est_n=1", getContext() );
+
+            ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+
+            PropertyInfo pi1 = new PropertyInfo();
+            pi1.setName("ds");
+            pi1.setValue(ds);
+            propertyInfos.add(pi1);
+
+            PropertyInfo pi2 = new PropertyInfo();
+            pi2.setName("ruta");
+            pi2.setValue(ruta);
+            propertyInfos.add(pi2);
+
+            peticion="enviarBitacora";
+            ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "RecibirDatosBitacoraJ");
+            cws.delegate = GeneralesFragment.this;
+            cws.propertyInfos = propertyInfos;
+            cws.execute();
+
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error al enviar bitacora", Toast.LENGTH_SHORT).show();
+            Utils.RegresarInicio(getActivity());
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        handler.removeCallbacks(myRunnable);
+    }
+
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
 
@@ -469,66 +554,56 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                         Log.d("salida","retval nulo");
 
                 }
+                else
+                if(peticion.equals("enviarBitacora"))
+                {
+                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+
+                    if(retVal!=null)
+                    {
+                        if(retVal.getRet().equals("true"))
+                        {
+                            actualizarBitacora(true);
+                        }
+                        else
+                            actualizarBitacora(false);
+                    }
+                    else
+                    {
+                        actualizarBitacora(false);
+                    }
+                }
+
+
             }
             else
             {
+                if(peticion.equals("enviarBitacora"))
+                    actualizarBitacora(false);
                 Toast.makeText(getContext(), "No se encontro información", Toast.LENGTH_LONG).show();
             }
         }
         else
         {
+            if(peticion.equals("enviarBitacora"))
+                actualizarBitacora(false);
             Toast.makeText(getContext(), respuesta, Toast.LENGTH_SHORT).show();
         }
-
     }
 
-    private void fechaIncorrecta()
+    private void actualizarBitacora(boolean enviado)
     {
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-        dialogo1.setTitle("Aviso");
-        dialogo1.setMessage("Para continuar debe configurar correctamente la fecha/hora del dispositivo");
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Configurar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                startActivity(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS));
-            }
-        });
-        dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-            }
-        });
-        dialogo1.show();
-
-    }
-
-    public void crearConfiguracion(String posicion)
-    {
-
-        BaseLocal.Insert(Querys.Inventario.DesactivaCarga,getContext());
-
-        BaseLocal.Insert("update ConfiguracionHH set est_cve_str='I'",getContext());
-
-        String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta_cve,empresa_cve,campos[3],campos[6],campos[7], String.valueOf( Integer.parseInt( tiporuta_cve )-1 )  );
-        BaseLocal.Insert(consulta,getContext());
-
-        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta_cve,posicion),getContext());
-
-        Log.d("salida","Configuracaion HH creada");
-
-        Utils.ActualizaConf("ruta",ruta_cve,getContext());
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.inicializar();
-
-        Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_SHORT).show();
+        if(enviado)
+        {
+            // Establecer Bitacora como enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        }
+        else
+        {
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
+        }
 
         Utils.RegresarInicio(getActivity());
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        handler.removeCallbacks(myRunnable);
     }
 
 }
