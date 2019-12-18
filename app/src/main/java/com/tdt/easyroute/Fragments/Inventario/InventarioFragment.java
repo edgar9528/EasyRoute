@@ -328,7 +328,6 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                 @Override
                 public void run() {
                     Utils.RegresarInicio(getActivity());
-                    Log.d("salida","entro aqui");
                 }
             }, 300);
         }
@@ -369,14 +368,15 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
             }
 
-            db.execSQL( string.formatSql(Querys.Pagos.InsPago,
+            String con= string.formatSql2(Querys.Pagos.InsPago,
                     String.valueOf(conf.getId() ), folio, String.valueOf(subtotal) ,"0","0",
-                               "null","null","1",null,null,
-                                idCteEsp, String.valueOf(conf.getRuta()),conf.getUsuario(),"0",null,
-                                "0",coordenada) );
+                    "null","null","1",null,null,
+                    idCteEsp, String.valueOf(conf.getRuta()),conf.getUsuario(),"0",null,
+                    "0",coordenada);
 
+            db.execSQL( con );
 
-            String con = string.formatSql(Querys.Ventas.InsVentas2, folio,idCteEsp, String.valueOf(conf.getRuta()),"11","0",conf.getUsuario().toUpperCase(), coordenada,"","","VENTA AUTOMATICA AL DESCARGAR");
+            con = string.formatSql(Querys.Ventas.InsVentas2, folio,idCteEsp, String.valueOf(conf.getRuta()),"11","0",conf.getUsuario().toUpperCase(), coordenada,null,"0","VENTA AUTOMATICA AL DESCARGAR");
             db.execSQL(con);
 
             con = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,conf.getUsuario(), String.valueOf(conf.getRuta()),idCteEsp,"CON VENTA","VISITA CON VENTA",coordenada);
@@ -390,10 +390,13 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
             db.setTransactionSuccessful();
 
+            db.endTransaction();
+            db.close();
+
 
             Toast.makeText(getContext(), "Venta automática guardada con exito.", Toast.LENGTH_SHORT).show();
 
-            enviarCambios();
+            //enviarCambios();
 
             Utils.RegresarInicio(getActivity());
 
@@ -404,8 +407,11 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         }
         finally
         {
-            db.endTransaction();
-            db.close();
+            if(db.isOpen())
+            {
+                db.endTransaction();
+                db.close();
+            }
         }
 
     }
@@ -537,7 +543,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         {
             try
             {
-                enviarCambios();
+                //enviarCambios();
                 peticionDescarga();
 
             }catch (Exception e)

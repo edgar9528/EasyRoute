@@ -1544,7 +1544,7 @@ public class Querys {
 
                 public static String InsVentas2 = "insert into ventas (ven_folio_str,cli_cve_n,ven_fecha_dt," +
                         "rut_cve_n,lpre_cve_n,dir_cve_n,usu_cve_str,ven_coordenada_str,prev_folio_str,ven_pulest_n,ven_comentario_str)" +
-                        "values({0},{1},datetime('now','localtime'),{2},{3},{4},{5},{6},{7},{8},{9})";
+                        "values('{0}',{1},datetime('now','localtime'),{2},{3},{4},'{5}','{6}','{7}',{8},'{9}')";
 
                 public static String InsVentaDet = "insert into ventasdet (ven_folio_str,vdet_cve_n," +
                         "prod_cve_n,prod_sku_str,prod_envase_n,prod_cant_n,env_devueltos_n,lpre_base_n," +

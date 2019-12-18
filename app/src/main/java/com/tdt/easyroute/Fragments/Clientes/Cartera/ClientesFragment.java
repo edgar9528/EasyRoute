@@ -231,7 +231,7 @@ public class ClientesFragment extends Fragment {
                 TotCartera+=r.getSaldo();
             }
 
-            menImp+= "\nSaldo Total Ruta: "+ Utils.numFormat(TotCartera);
+            menImp+= "\nSaldo Total Ruta: $"+ Utils.numFormat(TotCartera);
 
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());

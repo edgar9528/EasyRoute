@@ -133,7 +133,11 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
             // Leer Bitacora
             String bitacoraHH = BaseLocal.Select ("select * from BitacoraHH where trans_est_n=1",getContext());
 
-            ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+            //ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+
+            ds = "[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+
+            Log.d("salida","json: "+ds);
 
             //----- Preventa ------
             if (conf.getPreventa() == 1)
@@ -147,9 +151,10 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                 ds+="|"+preventa+"|"+preventaDet+"|"+preventaEnv+"|"+preventaPagos+"|"+visitaPreventa;
             }
 
-            peticion="RecibirDatos";
 
-            Log.d("salida","json: "+ds);
+            Log.d("salida","ds: "+ds);
+
+            peticion="RecibirDatos";
 
             //parametros del metodo
             ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
@@ -459,6 +464,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
 
         Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_LONG).show();
+        Log.d("salida","servidor: "+men);
 
         Utils.RegresarInicio(getActivity());
 
@@ -477,6 +483,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         // Establecer Bitacora como no enviadas
         BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
         Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_LONG).show();
+        Log.d("salida","servidor: "+men);
 
         Utils.RegresarInicio(getActivity());
     }

@@ -513,7 +513,6 @@ public class Utils {
                 } else {
                     ip.setPorcentajeRealizado(0);
                     ip.setPorcentajeRealizadoVentas(0);
-
                 }
             }
 
