@@ -284,12 +284,14 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
                 db.execSQL(  string.formatSql("delete from inventario where rut_cve_n={0}", String.valueOf( conf.getRuta()) ) ) ;
             }
 
+            Log.d("salida","entro aqui");
+
             for(int i=0; i<al_recargasDet.size();i++)
             {
                 DataTableWS.RecargasDet in = al_recargasDet.get(i);
                 DataTableLC.Inventario k=null;
 
-                for(int j=0; j<al_inventario.size();i++)
+                for(int j=0; j<al_inventario.size();j++)
                 {
                     if(al_recargasDet.get(i).getProd_cve_n().equals( al_inventario.get(i).getProd_cve_n() ))
                     {
@@ -297,6 +299,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
                         break;
                     }
                 }
+
 
                 if(k!=null && recarga )
                 {
@@ -313,6 +316,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
                     db.execSQL( string.formatSql(Querys.Inventario.InsertMovimiento,String.valueOf( conf.getRuta() ), in.getProd_cve_n(), null, conf.getUsuario(), "0", "0",in.getProd_cant_n(),in.getProd_cant_n(),mensaje ) );
                     Log.d("salida", "Insertar inventario");
                 }
+
 
             }
 

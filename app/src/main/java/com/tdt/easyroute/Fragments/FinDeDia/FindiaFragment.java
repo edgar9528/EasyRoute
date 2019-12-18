@@ -43,7 +43,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
     private static int opcion;
 
-    TextView tv_opcion;
     String nombreBase;
     String peticion="";
 
@@ -73,8 +72,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         //borrar datos 1
         //fin de ventas 2
 
-        tv_opcion = view.findViewById(R.id.tv_opcion);
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -91,7 +88,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         switch (opcion)
         {
             case 0:
-                transmitir();
+                enviarCambios();
                 break;
             case 1:
                 borrarDatos();
@@ -105,15 +102,83 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    private void transmitir()
+
+    private void enviarCambios()
     {
-        tv_opcion.setText("Transmitir");
+        String ds;
+        try
+        {
+            // Establecer ventas a enviar
+            BaseLocal.Insert("update ventas set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Ventas
+            String ventas = BaseLocal.Select("select * from ventas where trans_est_n=1",getContext());
+            // Leer Detalle Ventas
+            String ventasDet = BaseLocal.Select("select * from ventasdet where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext() );
+            // Leer Venta Envase
+            String ventasEnv=BaseLocal.Select("select * from ventaenv where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext());
+            // Establecer Creditos a enviar
+            BaseLocal.Insert("update creditos set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Creditos
+            String creditos = BaseLocal.Select("select * from creditos where trans_est_n=1",getContext());
+            // Establecer Pagos a enviar
+            BaseLocal.Insert("update Pagos set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Pagos
+            String pagos = BaseLocal.Select("select * from Pagos where trans_est_n=1",getContext());
+            // Establecer Visitas a enviar
+            BaseLocal.Insert("update visitas set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Visitas
+            String visitas= BaseLocal.Select("select * from visitas where trans_est_n=1",getContext());
+            // Establecer Bitacora a enviar
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Bitacora
+            String bitacoraHH = BaseLocal.Select ("select * from BitacoraHH where trans_est_n=1",getContext());
+
+            ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+
+            //----- Preventa ------
+            if (conf.getPreventa() == 1)
+            {
+                String preventa= BaseLocal.Select("select * from preventa",getContext());
+                String preventaDet= BaseLocal.Select("select * from preventadet",getContext());
+                String preventaEnv= BaseLocal.Select("select * from preventaenv",getContext());
+                String preventaPagos= BaseLocal.Select("select * from preventapagos",getContext());
+                String visitaPreventa= BaseLocal.Select("select * from visitapreventa",getContext());
+
+                ds+="|"+preventa+"|"+preventaDet+"|"+preventaEnv+"|"+preventaPagos+"|"+visitaPreventa;
+            }
+
+            peticion="RecibirDatos";
+
+            Log.d("salida","json: "+ds);
+
+            //parametros del metodo
+            ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+            PropertyInfo piUser = new PropertyInfo();
+            piUser.setName("ds");
+            piUser.setValue(ds);
+            propertyInfos.add(piUser);
+
+            PropertyInfo piPass = new PropertyInfo();
+            piPass.setName("ruta");
+            piPass.setValue(conf.getRuta());
+            propertyInfos.add(piPass);
+
+            //conexion con el metodo
+            ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "RecibirDatos2J");
+            conexionWS.delegate = FindiaFragment.this;
+            conexionWS.propertyInfos = propertyInfos;
+            conexionWS.execute();
+
+
+        }catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.toString());
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void borrarDatos()
     {
-        tv_opcion.setText("Borrar datos");
-
         Permisos p = null;
         Usuario AuxU = null;
 
@@ -149,23 +214,20 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
     private void finVentas()
     {
-        tv_opcion.setText("Fin de ventas");
-
-
         if ((!conf.isDescarga()) && conf.getPreventa()!=1)
         {
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("No ha realizado la descarga.");
-            dialogo1.setMessage("¿Desea finalizar el día?");
+            dialogo1.setTitle("¿Desea finalizar el día?");
+            dialogo1.setMessage("No ha realizado la descarga.");
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
 
                         AlertDialog.Builder dialogo2 = new AlertDialog.Builder(getContext());
-                        dialogo2.setTitle("Al realizar esta acción no podra realizar ninguna venta, cobranza o movimiento alguno.");
-                        dialogo2.setMessage("¿Esta seguro de cerrar la venta?");
+                        dialogo2.setTitle("¿Esta seguro de cerrar la venta?");
+                        dialogo2.setMessage("Al realizar esta acción no podra realizar ninguna venta, cobranza o movimiento alguno.");
                         dialogo2.setCancelable(false);
                         dialogo2.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogo1, int id) {
@@ -330,19 +392,41 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                         actualizarBitacora(false);
                     }
                 }
+                else
+                if(peticion.equals("RecibirDatos"))
+                {
+                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+
+                    if(retVal!=null)
+                    {
+                        if(retVal.getRet().equals("true"))
+                            establecerEnviado(retVal.getMsj());
+                        else
+                            establecerNoEnviado(retVal.getMsj());
+                    }
+                    else
+                    {
+                        establecerNoEnviado("No se encontro información");
+                    }
+                }
             }
             else
             {
-                Toast.makeText(getContext(), "Error transmitir bitacora", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Error transmitir:", Toast.LENGTH_LONG).show();
                 if(peticion.equals("enviarBitacora"))
                     actualizarBitacora(false);
+                if(peticion.equals("RecibirDatos"))
+                    establecerNoEnviado("No se encontro información");
             }
         }
         else
         {
-            Toast.makeText(getContext(),"Error transmitir bitacora: "+ respuesta, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Error al transmitir: "+ respuesta, Toast.LENGTH_SHORT).show();
             if(peticion.equals("enviarBitacora"))
                 actualizarBitacora(false);
+
+            if(peticion.equals("RecibirDatos"))
+                establecerNoEnviado(respuesta);
         }
     }
 
@@ -357,6 +441,42 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         {
             BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
         }
+
+        Utils.RegresarInicio(getActivity());
+    }
+
+    private void establecerEnviado(String men)
+    {
+        // Establecer ventas como enviadas
+        BaseLocal.Insert("update ventas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        // Establecer Creditos como enviados
+        BaseLocal.Insert("update creditos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        // Establecer Pagos como enviados
+        BaseLocal.Insert("update Pagos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        // Establecer Visitas como enviadas
+        BaseLocal.Insert("update visitas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        // Establecer Bitacora como enviadas
+        BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+
+        Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_LONG).show();
+
+        Utils.RegresarInicio(getActivity());
+
+    }
+
+    private void establecerNoEnviado(String men)
+    {
+        // Establecer ventas como no enviadas
+        BaseLocal.Insert("update ventas set trans_est_n=0 where trans_est_n=1",getContext());
+        // Establecer Creditos como no enviados
+        BaseLocal.Insert("update creditos set trans_est_n=0 where trans_est_n=1",getContext());
+        // Establecer Pagos como no enviados
+        BaseLocal.Insert("update Pagos set trans_est_n=0 where trans_est_n=1",getContext());
+        // Establecer Visitas como no enviadas
+        BaseLocal.Insert("update visitas set trans_est_n=0 where trans_est_n=1",getContext());
+        // Establecer Bitacora como no enviadas
+        BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
+        Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_LONG).show();
 
         Utils.RegresarInicio(getActivity());
     }

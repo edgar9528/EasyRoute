@@ -369,8 +369,11 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
             }
 
-            db.execSQL( string.formatSql(Querys.Pagos.InsPago, String.valueOf(conf.getId() ), folio, String.valueOf(subtotal) ,"0","0",
-                                          "null","null","1","","",idCteEsp, String.valueOf(conf.getRuta()),conf.getUsuario(),"0","","0",coordenada) );
+            db.execSQL( string.formatSql(Querys.Pagos.InsPago,
+                    String.valueOf(conf.getId() ), folio, String.valueOf(subtotal) ,"0","0",
+                               "null","null","1",null,null,
+                                idCteEsp, String.valueOf(conf.getRuta()),conf.getUsuario(),"0",null,
+                                "0",coordenada) );
 
 
             String con = string.formatSql(Querys.Ventas.InsVentas2, folio,idCteEsp, String.valueOf(conf.getRuta()),"11","0",conf.getUsuario().toUpperCase(), coordenada,"","","VENTA AUTOMATICA AL DESCARGAR");
@@ -876,9 +879,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                     {
                         Toast.makeText(getContext(), "Error al descargar inventario", Toast.LENGTH_LONG).show();
                     }
-
                 }
-
             }
             else
             {
@@ -895,7 +896,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    public void establecerEnviado(String men)
+    private void establecerEnviado(String men)
     {
         // Establecer ventas como enviadas
         BaseLocal.Insert("update ventas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
@@ -911,7 +912,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_SHORT).show();
     }
 
-    public void establecerNoEnviado(String men)
+    private void establecerNoEnviado(String men)
     {
         // Establecer ventas como no enviadas
         BaseLocal.Insert("update ventas set trans_est_n=0 where trans_est_n=1",getContext());
