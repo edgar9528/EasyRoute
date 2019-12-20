@@ -142,11 +142,11 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
             //----- Preventa ------
             if (conf.getPreventa() == 1)
             {
-                String preventa= BaseLocal.Select("select * from preventa",getContext());
-                String preventaDet= BaseLocal.Select("select * from preventadet",getContext());
-                String preventaEnv= BaseLocal.Select("select * from preventaenv",getContext());
-                String preventaPagos= BaseLocal.Select("select * from preventapagos",getContext());
-                String visitaPreventa= BaseLocal.Select("select * from visitapreventa",getContext());
+                String preventa= BaseLocal.SelectUpload("select * from preventa",getContext());
+                String preventaDet= BaseLocal.SelectUpload("select * from preventadet",getContext());
+                String preventaEnv= BaseLocal.SelectUpload("select * from preventaenv",getContext());
+                String preventaPagos= BaseLocal.SelectUpload("select * from preventapagos",getContext());
+                String visitaPreventa= BaseLocal.SelectUpload("select * from visitapreventa",getContext());
 
                 ds+="|"+preventa+"|"+preventaDet+"|"+preventaEnv+"|"+preventaPagos+"|"+visitaPreventa;
             }
@@ -317,7 +317,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
             db.setTransactionSuccessful();
 
-            Toast.makeText(getContext(), "Cierre de día completo", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Cierre de día completo", Toast.LENGTH_LONG).show();
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
@@ -366,7 +366,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al enviar bitacora", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error al enviar bitacora", Toast.LENGTH_LONG).show();
             Utils.RegresarInicio(getActivity());
         }
     }

@@ -476,7 +476,9 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         {
             String ruta = Utils.LeefConfig("ruta",getContext());
             BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
-            String ds = BaseLocal.Select( "select * from BitacoraHH where trans_est_n=1", getContext() );
+            String bitacoraHH = BaseLocal.Select( "select * from BitacoraHH where trans_est_n=1", getContext() );
+
+            String ds = "[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+bitacoraHH;
 
             ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
 
@@ -491,7 +493,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             propertyInfos.add(pi2);
 
             peticion="enviarBitacora";
-            ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "RecibirDatosBitacoraJ");
+            ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "RecibirDatos2J");
             cws.delegate = GeneralesFragment.this;
             cws.propertyInfos = propertyInfos;
             cws.execute();
@@ -500,7 +502,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al enviar bitacora", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error al enviar bitacora", Toast.LENGTH_LONG).show();
             Utils.RegresarInicio(getActivity());
         }
     }

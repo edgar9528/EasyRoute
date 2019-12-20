@@ -65,6 +65,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     private ArrayList<DataTableLC.Inv> al_inv;
 
     String peticion,nombreBase;
+    boolean botonDescargar=false;
 
     ArrayList<DataTableLC.InvP> dtVta = new ArrayList<>();
     String folio; String idCteEsp = "";
@@ -396,7 +397,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
             Toast.makeText(getContext(), "Venta automática guardada con exito.", Toast.LENGTH_SHORT).show();
 
-            //enviarCambios();
+            enviarCambios();
 
             Utils.RegresarInicio(getActivity());
 
@@ -543,8 +544,9 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         {
             try
             {
-                //enviarCambios();
-                peticionDescarga();
+                botonDescargar=true;
+                enviarCambios();
+                //al terminar enviar cambios, se ejecuta peticionDescarga();
 
             }catch (Exception e)
             {
@@ -702,41 +704,47 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             // Establecer ventas a enviar
             BaseLocal.Insert("update ventas set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Ventas
-            String ventas = BaseLocal.Select("select * from ventas where trans_est_n=1",getContext());
+            String ventas = BaseLocal.SelectUpload("select * from ventas where trans_est_n=1",getContext());
             // Leer Detalle Ventas
-            String ventasDet = BaseLocal.Select("select * from ventasdet where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext() );
+            String ventasDet = BaseLocal.SelectUpload("select * from ventasdet where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext() );
             // Leer Venta Envase
-            String ventasEnv=BaseLocal.Select("select * from ventaenv where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext());
+            String ventasEnv=BaseLocal.SelectUpload("select * from ventaenv where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext());
             // Establecer Creditos a enviar
             BaseLocal.Insert("update creditos set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Creditos
-            String creditos = BaseLocal.Select("select * from creditos where trans_est_n=1",getContext());
+            String creditos = BaseLocal.SelectUpload("select * from creditos where trans_est_n=1",getContext());
             // Establecer Pagos a enviar
             BaseLocal.Insert("update Pagos set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Pagos
-            String pagos = BaseLocal.Select("select * from Pagos where trans_est_n=1",getContext());
+            String pagos = BaseLocal.SelectUpload("select * from Pagos where trans_est_n=1",getContext());
             // Establecer Visitas a enviar
             BaseLocal.Insert("update visitas set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Visitas
-            String visitas= BaseLocal.Select("select * from visitas where trans_est_n=1",getContext());
+            String visitas= BaseLocal.SelectUpload("select * from visitas where trans_est_n=1",getContext());
             // Establecer Bitacora a enviar
             BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Bitacora
-            String bitacoraHH = BaseLocal.Select ("select * from BitacoraHH where trans_est_n=1",getContext());
+            String bitacoraHH = BaseLocal.SelectUpload ("select * from BitacoraHH where trans_est_n=1",getContext());
+
+            //ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
 
             ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+
+            //ds = "[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
 
             //----- Preventa ------
             if (conf.getPreventa() == 1)
             {
-                String preventa= BaseLocal.Select("select * from preventa",getContext());
-                String preventaDet= BaseLocal.Select("select * from preventadet",getContext());
-                String preventaEnv= BaseLocal.Select("select * from preventaenv",getContext());
-                String preventaPagos= BaseLocal.Select("select * from preventapagos",getContext());
-                String visitaPreventa= BaseLocal.Select("select * from visitapreventa",getContext());
+                String preventa= BaseLocal.SelectUpload("select * from preventa",getContext());
+                String preventaDet= BaseLocal.SelectUpload("select * from preventadet",getContext());
+                String preventaEnv= BaseLocal.SelectUpload("select * from preventaenv",getContext());
+                String preventaPagos= BaseLocal.SelectUpload("select * from preventapagos",getContext());
+                String visitaPreventa= BaseLocal.SelectUpload("select * from visitapreventa",getContext());
 
                 ds+="|"+preventa+"|"+preventaDet+"|"+preventaEnv+"|"+preventaPagos+"|"+visitaPreventa;
             }
+
+            Log.d("salida","ds: "+ds);
 
             peticion="RecibirDatos";
 
@@ -862,6 +870,12 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                     {
                         establecerNoEnviado("No se encontro información");
                     }
+
+                    if(botonDescargar) {
+                        botonDescargar=false;
+                        peticionDescarga();
+                    }
+
                 }
                 else
                 if(peticion.equals("RecibirDescarga"))
