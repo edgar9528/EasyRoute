@@ -111,33 +111,33 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
             // Establecer ventas a enviar
             BaseLocal.Insert("update ventas set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Ventas
-            String ventas = BaseLocal.Select("select * from ventas where trans_est_n=1",getContext());
+            String ventas = BaseLocal.SelectUpload("select * from ventas where trans_est_n=1",getContext());
             // Leer Detalle Ventas
-            String ventasDet = BaseLocal.Select("select * from ventasdet where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext() );
+            String ventasDet = BaseLocal.SelectUpload("select * from ventasdet where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext() );
             // Leer Venta Envase
-            String ventasEnv=BaseLocal.Select("select * from ventaenv where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext());
+            String ventasEnv=BaseLocal.SelectUpload("select * from ventaenv where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext());
             // Establecer Creditos a enviar
             BaseLocal.Insert("update creditos set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Creditos
-            String creditos = BaseLocal.Select("select * from creditos where trans_est_n=1",getContext());
+            String creditos = BaseLocal.SelectUpload("select * from creditos where trans_est_n=1",getContext());
             // Establecer Pagos a enviar
             BaseLocal.Insert("update Pagos set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Pagos
-            String pagos = BaseLocal.Select("select * from Pagos where trans_est_n=1",getContext());
+            String pagos = BaseLocal.SelectUpload("select * from Pagos where trans_est_n=1",getContext());
             // Establecer Visitas a enviar
             BaseLocal.Insert("update visitas set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Visitas
-            String visitas= BaseLocal.Select("select * from visitas where trans_est_n=1",getContext());
+            String visitas= BaseLocal.SelectUpload("select * from visitas where trans_est_n=1",getContext());
             // Establecer Bitacora a enviar
             BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Bitacora
-            String bitacoraHH = BaseLocal.Select ("select * from BitacoraHH where trans_est_n=1",getContext());
+            String bitacoraHH = BaseLocal.SelectUpload ("select * from BitacoraHH where trans_est_n=1",getContext());
 
             //ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
 
-            ds = "[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+            ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
 
-            Log.d("salida","json: "+ds);
+            //ds = "[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
 
             //----- Preventa ------
             if (conf.getPreventa() == 1)
@@ -150,7 +150,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
                 ds+="|"+preventa+"|"+preventaDet+"|"+preventaEnv+"|"+preventaPagos+"|"+visitaPreventa;
             }
-
 
             Log.d("salida","ds: "+ds);
 
@@ -333,7 +332,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
         enviarBitacora();
 
-
     }
 
     private void enviarBitacora()
@@ -342,7 +340,9 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         {
             String ruta = Utils.LeefConfig("ruta",getContext());
             BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
-            String ds = BaseLocal.Select( "select * from BitacoraHH where trans_est_n=1", getContext() );
+            String bitacoraHH = BaseLocal.Select( "select * from BitacoraHH where trans_est_n=1", getContext() );
+
+            String ds = "[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+bitacoraHH;
 
             ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
 
@@ -357,7 +357,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
             propertyInfos.add(pi2);
 
             peticion="enviarBitacora";
-            ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "RecibirDatosBitacoraJ");
+            ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "RecibirDatos2J");
             cws.delegate = FindiaFragment.this;
             cws.propertyInfos = propertyInfos;
             cws.execute();
