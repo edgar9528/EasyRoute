@@ -5,17 +5,17 @@ import java.util.List;
 
 public class Usuario implements Serializable {
 
-    private String usuario;
-    private String contrasena;
-    private int rol;
-    private String nombrerol;
-    private String estatus;
-    private byte bloqueado;
-    private String nombre;
-    private String appat;
-    private String apmat;
-    private byte esadmin;
-    private List<Permisos> permisos;
+    protected String usuario;
+    protected String contrasena;
+    protected int rol;
+    protected String nombrerol;
+    protected String estatus;
+    protected byte bloqueado;
+    protected String nombre;
+    protected String appat;
+    protected String apmat;
+    protected byte esadmin;
+    protected List<Permisos> permisos;
 
     public Usuario() {
     }

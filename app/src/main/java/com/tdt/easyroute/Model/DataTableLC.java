@@ -1822,5 +1822,120 @@ public class DataTableLC {
             this.prod_sug_n = prod_sug_n;
         }
     }
+
+    public static class UsuarioConRol
+    {
+        private String usu_cve_str;
+        private String usu_pwd_str;
+        private String usu_nom_str;
+        private String usu_app_str;
+        private String usu_apm_str;
+        private String rol_cve_n;
+        private String est_cve_str;
+        private String usu_factivo_dt;
+        private String usu_bloqueado_n;
+        private String usu_fbloqueo_dt;
+        private String rol_desc_str;
+        private String rol_esadmin_n;
+
+        public UsuarioConRol() {
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getUsu_pwd_str() {
+            return usu_pwd_str;
+        }
+
+        public void setUsu_pwd_str(String usu_pwd_str) {
+            this.usu_pwd_str = usu_pwd_str;
+        }
+
+        public String getUsu_nom_str() {
+            return usu_nom_str;
+        }
+
+        public void setUsu_nom_str(String usu_nom_str) {
+            this.usu_nom_str = usu_nom_str;
+        }
+
+        public String getUsu_app_str() {
+            return usu_app_str;
+        }
+
+        public void setUsu_app_str(String usu_app_str) {
+            this.usu_app_str = usu_app_str;
+        }
+
+        public String getUsu_apm_str() {
+            return usu_apm_str;
+        }
+
+        public void setUsu_apm_str(String usu_apm_str) {
+            this.usu_apm_str = usu_apm_str;
+        }
+
+        public String getRol_cve_n() {
+            return rol_cve_n;
+        }
+
+        public void setRol_cve_n(String rol_cve_n) {
+            this.rol_cve_n = rol_cve_n;
+        }
+
+        public String getEst_cve_str() {
+            return est_cve_str;
+        }
+
+        public void setEst_cve_str(String est_cve_str) {
+            this.est_cve_str = est_cve_str;
+        }
+
+        public String getUsu_factivo_dt() {
+            return usu_factivo_dt;
+        }
+
+        public void setUsu_factivo_dt(String usu_factivo_dt) {
+            this.usu_factivo_dt = usu_factivo_dt;
+        }
+
+        public String getUsu_bloqueado_n() {
+            return usu_bloqueado_n;
+        }
+
+        public void setUsu_bloqueado_n(String usu_bloqueado_n) {
+            this.usu_bloqueado_n = usu_bloqueado_n;
+        }
+
+        public String getUsu_fbloqueo_dt() {
+            return usu_fbloqueo_dt;
+        }
+
+        public void setUsu_fbloqueo_dt(String usu_fbloqueo_dt) {
+            this.usu_fbloqueo_dt = usu_fbloqueo_dt;
+        }
+
+        public String getRol_desc_str() {
+            return rol_desc_str;
+        }
+
+        public void setRol_desc_str(String rol_desc_str) {
+            this.rol_desc_str = rol_desc_str;
+        }
+
+        public String getRol_esadmin_n() {
+            return rol_esadmin_n;
+        }
+
+        public void setRol_esadmin_n(String rol_esadmin_n) {
+            this.rol_esadmin_n = rol_esadmin_n;
+        }
+    }
     
 }

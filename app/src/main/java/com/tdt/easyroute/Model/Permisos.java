@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public class Permisos implements Serializable {
 
-    private int mod_cve_n;
-    private String mod_desc_str;
-    private byte lectura;
-    private byte escritura;
-    private byte modificacion;
-    private byte eliminacion;
+    protected int mod_cve_n;
+    protected String mod_desc_str;
+    protected byte lectura;
+    protected byte escritura;
+    protected byte modificacion;
+    protected byte eliminacion;
 
     public Permisos() {
     }

@@ -1391,4 +1391,41 @@ public class ConvertirRespuesta {
         return al;
     }
 
+
+    public static ArrayList<DataTableLC.UsuarioConRol> getUsuarioConRolJson(String respuesta)
+    {
+        ArrayList<DataTableLC.UsuarioConRol> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.UsuarioConRol> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<Permisos> getPermisosJson(String respuesta)
+    {
+        ArrayList<Permisos> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<Permisos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+
 }
