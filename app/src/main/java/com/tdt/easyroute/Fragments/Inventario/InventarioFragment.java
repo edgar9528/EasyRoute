@@ -343,8 +343,8 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         {
             db.beginTransaction();
 
-            db.execSQL( string.formatSql( Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), idCteEsp,"NO LECTURA","SIN COSTO",coordenada ) );
-            db.execSQL( string.formatSql( Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), idCteEsp,"APERTURA DE CLIENTE","SIN COSTO",coordenada ) );
+            db.execSQL( string.formatSql( Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), idCteEsp,"NO LECTURA","SIN CODIGO",coordenada ) );
+            db.execSQL( string.formatSql( Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), idCteEsp,"APERTURA DE CLIENTE","SIN CODIGO",coordenada ) );
 
 
             float subtotal = 0;
@@ -352,7 +352,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
             for(int i=0; i<dtVta.size(); i++)
             {
-                subt = Float.parseFloat(dtVta.get(i).getProd_cancelado_n()) * Float.parseFloat(dtVta.get(i).getLpre_precio_n());
+                subt = Float.parseFloat(dtVta.get(i).getProd_cant_n()) * Float.parseFloat(dtVta.get(i).getLpre_precio_n());
                 db.execSQL( string.formatSql(Querys.Ventas.InsVentaDet,folio, String.valueOf(i+1),dtVta.get(i).getProd_cve_n(),
                                             dtVta.get(i).getProd_sku_str(),"0",dtVta.get(i).getProd_cant_n(),"0",dtVta.get(i).getLpre_precio_n(),dtVta.get(i).getLpre_precio_n(),
                                             "0",dtVta.get(i).getLpre_precio_n(),String.valueOf(subt),"0","0","0","0","0") );

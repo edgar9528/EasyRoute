@@ -456,9 +456,9 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         String consulta = string.formatSql(Querys.ConfiguracionHH.InsertConfiguracion,ruta_cve,empresa_cve,campos[3],campos[6],campos[7], String.valueOf( Integer.parseInt( tiporuta_cve )-1 )  );
         BaseLocal.Insert(consulta,getContext());
 
-        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta_cve,posicion),getContext());
+        BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(),"INICIO DE DIA", "SE CREO CONFIGURACION DE INICIO DE DIA",ruta_cve,posicion),getContext());
 
-        Log.d("salida","Configuracaion HH creada");
+        Log.d("salida","Configuración HH creada");
 
         Utils.ActualizaConf("ruta",ruta_cve,getContext());
         MainActivity mainActivity = (MainActivity) getActivity();

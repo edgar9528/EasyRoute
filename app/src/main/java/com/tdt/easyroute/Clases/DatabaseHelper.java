@@ -14,8 +14,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-
-
         db.execSQL(Querys.Estatus.CreaEstatus);
         db.execSQL(Querys.Roles.CreaRoles);
         db.execSQL(Querys.Modulos.CreaModulos);

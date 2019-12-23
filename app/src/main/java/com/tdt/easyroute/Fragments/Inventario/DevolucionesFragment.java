@@ -171,6 +171,7 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
         tr = (TableRow) layoutInflater.inflate(R.layout.tabla_devolucionesdet, null);
 
         ((TextView) tr.findViewById(R.id.t_dev_cve_n)).setTypeface( ((TextView) tr.findViewById(R.id.t_dev_cve_n)).getTypeface(), Typeface.BOLD);
+        ((TextView) tr.findViewById(R.id.t_prod_cve_n)).setTypeface( ((TextView) tr.findViewById(R.id.t_prod_cve_n)).getTypeface(), Typeface.BOLD);
         ((TextView) tr.findViewById(R.id.t_prod_sku_str)).setTypeface( ((TextView) tr.findViewById(R.id.t_prod_sku_str)).getTypeface(), Typeface.BOLD);
         ((TextView) tr.findViewById(R.id.t_prod_desc_str)).setTypeface( ((TextView) tr.findViewById(R.id.t_prod_desc_str)).getTypeface(), Typeface.BOLD);
         ((TextView) tr.findViewById(R.id.t_prod_cant_n)).setTypeface( ((TextView) tr.findViewById(R.id.t_prod_cant_n)).getTypeface(), Typeface.BOLD);
@@ -208,10 +209,12 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
     {
         peticion="DevolucionesDet";
 
+        String id = dgDevolucion.get(id_dev).getDev_cve_n();
+
         ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
         PropertyInfo pi = new PropertyInfo();
         pi.setName("devolucion");
-        pi.setValue(id_dev);
+        pi.setValue(id);
         propertyInfos.add(pi);
 
         ConexionWS_JSON cws = new ConexionWS_JSON(getContext(),"ObtenerDevolucionDetJ");
@@ -222,7 +225,7 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
 
     private void mostrarDevolucionDet()
     {
-        tableLayout.removeAllViews();
+        mostrarTitulo();
         TableRow tr;
         DataTableWS.DevolucionesDet d;
 
@@ -233,6 +236,7 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                 d = dgDevolucionDet.get(i);
 
                 ((TextView) tr.findViewById(R.id.t_dev_cve_n)).setText(d.getDev_cve_n());
+                ((TextView) tr.findViewById(R.id.t_prod_cve_n)).setText(d.getProd_cve_n());
                 ((TextView) tr.findViewById(R.id.t_prod_sku_str)).setText(d.getProd_sku_str());
                 ((TextView) tr.findViewById(R.id.t_prod_desc_str)).setText(d.getProd_desc_str());
                 ((TextView) tr.findViewById(R.id.t_prod_cant_n)).setText(d.getProd_cant_n());
@@ -286,7 +290,6 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                 folio =  dgDevolucion.get(id_devSeleccionada).getDev_folio_str();
                 cve =  Long.parseLong( dgDevolucion.get(id_devSeleccionada).getDev_cve_n() );
 
-
                 AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
                 dialogo1.setTitle("Importante");
                 dialogo1.setMessage(string.formatSql("¿Esta seguro de aplicar la {0} con folio {1}?", msj.toLowerCase(), folio));
@@ -329,11 +332,11 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
 
     private void aplicarDevolucion(DataTableWS.RetValInicioDia ret)
     {
-
         if(ret!=null)
         {
             if(ret.getRet().equals("true"))
             {
+
                 ArrayList<DataTableLC.Inventario> di;
 
                 String json = BaseLocal.Select(string.formatSql("Select prod_cve_n, inv_devuelto_n from inventario where rut_cve_n={0}", String.valueOf(conf.getRuta()) ),getContext());
@@ -407,7 +410,11 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                 peticionDevoluciones();
 
             }
+            else
+                Toast.makeText(getContext(), "Error: "+ret.getMsj(), Toast.LENGTH_SHORT).show();
         }
+        else
+            Toast.makeText(getContext(), "Error al procesar la devolución.", Toast.LENGTH_SHORT).show();
     }
 
 

@@ -3,26 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:weightSum="10"
     >
 
     <TextView
         android:id="@+id/t_dev_cve_n"
-        android:layout_width="0dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:layout_weight="2"
         android:text="CVE"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
 
     <TextView
-        android:id="@+id/t_prod_sku_str"
-        android:layout_width="0dp"
+        android:id="@+id/t_prod_cve_n"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:layout_weight="2"
+        android:text="PR.CVE"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+    <TextView
+        android:id="@+id/t_prod_sku_str"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
         android:text="SKU"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
@@ -30,10 +37,9 @@
 
     <TextView
         android:id="@+id/t_prod_desc_str"
-        android:layout_width="0dp"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:layout_weight="4"
         android:text="Descripción"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
@@ -41,10 +47,9 @@
 
     <TextView
         android:id="@+id/t_prod_cant_n"
-        android:layout_width="0dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:layout_weight="2"
         android:text="Cantidad"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
