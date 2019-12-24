@@ -211,6 +211,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
             else
             {
                 eliminarDatos();
+                Utils.RegresarInicio(getActivity());
             }
 
         }catch (Exception e)
@@ -275,6 +276,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                         if(AuxU!=null)
                         {
                             eliminarDatos();
+                            dialog.dismiss();
                             Utils.RegresarInicio(getActivity());
                         }
                         else
@@ -283,12 +285,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                             Utils.RegresarInicio(getActivity());
                         }
                     }
-                    else
-                    {
-                        Utils.RegresarInicio(getActivity());
-                    }
 
-                    dialog.dismiss();
                 }
                 else
                 {
@@ -445,7 +442,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                 db.endTransaction();
                 db.close();
             }
-            Utils.RegresarInicio(getActivity());
         }
     }
 

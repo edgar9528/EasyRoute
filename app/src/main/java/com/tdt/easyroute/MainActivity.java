@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private boolean bloquear=false;
 
-
     List<String> menuMostrar;
     private TextView tv_nombre,tv_ruta;
     Usuario usuario;
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         dialogo1.show();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             View listHeaderView = getLayoutInflater().inflate(R.layout.nav_header,null,false);
             expandableListView.addHeaderView(listHeaderView);
 
-            validarInicio();
             inicializar();
-            validarVacioMenu();
+            crearMenu();
+            validarMenu();
 
             addDrawersItem();
             setupDrawer();
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    private void validarVacioMenu() {
+    private void crearMenu() {
 
         //OPCIONES QUE SE MOSTRARAN EN EL MENU
 
@@ -293,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         lstChild.put(title.get(7), catalogos);
 
         lstTitle = new ArrayList<>(lstChild.keySet());
-
 
     }
 
@@ -349,9 +348,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    public void validarInicio()
+    public void validarMenu()
     {
-        //menuMostrar = Arrays.asList("Inicio de día", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
         try
         {
             Configuracion conf = null;
