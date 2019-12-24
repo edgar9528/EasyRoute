@@ -1300,4 +1300,11 @@ public class DatosFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("salidap","ENTRO ONDESTROY DATOS FRAGMENT");
+    }
+
+
 }

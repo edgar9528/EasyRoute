@@ -45,7 +45,10 @@ import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
 import com.tdt.easyroute.Interface.NavigationManager;
+import com.tdt.easyroute.Model.MenuBloqueo;
 import com.tdt.easyroute.Model.Usuario;
+
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,9 +71,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private boolean bloquear=false;
 
-    List<String> menuMostrar;
     private TextView tv_nombre,tv_ruta;
     Usuario usuario;
+    MenuBloqueo menuBloqueo;
 
     //region VARIABLES PARA UBICACION
     private static final String LOGTAG = "android-localizacion";
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        menuBloqueo = new MenuBloqueo();
 
         try {
             Log.d("salida","ENTRO MAIN ACTIVITY");
@@ -158,11 +162,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
-    public void actualizarMenu()
-    {
-        bloquear = true;
-    }
-
     //CONFIGURACION DEL MENU
 
     @Override
@@ -194,11 +193,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         adapter = new CustomExpandableListAdapter(this,lstTitle,lstChild);
         expandableListView.setAdapter(adapter);
 
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+
+                if(menuBloqueo.grupos[i]!=true)
+                {
+                    Toast.makeText(MainActivity.this, "Opción no disponible", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                else
+                    return false;
+            }
+        });
+
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
                 //set title for toolbar
                 //getSupportActionBar().setTitle(lstTitle.get(groupPosition).toString());
+
                 if(ultimoGrupo!=-1)
                     expandableListView.collapseGroup(ultimoGrupo);
 
@@ -225,12 +239,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 getSupportActionBar().setTitle(clave);
 
-                if(!bloquear) {
+                if(menuBloqueo.hijos.get(groupPosition)[childPosition]!=false)
+                {
                     navigationManager.showFragment(clave);
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "Opción deshabilitada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Opción no disponible", Toast.LENGTH_SHORT).show();
                 }
 
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -258,6 +273,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 //getSupportActionBar().setTitle(mActivityTitle);
+                if(ultimoGrupo>=0)
+                    expandableListView.collapseGroup(ultimoGrupo);
+
                 invalidateOptionsMenu();
             }
         };
@@ -355,22 +373,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             Configuracion conf = null;
             conf = Utils.ObtenerConf(getApplication());
 
+
             if(conf!=null)
             {
-                menuMostrar = new ArrayList<>();
-                if(conf.getPreventa()!=1)
-                    menuMostrar.add("Inventario");
+                menuBloqueo.hijos.get(0)[1]=false;
 
-                menuMostrar.add( "Fin de día");
-                menuMostrar.add( "Reportes" );
+                if(conf.getPreventa()!=1)
+                    menuBloqueo.grupos[1]=true;
+                else
+                    menuBloqueo.grupos[1]=false;
+
+                menuBloqueo.grupos[2]=true;
+                menuBloqueo.grupos[6]=true;
+                menuBloqueo.grupos[4]=true;
 
                 if(!conf.isDescarga())
-                    menuMostrar.add( "Pedidos" );
+                    menuBloqueo.grupos[2]=false;
             }
             else
             {
-                menuMostrar = Arrays.asList("Inicio de día","Reportes");
+                menuBloqueo.hijos.get(0)[1]=true;
+                menuBloqueo.grupos[1]=false;
+                menuBloqueo.grupos[2]=false;
+                menuBloqueo.grupos[6]=false;
+                menuBloqueo.grupos[4]=true;
             }
+
 
         }catch (Exception e)
         {

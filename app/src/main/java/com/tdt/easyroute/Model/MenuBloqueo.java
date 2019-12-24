@@ -6,19 +6,25 @@ import java.util.List;
 
 public class MenuBloqueo {
 
-    boolean grupos[] = new boolean[8];
-    ArrayList<boolean[]> hijos = new ArrayList<>();
+    public boolean grupos[];
+    public ArrayList<boolean[]> hijos;
 
     public MenuBloqueo() {
-        boolean[] hijos0 = new boolean[2];
-        boolean[] hijos1 = new boolean[5];
-        boolean[] hijos2 = new boolean[1];
-        boolean[] hijos3 = new boolean[3];
-        boolean[] hijos4 = new boolean[2];
-        boolean[] hijos5 = new boolean[3];
-        boolean[] hijos6 = new boolean[3];
-        boolean[] hijos7 = new boolean[4];
 
+        grupos = new boolean[8];
+        hijos = new ArrayList<>();
+
+        for(int i=0; i< grupos.length;i++)
+            grupos[i]=true;
+
+        boolean[] hijos0 = {true,true};
+        boolean[] hijos1 = {true,true,true,true,true};
+        boolean[] hijos2 = {true};
+        boolean[] hijos3 = {true,true,true};
+        boolean[] hijos4 = {true,true};
+        boolean[] hijos5 = {true,true,true};
+        boolean[] hijos6 = {true,true,true,true};
+        boolean[] hijos7 = {true};
 
         hijos.add(hijos0);
         hijos.add(hijos1);
@@ -30,8 +36,5 @@ public class MenuBloqueo {
         hijos.add(hijos7);
 
     }
-
-
-
 }
 
