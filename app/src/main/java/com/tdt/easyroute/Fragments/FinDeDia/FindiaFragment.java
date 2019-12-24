@@ -716,4 +716,14 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
         Utils.RegresarInicio(getActivity());
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        mainActivity.validarMenu();
+        Log.d("salida","ENTRO ACTUALIZAR MENU");
+
+    }
+
 }

@@ -64,6 +64,8 @@ public class DatosFragment extends Fragment {
     String nombreBase,tipoRuta,ruta_cve;
     ArrayList<String> metodosWS;
 
+    MainActivity mainActivity;
+
     StartdayVM startdayVM;
     boolean actualizoRutaEmpresa=false;
 
@@ -80,6 +82,8 @@ public class DatosFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_datos, container, false);
         layoutInflater = inflater;
         viewGral = view;
+
+        mainActivity = (MainActivity) getActivity();
 
         b_selec = view.findViewById(R.id.button_selec);
         b_deselec = view.findViewById(R.id.button_desSelec);
@@ -1299,12 +1303,5 @@ public class DatosFragment extends Fragment {
         }
 
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("salidap","ENTRO ONDESTROY DATOS FRAGMENT");
-    }
-
 
 }

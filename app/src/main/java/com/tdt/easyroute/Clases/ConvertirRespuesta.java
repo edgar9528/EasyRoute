@@ -1426,6 +1426,24 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.CargaInicial> getCargaInicialJson(String respuesta)
+    {
+        ArrayList<DataTableLC.CargaInicial> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.CargaInicial> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
 
 
 }

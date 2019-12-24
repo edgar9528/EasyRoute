@@ -70,6 +70,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
     Button button_buscar,button_aplicar,button_salir;
     String peticion,mensaje,nombreBase,cve,folio,rectxt;
 
+    MainActivity mainActivity;
+
     public Carga2Fragment() {
         // Required empty public constructor
     }
@@ -90,6 +92,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         View view = inflater.inflate(R.layout.fragment_carga2, container, false);
         vista = view;
         layoutInflater = inflater;
+
+        mainActivity = (MainActivity) getActivity();
 
         conf = Utils.ObtenerConf(getActivity().getApplication());
         nombreBase = getActivity().getString( R.string.nombreBD );
@@ -568,4 +572,14 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         }
 
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        mainActivity.validarMenu();
+        Log.d("salida","ENTRO ACTUALIZAR MENU");
+
+    }
+
 }

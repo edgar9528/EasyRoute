@@ -41,10 +41,12 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.tdt.easyroute.Adapter.CustomExpandableListAdapter;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
+import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
 import com.tdt.easyroute.Interface.NavigationManager;
+import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.MenuBloqueo;
 import com.tdt.easyroute.Model.Usuario;
 
@@ -242,17 +244,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 if(menuBloqueo.hijos.get(groupPosition)[childPosition]!=false)
                 {
                     navigationManager.showFragment(clave);
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                    ultimoGrupo = -1;
+                    expandableListView.collapseGroup(groupPosition);
                 }
                 else
                 {
                     Toast.makeText(MainActivity.this, "Opción no disponible", Toast.LENGTH_SHORT).show();
                 }
-
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-
-                ultimoGrupo = -1;
-                expandableListView.collapseGroup(groupPosition);
-
 
                 return false;
             }
@@ -292,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         List<String> title = Arrays.asList("Inicio", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
 
         List<String> iniciodia = Arrays.asList("Pantalla principal","Inicio de día");
-        List<String> inventario = Arrays.asList("Inventario", "Carga inicial", "Recarga", "Devoluciones", "Descarga");
+        List<String> inventario = Arrays.asList("Carga inicial","Inventario", "Recarga", "Devoluciones", "Descarga");
         List<String> pedidos = Arrays.asList("Clientes");
         List<String> entregas = Arrays.asList("Consigna", "Pedido", "Devolución");
         List<String> reportes = Arrays.asList("Arqueo", "Ventas día");
@@ -399,11 +398,59 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 menuBloqueo.grupos[4]=true;
             }
 
+            validarInventario();
 
         }catch (Exception e)
         {
             Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
+    public void validarInventario()
+    {
+        try
+        {
+            Configuracion conf = Utils.ObtenerConf(getApplication());
+            ArrayList<DataTableLC.CargaInicial> dt =null;
+            boolean carga = false;
+            String json = BaseLocal.Select("Select * from cargainicial where est_cve_str='A'",getApplicationContext());
+            dt = ConvertirRespuesta.getCargaInicialJson(json);
+
+
+
+            if(dt!=null)
+                carga =  dt.get(0).getCini_cargado_n().equals("1")?true:false;
+
+            if(carga)
+            {
+                menuBloqueo.hijos.get(1)[0]=false; //carga
+                menuBloqueo.hijos.get(1)[1]=true; //inventario
+                menuBloqueo.hijos.get(1)[2]=true; //recarga
+                menuBloqueo.hijos.get(1)[3]=true; //devoluciones
+                menuBloqueo.hijos.get(1)[4]=true; //descarga
+
+                Log.d("salida","ENTRO A CARGA TRUE");
+
+                if (conf.isDescarga())
+                {
+                    menuBloqueo.hijos.get(1)[2]=false; //recarga
+                    menuBloqueo.hijos.get(1)[3]=false; //devoluciones
+                }
+
+            }
+            else
+            {
+                Log.d("salida","ENTRO A CARGA FALSE");
+                menuBloqueo.hijos.get(1)[0]=true; //carga
+                menuBloqueo.hijos.get(1)[1]=false; //inventario
+                menuBloqueo.hijos.get(1)[2]=false; //recarga
+                menuBloqueo.hijos.get(1)[3]=false; //devoluciones
+                menuBloqueo.hijos.get(1)[4]=false; //descarga
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "Error al validar menu", Toast.LENGTH_SHORT).show();
         }
     }
 

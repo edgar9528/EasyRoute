@@ -30,6 +30,7 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.Model.Usuario;
@@ -57,6 +58,8 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
     private ArrayList<DataTableWS.Devoluciones> dgDevolucion=null;
     private ArrayList<DataTableWS.DevolucionesDet> dgDevolucionDet=null;
 
+    MainActivity mainActivity;
+
     public DevolucionesFragment() {
         // Required empty public constructor
     }
@@ -74,6 +77,8 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_devoluciones, container, false);
         layoutInflater = inflater;
+
+        mainActivity = (MainActivity) getActivity();
 
         nombreBase = getActivity().getString( R.string.nombreBD );
 
@@ -452,6 +457,15 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
         {
             Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        mainActivity.validarMenu();
+        Log.d("salida","ENTRO ACTUALIZAR MENU");
 
     }
 }

@@ -1938,4 +1938,65 @@ public class DataTableLC {
         }
     }
     
+    public static class CargaInicial
+    {
+        private String cini_cve_n;
+	    private String cini_cargado_n;
+        private String cini_fecha_dt;
+        private String usu_cve_str;
+        private String est_cve_str;
+        private String cini_comentario_str;
+
+        public CargaInicial() {
+        }
+
+        public String getCini_cve_n() {
+            return cini_cve_n;
+        }
+
+        public void setCini_cve_n(String cini_cve_n) {
+            this.cini_cve_n = cini_cve_n;
+        }
+
+        public String getCini_cargado_n() {
+            return cini_cargado_n;
+        }
+
+        public void setCini_cargado_n(String cini_cargado_n) {
+            this.cini_cargado_n = cini_cargado_n;
+        }
+
+        public String getCini_fecha_dt() {
+            return cini_fecha_dt;
+        }
+
+        public void setCini_fecha_dt(String cini_fecha_dt) {
+            this.cini_fecha_dt = cini_fecha_dt;
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getEst_cve_str() {
+            return est_cve_str;
+        }
+
+        public void setEst_cve_str(String est_cve_str) {
+            this.est_cve_str = est_cve_str;
+        }
+
+        public String getCini_comentario_str() {
+            return cini_comentario_str;
+        }
+
+        public void setCini_comentario_str(String cini_comentario_str) {
+            this.cini_comentario_str = cini_comentario_str;
+        }
+    }
+    
 }

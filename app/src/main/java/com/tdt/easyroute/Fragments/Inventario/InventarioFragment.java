@@ -73,6 +73,8 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
 
+    MainActivity mainActivity;
+
     private boolean entrarDescarga;
 
     public InventarioFragment() {
@@ -95,11 +97,12 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         View view = inflater.inflate(R.layout.fragment_inventario, container, false);
         layoutInflater = inflater;
 
+        mainActivity = (MainActivity) getActivity();
+
         button_imprimir = view.findViewById(R.id.button_imprimir);
         button_salir = view.findViewById(R.id.button_salir);
         tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
         nombreBase = getActivity().getString( R.string.nombreBD );
-
 
         if(descarga)
         {
@@ -945,6 +948,15 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         // Establecer Bitacora como no enviadas
         BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
         Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        mainActivity.validarMenu();
+        Log.d("salida","ENTRO ACTUALIZAR MENU");
+
     }
 
 }

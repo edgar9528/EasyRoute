@@ -33,6 +33,8 @@ public class MainsugeridoFragment extends Fragment {
 
     SugeridoVM sugeridoVM;
 
+    MainActivity mainActivity;
+
     public static MainsugeridoFragment newInstance(Usuario u) {
         MainsugeridoFragment fragment = new MainsugeridoFragment();
         Bundle args = new Bundle();
@@ -59,6 +61,8 @@ public class MainsugeridoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_mainsugerido, container, false);
+
+        mainActivity = (MainActivity) getActivity();
 
         //CONFIGURACION DE LAS TABS
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
@@ -174,6 +178,15 @@ public class MainsugeridoFragment extends Fragment {
     public void goSugerido()
     {
         viewPager.setCurrentItem(4);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        mainActivity.validarMenu();
+        Log.d("salida","ENTRO ACTUALIZAR MENU");
+
     }
 
 }

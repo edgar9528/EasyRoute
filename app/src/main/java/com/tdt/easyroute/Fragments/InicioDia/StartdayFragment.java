@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tdt.easyroute.Adapter.PagerIniciodiaAdapter;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.R;
 
 public class StartdayFragment extends Fragment {
@@ -18,12 +19,16 @@ public class StartdayFragment extends Fragment {
         // Required empty public constructor
     }
 
+    MainActivity mainActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_startday, container, false);
         Log.d("salida","stardayFragment");
+
+        mainActivity = (MainActivity) getActivity();
 
 
         //CONFIGURACION DE LAS TABS
@@ -61,10 +66,12 @@ public class StartdayFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        mainActivity.validarMenu();
+        Log.d("salida","ENTRO ACTUALIZAR MENU");
 
     }
 }
