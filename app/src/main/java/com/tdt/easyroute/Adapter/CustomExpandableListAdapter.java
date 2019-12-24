@@ -2,11 +2,17 @@ package com.tdt.easyroute.Adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
+
 import com.tdt.easyroute.R;
 import java.util.List;
 import java.util.Map;
@@ -79,15 +85,31 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         if(convertView==null)
         {
             convertView= LayoutInflater.from(context).inflate(R.layout.list_item,null);
-
         }
         TextView txtChild= (TextView) convertView.findViewById(R.id.expandabledListItem);
+        ImageView ivChild= (ImageView) convertView.findViewById(R.id.expandabledListImage);
+
         txtChild.setText(title);
+
+        ivChild.setBackground(imagen(groupPosition,childPosition));
+
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public Drawable imagen(int grupo, int hijo)
+    {
+        Drawable drawable=null;
+
+        if(grupo==6 && hijo==3)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_fin, null);
+        else
+            drawable=null;
+
+        return drawable;
     }
 }

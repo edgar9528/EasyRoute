@@ -2,9 +2,20 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+    android:paddingRight="?android:attr/expandableListPreferredItemPaddingLeft"
     >
+
+    <ImageView
+        android:id="@+id/expandabledListImage"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_gravity="center"
+        android:background="@drawable/icon_ini"
+        >
+    </ImageView>
 
     <TextView
         android:id="@+id/expandabledListItem"
@@ -12,10 +23,10 @@
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:paddingRight="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:paddingLeft="5dp"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
+        android:text="Prueba de item"
         />
 
 </LinearLayout>
