@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 menuBloqueo.grupos[6]=true;
                 menuBloqueo.grupos[4]=true;
 
-                if(!conf.isDescarga())
+                if(conf.isDescarga())
                     menuBloqueo.grupos[2]=false;
             }
             else

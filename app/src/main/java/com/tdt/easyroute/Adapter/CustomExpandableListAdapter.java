@@ -105,8 +105,68 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     {
         Drawable drawable=null;
 
+        if(grupo==0 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_home, null);
+        else
+        if(grupo==0 && hijo==1)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_ini, null);
+        else
+        if(grupo==1 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_carga, null);
+        else
+        if(grupo==1 && hijo==1)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_inv, null);
+        else
+        if(grupo==1 && hijo==2)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_recarga, null);
+        else
+        if(grupo==1 && hijo==3)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_devo, null);
+        else
+        if(grupo==1 && hijo==4)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_descarga, null);
+        else
+        if(grupo==2 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_pedidos, null);
+        else
+        if(grupo==3 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_con, null);
+        else
+        if(grupo==3 && hijo==1)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_ped, null);
+        else
+        if(grupo==3 && hijo==2)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_dev, null);
+        else
+        if(grupo==4 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_arq, null);
+        else
+        if(grupo==4 && hijo==1)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_ven, null);
+        else
+        if(grupo==5 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_cli1, null);
+        else
+        if(grupo==5 && hijo==1)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_cli2, null);
+        else
+        if(grupo==5 && hijo==2)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_cli3, null);
+        else
+        if(grupo==6 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_sug, null);
+        else
+        if(grupo==6 && hijo==1)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_tans, null);
+        else
+        if(grupo==6 && hijo==2)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_borrar, null);
+        else
         if(grupo==6 && hijo==3)
             drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_fin, null);
+        else
+        if(grupo==7 && hijo==0)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_ajus, null);
         else
             drawable=null;
 
