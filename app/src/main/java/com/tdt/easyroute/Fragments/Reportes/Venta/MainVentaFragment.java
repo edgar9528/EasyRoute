@@ -1,7 +1,5 @@
 package com.tdt.easyroute.Fragments.Reportes.Venta;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,10 +14,10 @@ import com.tdt.easyroute.Adapter.PagerReporteventaAdapter;
 import com.tdt.easyroute.R;
 
 
-public class ReporteventaFragment extends Fragment {
+public class MainVentaFragment extends Fragment {
 
-    public static ReporteventaFragment newInstance() {
-        ReporteventaFragment fragment = new ReporteventaFragment();
+    public static MainVentaFragment newInstance() {
+        MainVentaFragment fragment = new MainVentaFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
@@ -31,7 +29,7 @@ public class ReporteventaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_reporteventa, container, false);
+        View view = inflater.inflate(R.layout.fragment_mainventa, container, false);
 
 
         //CONFIGURACION DE LAS TABS

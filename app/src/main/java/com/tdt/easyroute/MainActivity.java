@@ -432,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 Log.d("salida","ENTRO A CARGA TRUE");
 
-                if (conf.isDescarga())
+                if (conf!=null && conf.isDescarga())
                 {
                     menuBloqueo.hijos.get(1)[2]=false; //recarga
                     menuBloqueo.hijos.get(1)[3]=false; //devoluciones

@@ -5,10 +5,123 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Reportes.Venta.ProductosvenFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="PRODUCTOS VENTIDOS" />
+        android:weightSum="14"
+        android:orientation="vertical"
+        android:padding="@dimen/paddingGeneral"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="13"
+            android:orientation="vertical"
+        >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <TableLayout
+                    android:id="@+id/tableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </TableLayout>
+
+
+            </ScrollView>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                >
+
+                <TextView
+                    android:id="@+id/tv_cerveza"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="CERVEZA: 0"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="19sp"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_otros"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OTROS: 0"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="19sp"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="15dp"
+                android:weightSum="6"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+
+                >
+
+                <Button
+                    android:id="@+id/button_salir"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Salir"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_imprimir1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Imp. x Pre"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+                <Button
+                    android:id="@+id/button_imprimir2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Imp. x SKU"
+                    android:theme="@style/ButtonDarkSmall"
+                    />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -1998,5 +1998,264 @@ public class DataTableLC {
             this.cini_comentario_str = cini_comentario_str;
         }
     }
+
+    public static class SaldoVentaSE
+    {
+        String ven_folio_str;
+        String cli_cve_n;
+        String cli_cveext_str;
+        String total;
+
+        public SaldoVentaSE() {
+        }
+
+        public String getVen_folio_str() {
+            return ven_folio_str;
+        }
+
+        public void setVen_folio_str(String ven_folio_str) {
+            this.ven_folio_str = ven_folio_str;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getTotal() {
+            return total;
+        }
+
+        public void setTotal(String total) {
+            this.total = total;
+        }
+    }
+
+    public static class VentasContado
+    {
+        String rut_cve_n;
+        String total;
+
+        public VentasContado() {
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getTotal() {
+            return total;
+        }
+
+        public void setTotal(String total) {
+            this.total = total;
+        }
+    }
+
+    public static class Dtproven
+    {
+        private String cat_desc_str;
+        private String Sku;
+        private String Descr;
+        private String Descr_LPre;
+        private String Total;
+
+        public Dtproven() {
+        }
+
+        public String getCat_desc_str() {
+            return cat_desc_str;
+        }
+
+        public void setCat_desc_str(String cat_desc_str) {
+            this.cat_desc_str = cat_desc_str;
+        }
+
+        public String getSku() {
+            return Sku;
+        }
+
+        public void setSku(String sku) {
+            Sku = sku;
+        }
+
+        public String getDescr() {
+            return Descr;
+        }
+
+        public void setDescr(String descr) {
+            Descr = descr;
+        }
+
+        public String getDescr_LPre() {
+            return Descr_LPre;
+        }
+
+        public void setDescr_LPre(String descr_LPre) {
+            Descr_LPre = descr_LPre;
+        }
+
+        public String getTotal() {
+            return Total;
+        }
+
+        public void setTotal(String total) {
+            Total = total;
+        }
+    }
+
+    public static class Dtprogral
+    {
+        private String cat_desc_str;
+        private String Sku;
+        private String Descr;
+        private String  Total;
+
+        public Dtprogral() {
+        }
+
+        public String getCat_desc_str() {
+            return cat_desc_str;
+        }
+
+        public void setCat_desc_str(String cat_desc_str) {
+            this.cat_desc_str = cat_desc_str;
+        }
+
+        public String getSku() {
+            return Sku;
+        }
+
+        public void setSku(String sku) {
+            Sku = sku;
+        }
+
+        public String getDescr() {
+            return Descr;
+        }
+
+        public void setDescr(String descr) {
+            Descr = descr;
+        }
+
+        public String getTotal() {
+            return Total;
+        }
+
+        public void setTotal(String total) {
+            Total = total;
+        }
+    }
+
+    public static class Dtcobros
+    {
+        private String Tpago;
+        private String Monto;
+
+        public Dtcobros() {
+        }
+
+        public String getTpago() {
+            return Tpago;
+        }
+
+        public void setTpago(String tpago) {
+            Tpago = tpago;
+        }
+
+        public String getMonto() {
+            return Monto;
+        }
+
+        public void setMonto(String monto) {
+            Monto = monto;
+        }
+    }
+
+    public static class Arqueo_vc
+    {
+        private String cli_cveext_str;
+        private String pag_abono_n;
+        private String fpag_desc_str;
+
+        public Arqueo_vc() {
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getPag_abono_n() {
+            return pag_abono_n;
+        }
+
+        public void setPag_abono_n(String pag_abono_n) {
+            this.pag_abono_n = pag_abono_n;
+        }
+
+        public String getFpag_desc_str() {
+            return fpag_desc_str;
+        }
+
+        public void setFpag_desc_str(String fpag_desc_str) {
+            this.fpag_desc_str = fpag_desc_str;
+        }
+    }
+
+    public static class Arqueo_ccred
+    {
+        private String cli_cveext_str;
+        private String cred_referencia_str;
+        private String cred_monto_n;
+
+        public Arqueo_ccred() {
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getCred_referencia_str() {
+            return cred_referencia_str;
+        }
+
+        public void setCred_referencia_str(String cred_referencia_str) {
+            this.cred_referencia_str = cred_referencia_str;
+        }
+
+        public String getCred_monto_n() {
+            return cred_monto_n;
+        }
+
+        public void setCred_monto_n(String cred_monto_n) {
+            this.cred_monto_n = cred_monto_n;
+        }
+    }
+
+
+
     
 }

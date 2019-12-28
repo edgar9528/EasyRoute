@@ -653,7 +653,7 @@ public class Querys {
                         " where p.pag_envase_n=0 and p.pag_referencia_str not in (select ven_folio_str " +
                         "  from ventas where rut_cve_n={0}) group by p.fpag_cve_n,fp.fpag_desc_str";
 
-                public static String Cobranza = "Select p.rut_cve_n,sum(pag_abono_n) from Pagos p inner join clientes c " +
+                public static String Cobranza = "Select p.rut_cve_n,sum(pag_abono_n) total from Pagos p inner join clientes c " +
                         "on p.cli_cve_n=c.cli_cve_n where pag_cobranza_n=1 and pag_envase_n=0 group by p.rut_cve_n";
 
                 public static String EnvasesDevueltos = "select p.prod_cve_n,pr.prod_sku_str, " +
@@ -684,7 +684,7 @@ public class Querys {
                         "where vd.prod_envase_n=0 and v.ven_est_str<>'C'  " +
                         "group by  v.ven_folio_str,v.cli_cve_n,c.cli_cveext_str";
 
-                public static String VentasContado = "Select p.rut_cve_n,sum(pag_abono_n) from Pagos p inner join clientes c "+
+                public static String VentasContado = "Select p.rut_cve_n,sum(pag_abono_n) total from Pagos p inner join clientes c "+
                         "on p.cli_cve_n=c.cli_cve_n where pag_cobranza_n=0 and pag_envase_n=0 group by p.rut_cve_n";
 
                 public static String PreventasTotal = "select sum(d.prod_subtotal_n) prod_subtotal_n " +

@@ -14,68 +14,80 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack">
+            android:theme="@style/EditTextBlack"
+            android:hint="Ventas del día"
+            >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ventas del día"
+
                 android:singleLine="true"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack">
+            android:theme="@style/EditTextBlack"
+            android:hint="Ventas contado"
+            >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ventas contado"
                 android:singleLine="true"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack">
+            android:theme="@style/EditTextBlack"
+            android:hint="Ventas crédito"
+            >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ventas crédito"
                 android:singleLine="true"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack">
+            android:theme="@style/EditTextBlack"
+            android:hint="Cobranza"
+            >
             <com.google.android.material.textfield.TextInputEditText
+
                 android:id="@+id/et4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cobranza"
                 android:singleLine="true"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack">
+            android:theme="@style/EditTextBlack"
+            android:hint="Entregar a caja"
+            >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Entregar a caja"
                 android:singleLine="true"
                 />
         </com.google.android.material.textfield.TextInputLayout>

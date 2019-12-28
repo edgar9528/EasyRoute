@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.Reportes.Venta.ReporteventaFragment">
+    tools:context=".Fragments.Reportes.Venta.MainVentaFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,6 +26,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
@@ -33,6 +34,5 @@
             />
 
     </LinearLayout>
-
 
 </FrameLayout>

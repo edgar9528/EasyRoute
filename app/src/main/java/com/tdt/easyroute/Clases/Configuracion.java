@@ -31,6 +31,10 @@ public class Configuracion {
         return ruta;
     }
 
+    public String getRutaStr() {
+        return String.valueOf( ruta );
+    }
+
     public void setRuta(int ruta) {
         this.ruta = ruta;
     }
