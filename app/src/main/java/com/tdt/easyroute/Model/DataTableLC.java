@@ -2339,5 +2339,187 @@ public class DataTableLC {
         }
     }
 
+    public static class Env
+    {
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_desc_str;
+        private String inv_inicial_n;
+        private String inv_cargo_n;
+        private String inv_abono_n;
+        private String inv_venta_n;
+        private String inv_fin_n;
+
+        public Env() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_desc_str() {
+            return prod_desc_str;
+        }
+
+        public void setProd_desc_str(String prod_desc_str) {
+            this.prod_desc_str = prod_desc_str;
+        }
+
+        public String getInv_inicial_n() {
+            return inv_inicial_n;
+        }
+
+        public void setInv_inicial_n(String inv_inicial_n) {
+            this.inv_inicial_n = inv_inicial_n;
+        }
+
+        public String getInv_cargo_n() {
+            return inv_cargo_n;
+        }
+
+        public void setInv_cargo_n(String inv_cargo_n) {
+            this.inv_cargo_n = inv_cargo_n;
+        }
+
+        public String getInv_abono_n() {
+            return inv_abono_n;
+        }
+
+        public void setInv_abono_n(String inv_abono_n) {
+            this.inv_abono_n = inv_abono_n;
+        }
+
+        public String getInv_venta_n() {
+            return inv_venta_n;
+        }
+
+        public void setInv_venta_n(String inv_venta_n) {
+            this.inv_venta_n = inv_venta_n;
+        }
+
+        public String getInv_fin_n() {
+            return inv_fin_n;
+        }
+
+        public void setInv_fin_n(String inv_fin_n) {
+            this.inv_fin_n = inv_fin_n;
+        }
+    }
+
+    public static class EnvPrev {
+        private String prod_sku_str;
+        private String INI;
+        private String CAR;
+        private String ABO;
+        private String VEN;
+        private String FIN;
+
+        public EnvPrev() {
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getINI() {
+            return INI;
+        }
+
+        public void setINI(String INI) {
+            this.INI = INI;
+        }
+
+        public String getCAR() {
+            return CAR;
+        }
+
+        public void setCAR(String CAR) {
+            this.CAR = CAR;
+        }
+
+        public String getABO() {
+            return ABO;
+        }
+
+        public void setABO(String ABO) {
+            this.ABO = ABO;
+        }
+
+        public String getVEN() {
+            return VEN;
+        }
+
+        public void setVEN(String VEN) {
+            this.VEN = VEN;
+        }
+
+        public String getFIN() {
+            return FIN;
+        }
+
+        public void setFIN(String FIN) {
+            this.FIN = FIN;
+        }
+    }
+
+    public static class SaldoEnvase
+    {
+        private String prod_cve_n;
+        private String ven_cargo_n;
+        private String ven_abono_n;
+        private String ven_venta_n;
+
+        public SaldoEnvase() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getVen_cargo_n() {
+            return ven_cargo_n;
+        }
+
+        public void setVen_cargo_n(String ven_cargo_n) {
+            this.ven_cargo_n = ven_cargo_n;
+        }
+
+        public String getVen_abono_n() {
+            return ven_abono_n;
+        }
+
+        public void setVen_abono_n(String ven_abono_n) {
+            this.ven_abono_n = ven_abono_n;
+        }
+
+        public String getVen_venta_n() {
+            return ven_venta_n;
+        }
+
+        public void setVen_venta_n(String ven_venta_n) {
+            this.ven_venta_n = ven_venta_n;
+        }
+    }
+
     
 }

@@ -152,7 +152,8 @@ public class BaseLocal {
         return json;
     }
 
-    private static String cur2Json(Cursor cursor) {
+    private static String cur2Json(Cursor cursor)
+    {
 
         JSONArray resultSet = new JSONArray();
         cursor.moveToFirst();
@@ -181,7 +182,8 @@ public class BaseLocal {
         return resultSet.toString();
     }
 
-    private static String cur2JsonFrec(Cursor cursor) {
+    private static String cur2JsonFrec(Cursor cursor)
+    {
 
         JSONArray resultSet = new JSONArray();
         cursor.moveToFirst();
@@ -214,7 +216,8 @@ public class BaseLocal {
         return resultSet.toString();
     }
 
-    private static String cur2JsonUpload(Cursor cursor) {
+    private static String cur2JsonUpload(Cursor cursor)
+    {
 
         String[] x = {"ven_credito_n","ven_consigna_n",
                       "prod_envase_n","prod_promo_n","prod_regalo_n","prod_cobranza_n","vdet_dia_n","vdet_kit_n",
