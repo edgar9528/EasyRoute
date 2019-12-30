@@ -782,6 +782,31 @@ public class DataTableLC {
             this.lpre_precio_n = lpre_precio_n;
         }
     }
+
+    public static class InvAdd
+    {
+        private String prod_lleno_n;
+        private String prod_vacio_n;
+
+        public InvAdd() {
+        }
+
+        public String getProd_lleno_n() {
+            return prod_lleno_n;
+        }
+
+        public void setProd_lleno_n(String prod_lleno_n) {
+            this.prod_lleno_n = prod_lleno_n;
+        }
+
+        public String getProd_vacio_n() {
+            return prod_vacio_n;
+        }
+
+        public void setProd_vacio_n(String prod_vacio_n) {
+            this.prod_vacio_n = prod_vacio_n;
+        }
+    }
     
     public static class Inv
     {
@@ -2255,7 +2280,64 @@ public class DataTableLC {
         }
     }
 
+    public static class Arqueo_cobranza
+    {
+        private String cli_cveext_str;
+        private String pag_abono_n;
+        private String fpag_desc_str;
 
+        public Arqueo_cobranza() {
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getPag_abono_n() {
+            return pag_abono_n;
+        }
+
+        public void setPag_abono_n(String pag_abono_n) {
+            this.pag_abono_n = pag_abono_n;
+        }
+
+        public String getFpag_desc_str() {
+            return fpag_desc_str;
+        }
+
+        public void setFpag_desc_str(String fpag_desc_str) {
+            this.fpag_desc_str = fpag_desc_str;
+        }
+    }
+
+    public static class Arqueo_rec
+    {
+        private String pag_abono_n;
+        private String fpag_desc_str;
+
+        public Arqueo_rec() {
+        }
+
+        public String getPag_abono_n() {
+            return pag_abono_n;
+        }
+
+        public void setPag_abono_n(String pag_abono_n) {
+            this.pag_abono_n = pag_abono_n;
+        }
+
+        public String getFpag_desc_str() {
+            return fpag_desc_str;
+        }
+
+        public void setFpag_desc_str(String fpag_desc_str) {
+            this.fpag_desc_str = fpag_desc_str;
+        }
+    }
 
     
 }

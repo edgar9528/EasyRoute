@@ -1,17 +1,23 @@
 package com.tdt.easyroute.Fragments.Reportes.Venta;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,6 +41,7 @@ public class ProductosvenFragment extends Fragment {
     ArrayList<DataTableLC.Dtprogral> dtProdVenGral= null;
     ArrayList<DataTableLC.Dtcobros> dtcobros= null;
 
+    Button b_salir,b_impPre, b_impSku;
     TextView tv_cerveza, tv_otros;
 
     Configuracion conf;
@@ -45,7 +52,7 @@ public class ProductosvenFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ventasDiaVM = ViewModelProviders.of ( this ).get(VentasDiaVM.class);
+        ventasDiaVM = ViewModelProviders.of ( getParentFragment() ).get(VentasDiaVM.class);
     }
 
     @Override
@@ -58,17 +65,60 @@ public class ProductosvenFragment extends Fragment {
         tv_cerveza = view.findViewById(R.id.tv_cerveza);
         tv_otros = view.findViewById(R.id.tv_otros);
 
+        b_salir = view.findViewById(R.id.button_salir);
+        b_impPre = view.findViewById(R.id.button_imprimir1);
+        b_impSku = view.findViewById(R.id.button_imprimir2);
+
+
+        b_salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.RegresarInicio(getActivity());
+            }
+        });
+
+        b_impSku.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imprimirSKU();
+            }
+        });
+
+        b_impPre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imprimirPre();
+            }
+        });
+
         conf = Utils.ObtenerConf(getActivity().getApplication());
-
-
         mostrarTitulo();
-
         cargarVendidos();
         cargarPagos();
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ventasDiaVM.getBotonClick().observe(getParentFragment(), new Observer<String >() {
+            @Override
+            public void onChanged( String Boton) {
+                switch (Boton)
+                {
+                    case "sku":
+                        imprimirSKU();
+                        break;
+                    case "pre":
+                        imprimirPre();
+                        break;
+                }
+            }
+        });
+
+    }
 
     private void mostrarTitulo()
     {
@@ -230,10 +280,10 @@ public class ProductosvenFragment extends Fragment {
 
                 json= BaseLocal.Select(con,getContext());
                 dtcobros = ConvertirRespuesta.getDtcobrosJson(json);
-
-                ventasDiaVM.setDtCobros(dtcobros);
-
             }
+
+            ventasDiaVM.setDtCobros(dtcobros);
+
 
         }catch (Exception e)
         {
@@ -242,5 +292,50 @@ public class ProductosvenFragment extends Fragment {
 
     }
 
+    private void imprimirSKU()
+    {
+        String imp="SKU";
+
+
+
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+        dialogo1.setTitle("¿Imprimir por sku?");
+        dialogo1.setMessage(imp);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+
+            }
+        });
+        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                //cancelar();
+            }
+        });
+        dialogo1.show();
+    }
+
+    private void imprimirPre()
+    {
+        String imp="PRE";
+
+
+
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+        dialogo1.setTitle("¿Imprimir por pre?");
+        dialogo1.setMessage(imp);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+
+            }
+        });
+        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                //cancelar();
+            }
+        });
+        dialogo1.show();
+    }
 
 }

@@ -1,9 +1,11 @@
 package com.tdt.easyroute.Fragments.Reportes;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -265,7 +267,6 @@ public class ArqueoFragment extends Fragment {
 
             ArrayList<DataTableLC.Arqueo_ccred> dtVCred = null;
 
-
             con="Select c.cli_cveext_str,cr.cred_referencia_str,cr.cred_monto_n from creditos cr inner join clientes c " +
                     "on c.cli_cve_n=cr.cli_cve_n where cr.cred_referencia_str not like '%-%' and cr.trans_est_n<>3";
             json = BaseLocal.Select(con,getContext());
@@ -285,9 +286,164 @@ public class ArqueoFragment extends Fragment {
                     imp += dtVCred.get(i).getCli_cveext_str() + " "+dtVCred.get(i).getCred_monto_n()+"  "+ dtVCred.get(i).getCred_referencia_str()+"\n";
                 }
 
-                imp+="TOTAL CREDITO: "+TotVCred;
-
+                imp+="TOTAL CREDITO: "+TotVCred+"\n\n";
             }
+
+
+            //Cobranza
+
+            ArrayList<DataTableLC.Arqueo_cobranza> dtVCr=null;
+
+            con = "Select c.cli_cveext_str,p.pag_abono_n,fp.fpag_desc_str from Pagos p inner join clientes c " +
+                    "on p.cli_cve_n=c.cli_cve_n  inner join formaspago fp on p.fpag_cve_n=fp.fpag_cve_n " +
+                    "where pag_cobranza_n=1 and pag_envase_n=0";
+
+            json = BaseLocal.Select(con,getContext());
+            dtVCr = ConvertirRespuesta.getArqueo_cobranzaJson(json);
+
+            double TotCob=0.00;
+            if(dtVCr!=null)
+            {
+                imp +="C O B R A N Z A \n";
+                imp+= "CLIENTE   ABONO   FORMA PAGO\n";
+
+                for(int i=0; i<dtVCr.size();i++)
+                {
+                    TotCob += Double.parseDouble( dtVCr.get(i).getPag_abono_n() );
+                    imp+= dtVCr.get(i).getCli_cveext_str() + " "+ dtVCr.get(i).getPag_abono_n()+ " " +dtVCr.get(i).getFpag_desc_str()+"\n";
+                }
+                imp+="TOTAL COBRANZA: "+TotCob+"\n\n";
+            }
+
+
+            ArrayList<DataTableLC.InvP> dtInvP=null;
+            ArrayList<DataTableLC.Inv> dtInv=null;
+
+            json = BaseLocal.Select(Querys.Inventario.LayoutInventario,getContext());
+            dtInvP = ConvertirRespuesta.getInvPJson(json);
+
+            json = BaseLocal.Select(string.formatSql(Querys.Inventario.ConsultaInventario, conf.getRutaStr() ), getContext());
+            dtInv = ConvertirRespuesta.getInvJson(json);
+
+            if( (dtInvP!=null && dtInvP.size()>0) && (dtInv!=null && dtInv.size()>0)  )
+            {
+                for(int i=0; i< dtInvP.size();i++)
+                {
+                    DataTableLC.InvP r = dtInvP.get(i);
+
+                    DataTableLC.Inv in = null;
+                    for(int j=0; j<dtInv.size();j++) //obtener todos los que coinciden (el select)
+                    {
+                        if(dtInv.get(j).getProd_cve_n().equals(r.getProd_cve_n()))
+                            in= dtInv.get(j);
+                    }
+
+                    if(in!=null)
+                        dtInvP.get(i).setProd_cant_n(  in.getProd_cant_n()  );
+                }
+            }
+
+            ArrayList<DataTableLC.InvP> dtVacio= new ArrayList<>();
+            ArrayList<DataTableLC.InvAdd> dtVacioAdd= new ArrayList<>();
+
+            if(dtInvP!=null)
+                for(int i=0; i<dtInvP.size();i++)
+                {
+                    if(dtInvP.get(i).getCat_desc_str().equals("ENVASE"))
+                    {
+                        dtVacio.add( dtInvP.get(i) );
+
+                        DataTableLC.InvAdd invAdd = new DataTableLC.InvAdd();
+                        invAdd.setProd_lleno_n("0");
+                        invAdd.setProd_vacio_n( String.valueOf( Double.parseDouble( dtInvP.get(i).getProd_cant_n() ) - 0 ) );
+                        dtVacioAdd.add(invAdd);
+                    }
+                }
+
+            imp+="E N V A S E\n";
+
+            imp+=string.formatSql("{0} {1} {2} {3}", "  SKU  ", "  ENVASE  ", "LLENO", "VACIO")+"\n";
+
+            DataTableLC.InvP r;
+            for(int i=0; i<dtVacio.size();i++)
+            {
+                r= dtVacio.get(i);
+
+                double s=0;
+                for(int j=0; j<dtInvP.size();j++)
+                    if(dtInvP.get(j).getId_envase_n().equals( r.getId_envase_n() ))
+                        s += Double.parseDouble( dtInvP.get(j).getProd_cant_n() );
+
+                dtVacioAdd.get(i).setProd_lleno_n( String.valueOf(s));
+
+                imp+= string.formatSql("{0} {1} {2} {3} \n", r.getProd_sku_str(), r.getProd_desc_str(), dtVacioAdd.get(i).getProd_lleno_n(), dtVacioAdd.get(i).getProd_vacio_n());
+            }
+
+
+            imp+="\nT O T A L E S\n";
+
+            imp+="TOTAL VENTAS DEL DIA: $"+(TotVC + TotVCred)+"\n";
+
+
+
+            ArrayList<DataTableLC.Arqueo_rec> dtRec=null;
+
+            con= "Select sum(p.pag_abono_n) pag_abono_n,fp.fpag_desc_str from Pagos p " +
+                    " inner join formaspago fp on p.fpag_cve_n=fp.fpag_cve_n " +
+                    "where pag_envase_n=0 group by fp.fpag_desc_str";
+
+            json = BaseLocal.Select(con,getContext());
+
+            dtRec = ConvertirRespuesta.getArqueo_recJson(json);
+
+
+            double Efe = 0.00;
+            double TotRec = 0.00;
+
+            if(dtRec!=null)
+            {
+                DataTableLC.Arqueo_rec r2;
+                for (int i = 0; i < dtRec.size(); i++)
+                {
+                    r2 = dtRec.get(i);
+                    imp+= "TOTAL "+r2.getFpag_desc_str() +": $"+r2.getPag_abono_n()+"\n";
+
+                    if(r2.getFpag_desc_str().equals("EFECTIVO"))
+                    {
+                        Efe += Double.parseDouble(r2.getPag_abono_n() );
+                    }
+
+                    TotRec += Double.parseDouble(r2.getPag_abono_n() );
+                }
+            }
+
+            imp+= "TOTAL ENTREGAR A CAJA: $" + (TotVC + TotCob) +"\n\n";
+
+            imp+= string.formatSql("YO {0} RESPONSABLE DE LA RUTA {1} DEBO Y PAGARE " +
+                    "A LA EMPRESA STORYBIRD, S.A. DE C.V. LA CANTIDAD DE ${2}",asesor,rutac, String.valueOf (TotVC+TotCob));
+
+
+
+            Log.d("salida","FINALIZO DE IMPRIMIR");
+
+
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+            dialogo1.setTitle("¿Imprimir inventario?");
+            dialogo1.setMessage(imp);
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+
+                }
+            });
+            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    //cancelar();
+                }
+            });
+            dialogo1.show();
+
+
 
         }
         catch (Exception e)
