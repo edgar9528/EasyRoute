@@ -12,6 +12,7 @@ import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.OrdenacliFragment;
 import com.tdt.easyroute.Fragments.FinDeDia.FindiaFragment;
 import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.MainsugeridoFragment;
 import com.tdt.easyroute.Fragments.Inventario.DevolucionesFragment;
+import com.tdt.easyroute.Fragments.Pedidos.PedidosFragment;
 import com.tdt.easyroute.Fragments.PrincipalFragment;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
 import com.tdt.easyroute.Fragments.Inventario.Carga2Fragment;
@@ -83,6 +84,10 @@ public class FragmentNavigationManager implements NavigationManager {
 
             case "Inventario | Devoluciones":
                 ft= fm.beginTransaction().replace(R.id.container, DevolucionesFragment.newInstance(usuario));
+                break;
+
+            case "Pedidos | Clientes":
+                ft= fm.beginTransaction().replace(R.id.container, PedidosFragment.newInstance());
                 break;
 
             case "Reportes | Arqueo":

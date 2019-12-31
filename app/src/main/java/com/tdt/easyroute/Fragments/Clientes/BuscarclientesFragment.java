@@ -214,7 +214,6 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
             }
 
             String json = BaseLocal.Select( consulta ,getContext());
-
             bsClientes = ConvertirRespuesta.getClientesJson(json);
 
             mostrarClientes("");

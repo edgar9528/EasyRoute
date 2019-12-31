@@ -707,7 +707,6 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
             startActivityForResult(intent,0);
 
             //se recibe la respuesta en onActivityResult
-
         }
         else
             Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
@@ -838,24 +837,32 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
     private void enviarFrec()
     {
-        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
-        String json = BaseLocal.SelectFrecPunteo(getContext());
-        Configuracion conf = Utils.ObtenerConf(getActivity().getApplication());
+        try
+        {
+            ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+            String json = BaseLocal.SelectFrecPunteo(getContext());
+            Configuracion conf = Utils.ObtenerConf(getActivity().getApplication());
 
-        PropertyInfo pi1 = new PropertyInfo();
-        pi1.setName("fp");
-        pi1.setValue(json);
-        propertyInfos.add(pi1);
+            PropertyInfo pi1 = new PropertyInfo();
+            pi1.setName("fp");
+            pi1.setValue(json);
+            propertyInfos.add(pi1);
 
-        PropertyInfo pi2 = new PropertyInfo();
-        pi2.setName("ruta");
-        pi2.setValue(conf.getRuta());
-        propertyInfos.add(pi2);
+            PropertyInfo pi2 = new PropertyInfo();
+            pi2.setName("ruta");
+            pi2.setValue(conf.getRuta());
+            propertyInfos.add(pi2);
 
-        ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "Sube_FrecuenciaPunteoJ");
-        cws.propertyInfos= propertyInfos;
-        cws.delegate = CdiaFragment.this;
-        cws.execute();
+            ConexionWS_JSON cws = new ConexionWS_JSON(getContext(), "Sube_FrecuenciaPunteoJ");
+            cws.propertyInfos = propertyInfos;
+            cws.delegate = CdiaFragment.this;
+            cws.execute();
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error al enviar: "+e.getMessage());
+            Toast.makeText(getContext(), "Error al enviar: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
