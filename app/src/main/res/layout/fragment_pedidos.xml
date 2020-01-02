@@ -69,8 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="18"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <ScrollView
                 android:id="@+id/scrollView"
@@ -79,25 +78,20 @@
 
                 <HorizontalScrollView
                     android:id="@+id/horizontalView"
-                    android:layout_height="match_parent"
-                    android:scrollbars="horizontal|vertical"
                     android:layout_width="match_parent"
-                    >
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal|vertical">
 
                     <TableLayout
                         android:id="@+id/tableLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </TableLayout>
+                        android:layout_height="match_parent"></TableLayout>
 
                 </HorizontalScrollView>
 
             </ScrollView>
 
         </LinearLayout>
-
-
-
 
         <LinearLayout
             android:layout_width="match_parent"

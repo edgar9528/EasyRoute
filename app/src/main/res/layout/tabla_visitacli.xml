@@ -4,17 +4,20 @@
     android:layout_height="wrap_content"
     >
 
-    <TextView
+
+    <ImageView
         android:id="@+id/t_icono"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="SKU"
-        android:textSize="18sp"
-        android:textColor="@color/colorPrimaryDark"
-        />
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        >
+
+    </ImageView>
 
     <TextView
+        android:paddingLeft="8dp"
         android:id="@+id/t_estado"
         android:layout_width="50dp"
         android:layout_height="wrap_content"

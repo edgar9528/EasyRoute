@@ -1648,6 +1648,65 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.PedidosClientes> getPedidosClientesJson(String respuesta)
+    {
+        ArrayList<DataTableLC.PedidosClientes> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.PedidosClientes> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.PedidosVisPre> getPedidosVisPreJson(String respuesta)
+    {
+        ArrayList<DataTableLC.PedidosVisPre> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.PedidosVisPre> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.PedidosVisitas> getPedidosVisitasJson(String respuesta)
+    {
+        ArrayList<DataTableLC.PedidosVisitas> al =null;
+        try {
+
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.PedidosVisitas> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+
+
+
+
+
+
+
 
 
 

@@ -82,7 +82,6 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
         button_salir = view.findViewById(R.id.button_salir);
         et_filtro = view.findViewById(R.id.et_filtro);
 
-
         button_salir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +128,6 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
 
         inicializar();
 
-
         return  view;
     }
 
@@ -142,7 +140,6 @@ public class BuscarclientesFragment extends Fragment implements AsyncResponseJSO
         if (buscar) {
             button_seleccionar.setEnabled(false);
         }
-
     }
 
     private String diaActual()
