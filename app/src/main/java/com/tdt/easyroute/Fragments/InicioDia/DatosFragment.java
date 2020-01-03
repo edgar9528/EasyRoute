@@ -238,7 +238,6 @@ public class DatosFragment extends Fragment {
                             metodosWS.add("Obtener"+al_catalogos.get(i)+"J");
                             break;
                     }
-
                 }
                 else
                 {
@@ -1242,8 +1241,11 @@ public class DatosFragment extends Fragment {
             }
             finally
             {
-                db.endTransaction();
-                db.close();
+                if(db.isOpen())
+                {
+                    db.endTransaction();
+                    db.close();
+                }
             }
         }
 

@@ -50,8 +50,6 @@ import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.MenuBloqueo;
 import com.tdt.easyroute.Model.Usuario;
 
-import org.slf4j.Logger;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -59,8 +57,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks,
-        LocationListener {
+                                                            GoogleApiClient.ConnectionCallbacks,
+                                                            LocationListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -116,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         menuBloqueo = new MenuBloqueo();
+
+
 
         try {
             Log.d("salida","ENTRO MAIN ACTIVITY");
@@ -462,6 +462,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return usuario;
     }
 
+    public MainActivity getActivityPrincipal()
+    {
+        return this;
+    }
 
     //region Obtener ubicación actual
 
@@ -635,8 +639,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Mostramos la nueva ubicación recibida
         updateUI(location);
     }
-
-
     //endregion
 
 }
