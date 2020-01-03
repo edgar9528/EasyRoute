@@ -462,11 +462,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return usuario;
     }
 
-    public MainActivity getActivityPrincipal()
-    {
-        return this;
-    }
-
     //region Obtener ubicación actual
 
     public String getLatLon()

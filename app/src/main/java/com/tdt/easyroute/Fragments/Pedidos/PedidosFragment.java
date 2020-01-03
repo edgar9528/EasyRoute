@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Fragments.Pedidos;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -126,8 +127,9 @@ public class PedidosFragment extends Fragment {
         b_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(getContext(), BuscarClientesActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
 
@@ -481,6 +483,32 @@ public class PedidosFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode== Activity.RESULT_OK)
+        {
+            try
+            {
+                //String editar = (String) data.getExtras().getSerializable("CamposEditar");
+                String editar = (String) data.getStringExtra("clave");
+
+                Toast.makeText(getContext(), "Cliente a editar: "+editar, Toast.LENGTH_SHORT).show();
+
+            }
+            catch (Exception e)
+            {
+                Log.d("salida",e.getMessage());
+                Toast.makeText(getContext(), "Error al buscar clientes", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Log.d("salida","Busqueda cancelada");
+            Toast.makeText(getContext(), "Busqueda cancelada", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean> {
 
@@ -531,7 +559,7 @@ public class PedidosFragment extends Fragment {
             }
             else
             {
-                Toast.makeText(getContext(), "Error: "+mensaje, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error: "+mensaje, Toast.LENGTH_LONG).show();
             }
         }
     }

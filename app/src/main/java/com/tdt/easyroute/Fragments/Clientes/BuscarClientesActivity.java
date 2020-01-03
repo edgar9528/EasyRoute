@@ -12,6 +12,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -94,7 +95,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         layoutInflater= getLayoutInflater();
         vista = getWindow().getDecorView().getRootView();
 
-
         tableLayout = findViewById(R.id.tableLayout);
         button_buscar = findViewById(R.id.button_buscar);
         button_borrar = findViewById(R.id.button_borrar);
@@ -157,7 +157,9 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 .addApi(LocationServices.API)
                 .build();
 
+
         inicializar();
+
     }
 
     private void inicializar()
@@ -166,7 +168,9 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         Day = diaActual();
 
         mostrarTitulo();
-        cargarClientes();
+
+        InicializarAsync inicializarAsync = new InicializarAsync();
+        inicializarAsync.execute();
 
         if (buscar) {
             button_seleccionar.setEnabled(false);
@@ -244,12 +248,10 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
             String json = BaseLocal.Select( consulta ,getApplicationContext());
             bsClientes = ConvertirRespuesta.getClientesJson(json);
 
-            mostrarClientes("");
-
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -313,6 +315,8 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                     tableLayout.addView(tr);
                     dgClientes.add(c);
                 }
+
+
             }
         }
     }
@@ -426,13 +430,16 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                         if (diaVisitar <= 0) {
                             consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "EL CLIENTE NO SE VISITA HOY", "{0}");
                             obtenerUbicacion(consulta);
-                            Toast.makeText(getApplicationContext(), "El cliente no se visita hoy", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "El cliente no se visita hoy", Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
                 }
 
-                onBackPressed();
+                Intent i = getIntent();
+                i.putExtra("clave", dgCliente.getCli_nombrenegocio_str());
+                setResult(RESULT_OK, i);
+                finish();
 
             } else {
                 Toast.makeText(getApplicationContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
@@ -539,7 +546,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 pi.setValue(cliente);
                 propertyInfos.add(pi);
 
-                ConexionWS_JSON cws = new ConexionWS_JSON(getApplicationContext(),"ActualizarClienteJ");
+                ConexionWS_JSON cws = new ConexionWS_JSON(BuscarClientesActivity.this,"ActualizarClienteJ");
                 cws.propertyInfos = propertyInfos;
                 cws.delegate = BuscarClientesActivity.this;
                 cws.execute();
@@ -553,6 +560,58 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         {
             Log.d( "salida","Error: "+e.getMessage());
             Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean> {
+
+        public InicializarAsync() {
+        }
+
+        private String mensaje="";
+
+        private ProgressDialog progreso;
+
+        @Override protected void onPreExecute() {
+            progreso = new ProgressDialog(BuscarClientesActivity.this);
+            progreso.setMessage("Cargando...");
+            progreso.setCancelable(false);
+            progreso.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Boolean... booleans) {
+
+            try
+            {
+                cargarClientes();
+                return true;
+            }catch (Exception e)
+            {
+                mensaje = e.getMessage();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progreso.setProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            progreso.dismiss();
+
+            if(result)
+            {
+                mostrarClientes("");
+            }
+            else
+            {
+                Toast.makeText(getApplication(), "Error: "+mensaje, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
