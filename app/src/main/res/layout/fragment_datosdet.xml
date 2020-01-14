@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.Pedidos.DetallesCliente.DatosdetFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/paddingGeneral"
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_codigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Código"
+                    android:singleLine="true"
+                    android:enabled="false"
+                    android:focusable="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_razon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Razón social"
+                    android:enabled="false"
+                    android:focusable="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_negocio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Negocio"
+                    android:enabled="false"
+                    android:focusable="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_rfc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="RFC"
+                    android:singleLine="true"
+                    android:enabled="false"
+                    android:focusable="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_limite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Límite de crédito"
+                    android:singleLine="true"
+                    android:enabled="false"
+                    android:focusable="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:paddingTop="@dimen/paddingControles"
+                >
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/EditTextBlack">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_plazo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Plazo"
+                        android:singleLine="true"
+                        android:enabled="false"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/EditTextBlack">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_envases"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Envases"
+                        android:singleLine="true"
+                        android:enabled="false"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estado crédito"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="@dimen/paddingControles"
+                >
+            </TextView>
+
+            <Spinner
+                android:id="@+id/spinnerEstadoCred"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:clickable="false"
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_coordenada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Coordenada"
+                    android:singleLine="true"
+                    android:enabled="false"
+                    android:focusable="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4"
+            android:paddingTop="@dimen/paddingControles"
+            >
+
+                <RadioButton
+                    android:id="@+id/rb_reqfact"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="Req. Fact"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:enabled="false"
+                    >
+                </RadioButton>
+
+                <RadioButton
+                    android:id="@+id/rb_prospectp"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="Prospecto"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:enabled="false"
+                    >
+                </RadioButton>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:paddingTop="@dimen/paddingControles"
+                >
+
+                <RadioButton
+                    android:id="@+id/rb_fba"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="FBA"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:enabled="false"
+                    >
+                </RadioButton>
+
+                <RadioButton
+                    android:id="@+id/rb_comodato"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="Comodato"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:enabled="false"
+                    >
+                </RadioButton>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

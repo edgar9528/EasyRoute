@@ -1,5 +1,7 @@
 package com.tdt.easyroute.Model;
 
+import java.io.Serializable;
+
 public class DataTableLC {
 
     public static class VentasDet {
@@ -2671,7 +2673,7 @@ public class DataTableLC {
         }
     }
 
-    public static class PedidosLv
+    public static class PedidosLv implements Serializable
     {
         private String icono;
         private String cli_cve_n;
@@ -2848,6 +2850,31 @@ public class DataTableLC {
 
         public void setTrans_fecha_dt(String trans_fecha_dt) {
             this.trans_fecha_dt = trans_fecha_dt;
+        }
+    }
+
+    public static class Estatus
+    {
+        private String est_cve_str;
+        private String est_desc_str;
+
+        public Estatus() {
+        }
+
+        public String getEst_cve_str() {
+            return est_cve_str;
+        }
+
+        public void setEst_cve_str(String est_cve_str) {
+            this.est_cve_str = est_cve_str;
+        }
+
+        public String getEst_desc_str() {
+            return est_desc_str;
+        }
+
+        public void setEst_desc_str(String est_desc_str) {
+            this.est_desc_str = est_desc_str;
         }
     }
 

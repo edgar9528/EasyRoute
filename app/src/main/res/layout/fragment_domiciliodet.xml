@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.Pedidos.DetallesCliente.DomiciliodetFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/paddingGeneral"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dirección"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"
+            >
+        </TextView>
+
+        <Spinner
+            android:id="@+id/spinnerDireccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_calle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Calle"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_noExt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="No. Exterior"
+                android:singleLine="true"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_noInt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="No. Interior"
+                android:singleLine="true"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_colonia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Colonia"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_municipio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Municipio"
+                android:singleLine="true"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_telefono1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Teléfono 1"
+                android:singleLine="true"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_telefono2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Teléfono 2"
+                android:singleLine="true"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_coordenada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Coordenada"
+                android:singleLine="true"
+                android:enabled="false"
+                android:focusable="false"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

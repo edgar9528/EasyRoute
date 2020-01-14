@@ -29,6 +29,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.tdt.easyroute.Clases.BaseLocal;
+import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
@@ -37,6 +38,8 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Fragments.Clientes.BuscarClientesActivity;
+import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.MainDetallesActivity;
+import com.tdt.easyroute.Interface.AsyncResponseJSON;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
@@ -49,27 +52,30 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.Serializable;
+import java.security.spec.ECField;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class PedidosFragment extends Fragment {
+public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     Button b_actClientes, b_reimp, b_actCliente, b_buscar,
-           b_selec, b_detalle, b_noven,b_salir;
+            b_selec, b_detalle, b_noven, b_salir;
 
     EditText et_visitas, et_efectividad;
 
     TableLayout tableLayout;
     LayoutInflater layoutInflater;
     View vista;
-    String cliSelec="",nombreBase;
+    String cliSelec = "", nombreBase;
 
-    ArrayList<DataTableLC.PedidosLv> lvClientes=null;
+    ArrayList<DataTableLC.PedidosLv> lvClientes = null;
     ArrayList<String> metodosWS;
 
     Configuracion conf;
+    int tipo = 0;// 1.- no venta 2.- no lectura
+    int indiceSelec=-1;
 
     public static PedidosFragment newInstance() {
         PedidosFragment fragment = new PedidosFragment();
@@ -88,8 +94,8 @@ public class PedidosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_pedidos, container, false);
-        vista=view;
+        View view = inflater.inflate(R.layout.fragment_pedidos, container, false);
+        vista = view;
 
         b_actClientes = view.findViewById(R.id.b_actClientes);
         b_reimp = view.findViewById(R.id.b_reimprimir);
@@ -103,7 +109,7 @@ public class PedidosFragment extends Fragment {
         et_visitas = view.findViewById(R.id.et_vt);
         et_efectividad = view.findViewById(R.id.et_efec);
 
-        nombreBase = getContext().getString( R.string.nombreBD );
+        nombreBase = getContext().getString(R.string.nombreBD);
 
         layoutInflater = inflater;
         tableLayout = view.findViewById(R.id.tableLayout);
@@ -114,6 +120,20 @@ public class PedidosFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 actualizaClientes();
+            }
+        });
+
+        b_actCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actualizaCliente();
+            }
+        });
+
+        b_noven.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                noVisita();
             }
         });
 
@@ -129,7 +149,14 @@ public class PedidosFragment extends Fragment {
             public void onClick(View view) {
 
                 Intent intent = new Intent(getContext(), BuscarClientesActivity.class);
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
+            }
+        });
+
+        b_detalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirDetalles();
             }
         });
 
@@ -141,38 +168,31 @@ public class PedidosFragment extends Fragment {
 
     }
 
-    private void listarClientes(boolean dia)
-    {
-        try
-        {
+    private void listarClientes(boolean dia) {
+        try {
             String filtro = "";
             String qry = "";
             String qryc = "";
 
-            if(conf.getPreventa()==2)
-                qryc="or cli_cve_n in (select cli_cve_n from visitapreventa)";
+            if (conf.getPreventa() == 2)
+                qryc = "or cli_cve_n in (select cli_cve_n from visitapreventa)";
 
-            String[] dias={"Domingo","Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado"};
-            Calendar cal= Calendar.getInstance();
+            String[] dias = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+            Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
-            int numeroDia = cal.get(Calendar.DAY_OF_WEEK)-1;
+            int numeroDia = cal.get(Calendar.DAY_OF_WEEK) - 1;
 
             String hoy = dias[numeroDia];
 
-            if(conf.getPreventa()==1)
-            {
-                if(dias[numeroDia].equals("Sábado"))
-                {
+            if (conf.getPreventa() == 1) {
+                if (dias[numeroDia].equals("Sábado")) {
                     hoy = "Lunes";
-                }
-                else
-                    hoy= dias[numeroDia+1];
+                } else
+                    hoy = dias[numeroDia + 1];
             }
 
-            if(dia)
-            {
-                switch (hoy)
-                {
+            if (dia) {
+                switch (hoy) {
                     case "Lunes":
                         filtro = "cli_lun_n";
                         break;
@@ -199,168 +219,143 @@ public class PedidosFragment extends Fragment {
                 if (conf.getPreventa() == 1)
                     qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_razonsocial_str,cli_nombrenegocio_str," +
                             "cli_especial_n,cli_prospecto_n,est_cve_str from clientes where {0}>0 and rut_cve_n in " +
-                            "(select rut_cve_n from rutas where rut_prev_n={1}) and est_cve_str<>'B' order by {0}", filtro, conf.getRutaStr(),filtro);
+                            "(select rut_cve_n from rutas where rut_prev_n={1}) and est_cve_str<>'B' order by {0}", filtro, conf.getRutaStr(), filtro);
                 else
                     qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_razonsocial_str,cli_nombrenegocio_str," +
                             "cli_especial_n,cli_prospecto_n,est_cve_str from clientes where {0}>0 and rut_cve_n={1} and " +
-                            "est_cve_str<>'B' {2} order by {0}", filtro, conf.getRutaStr(),qryc,filtro);
-            }
-            else
-            {
+                            "est_cve_str<>'B' {2} order by {0}", filtro, conf.getRutaStr(), qryc, filtro);
+            } else {
                 if (conf.getPreventa() == 1)
                     qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_razonsocial_str,cli_nombrenegocio_str," +
                             "cli_especial_n,cli_prospecto_n,est_cve_str from clientes where rut_cve_n in " +
-                            "(select rut_cve_n from rutas where rut_prev_n={1}) est_cve_str<>'B' order by {0}", conf.getRutaStr(),conf.getRutaStr());
+                            "(select rut_cve_n from rutas where rut_prev_n={1}) est_cve_str<>'B' order by {0}", conf.getRutaStr(), conf.getRutaStr());
                 else
                     qry = string.formatSql("select cli_cve_n,cli_cveext_str,cli_razonsocial_str,cli_nombrenegocio_str," +
                             "cli_especial_n,cli_prospecto_n,est_cve_str from clientes where rut_cve_n={0} and " +
-                            "est_cve_str<>'B' order by {0}", conf.getRutaStr(),conf.getRutaStr());
+                            "est_cve_str<>'B' order by {0}", conf.getRutaStr(), conf.getRutaStr());
             }
 
 
-            try
-            {
-                BaseLocal.Select("select pag_especie_n from pagos",getContext());
-            }
-            catch (Exception ex)
-            {
-                BaseLocal.Insert("alter table pagos add pag_especie_n bit not null default 0",getContext());
+            try {
+                BaseLocal.Select("select pag_especie_n from pagos", getContext());
+            } catch (Exception ex) {
+                BaseLocal.Insert("alter table pagos add pag_especie_n bit not null default 0", getContext());
             }
 
-            try
-            {
-                BaseLocal.Select("select vdet_kit_n from ventasdet",getContext());
-            }
-            catch (Exception ex)
-            {
-                BaseLocal.Insert("alter table ventasdet add vdet_kit_n bit not null default 0",getContext());
+            try {
+                BaseLocal.Select("select vdet_kit_n from ventasdet", getContext());
+            } catch (Exception ex) {
+                BaseLocal.Insert("alter table ventasdet add vdet_kit_n bit not null default 0", getContext());
             }
 
-            ArrayList<DataTableLC.PedidosClientes> dt =null;
-            String json = BaseLocal.Select(qry,getContext());
+            ArrayList<DataTableLC.PedidosClientes> dt = null;
+            String json = BaseLocal.Select(qry, getContext());
             dt = ConvertirRespuesta.getPedidosClientesJson(json);
 
-            if (dia)
-            {
+            if (dia) {
                 cargarClientes(dt);
             }
-        }
-        catch (Exception e)
-        {
-            Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getContext(), "Error al listar clientes: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.d("salida", "Error: " + e.toString());
+            Toast.makeText(getContext(), "Error al listar clientes: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void cargarClientes(ArrayList<DataTableLC.PedidosClientes> dt)
-    {
-        try
-        {
+    private void cargarClientes(ArrayList<DataTableLC.PedidosClientes> dt) {
+        try {
             ArrayList<DataTableLC.PedidosVisitas> dtCli = null;
             ArrayList<DataTableLC.PedidosVisitas> dtCli2 = null;
-            ArrayList<DataTableLC.PedidosVisPre> dtVisPre =null;
+            ArrayList<DataTableLC.PedidosVisPre> dtVisPre = null;
 
             int l = 0;
             String cveext = "";
 
-            String json= BaseLocal.Select("Select * from visitapreventa",getContext());
+            String json = BaseLocal.Select("Select * from visitapreventa", getContext());
             dtVisPre = ConvertirRespuesta.getPedidosVisPreJson(json);
 
-            if(dt!=null)
-            {
-                lvClientes=null;
+            if (dt != null) {
+                lvClientes = null;
                 lvClientes = new ArrayList<>();
 
-                String icono,cli_cve_n,cli_est;
-                String cli_cveext_n,cli_nombre,cli_especial_n;
+                String icono, cli_cve_n, cli_est;
+                String cli_cveext_n, cli_nombre, cli_especial_n;
 
                 DataTableLC.PedidosClientes r;
-                for(int i=0; i <dt.size();i++)
-                {
+                for (int i = 0; i < dt.size(); i++) {
                     r = dt.get(i);
-                    l= r.getCli_cveext_str().length()-6;
+                    l = r.getCli_cveext_str().length() - 6;
 
                     //if(l>=0)
                     //{
-                        cli_cve_n = r.getCli_cve_n();
-                        cli_especial_n = r.getCli_especial_n();
+                    cli_cve_n = r.getCli_cve_n();
+                    cli_especial_n = r.getCli_especial_n();
 
-                        if(r.getCli_prospecto_n()==null || r.getCli_prospecto_n().isEmpty() )
-                            cli_est="P";
-                        else
-                            cli_est = r.getCli_cveext_str().substring(0,1);
+                    if (r.getCli_prospecto_n() == null || r.getCli_prospecto_n().isEmpty())
+                        cli_est = "P";
+                    else
+                        cli_est = r.getCli_cveext_str().substring(0, 1);
 
-                        cli_cveext_n = String.valueOf(   Long.parseLong( r.getCli_cveext_str().replace("PR","").replace("C","").replace("P","").replace("V","") )   ) ;
+                    cli_cveext_n = String.valueOf(Long.parseLong(r.getCli_cveext_str().replace("PR", "").replace("C", "").replace("P", "").replace("V", "")));
 
-                        if(r.getCli_nombrenegocio_str()==null || r.getCli_nombrenegocio_str().isEmpty())
-                            cli_nombre = r.getCli_razonsocial_str();
-                        else
-                            cli_nombre = r.getCli_nombrenegocio_str();
+                    if (r.getCli_nombrenegocio_str() == null || r.getCli_nombrenegocio_str().isEmpty())
+                        cli_nombre = r.getCli_razonsocial_str();
+                    else
+                        cli_nombre = r.getCli_nombrenegocio_str();
 
                     //}
 
-
                     icono = "0";
 
-                    if (  r.getEst_cve_str().equals("I") )
+                    if (r.getEst_cve_str().equals("I"))
                         icono = "4";
 
-                    dtCli=null;
-                    json = BaseLocal.Select( string.formatSql("select * from visitas where cli_cve_n={0} and " +
-                            "(upper(vis_operacion_str)='CON VENTA' or upper(vis_operacion_str)='CON PREVENTA') order by vis_fecha_dt desc", r.getCli_cve_n() ),getContext() );
+                    dtCli = null;
+                    json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and " +
+                            "(upper(vis_operacion_str)='CON VENTA' or upper(vis_operacion_str)='CON PREVENTA') order by vis_fecha_dt desc", r.getCli_cve_n()), getContext());
                     dtCli = ConvertirRespuesta.getPedidosVisitasJson(json);
 
-                    DataTableLC.PedidosVisPre vp=null;
-                    if(dtVisPre!=null)
-                        for(int j=0; j<dtVisPre.size();j++)
-                        {
-                            if(r.getCli_cve_n().equals( dtVisPre.get(j).getCli_cve_n()  ))
-                            {
+                    DataTableLC.PedidosVisPre vp = null;
+                    if (dtVisPre != null)
+                        for (int j = 0; j < dtVisPre.size(); j++) {
+                            if (r.getCli_cve_n().equals(dtVisPre.get(j).getCli_cve_n())) {
                                 vp = dtVisPre.get(j);
                             }
                         }
 
-                    if(vp!=null && conf.getPreventa()==2)
-                    {
-                        icono ="5";
+                    if (vp != null && conf.getPreventa() == 2) {
+                        icono = "5";
                     }
 
-                    if (dtCli!=null)
-                    {
+                    if (dtCli != null) {
 
-                        icono="1";
-                    }
-                    else
-                    {
-                        dtCli2=null;
-                        json = BaseLocal.Select(   string.formatSql("select * from visitas where cli_cve_n={0} and vis_operacion_str<>'CON VENTA' order by vis_fecha_dt desc", r.getCli_cve_n()), getContext()   );
+                        icono = "1";
+                    } else {
+                        dtCli2 = null;
+                        json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and vis_operacion_str<>'CON VENTA' order by vis_fecha_dt desc", r.getCli_cve_n()), getContext());
                         dtCli2 = ConvertirRespuesta.getPedidosVisitasJson(json);
 
-                        if(dtCli2!=null)
-                        {
+                        if (dtCli2 != null) {
                             String op = dtCli2.get(0).getVis_operacion_str();
-                            if(op.equals("NO VENTA"))
-                                icono="3";
-                            if(op.equals("CON VENTA") || op.equals("CON PREVENTA") )
-                                icono="1";
-                            if(op.equals("SIN VENTA") || op.equals("CON COBRANZA") )
-                                icono="2";
+                            if (op.equals("NO VENTA"))
+                                icono = "3";
+                            if (op.equals("CON VENTA") || op.equals("CON PREVENTA"))
+                                icono = "1";
+                            if (op.equals("SIN VENTA") || op.equals("CON COBRANZA"))
+                                icono = "2";
                         }
                     }
 
-                    lvClientes.add( new DataTableLC.PedidosLv(icono, cli_cve_n,cli_est,cli_cveext_n,cli_nombre, cli_especial_n) );
+                    lvClientes.add(new DataTableLC.PedidosLv(icono, cli_cve_n, cli_est, cli_cveext_n, cli_nombre, cli_especial_n));
                 }
             }
 
-        }catch (Exception e)
-        {
-            Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getContext(), "Error al cargar clientes: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.d("salida", "Error: " + e.toString());
+            Toast.makeText(getContext(), "Error al cargar clientes: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    private void mostrarClientes()
-    {
+    private void mostrarClientes() {
         Drawable[] iconos = new Drawable[6];
         iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
         iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
@@ -371,10 +366,9 @@ public class PedidosFragment extends Fragment {
 
         tableLayout.removeAllViews();
         TableRow tr;
-        cliSelec="";
+        cliSelec = "";
 
-        if(lvClientes!=null)
-        {
+        if (lvClientes != null) {
             for (int i = 0; i < lvClientes.size(); i++) {
                 tr = (TableRow) layoutInflater.inflate(R.layout.tabla_visitacli, null);
 
@@ -394,70 +388,60 @@ public class PedidosFragment extends Fragment {
     //region evento del clic a la fila
     private View.OnClickListener tableListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view)
-        {
+        public void onClick(View view) {
             TableRow tr = ((TableRow) view);
             String tag = (String) tr.getTag(); //se obtiene la fila y tag de la seleccion
 
-            if(!tag.equals(cliSelec))
-            {
+            if (!tag.equals(cliSelec)) {
                 for (int i = 0; i < lvClientes.size(); i++) {
                     TableRow row = (TableRow) vista.findViewWithTag(lvClientes.get(i).getCli_cve_n());
                     row.setBackgroundColor(getResources().getColor(R.color.bgDefault));
+
+                    if(tag.equals( lvClientes.get(i).getCli_cve_n() ))
+                        indiceSelec = i;
                 }
                 //pinta de azul la fila y actualiza la cve de la fila seccionada
                 tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 cliSelec = tag;
             }
+
         }
     };
     //endregion
 
-    private void CalcularEfectividad()
-    {
+    private void CalcularEfectividad() {
         int visitas = 0;
         int ConVenta = 0;
         DataTableLC.PedidosLv i;
 
-        if(lvClientes!=null)
-            for(int j=0; j<lvClientes.size();j++)
-            {
+        if (lvClientes != null)
+            for (int j = 0; j < lvClientes.size(); j++) {
                 i = lvClientes.get(j);
-                if(i.getIconoInt() ==1)
-                {
+                if (i.getIconoInt() == 1) {
                     ConVenta++;
                     visitas++;
-                }
-                else
-                {
+                } else {
                     if (i.getIconoInt() == 2 || i.getIconoInt() == 3)
                         visitas++;
                 }
             }
 
-        try
-        {
-            if (lvClientes.size() > 0)
-            {
-                et_visitas.setText( string.formatSql("{0}/{1}", String.valueOf( visitas ) , String.valueOf(lvClientes.size())  ) );
-                et_efectividad.setText( (  ConVenta/lvClientes.size() ) +" %" );
+        try {
+            if (lvClientes.size() > 0) {
+                et_visitas.setText(string.formatSql("{0}/{1}", String.valueOf(visitas), String.valueOf(lvClientes.size())));
+                et_efectividad.setText((ConVenta / lvClientes.size()) + " %");
+            } else {
+                et_visitas.setText(string.formatSql("{0}/{1}", String.valueOf(visitas), "0"));
+                et_efectividad.setText(ConVenta + "/0");
             }
-            else
-            {
-                et_visitas.setText( string.formatSql("{0}/{1}", String.valueOf(visitas), "0") );
-                et_efectividad.setText( ConVenta+"/0" );
-            }
-        }
-        catch (Exception e)
-        {
-            Log.d("salida","Error: "+e);
+        } catch (Exception e) {
+            Log.d("salida", "Error: " + e);
             Toast.makeText(getContext(), "Error al calcular efectividad." + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
     }
 
-    private void actualizaClientes()
-    {
+    private void actualizaClientes() {
         try {
             metodosWS = null;
             metodosWS = new ArrayList<>();
@@ -474,40 +458,184 @@ public class PedidosFragment extends Fragment {
 
             ConexionWS conexionWS = new ConexionWS(getContext());
             conexionWS.execute();
-        }
-        catch (Exception e)
-        {
-            Log.d("salida","Error al actualizar: "+e.getMessage());
+        } catch (Exception e) {
+            Log.d("salida", "Error al actualizar: " + e.getMessage());
             Toast.makeText(getContext(), "Error al actualizar clientes", Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    private void actualizaCliente()
+    {
+        try {
+
+            if (!cliSelec.isEmpty())
+            {
+                String cliente = lvClientes.get(indiceSelec).getCli_cve_n();
+
+                ArrayList<PropertyInfo> propertyInfos  =new ArrayList<>();
+
+                PropertyInfo pi = new PropertyInfo();
+                pi.setName("IdCliente");
+                pi.setValue(cliente);
+                propertyInfos.add(pi);
+
+                ConexionWS_JSON cws = new ConexionWS_JSON(getContext(),"ActualizarClienteJ");
+                cws.propertyInfos = propertyInfos;
+                cws.delegate = PedidosFragment.this;
+                cws.execute();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+            }
+
+        }catch (Exception e)
+        {
+            Log.d( "salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void noVisita()
+    {
+        if(lvClientes.get(indiceSelec).getIconoInt() ==1 )
+        {
+            Toast.makeText(getContext(), "El cliente ya tiene una venta registrada.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else
+        if(lvClientes.get(indiceSelec).getIconoInt() ==2 )
+        {
+            Toast.makeText(getContext(), "El cliente ya registro cobranza.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else
+        if(lvClientes.get(indiceSelec).getIconoInt() ==3 )
+        {
+            Toast.makeText(getContext(), "El cliente ya tiene un motivo de no venta.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        tipo = 1;
+        MostrarMsj();
+    }
+
+    private void MostrarMsj()
+    {
+        Toast.makeText(getContext(), "Entro a mostrar mensaje", Toast.LENGTH_SHORT).show();
+    }
+
+    private void abrirDetalles()
+    {
+        try {
+
+            if(!cliSelec.isEmpty())
+            {
+                Intent intent = new Intent(getContext(), MainDetallesActivity.class);
+                intent.putExtra("cliente",lvClientes.get(indiceSelec));
+                startActivity(intent);
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.getMessage());
+            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(resultCode== Activity.RESULT_OK)
-        {
-            try
-            {
+        if (resultCode == Activity.RESULT_OK) {
+            try {
                 //String editar = (String) data.getExtras().getSerializable("CamposEditar");
                 String editar = (String) data.getStringExtra("clave");
 
-                Toast.makeText(getContext(), "Cliente a editar: "+editar, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cliente a editar: " + editar, Toast.LENGTH_SHORT).show();
 
-            }
-            catch (Exception e)
-            {
-                Log.d("salida",e.getMessage());
+            } catch (Exception e) {
+                Log.d("salida", e.getMessage());
                 Toast.makeText(getContext(), "Error al buscar clientes", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Log.d("salida", "Busqueda cancelada");
+            Toast.makeText(getContext(), "Busqueda cancelada", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void recibirPeticion(boolean estado, String respuesta) {
+        if(estado)
+        {
+            if (respuesta != null)
+            {
+                ArrayList<DataTableWS.Clientes> clientes;
+                clientes = ConvertirRespuesta.getClientesJson(respuesta);
+
+                if(clientes!=null && clientes.size()>0)
+                {
+                    DataTableWS.Clientes r = clientes.get(0);
+
+                    try {
+
+                        String consulta=string.formatSql(Querys.Clientes.UpClientes4, r.getCli_cveext_str() , getBool( r.getCli_padre_n() ),
+                                r.getCli_cvepadre_n(),r.getCli_razonsocial_str(), r.getCli_rfc_Str() , getBool( r.getCli_reqfact_n() ) ,r.getCli_nombrenegocio_str(),
+                                r.getCli_nom_str(), r.getCli_app_str(),r.getCli_apm_str(),r.getCli_fnac_dt(), r.getCli_genero_str(),r.getLpre_cve_n(),
+                                r.getNota_cve_n(), r.getFpag_cve_n(), getBool( r.getCli_consigna_n() ) , getBool( r.getCli_credito_n() ) ,r.getCli_montocredito_n(),
+                                r.getCli_plazocredito_n(),r.getCli_credenvases_n(),r.getCli_estcredito_str(), getBool( r.getCli_fba_n()) ,
+                                r.getCli_porcentajefba_n(),r.getRut_cve_n(),r.getNvc_cve_n(),r.getGiro_cve_n(),r.getCli_email_str(),
+                                r.getCli_dirfact_n(), r.getCli_dirent_n(), r.getCli_Tel1_str(),r.getCli_tel2_str(),r.getEmp_cve_n(),
+                                r.getCli_coordenadaini_str(),r.getEst_cve_str(),r.getTcli_cve_n(),r.getCli_lun_n(),
+                                r.getCli_mar_n(), r.getCli_mie_n(), r.getCli_jue_n(), r.getCli_vie_n(),r.getCli_sab_n(),r.getCli_dom_n(),
+                                r.getFrec_cve_n(), getBool( r.getCli_especial_n() ) , getBool( r.getCli_esvallejo_n() ) , r.getNpro_cve_n(),r.getCli_huixdesc_n(),
+                                getBool( r.getCli_eshuix_n() ) , getBool( r.getCli_prospecto_n() ) , getBool( r.getCli_invalidafrecuencia_n() ) , getBool( r.getCli_invalidagps_n() ) ,
+                                getBool( r.getCli_dobleventa_n() ), getBool(r.getCli_comodato_n()) , r.getSeg_cve_n(), getBool( r.getCli_dispersion_n() ) ,
+                                r.getCli_dispersioncant_n(), r.getCli_limitemes_n(), r.getCli_cve_n());
+
+                        BaseLocal.Insert( consulta,getContext());
+
+                        Toast.makeText(getContext(), "Cliente actualizado", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.d("salida", "Error: "+e.getMessage());
+                        Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(getContext(), "No se encontro el cliente", Toast.LENGTH_SHORT).show();
             }
         }
         else
         {
-            Log.d("salida","Busqueda cancelada");
-            Toast.makeText(getContext(), "Busqueda cancelada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private String getBool(String cad)
+    {
+        try {
+            if (cad.equals("true")) {
+                cad = "1";
+            } else {
+                cad = "0";
+            }
+            return cad;
+        }catch (Exception e)
+        {
+            return "0";
+        }
     }
 
     private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean> {
@@ -635,7 +763,7 @@ public class PedidosFragment extends Fragment {
                         } catch (Exception e) {
                             Log.d("salida", "error: " + e.getMessage());
                             result = false;
-                            resultado = "Error: " + e.getMessage();
+                            resultado = e.getMessage();
                             i = metodosWS.size(); //terminar ciclo
                         }
 

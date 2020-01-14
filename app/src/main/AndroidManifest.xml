@@ -15,16 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".Fragments.Clientes.BuscarClientesActivity"
-                  android:windowSoftInputMode="stateHidden"
-            ></activity>
-
-        <activity android:name=".Fragments.Clientes.OrdenaCliente.EditarclienteActivity"
-                  android:windowSoftInputMode="stateHidden"  >
-
-        </activity>
-
+        <activity android:name=".Fragments.Pedidos.DetallesCliente.MainDetallesActivity"></activity>
+        <activity
+            android:name=".Fragments.Clientes.BuscarClientesActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Fragments.Clientes.OrdenaCliente.EditarclienteActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".Ventanas.PruebasActivity" />
         <activity
             android:name=".LoginActivity"
