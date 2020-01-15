@@ -2878,5 +2878,587 @@ public class DataTableLC {
         }
     }
 
+
+    public static class Motivos
+    {
+        private String mov_cve_n;
+        private String mov_desc_str;
+
+        public Motivos() {
+        }
+
+        public String getMov_cve_n() {
+            return mov_cve_n;
+        }
+
+        public void setMov_cve_n(String mov_cve_n) {
+            this.mov_cve_n = mov_cve_n;
+        }
+
+        public String getMov_desc_str() {
+            return mov_desc_str;
+        }
+
+        public void setMov_desc_str(String mov_desc_str) {
+            this.mov_desc_str = mov_desc_str;
+        }
+    }
+
+    public static class DtCliVenta
+    {
+        private String cli_cve_n;
+        private String cli_cveext_str;
+        private String cli_padre_n;
+        private String cli_cvepadre_n;
+        private String cli_razonsocial_str;
+        private String cli_rfc_str;
+        private String cli_reqfact_n;
+        private String cli_nombrenegocio_str;
+        private String cli_nom_str;
+        private String cli_app_str;
+        private String cli_apm_str;
+        private String cli_fnac_dt;
+        private String cli_genero_str;
+        private String lpre_cve_n;
+        private String nota_cve_n;
+        private String fpag_cve_n;
+        private String cli_consigna_n;
+        private String cli_especial_n;
+        private String cli_credito_n;
+        private String cli_montocredito_n;
+        private String cli_plazocredito_n;
+        private String cli_credenvases_n;
+        private String cli_estcredito_str;
+        private String cli_fba_n;
+        private String cli_porcentajefba_n;
+        private String rut_cve_n;
+        private String nvc_cve_n;
+        private String giro_cve_n;
+        private String cli_email_str;
+        private String cli_dirfact_n;
+        private String cli_dirent_n;
+        private String cli_tel1_str;
+        private String cli_tel2_str;
+        private String emp_cve_n;
+        private String cli_coordenadaini_str;
+        private String est_cve_str;
+        private String tcli_cve_n;
+        private String cli_lun_n;
+        private String cli_mar_n;
+        private String cli_mie_n;
+        private String cli_jue_n;
+        private String cli_vie_n;
+        private String cli_sab_n;
+        private String cli_dom_n;
+        private String frec_cve_n;
+        private String cli_esvallejo_n;
+        private String npro_cve_n;
+        private String cli_eshuix_n;
+        private String cli_huixdesc_n;
+        private String cli_prospecto_n;
+        private String cli_invalidafrecuencia_n;
+        private String cli_invalidagps_n;
+        private String cli_dobleventa_n;
+        private String cli_comodato_n;
+        private String cli_imagen_n;
+        private String cli_invalidacb_n;
+        private String seg_cve_n;
+        private String cli_dispersion_n;
+        private String cli_dispersioncant_n;
+        private String cli_limitemes_n;
+        private String cvm_vtaacum_n;
+
+        public DtCliVenta() {
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getCli_cveext_str() {
+            return cli_cveext_str;
+        }
+
+        public void setCli_cveext_str(String cli_cveext_str) {
+            this.cli_cveext_str = cli_cveext_str;
+        }
+
+        public String getCli_padre_n() {
+            return cli_padre_n;
+        }
+
+        public void setCli_padre_n(String cli_padre_n) {
+            this.cli_padre_n = cli_padre_n;
+        }
+
+        public String getCli_cvepadre_n() {
+            return cli_cvepadre_n;
+        }
+
+        public void setCli_cvepadre_n(String cli_cvepadre_n) {
+            this.cli_cvepadre_n = cli_cvepadre_n;
+        }
+
+        public String getCli_razonsocial_str() {
+            return cli_razonsocial_str;
+        }
+
+        public void setCli_razonsocial_str(String cli_razonsocial_str) {
+            this.cli_razonsocial_str = cli_razonsocial_str;
+        }
+
+        public String getCli_rfc_str() {
+            return cli_rfc_str;
+        }
+
+        public void setCli_rfc_str(String cli_rfc_str) {
+            this.cli_rfc_str = cli_rfc_str;
+        }
+
+        public String getCli_reqfact_n() {
+            return cli_reqfact_n;
+        }
+
+        public void setCli_reqfact_n(String cli_reqfact_n) {
+            this.cli_reqfact_n = cli_reqfact_n;
+        }
+
+        public String getCli_nombrenegocio_str() {
+            return cli_nombrenegocio_str;
+        }
+
+        public void setCli_nombrenegocio_str(String cli_nombrenegocio_str) {
+            this.cli_nombrenegocio_str = cli_nombrenegocio_str;
+        }
+
+        public String getCli_nom_str() {
+            return cli_nom_str;
+        }
+
+        public void setCli_nom_str(String cli_nom_str) {
+            this.cli_nom_str = cli_nom_str;
+        }
+
+        public String getCli_app_str() {
+            return cli_app_str;
+        }
+
+        public void setCli_app_str(String cli_app_str) {
+            this.cli_app_str = cli_app_str;
+        }
+
+        public String getCli_apm_str() {
+            return cli_apm_str;
+        }
+
+        public void setCli_apm_str(String cli_apm_str) {
+            this.cli_apm_str = cli_apm_str;
+        }
+
+        public String getCli_fnac_dt() {
+            return cli_fnac_dt;
+        }
+
+        public void setCli_fnac_dt(String cli_fnac_dt) {
+            this.cli_fnac_dt = cli_fnac_dt;
+        }
+
+        public String getCli_genero_str() {
+            return cli_genero_str;
+        }
+
+        public void setCli_genero_str(String cli_genero_str) {
+            this.cli_genero_str = cli_genero_str;
+        }
+
+        public String getLpre_cve_n() {
+            return lpre_cve_n;
+        }
+
+        public void setLpre_cve_n(String lpre_cve_n) {
+            this.lpre_cve_n = lpre_cve_n;
+        }
+
+        public String getNota_cve_n() {
+            return nota_cve_n;
+        }
+
+        public void setNota_cve_n(String nota_cve_n) {
+            this.nota_cve_n = nota_cve_n;
+        }
+
+        public String getFpag_cve_n() {
+            return fpag_cve_n;
+        }
+
+        public void setFpag_cve_n(String fpag_cve_n) {
+            this.fpag_cve_n = fpag_cve_n;
+        }
+
+        public String getCli_consigna_n() {
+            return cli_consigna_n;
+        }
+
+        public void setCli_consigna_n(String cli_consigna_n) {
+            this.cli_consigna_n = cli_consigna_n;
+        }
+
+        public String getCli_especial_n() {
+            return cli_especial_n;
+        }
+
+        public void setCli_especial_n(String cli_especial_n) {
+            this.cli_especial_n = cli_especial_n;
+        }
+
+        public String getCli_credito_n() {
+            return cli_credito_n;
+        }
+
+        public void setCli_credito_n(String cli_credito_n) {
+            this.cli_credito_n = cli_credito_n;
+        }
+
+        public String getCli_montocredito_n() {
+            return cli_montocredito_n;
+        }
+
+        public void setCli_montocredito_n(String cli_montocredito_n) {
+            this.cli_montocredito_n = cli_montocredito_n;
+        }
+
+        public String getCli_plazocredito_n() {
+            return cli_plazocredito_n;
+        }
+
+        public void setCli_plazocredito_n(String cli_plazocredito_n) {
+            this.cli_plazocredito_n = cli_plazocredito_n;
+        }
+
+        public String getCli_credenvases_n() {
+            return cli_credenvases_n;
+        }
+
+        public void setCli_credenvases_n(String cli_credenvases_n) {
+            this.cli_credenvases_n = cli_credenvases_n;
+        }
+
+        public String getCli_estcredito_str() {
+            return cli_estcredito_str;
+        }
+
+        public void setCli_estcredito_str(String cli_estcredito_str) {
+            this.cli_estcredito_str = cli_estcredito_str;
+        }
+
+        public String getCli_fba_n() {
+            return cli_fba_n;
+        }
+
+        public void setCli_fba_n(String cli_fba_n) {
+            this.cli_fba_n = cli_fba_n;
+        }
+
+        public String getCli_porcentajefba_n() {
+            return cli_porcentajefba_n;
+        }
+
+        public void setCli_porcentajefba_n(String cli_porcentajefba_n) {
+            this.cli_porcentajefba_n = cli_porcentajefba_n;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getNvc_cve_n() {
+            return nvc_cve_n;
+        }
+
+        public void setNvc_cve_n(String nvc_cve_n) {
+            this.nvc_cve_n = nvc_cve_n;
+        }
+
+        public String getGiro_cve_n() {
+            return giro_cve_n;
+        }
+
+        public void setGiro_cve_n(String giro_cve_n) {
+            this.giro_cve_n = giro_cve_n;
+        }
+
+        public String getCli_email_str() {
+            return cli_email_str;
+        }
+
+        public void setCli_email_str(String cli_email_str) {
+            this.cli_email_str = cli_email_str;
+        }
+
+        public String getCli_dirfact_n() {
+            return cli_dirfact_n;
+        }
+
+        public void setCli_dirfact_n(String cli_dirfact_n) {
+            this.cli_dirfact_n = cli_dirfact_n;
+        }
+
+        public String getCli_dirent_n() {
+            return cli_dirent_n;
+        }
+
+        public void setCli_dirent_n(String cli_dirent_n) {
+            this.cli_dirent_n = cli_dirent_n;
+        }
+
+        public String getCli_tel1_str() {
+            return cli_tel1_str;
+        }
+
+        public void setCli_tel1_str(String cli_tel1_str) {
+            this.cli_tel1_str = cli_tel1_str;
+        }
+
+        public String getCli_tel2_str() {
+            return cli_tel2_str;
+        }
+
+        public void setCli_tel2_str(String cli_tel2_str) {
+            this.cli_tel2_str = cli_tel2_str;
+        }
+
+        public String getEmp_cve_n() {
+            return emp_cve_n;
+        }
+
+        public void setEmp_cve_n(String emp_cve_n) {
+            this.emp_cve_n = emp_cve_n;
+        }
+
+        public String getCli_coordenadaini_str() {
+            return cli_coordenadaini_str;
+        }
+
+        public void setCli_coordenadaini_str(String cli_coordenadaini_str) {
+            this.cli_coordenadaini_str = cli_coordenadaini_str;
+        }
+
+        public String getEst_cve_str() {
+            return est_cve_str;
+        }
+
+        public void setEst_cve_str(String est_cve_str) {
+            this.est_cve_str = est_cve_str;
+        }
+
+        public String getTcli_cve_n() {
+            return tcli_cve_n;
+        }
+
+        public void setTcli_cve_n(String tcli_cve_n) {
+            this.tcli_cve_n = tcli_cve_n;
+        }
+
+        public String getCli_lun_n() {
+            return cli_lun_n;
+        }
+
+        public void setCli_lun_n(String cli_lun_n) {
+            this.cli_lun_n = cli_lun_n;
+        }
+
+        public String getCli_mar_n() {
+            return cli_mar_n;
+        }
+
+        public void setCli_mar_n(String cli_mar_n) {
+            this.cli_mar_n = cli_mar_n;
+        }
+
+        public String getCli_mie_n() {
+            return cli_mie_n;
+        }
+
+        public void setCli_mie_n(String cli_mie_n) {
+            this.cli_mie_n = cli_mie_n;
+        }
+
+        public String getCli_jue_n() {
+            return cli_jue_n;
+        }
+
+        public void setCli_jue_n(String cli_jue_n) {
+            this.cli_jue_n = cli_jue_n;
+        }
+
+        public String getCli_vie_n() {
+            return cli_vie_n;
+        }
+
+        public void setCli_vie_n(String cli_vie_n) {
+            this.cli_vie_n = cli_vie_n;
+        }
+
+        public String getCli_sab_n() {
+            return cli_sab_n;
+        }
+
+        public void setCli_sab_n(String cli_sab_n) {
+            this.cli_sab_n = cli_sab_n;
+        }
+
+        public String getCli_dom_n() {
+            return cli_dom_n;
+        }
+
+        public void setCli_dom_n(String cli_dom_n) {
+            this.cli_dom_n = cli_dom_n;
+        }
+
+        public String getFrec_cve_n() {
+            return frec_cve_n;
+        }
+
+        public void setFrec_cve_n(String frec_cve_n) {
+            this.frec_cve_n = frec_cve_n;
+        }
+
+        public String getCli_esvallejo_n() {
+            return cli_esvallejo_n;
+        }
+
+        public void setCli_esvallejo_n(String cli_esvallejo_n) {
+            this.cli_esvallejo_n = cli_esvallejo_n;
+        }
+
+        public String getNpro_cve_n() {
+            return npro_cve_n;
+        }
+
+        public void setNpro_cve_n(String npro_cve_n) {
+            this.npro_cve_n = npro_cve_n;
+        }
+
+        public String getCli_eshuix_n() {
+            return cli_eshuix_n;
+        }
+
+        public void setCli_eshuix_n(String cli_eshuix_n) {
+            this.cli_eshuix_n = cli_eshuix_n;
+        }
+
+        public String getCli_huixdesc_n() {
+            return cli_huixdesc_n;
+        }
+
+        public void setCli_huixdesc_n(String cli_huixdesc_n) {
+            this.cli_huixdesc_n = cli_huixdesc_n;
+        }
+
+        public String getCli_prospecto_n() {
+            return cli_prospecto_n;
+        }
+
+        public void setCli_prospecto_n(String cli_prospecto_n) {
+            this.cli_prospecto_n = cli_prospecto_n;
+        }
+
+        public String getCli_invalidafrecuencia_n() {
+            return cli_invalidafrecuencia_n;
+        }
+
+        public void setCli_invalidafrecuencia_n(String cli_invalidafrecuencia_n) {
+            this.cli_invalidafrecuencia_n = cli_invalidafrecuencia_n;
+        }
+
+        public String getCli_invalidagps_n() {
+            return cli_invalidagps_n;
+        }
+
+        public void setCli_invalidagps_n(String cli_invalidagps_n) {
+            this.cli_invalidagps_n = cli_invalidagps_n;
+        }
+
+        public String getCli_dobleventa_n() {
+            return cli_dobleventa_n;
+        }
+
+        public void setCli_dobleventa_n(String cli_dobleventa_n) {
+            this.cli_dobleventa_n = cli_dobleventa_n;
+        }
+
+        public String getCli_comodato_n() {
+            return cli_comodato_n;
+        }
+
+        public void setCli_comodato_n(String cli_comodato_n) {
+            this.cli_comodato_n = cli_comodato_n;
+        }
+
+        public String getCli_imagen_n() {
+            return cli_imagen_n;
+        }
+
+        public void setCli_imagen_n(String cli_imagen_n) {
+            this.cli_imagen_n = cli_imagen_n;
+        }
+
+        public String getCli_invalidacb_n() {
+            return cli_invalidacb_n;
+        }
+
+        public void setCli_invalidacb_n(String cli_invalidacb_n) {
+            this.cli_invalidacb_n = cli_invalidacb_n;
+        }
+
+        public String getSeg_cve_n() {
+            return seg_cve_n;
+        }
+
+        public void setSeg_cve_n(String seg_cve_n) {
+            this.seg_cve_n = seg_cve_n;
+        }
+
+        public String getCli_dispersion_n() {
+            return cli_dispersion_n;
+        }
+
+        public void setCli_dispersion_n(String cli_dispersion_n) {
+            this.cli_dispersion_n = cli_dispersion_n;
+        }
+
+        public String getCli_dispersioncant_n() {
+            return cli_dispersioncant_n;
+        }
+
+        public void setCli_dispersioncant_n(String cli_dispersioncant_n) {
+            this.cli_dispersioncant_n = cli_dispersioncant_n;
+        }
+
+        public String getCli_limitemes_n() {
+            return cli_limitemes_n;
+        }
+
+        public void setCli_limitemes_n(String cli_limitemes_n) {
+            this.cli_limitemes_n = cli_limitemes_n;
+        }
+
+        public String getCvm_vtaacum_n() {
+            return cvm_vtaacum_n;
+        }
+
+        public void setCvm_vtaacum_n(String cvm_vtaacum_n) {
+            this.cvm_vtaacum_n = cvm_vtaacum_n;
+        }
+    }
+
     
 }

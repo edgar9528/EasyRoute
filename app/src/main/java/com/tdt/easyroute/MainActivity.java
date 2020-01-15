@@ -9,7 +9,9 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                                             GoogleApiClient.ConnectionCallbacks,
                                                             LocationListener {
 
+    private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ExpandableListView expandableListView;
@@ -115,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.activity_main);
         menuBloqueo = new MenuBloqueo();
 
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         try {
             Log.d("salida","ENTRO MAIN ACTIVITY");
@@ -247,6 +251,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     mDrawerLayout.closeDrawer(GravityCompat.START);
                     ultimoGrupo = -1;
                     expandableListView.collapseGroup(groupPosition);
+
+                    /*if(clave.equals("Pedidos | Clientes"))
+                        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), android.R.color.transparent));
+                    else
+                        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+
+                     */
+
                 }
                 else
                 {

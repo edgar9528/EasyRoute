@@ -5,13 +5,18 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tdt.easyroute.CardViews.Model.PedidosCardView;
+import com.tdt.easyroute.Fragments.Pedidos.Pedidos2Fragment;
 import com.tdt.easyroute.R;
 
 import java.util.ArrayList;
@@ -21,13 +26,13 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
 
     private ArrayList<PedidosCardView> pedidosCardViews;
     private int resource;
-    private Activity activity;
+    private Pedidos2Fragment pedidos2Fragment;
 
 
-    public PedidosAdapterRecyclerView(ArrayList<PedidosCardView> pedidosCardViews, int resource, Activity activity) {
+    public PedidosAdapterRecyclerView(ArrayList<PedidosCardView> pedidosCardViews, int resource, Pedidos2Fragment pedidos2Fragment) {
         this.pedidosCardViews = pedidosCardViews;
         this.resource = resource;
-        this.activity = activity;
+        this.pedidos2Fragment = pedidos2Fragment;
     }
 
     @NonNull
@@ -41,44 +46,40 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
 
     @Override
     public void onBindViewHolder(@NonNull PedidosViewHolder pedidosViewHolder, int i) {
-        PedidosCardView pedidosCardView = pedidosCardViews.get(i);
+        final PedidosCardView pedidosCardView = pedidosCardViews.get(i);
 
-        pedidosViewHolder.clave.setText( pedidosCardView.getClave() );
-        pedidosViewHolder.nombre.setText( pedidosCardView.getNombre() );
+        pedidosViewHolder.et_clave.setText( pedidosCardView.getClave() );
+        pedidosViewHolder.et_nombre.setText( pedidosCardView.getNombre() );
 
-
-
-        /*
-        peliculasViewHolder.tituloCard.setOnClickListener(new View.OnClickListener() {
+        pedidosViewHolder.b_actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity,DetallePeliculaActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("idUsuarioRecibido", id_usuarioEnviar);
-                activity.startActivity(intent);
+            public void onClick(View view) {
+                pedidos2Fragment.actualizaCliente(pedidosCardView.getCliente().getCli_cve_n());
             }
         });
 
-        peliculasViewHolder.tituloCard.setOnClickListener(new View.OnClickListener() {
+        pedidosViewHolder.b_detalles.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity,DetallePeliculaActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("idUsuarioRecibido", id_usuarioEnviar);
-                activity.startActivity(intent);
+            public void onClick(View view) {
+                pedidos2Fragment.abrirDetalles(pedidosCardView.getCliente().getCli_cve_n());
             }
         });
 
-        peliculasViewHolder.tituloCard.setOnClickListener(new View.OnClickListener() {
+        pedidosViewHolder.b_noVenta.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(activity,DetallePeliculaActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("idUsuarioRecibido", id_usuarioEnviar);
-                activity.startActivity(intent);
+            public void onClick(View view) {
+                pedidos2Fragment.noVisita(pedidosCardView.getCliente());
             }
         });
-         */
+
+        pedidosViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pedidos2Fragment.mensaje();
+            }
+        });
+
+
     }
 
     @Override
@@ -88,14 +89,22 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
 
     public class PedidosViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView  clave;
-        private TextView  nombre;
+        private TextView  et_clave;
+        private TextView  et_nombre;
+        private ImageButton  b_actualizar;
+        private ImageButton  b_detalles;
+        private ImageButton  b_noVenta;
+        private ConstraintLayout constraintLayout;
 
         public PedidosViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            clave= itemView.findViewById(R.id.cv_pedidos_clave);
-            nombre= itemView.findViewById(R.id.cv_pedidos_nombre);
+            et_clave= itemView.findViewById(R.id.cv_pedidos_clave);
+            et_nombre= itemView.findViewById(R.id.cv_pedidos_nombre);
+            b_actualizar = itemView.findViewById(R.id.cv_bActualizar);
+            b_detalles = itemView.findViewById(R.id.cv_bDetalles);
+            b_noVenta = itemView.findViewById(R.id.cv_bNoVenta);
+            constraintLayout = itemView.findViewById(R.id.constraint);
 
         }
     }

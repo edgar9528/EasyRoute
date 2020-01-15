@@ -53,6 +53,7 @@ public class BaseLocal {
             DatabaseHelper databaseHelper = new DatabaseHelper(context, nombreBase, null, 1);
             SQLiteDatabase bd = databaseHelper.getWritableDatabase();
 
+
             bd.execSQL(consulta);
 
             bd.close();
@@ -161,6 +162,7 @@ public class BaseLocal {
             int totalColumn = cursor.getColumnCount();
             JSONObject rowObject = new JSONObject();
             for (int i = 0; i < totalColumn; i++) {
+
                 if (cursor.getColumnName(i) != null) {
                     try {
 

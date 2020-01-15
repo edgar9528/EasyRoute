@@ -15,13 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Fragments.Pedidos.DetallesCliente.MainDetallesActivity"></activity>
+        <activity
+            android:name=".ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Fragments.Pedidos.DetallesCliente.MainDetallesActivity" />
         <activity
             android:name=".Fragments.Clientes.BuscarClientesActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Fragments.Clientes.OrdenaCliente.EditarclienteActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".Ventanas.PruebasActivity" />
         <activity
             android:name=".LoginActivity"
@@ -34,6 +38,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Ventanas.Configuracion.ConfiguracionActivity"

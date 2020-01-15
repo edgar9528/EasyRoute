@@ -12,4 +12,8 @@
     <dimen name="Text_data">20sp</dimen>
     <dimen name="paddingGeneral">15dp</dimen>
     <dimen name="paddingControles">8dp</dimen>
+    <dimen name="paddingCardView">5dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

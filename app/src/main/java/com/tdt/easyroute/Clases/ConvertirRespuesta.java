@@ -1716,6 +1716,39 @@ public class ConvertirRespuesta {
     }
 
 
+    public static ArrayList<DataTableLC.Motivos> getMotivosJson(String respuesta)
+    {
+        ArrayList<DataTableLC.Motivos> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Motivos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.DtCliVenta> getDtCliVentaJson(String respuesta)
+    {
+        ArrayList<DataTableLC.DtCliVenta> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.DtCliVenta> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
 
 
 
