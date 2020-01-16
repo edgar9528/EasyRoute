@@ -27,6 +27,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.tdt.easyroute.CardViews.Adapter.PedidosAdapterRecyclerView;
 import com.tdt.easyroute.CardViews.Model.PedidosCardView;
 import com.tdt.easyroute.Clases.BaseLocal;
@@ -70,6 +81,8 @@ public class Pedidos2Fragment extends Fragment implements AsyncResponseJSON {
     private Toolbar toolbar;
     String nombreBase;
 
+    PieChart pieChartVisitas,pieChartEfectividad;
+
     public Pedidos2Fragment() {
         // Required empty public constructor
     }
@@ -97,6 +110,9 @@ public class Pedidos2Fragment extends Fragment implements AsyncResponseJSON {
         toolbar = view.findViewById(R.id.toolbarPedidos);
         toolbar.inflateMenu(R.menu.pedidos_menu);
 
+        pieChartVisitas= view.findViewById(R.id.pieChart1);
+        pieChartEfectividad = view.findViewById(R.id.pieChart2);
+
         nombreBase = getContext().getString(R.string.nombreBD);
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -109,6 +125,9 @@ public class Pedidos2Fragment extends Fragment implements AsyncResponseJSON {
         conf = Utils.ObtenerConf(getActivity().getApplication());
         vista=view;
 
+        graficoVisitas();
+        graficoEfectividad();
+
         //crearPedidos(view);
 
         InicializarAsync inicializar = new InicializarAsync();
@@ -117,6 +136,77 @@ public class Pedidos2Fragment extends Fragment implements AsyncResponseJSON {
 
         return view;
     }
+
+
+
+    private void graficoVisitas()
+    {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        PieDataSet pieDataSet ;
+        PieData pieData ;
+
+
+        entries.add(new PieEntry(3,"Cumplidas" ));
+        entries.add(new PieEntry(48, "Faltantes"));
+
+        pieDataSet = new PieDataSet(entries, "");
+
+        pieData = new PieData( pieDataSet);
+
+        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+
+        pieChartVisitas.setData(pieData);
+
+        Description description = new Description();
+        description.setText("Ventas");
+        description.setTextColor(ColorTemplate.rgb("ffffff") );
+        description.setTextSize(18);
+
+        pieChartVisitas.setCenterText(60+"%");
+        pieChartVisitas.setCenterTextSize(18);
+        pieChartVisitas.setCenterTextColor( ColorTemplate.rgb("ffffff") );
+
+        pieChartVisitas.getLegend().setEnabled(false);
+        pieChartVisitas.setDrawEntryLabels(false);
+        pieChartVisitas.setDescription(description);
+        pieChartVisitas.setHoleColor( ColorTemplate.COLOR_NONE );
+        pieChartVisitas.animateY(500);
+    }
+
+    private void graficoEfectividad()
+    {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        PieDataSet pieDataSet ;
+        PieData pieData ;
+
+
+        entries.add(new PieEntry(60,"Efectividad" ));
+        entries.add(new PieEntry(40,"Restante" ));
+
+        pieDataSet = new PieDataSet(entries, "");
+
+        pieData = new PieData( pieDataSet);
+
+        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+
+        pieChartEfectividad.setData(pieData);
+
+        Description description = new Description();
+        description.setText("Efectividad");
+        description.setTextColor(ColorTemplate.rgb("ffffff") );
+        description.setTextSize(18);
+
+        pieChartEfectividad.setCenterText(60+"%");
+        pieChartEfectividad.setCenterTextSize(18);
+        pieChartEfectividad.setCenterTextColor( ColorTemplate.rgb("ffffff") );
+
+        pieChartEfectividad.getLegend().setEnabled(false);
+        pieChartEfectividad.setDrawEntryLabels(false);
+        pieChartEfectividad.setDescription(description);
+        pieChartEfectividad.setHoleColor( ColorTemplate.COLOR_NONE );
+        pieChartEfectividad.animateY(500);
+    }
+
 
     private void crearPedidos(View view)
     {

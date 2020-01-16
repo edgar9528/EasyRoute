@@ -27,12 +27,48 @@
             app:expandedTitleMarginEnd="64dp"
             >
 
+            <!--
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+-->
+
+           <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:padding="@dimen/paddingControles"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    />
+
+               <com.github.mikephil.charting.charts.PieChart
+                   android:id="@+id/pieChart2"
+                   android:layout_width="0dp"
+                   android:layout_weight="1"
+                   android:layout_height="match_parent"
+                   />
+
+            </LinearLayout>
+
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarPedidos"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
+
                 />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
