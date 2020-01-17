@@ -358,6 +358,7 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                     String qi = "insert into inventario(rut_cve_n,prod_cve_n," + col + ") values ({0},{1},{2})";
                     String qu = "update inventario set " + col + "=" + col + "+{2} where rut_cve_n={0} and prod_cve_n={1}";
 
+                    Log.d("salida","Entro al for");
                     for(int j=0; j< dgDevolucionDet.size();j++)
                     {
                         DataTableWS.DevolucionesDet i = dgDevolucionDet.get(j);
@@ -376,20 +377,28 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                                 "0",i.getProd_cant_n(), String.valueOf( Float.parseFloat(k.getInv_devuelto_n()) + Float.parseFloat(i.getProd_cant_n()) )  );
 
                     }
+                    Log.d("salida","Salio del for");
 
 
                     db.setTransactionSuccessful();
 
+
                 }catch (Exception e)
                 {
+                    if(db.isOpen())
+                        db.close();
+
                     Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.d("salida", "Error: "+e.getMessage() );
-                    db.close();
+
                 }
                 finally
                 {
-                    db.endTransaction();
-                    db.close();
+                    if(db.isOpen())
+                    {
+                        db.endTransaction();
+                        db.close();
+                    }
                 }
 
                 String js= BaseLocal.Select( "Select p.prod_cve_n from productos p inner join categorias c on p.cat_cve_n=c.cat_cve_n " +

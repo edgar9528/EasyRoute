@@ -138,5 +138,7 @@
     <string name="bt_seleccionar">Seleccionar</string>
     <string name="bt_ver">Ver</string>
     <string name="iv_descripcion">Imagen</string>
+    <string name="hint_empresa">Empresa</string>
+    <string name="bt_validar">Validar</string>
 
 </resources>

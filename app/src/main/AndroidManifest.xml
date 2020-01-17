@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.tdt.easyroute">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,41 +9,56 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+
         android:allowBackup="true"
+        android:fullBackupContent="true"
+
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Fragments.Pedidos.DetallesCliente.MainDetallesActivity" />
-        <activity
-            android:name=".Fragments.Clientes.BuscarClientesActivity"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".Fragments.Clientes.OrdenaCliente.EditarclienteActivity"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".Ventanas.PruebasActivity" />
+        android:theme="@style/AppTheme"
+        tools:targetApi="n">
+
         <activity
             android:name=".LoginActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".Ventanas.Configuracion.ConfiguracionActivity"
+            tools:ignore="InnerclassSeparator"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity android:name=".Fragments.Pedidos.DetallesCliente.MainDetallesActivity"
+            tools:ignore="InnerclassSeparator"
+            android:windowSoftInputMode="stateHidden"
+            />
+
+        <activity
+            android:name=".Fragments.Clientes.BuscarClientesActivity"
+            tools:ignore="InnerclassSeparator"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".Fragments.Clientes.OrdenaCliente.EditarclienteActivity"
+            tools:ignore="InnerclassSeparator"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity android:name=".Ventanas.PruebasActivity"
+            tools:ignore="InnerclassSeparator"/>
+
     </application>
 
 </manifest>

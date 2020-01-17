@@ -1,80 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.InicioDia.DatosFragment"
-    >
+    tools:context=".Fragments.InicioDia.DatosFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/paddingGeneral"
-        android:orientation="vertical"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:weightSum="7"
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/tabla_titulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginTop="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toTopOf="@+id/button_salir"
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
         >
-
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="6"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <include
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    layout="@layout/tabla_titulo"
-                    />
-                <TableLayout
-                    android:id="@+id/tableLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="2">
-                </TableLayout>
-            </LinearLayout>
-
-
-        </ScrollView>
-
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:weightSum="10"
-            android:paddingBottom="@dimen/paddingControles"
-            >
-            <Button
-                android:id="@+id/button_salir"
-                android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="@string/bt_salir"
-                android:theme="@style/RaisedButtonDark"
-                android:tag="deselec"
-                tools:ignore="ButtonStyle" />
-            <Button
-                android:id="@+id/button_sincronizar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="@string/bt_sincronizar"
-                android:theme="@style/RaisedButtonDark"
-                tools:ignore="ButtonStyle"
-                />
+                >
+            </TableLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
-</FrameLayout>
+
+    <Button
+        android:id="@+id/button_salir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:tag="deselec"
+        android:text="@string/bt_salir"
+        android:theme="@style/RaisedButtonDark"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_sincronizar"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="ButtonStyle" />
+
+    <Button
+        android:id="@+id/button_sincronizar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_sincronizar"
+        android:theme="@style/RaisedButtonDark"
+
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
+        app:layout_constraintStart_toEndOf="@+id/button_salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ButtonStyle" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

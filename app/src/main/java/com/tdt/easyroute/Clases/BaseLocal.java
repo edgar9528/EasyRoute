@@ -21,10 +21,10 @@ public class BaseLocal {
         String nombreBase = context.getString( R.string.nombreBD );
         String json=null;
 
-        try {
+        DatabaseHelper databaseHelper = new DatabaseHelper(context, nombreBase, null, 1);
+        SQLiteDatabase bd = databaseHelper.getReadableDatabase();
 
-            DatabaseHelper databaseHelper = new DatabaseHelper(context, nombreBase, null, 1);
-            SQLiteDatabase bd = databaseHelper.getReadableDatabase();
+        try {
 
             Cursor cursor = bd.rawQuery(consulta, null);
 
@@ -40,6 +40,10 @@ public class BaseLocal {
         {
             Log.d("salida","Error baseLocal Select: "+e.toString());
             json=null;
+        }
+        finally {
+            if(bd.isOpen())
+                bd.close();
         }
 
         return json;
