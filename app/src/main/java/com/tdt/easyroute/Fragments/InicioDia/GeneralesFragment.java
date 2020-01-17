@@ -59,11 +59,12 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
     private Usuario user;
     private String[] campos;
 
-    boolean sincro=false;
+    private boolean sincro=false;
 
     private Handler handler=null;
     private Runnable myRunnable;
 
+    private StartdayFragment startdayFragment;
     private StartdayVM startdayVM;
 
     public GeneralesFragment() {
@@ -82,6 +83,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         View view = inflater.inflate(R.layout.fragment_generales, container, false);
         // Inflate the layout for this fragment
         MainActivity mainActivity = (MainActivity) getActivity();
+        startdayFragment = (StartdayFragment) getParentFragment();
         user = mainActivity.getUsuario();
 
         et_empresa = view.findViewById(R.id.et_empresa);
@@ -150,16 +152,6 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
-        startdayVM.getActualizoRutaEmpresa().observe(getParentFragment(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean s) {
-                if(s)
-                {
-                    //inicializar(); comentado porque cambiaba la ruta/empresa seleccionada al sincronizar
-                }
-
-            }
-        });
 
     }
 
@@ -380,7 +372,10 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
                 peticionFecha();
             }
             else
+                {
                 Toast.makeText(getContext(), "No ha realizado la sincronizacion", Toast.LENGTH_SHORT).show();
+                startdayFragment.goDatos();
+            }
         }
         else
             Toast.makeText(getContext(), "Rellena todos los campos", Toast.LENGTH_SHORT).show();
@@ -446,7 +441,7 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
     }
 
-    public void crearConfiguracion(String posicion)
+    private void crearConfiguracion(String posicion)
     {
 
         BaseLocal.Insert(Querys.Inventario.DesactivaCarga,getContext());

@@ -23,6 +23,7 @@ import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ConfiguracionActivity extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
     boolean catalogos = false;
     boolean mnGuardar = true;
     boolean crut = false;
-    boolean tabs[];
+    private boolean[] tabs;
     String cat="Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas";
 
     ArrayList<DataTableWS.Ruta> lista_rutas;
@@ -43,8 +44,11 @@ public class ConfiguracionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuracion);
-        this.setTitle("Configuración");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.setTitle(R.string.tt_configuracion);
+
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         try {
 
@@ -68,18 +72,18 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
 
             //CONFIGURACION DE LAS TABS
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+            TabLayout tabLayout = findViewById(R.id.tab_layout);
 
             if (tabs[0])
-                tabLayout.addTab(tabLayout.newTab().setText("Servidor, ruta e impresor"));
+                tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_conf1));
             if (tabs[1])
-                tabLayout.addTab(tabLayout.newTab().setText("Servidor"));
+                tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_conf2));
             if (tabs[2])
-                tabLayout.addTab(tabLayout.newTab().setText("Utilidad"));
+                tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_conf3));
 
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-            final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+            final ViewPager viewPager =  findViewById(R.id.pager);
             final PagerConfiguracionAdapter adapter = new PagerConfiguracionAdapter
                     (getSupportFragmentManager(), tabLayout.getTabCount(), tabs);
 
@@ -89,19 +93,20 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-            tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     viewPager.setCurrentItem(tab.getPosition());
-                    //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
                 }
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
+
                 }
 
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
+
                 }
             });
 
@@ -116,13 +121,11 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void inicializar()
@@ -162,7 +165,8 @@ public class ConfiguracionActivity extends AppCompatActivity {
                     if(bd!=null)
                         bd.execSQL(con);
                 }
-                bd.close();
+                if(bd!=null)
+                    bd.close();
             }
 
 
@@ -257,10 +261,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
         lista_catalogos = new ArrayList<>();
 
         //AGREGAR LOS CATALOGOS AL ARRAY
-        for (int i=0; i<s.length;i++)
-        {
-            lista_catalogos.add(s[i]);
-        }
+        Collections.addAll(lista_catalogos, s);
 
         Log.d("salida","Catalogos agregados");
 
@@ -292,6 +293,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 Log.d("salida", "No se encontraron rutas guardadas");
             }
 
+            cursor.close();
             bd.close();
 
         }

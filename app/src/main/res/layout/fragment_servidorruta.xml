@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="@dimen/paddingGeneral"
         android:orientation="vertical"
         android:focusable="true"
@@ -29,7 +29,7 @@
                 android:id="@+id/et_servidor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Dirección del servidor"
+                android:hint="@string/hint_servidorDir"
                 android:singleLine="true"
                 />
         </com.google.android.material.textfield.TextInputLayout>
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:digits="0123456789"
-                android:hint="TimeOut(ms)"
+                android:hint="@string/hint_timeOut"
                 android:singleLine="true"
                 />
         </com.google.android.material.textfield.TextInputLayout>
@@ -54,7 +54,7 @@
             android:id="@+id/button_pruebaWs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prueba webService"
+            android:text="@string/bt_prueba"
             android:theme="@style/RaisedButtonDark"
             android:paddingTop="@dimen/paddingControles"
             />
@@ -84,8 +84,7 @@
                     android:id="@+id/et_ruta"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Seleccionar ruta"
-                    android:editable="false"
+                    android:hint="@string/hint_ruta"
                     android:focusable="false"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -95,7 +94,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="Listar"
+                android:text="@string/bt_listar"
                 android:layout_gravity="center"
                 android:theme="@style/RaisedButtonDark"
                 />
@@ -119,7 +118,7 @@
                     android:id="@+id/et_comImpresora"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Puerto de impresora"
+                    android:hint="@string/hint_impresora"
                     android:singleLine="true"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -131,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:layout_gravity="center"
-                android:text="Prueba"
+                android:text="@string/bt_pruebaImp"
                 android:theme="@style/RaisedButtonDark"
                 android:focusableInTouchMode="false"
                 />
@@ -157,8 +156,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:text="Salir"
+                android:text="@string/bt_salir"
                 android:theme="@style/RaisedButtonDark"
+                tools:ignore="ButtonStyle"
                 />
 
             <Button
@@ -166,8 +166,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:text="Guardar"
+                android:text="@string/bt_guardar"
                 android:theme="@style/RaisedButtonDark"
+                tools:ignore="ButtonStyle"
                 />
 
         </LinearLayout>

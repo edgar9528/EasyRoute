@@ -27,7 +27,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
@@ -51,26 +50,25 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     private static boolean recarga= false;
     private static boolean cautivo=false;
-    Configuracion conf = null;
+    private Configuracion conf = null;
 
-    Spinner sp_recargas;
+    private Spinner sp_recargas;
 
-    ArrayList<DataTableWS.Recargas> al_recargas;
-    ArrayList<DataTableWS.RecargasDet> al_recargasDet;
-    ArrayList<DataTableLC.Inventario> al_inventario;
-    ArrayList<String> recargas;
-    int indiceFolio=-1;
+    private ArrayList<DataTableWS.Recargas> al_recargas;
+    private ArrayList<DataTableWS.RecargasDet> al_recargasDet;
+    private ArrayList<DataTableLC.Inventario> al_inventario;
+    private ArrayList<String> recargas;
+    private int indiceFolio=-1;
 
-    TextView tv1,tv2,tv3,tv4,tv5;
+    private TextView tv1,tv2,tv3,tv4,tv5;
 
-    TableLayout tableLayout;
-    View vista;
-    LayoutInflater layoutInflater;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
 
-    Button button_buscar,button_aplicar,button_salir;
-    String peticion,mensaje,nombreBase,cve,folio,rectxt;
+    private Button button_buscar,button_aplicar,button_salir;
+    private String peticion,mensaje,nombreBase,cve,folio,rectxt;
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
     public Carga2Fragment() {
         // Required empty public constructor
@@ -90,7 +88,6 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_carga2, container, false);
-        vista = view;
         layoutInflater = inflater;
 
         mainActivity = (MainActivity) getActivity();
@@ -114,8 +111,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         tv3 = view.findViewById(R.id.tv_rec_falta_dt);
         tv4 = view.findViewById(R.id.tv_usu_solicita_str);
         tv5 = view.findViewById(R.id.tv_rec_observaciones_str);
-        sp_recargas = (Spinner) view.findViewById(R.id.spinnerRecargas);
-        tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        sp_recargas =  view.findViewById(R.id.spinnerRecargas);
+        tableLayout = view.findViewById(R.id.tableLayout);
 
         button_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +185,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         buscarRecargas();
     }
 
-    public void aplicar()
+    private void aplicar()
     {
         if(indiceFolio!=-1)
         {
@@ -263,7 +260,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    public void aplicarCargaInicial(String ubicacion)
+    private void aplicarCargaInicial(String ubicacion)
     {
         DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -351,7 +348,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    public void peticionProcesarRecarga()
+    private void peticionProcesarRecarga()
     {
         peticion="ProcesarRecarga";
 
@@ -376,7 +373,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     }
 
-    public void procesarRecarga()
+    private void procesarRecarga()
     {
         String consulta ="Select p.prod_cve_n from productos p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE' and p.prod_cve_n not in (Select p.prod_cve_n from inventario p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE')";
         String res= BaseLocal.Select(consulta,getContext());
@@ -428,7 +425,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     }
 
-    public void buscarRecargas()
+    private void buscarRecargas()
     {
         peticion="Recargas";
         //parametros del metodo
@@ -452,7 +449,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         conexionWS.execute();
     }
 
-    public void llenarSpinnerRecargas()
+    private void llenarSpinnerRecargas()
     {
         recargas = new ArrayList<>();
         recargas.add("Seleccione una "+mensaje);
@@ -463,7 +460,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     }
 
-    public void mostrarRecarga(int indiceRecarga)
+    private void mostrarRecarga(int indiceRecarga)
     {
         tv1.setText(al_recargas.get(indiceRecarga).getRec_cve_n());
         tv2.setText(al_recargas.get(indiceRecarga).getRec_folio_str());
@@ -473,7 +470,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         tv5.setText(al_recargas.get(indiceRecarga).getRec_observaciones_str());
     }
 
-    public void buscarRecargaDet(int indiceRecarga)
+    private void buscarRecargaDet(int indiceRecarga)
     {
         //parametros del metodo
         ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
@@ -492,7 +489,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         conexionWS.execute();
     }
 
-    public void mostrarRecargaDet()
+    private void mostrarRecargaDet()
     {
         tableLayout.removeAllViews();
         TableRow tr;

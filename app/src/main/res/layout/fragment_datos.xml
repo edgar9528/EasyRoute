@@ -3,97 +3,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.InicioDia.DatosFragment">
+    tools:context=".Fragments.InicioDia.DatosFragment"
+    >
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="@dimen/paddingGeneral"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:weightSum="7"
         >
 
-        <LinearLayout
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/paddingGeneral"
-            android:orientation="vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:layout_height="0dp"
+            android:layout_weight="6"
             >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:paddingBottom="@dimen/paddingControles"
+                android:orientation="vertical"
                 >
-
-                <Button
-                    android:id="@+id/button_selec"
-                    android:layout_width="0dp"
+                <include
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Seleccionar todo"
-                    android:theme="@style/RaisedButtonDark"
-                    android:tag="selec"
+                    layout="@layout/tabla_titulo"
                     />
-
-                <Button
-                    android:id="@+id/button_desSelec"
-                    android:layout_width="0dp"
+                <TableLayout
+                    android:id="@+id/tableLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Deselec. todo"
-                    android:theme="@style/RaisedButtonDark"
-                    android:tag="deselec"
-                    />
-
+                    android:weightSum="2">
+                </TableLayout>
             </LinearLayout>
 
-            <include
-                android:layout_width="fill_parent"
+
+        </ScrollView>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:weightSum="10"
+            android:paddingBottom="@dimen/paddingControles"
+            >
+            <Button
+                android:id="@+id/button_salir"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                layout="@layout/tabla_titulo"
+                android:layout_weight="5"
+                android:text="@string/bt_salir"
+                android:theme="@style/RaisedButtonDark"
+                android:tag="deselec"
+                tools:ignore="ButtonStyle" />
+            <Button
+                android:id="@+id/button_sincronizar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="@string/bt_sincronizar"
+                android:theme="@style/RaisedButtonDark"
+                tools:ignore="ButtonStyle"
                 />
-
-            <TableLayout
-                android:id="@+id/tableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="2">
-            </TableLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:paddingBottom="@dimen/paddingControles"
-                >
-
-                <Button
-                    android:id="@+id/button_salir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Salir"
-                    android:theme="@style/RaisedButtonDark"
-                    android:tag="deselec"
-                    />
-
-                <Button
-                    android:id="@+id/button_sincronizar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Sincronizar"
-                    android:theme="@style/RaisedButtonDark"
-                    />
-
-            </LinearLayout>
-
         </LinearLayout>
 
-    </ScrollView>
+    </LinearLayout>
 
 </FrameLayout>

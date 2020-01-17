@@ -44,35 +44,38 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class DatosFragment extends Fragment {
 
-    String catalogos;
+    private String catalogos;
 
-    ArrayList<String> al_catalogos;
-    String[] arr_estadoCat;
+    private ArrayList<String> al_catalogos;
+    private String[] arr_estadoCat;
 
+    private Button b_sincronizar,b_selec,b_deselec,b_salir;
 
-    Button b_sincronizar,b_selec,b_deselec,b_salir;
+    private boolean[] rbSeleccionados;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private View viewGral;
 
-    boolean[] rbSeleccionados;
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    View viewGral;
-
-    String nombreBase,tipoRuta,ruta_cve;
+    private String nombreBase,tipoRuta,ruta_cve;
     ArrayList<String> metodosWS;
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
-    StartdayVM startdayVM;
-    boolean actualizoRutaEmpresa=false;
+    private StartdayVM startdayVM;
+    private boolean actualizoRutaEmpresa=false;
+
+    private StartdayFragment startdayFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startdayVM = ViewModelProviders.of(getParentFragment()).get(StartdayVM.class);
+        if(getParentFragment()!=null)
+            startdayVM = ViewModelProviders.of(getParentFragment()).get(StartdayVM.class);
     }
 
     @Override
@@ -84,6 +87,7 @@ public class DatosFragment extends Fragment {
         viewGral = view;
 
         mainActivity = (MainActivity) getActivity();
+        startdayFragment = (StartdayFragment) getParentFragment();
 
         b_selec = view.findViewById(R.id.button_selec);
         b_deselec = view.findViewById(R.id.button_desSelec);
@@ -99,37 +103,12 @@ public class DatosFragment extends Fragment {
             }
         });
 
-        b_selec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(int i=0; i<rbSeleccionados.length;i++)
-                {
-                    rbSeleccionados[i]=true;
-                    RadioButton rb = (RadioButton) viewGral.findViewWithTag(i);
-                    rb.setChecked( true );
-                }
-            }
-        });
-
-        b_deselec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(int i=0; i<rbSeleccionados.length;i++)
-                {
-                    rbSeleccionados[i]=false;
-                    RadioButton rb = (RadioButton) viewGral.findViewWithTag(i);
-                    rb.setChecked( false );
-                }
-            }
-        });
-
         b_salir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Utils.RegresarInicio(getActivity());
             }
         });
-
 
 
         return view;
@@ -170,10 +149,7 @@ public class DatosFragment extends Fragment {
         al_catalogos = new ArrayList<>();
 
         //AGREGAR LOS CATALOGOS AL ARRAY
-        for (int i=0; i<s.length;i++)
-        {
-            al_catalogos.add(s[i]);
-        }
+        Collections.addAll(al_catalogos, s);
 
         arr_estadoCat = new String[al_catalogos.size()];
         rbSeleccionados = new boolean[al_catalogos.size()];
@@ -184,7 +160,7 @@ public class DatosFragment extends Fragment {
 
         if( !Boolean.getBoolean(String.valueOf(startdayVM.getActualizoRutaEmpresa()))  ) {
 
-            tableLayout = (TableLayout) viewGral.findViewById(R.id.tableLayout);
+            tableLayout = viewGral.findViewById(R.id.tableLayout);
             tableLayout.removeAllViews();
             TableRow tr;
 
@@ -195,6 +171,7 @@ public class DatosFragment extends Fragment {
                 rb.setId(i);
                 rb.setTag(i);
                 rb.setOnClickListener(rbListener);
+                rb.setChecked(true);
 
                 ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(al_catalogos.get(i));
                 ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
@@ -203,7 +180,7 @@ public class DatosFragment extends Fragment {
                 ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
 
                 tableLayout.addView(tr);
-                rbSeleccionados[i] = false;
+                rbSeleccionados[i] = true;
             }
         }
 
@@ -276,7 +253,6 @@ public class DatosFragment extends Fragment {
                 rb.setChecked(true);
                 rbSeleccionados[id]=true;
             }
-
         }
     };
 
@@ -285,7 +261,7 @@ public class DatosFragment extends Fragment {
         private Context context;
         private ParametrosWS parametrosWS;
         private String resultado;
-        boolean almacenado=false;
+        boolean almacenado;
 
         //region Lista de arrayList para descargar
 
@@ -457,6 +433,9 @@ public class DatosFragment extends Fragment {
                     startdayVM.setSincro(true); //actualiza el valor de la variable startday
 
                     Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
+
+                    startdayFragment.goGenerales();
+
                 }
                 else
                 {

@@ -71,17 +71,17 @@ import java.util.Date;
 
 public class Pedidos2Fragment extends Fragment implements AsyncResponseJSON {
 
-    ArrayList<DataTableLC.PedidosLv> lvClientes = null;
-    Configuracion conf;
-    View vista;
-    int tipo = 0;// 1.- no venta 2.- no lectura
-    boolean MensajeAbierto=false;
+    private ArrayList<DataTableLC.PedidosLv> lvClientes = null;
+    private Configuracion conf;
+    private View vista;
+    private int tipo = 0;// 1.- no venta 2.- no lectura
+    private boolean MensajeAbierto=false;
     ArrayList<String> metodosWS;
 
     private Toolbar toolbar;
-    String nombreBase;
+    private String nombreBase;
 
-    PieChart pieChartVisitas,pieChartEfectividad;
+    private PieChart pieChartVisitas,pieChartEfectividad;
 
     public Pedidos2Fragment() {
         // Required empty public constructor
@@ -207,34 +207,16 @@ public class Pedidos2Fragment extends Fragment implements AsyncResponseJSON {
         pieChartEfectividad.animateY(500);
     }
 
-
-    private void crearPedidos(View view)
+    private void imprimir()
     {
-        RecyclerView pedidosRecyclerView = view.findViewById(R.id.pedidosRecycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        pedidosRecyclerView.setLayoutManager(linearLayoutManager);
-
-        ArrayList<PedidosCardView> pedidosCardViews = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            pedidosCardViews.add( new PedidosCardView("cve"+i,"nombre"+i,null) );
-        }
-
-        PedidosAdapterRecyclerView pedidosAdapterRecyclerView = new PedidosAdapterRecyclerView(pedidosCardViews,R.layout.cardview_pedidos,this);
-
-        pedidosRecyclerView.setAdapter(pedidosAdapterRecyclerView);
 
     }
-
-
-
 
     private boolean clickItemToolbar(MenuItem item)
     {
         switch (item.getItemId()) {
             case R.id.action_imprimir:
-                Toast.makeText(getContext(), "Imprimir", Toast.LENGTH_SHORT).show();
+                imprimir();
                 return true;
             case R.id.action_buscar:
                 Intent intent = new Intent(getContext(), BuscarClientesActivity.class);
@@ -250,7 +232,6 @@ public class Pedidos2Fragment extends Fragment implements AsyncResponseJSON {
                 return false;
         }
     }
-
     private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean> {
 
         public InicializarAsync() {

@@ -19,7 +19,8 @@ public class StartdayFragment extends Fragment {
         // Required empty public constructor
     }
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,15 +31,14 @@ public class StartdayFragment extends Fragment {
 
         mainActivity = (MainActivity) getActivity();
 
-
         //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
 
         tabLayout.addTab(tabLayout.newTab().setText("Generales"));
         tabLayout.addTab(tabLayout.newTab().setText("Datos"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager =  view.findViewById(R.id.pager);
 
         final PagerIniciodiaAdapter adapter = new PagerIniciodiaAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
@@ -46,18 +46,20 @@ public class StartdayFragment extends Fragment {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
@@ -74,4 +76,15 @@ public class StartdayFragment extends Fragment {
         Log.d("salida","ENTRO ACTUALIZAR MENU");
 
     }
+
+    public void goDatos()
+    {
+        viewPager.setCurrentItem(1);
+    }
+
+    public void goGenerales()
+    {
+        viewPager.setCurrentItem(0);
+    }
+
 }

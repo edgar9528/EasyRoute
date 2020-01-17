@@ -24,7 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:elevation="4dp"
                 android:elevation="4dp"
                 android:theme="@style/AppTheme.AppBarOverlay"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
@@ -42,7 +41,7 @@
 
     <ExpandableListView
         android:id="@+id/navList"
-        android:layout_gravity="left|start"
+        android:layout_gravity="start"
         android:layout_width="235dp"
         android:layout_height="match_parent"
         android:background="@android:color/white"
@@ -51,8 +50,6 @@
         android:indicatorLeft="?android:attr/expandableListPreferredChildIndicatorLeft"
         >
     </ExpandableListView>
-
-
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

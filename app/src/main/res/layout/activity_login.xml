@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@drawable/logotdt"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/iv_descripcion"
 
                 />
 
@@ -59,7 +59,7 @@
                         android:id="@+id/TIusername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Usuario"
+                        android:hint="@string/hint_usuario"
 
                         />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -74,7 +74,7 @@
                         android:id="@+id/TIpassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Contraseña"
+                        android:hint="@string/hint_contraseña"
                         android:inputType="textPassword"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -83,9 +83,9 @@
                     android:id="@+id/Blogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Iniciar sesion"
+                    android:text="@string/bt_iniciar"
                     android:theme="@style/RaisedButtonDark"
-                    android:paddingTop="6dp"
+                    android:paddingTop="@dimen/paddingControles"
                     />
 
             </LinearLayout>

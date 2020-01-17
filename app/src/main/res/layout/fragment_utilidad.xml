@@ -36,7 +36,7 @@
                         android:id="@+id/et_folio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Folio"
+                        android:hint="@string/hint_folio"
                         android:singleLine="true"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -46,7 +46,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:text="Ver"
+                    android:text="@string/bt_ver"
                     android:theme="@style/RaisedButtonDark"
                     android:tag="deselec"
                     android:layout_gravity="center"
@@ -63,7 +63,7 @@
                     android:id="@+id/et_pagos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Pagos"
+                    android:hint="@string/hint_pagos"
                     android:singleLine="true"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -77,7 +77,7 @@
                     android:id="@+id/et_credito"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Credito"
+                    android:hint="@string/hint_credito"
                     android:singleLine="true"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -96,17 +96,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Realizar"
+                    android:text="@string/bt_realizar"
                     android:theme="@style/ButtonDarkSmall"
-                    />
+                    tools:ignore="ButtonStyle" />
 
                 <Button
                     android:id="@+id/button_radia"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="ReAc.Día"
+                    android:text="@string/bt_reacdia"
                     android:theme="@style/ButtonDarkSmall"
+                    tools:ignore="ButtonStyle"
                     />
 
                 <Button
@@ -114,8 +115,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Preven."
+                    android:text="@string/hint_preventa"
                     android:theme="@style/ButtonDarkSmall"
+                    tools:ignore="ButtonStyle"
                     />
 
                 <Button
@@ -123,8 +125,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Venta"
+                    android:text="@string/bt_venta"
                     android:theme="@style/ButtonDarkSmall"
+                    tools:ignore="ButtonStyle"
                     />
 
             </LinearLayout>
@@ -143,8 +146,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="ReAc.Ped"
+                    android:text="@string/bt_reacped"
                     android:theme="@style/ButtonDarkSmall"
+                    tools:ignore="ButtonStyle"
                     />
 
                 <Button
@@ -152,8 +156,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Ac.Audit"
+                    android:text="@string/bt_actaudi"
                     android:theme="@style/ButtonDarkSmall"
+                    tools:ignore="ButtonStyle"
                     />
 
                 <Button
@@ -161,8 +166,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Des.Audi"
+                    android:text="@string/bt_desaudi"
                     android:theme="@style/ButtonDarkSmall"
+                    tools:ignore="ButtonStyle"
                     />
 
                 <Button
@@ -170,10 +176,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Salir"
+                    android:text="@string/bt_salir"
                     android:theme="@style/ButtonDarkSmall"
+                    tools:ignore="ButtonStyle"
                     />
-
 
             </LinearLayout>
 
