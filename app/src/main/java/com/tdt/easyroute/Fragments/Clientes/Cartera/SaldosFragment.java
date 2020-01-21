@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tdt.easyroute.CardViews.Adapter.CarteraAdapterRecyclerView;
+import com.tdt.easyroute.CardViews.Model.CarteraCardView;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.Utils;
@@ -33,10 +37,12 @@ public class SaldosFragment extends Fragment {
 
     private ClientesVM clientesVM;
     private CarteraFragment fragment;
-    private TextView tv_cliente;
+    private TextView tv_cliente,tv_negocio,tv_razon,tv_cve;
     private Button b_imprimir,b_salir;
+    String negocio,razonSocial;
 
-    TableLayout tableLayout;
+    RecyclerView pedidosRecyclerView;
+
     LayoutInflater layoutInflater;
 
     ArrayList<DataTableLC.Saldos> dgSaldos;
@@ -55,7 +61,9 @@ public class SaldosFragment extends Fragment {
         fragment = (CarteraFragment) getParentFragment();
         layoutInflater = inflater;
 
-        tableLayout = view.findViewById(R.id.tableLayout);
+        tv_cve = view.findViewById(R.id.tv_cve);
+        tv_razon = view.findViewById(R.id.tv_razon);
+        tv_negocio = view.findViewById(R.id.tv_negocio);
         tv_cliente = view.findViewById(R.id.tv_cliente);
         b_imprimir = view.findViewById(R.id.button_imprimir);
         b_salir = view.findViewById(R.id.button_salir);
@@ -74,9 +82,15 @@ public class SaldosFragment extends Fragment {
             }
         });
 
+
+        pedidosRecyclerView = view.findViewById(R.id.carteraRecycler);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        pedidosRecyclerView.setLayoutManager(linearLayoutManager);
+
         tv_cliente.setText("Saldo cliente: $0.00");
 
-        mostrarTitulo();
 
         return view;
     }
@@ -85,6 +99,20 @@ public class SaldosFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        clientesVM.getNegocio().observe(getParentFragment(), new Observer<String>() {
+            @Override
+            public void onChanged(String response) {
+                negocio = response;
+            }
+        });
+
+        clientesVM.getRazonSocial().observe(getParentFragment(), new Observer<String>() {
+            @Override
+            public void onChanged(String response) {
+                razonSocial = response;
+            }
+        });
+
         clientesVM.getCli_cve().observe(getParentFragment(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -92,7 +120,6 @@ public class SaldosFragment extends Fragment {
             }
         });
     }
-
 
 
     private void cargarSaldos(String cve)
@@ -111,7 +138,7 @@ public class SaldosFragment extends Fragment {
 
             if(dgSaldos!=null)
             {
-                mostrarSaldos();
+                mostrarSaldos(cve);
             }
 
         }
@@ -123,47 +150,34 @@ public class SaldosFragment extends Fragment {
 
     }
 
-    private void mostrarTitulo()
+
+    private void mostrarSaldos(String cve)
     {
-        tableLayout.removeAllViews();
-        TableRow tr;
-
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_saldos, null);
-
-        ((TextView) tr.findViewById(R.id.t_cliente)).setTypeface( ((TextView) tr.findViewById(R.id.t_cliente)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_credito)).setTypeface( ((TextView) tr.findViewById(R.id.t_credito)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_monto)).setTypeface( ((TextView) tr.findViewById(R.id.t_monto)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_abono)).setTypeface( ((TextView) tr.findViewById(R.id.t_abono)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_saldo)).setTypeface( ((TextView) tr.findViewById(R.id.t_saldo)).getTypeface(), Typeface.BOLD);
-
-        tableLayout.addView(tr);
-
-    }
-
-    private void mostrarSaldos()
-    {
-        mostrarTitulo();
-        TableRow tr;
-
+        String credito,monto,abono,saldoStr;
         double rsc= 0;
 
+        ArrayList<CarteraCardView> carteraCardViews = new ArrayList<>();
         for(int i=0; i<dgSaldos.size();i++)
         {
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_saldos, null);
             DataTableLC.Saldos s = dgSaldos.get(i);
 
             double saldo = Double.parseDouble( s.getCred_monto_n() ) - Double.parseDouble(s.getAbono()) ;
             rsc += saldo;
 
-            ((TextView) tr.findViewById(R.id.t_cliente)).setText(s.getCli_cve_n());
-            ((TextView) tr.findViewById(R.id.t_credito)).setText(s.getCred_referencia_str());
-            ((TextView) tr.findViewById(R.id.t_monto)).setText("$"+ Utils.strToNum( s.getCred_monto_n()) );
-            ((TextView) tr.findViewById(R.id.t_abono)).setText("$"+ Utils.strToNum( s.getAbono() ) );
-            ((TextView) tr.findViewById(R.id.t_saldo)).setText("$"+ Utils.numFormat( saldo ) );
+            credito = s.getCred_referencia_str();
+            monto = "$"+ Utils.strToNum( s.getCred_monto_n());
+            abono = "$"+ Utils.strToNum( s.getAbono());
+            saldoStr = "$"+ Utils.numFormat( saldo );
 
-            tableLayout.addView(tr);
+            carteraCardViews.add( new CarteraCardView( credito, monto, abono, saldoStr ));
         }
 
+        CarteraAdapterRecyclerView carteraAdapterRecyclerView = new CarteraAdapterRecyclerView (carteraCardViews,R.layout.cardview_cartera);
+        pedidosRecyclerView.setAdapter(carteraAdapterRecyclerView);
+
+        tv_cve.setText(dgSaldos.get(0).getCli_cveext_str());
+        tv_negocio.setText(negocio);
+        tv_razon.setText(razonSocial);
         tv_cliente.setText("Saldo cliente: $"+Utils.numFormat(rsc));
 
     }

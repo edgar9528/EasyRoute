@@ -37,21 +37,21 @@ import java.util.ArrayList;
 
 public class CfueraFragment extends Fragment {
 
-    String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
-    String clienteSeleccionado="";
-    ClientesNodia clientesNodia;
+    private String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
+    private String clienteSeleccionado="";
+    private ClientesNodia clientesNodia;
 
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    View vista;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private View vista;
 
-    Spinner sp_dias;
+    private Spinner sp_dias;
 
-    boolean primerCambio=true,cambioDia=false;
+    private boolean primerCambio=true,cambioDia=false;
 
-    EditText et_filtro;
-    Button b_buscar,b_agregar;
-    ScrollView scrollView;
+    private EditText et_filtro;
+    private Button b_buscar,b_agregar,b_salir,b_enviar;
+    private ScrollView scrollView;
 
     public OrdenaClientesVM ordenaClientesVM;
 
@@ -70,6 +70,8 @@ public class CfueraFragment extends Fragment {
         et_filtro = view.findViewById(R.id.et_filtro);
         b_buscar = view.findViewById(R.id.button_buscar);
         b_agregar = view.findViewById(R.id.b_agregar);
+        b_salir = view.findViewById(R.id.b_salir);
+        b_enviar = view.findViewById(R.id.b_enviar);
         sp_dias = view.findViewById(R.id.sp_dia);
         tableLayout = view.findViewById(R.id.tableLayout);
         layoutInflater = inflater;
@@ -112,6 +114,20 @@ public class CfueraFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 agregarItem();
+            }
+        });
+
+        b_enviar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ordenaClientesVM.setEnviar(true);
+            }
+        });
+
+        b_salir.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.RegresarInicio(getActivity());
             }
         });
 

@@ -1,84 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout10"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.Inventario.InventarioFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/paddingGeneral"
-        android:orientation="vertical"
-        android:weightSum="10"
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_salir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginTop="@dimen/paddingGeneral"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
         >
 
-            <LinearLayout
+        <HorizontalScrollView
+            android:id="@+id/horizontalView"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal|vertical"
+            android:layout_width="wrap_content"
+            >
+
+            <TableLayout
+                android:id="@+id/tableLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="8"
-                >
+                android:weightSum="2">
+            </TableLayout>
+
+        </HorizontalScrollView>
+
+    </ScrollView>
 
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/button_salir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Salir"
+        android:theme="@style/RaisedButtonDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_imprimir"
+        app:layout_constraintStart_toStartOf="parent"
 
-                <HorizontalScrollView
-                    android:id="@+id/horizontalView"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="horizontal|vertical"
-                    android:layout_width="wrap_content"
-                    >
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
 
-                    <TableLayout
-                        android:id="@+id/tableLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="2">
-                    </TableLayout>
+        />
 
-                </HorizontalScrollView>
+    <Button
+        android:id="@+id/button_imprimir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Imprimir"
+        android:theme="@style/RaisedButtonDark"
 
-                </ScrollView>
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
+        app:layout_constraintStart_toEndOf="@+id/button_salir"
+        app:layout_constraintEnd_toEndOf="parent"
 
-            </LinearLayout>
+        android:layout_marginEnd="@dimen/paddingGeneral"
 
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10"
-                    android:paddingBottom="@dimen/paddingControles"
-                    android:paddingTop="@dimen/paddingControles"
-                    >
-
-                    <Button
-                        android:id="@+id/button_salir"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="Salir"
-                        android:theme="@style/RaisedButtonDark"
-                        android:tag="deselec"
-                        />
-
-                    <Button
-                        android:id="@+id/button_imprimir"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="Imprimir"
-                        android:theme="@style/RaisedButtonDark"
-                        />
-
-                </LinearLayout>
+         />
 
 
-    </LinearLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

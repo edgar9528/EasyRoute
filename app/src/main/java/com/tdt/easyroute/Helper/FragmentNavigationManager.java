@@ -3,18 +3,16 @@ package com.tdt.easyroute.Helper;
 import android.app.Activity;
 import android.content.Intent;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.tdt.easyroute.BuildConfig;
-import com.tdt.easyroute.Fragments.Clientes.BuscarclientesFragment;
+import com.tdt.easyroute.Fragments.Clientes.BuscarClientesActivity;
 import com.tdt.easyroute.Fragments.Clientes.Cartera.CarteraFragment;
 import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.OrdenacliFragment;
 import com.tdt.easyroute.Fragments.FinDeDia.FindiaFragment;
 import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.MainsugeridoFragment;
 import com.tdt.easyroute.Fragments.Inventario.DevolucionesFragment;
-import com.tdt.easyroute.Fragments.Pedidos.Pedidos2Fragment;
 import com.tdt.easyroute.Fragments.Pedidos.PedidosFragment;
 import com.tdt.easyroute.Fragments.PrincipalFragment;
 import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
@@ -90,7 +88,7 @@ public class FragmentNavigationManager implements NavigationManager {
                 break;
 
             case "Pedidos | Clientes":
-                ft= fm.beginTransaction().replace(R.id.container, Pedidos2Fragment.newInstance());
+                ft= fm.beginTransaction().replace(R.id.container, PedidosFragment.newInstance());
                 break;
 
             case "Reportes | Arqueo":
@@ -107,7 +105,9 @@ public class FragmentNavigationManager implements NavigationManager {
                 break;
 
             case "Clientes | Busq. Clientes":
-                ft= fm.beginTransaction().replace(R.id.container, BuscarclientesFragment.newInstance(true));
+                esFragment=false;
+                Intent intent1 = new Intent(activity, BuscarClientesActivity.class);
+                activity.startActivity(intent1);
                 break;
 
             case "Clientes | Ord. Clientes":

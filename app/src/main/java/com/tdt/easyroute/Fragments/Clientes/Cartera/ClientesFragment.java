@@ -140,7 +140,6 @@ public class ClientesFragment extends Fragment {
         ((TextView) tr.findViewById(R.id.t_razon)).setTypeface( ((TextView) tr.findViewById(R.id.t_razon)).getTypeface(), Typeface.BOLD);
 
         tableLayout.addView(tr);
-
     }
 
     private void mostrarCartera()
@@ -178,6 +177,8 @@ public class ClientesFragment extends Fragment {
 
             if(cveSeleccionada.equals(tag)) //si coincide con el anterior, quiere decir que dio doble clic
             {
+                clientesVM.setNegocio(  ((TextView) tr.findViewById(R.id.t_negocio)).getText().toString() );
+                clientesVM.setRazonSocial( ((TextView) tr.findViewById(R.id.t_razon)).getText().toString()  );
                 clientesVM.setCle_cve(tag);
                 fragment.goSaldosFragment();
             }

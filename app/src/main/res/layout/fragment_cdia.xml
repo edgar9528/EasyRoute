@@ -1,215 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Clientes.OrdenaCliente.CdiaFragment"
-    android:fillViewport= "true"
-    >
+    android:fillViewport="true"
+    tools:context=".Fragments.Clientes.OrdenaCliente.CdiaFragment">
+
+
+    <Spinner
+        android:id="@+id/sp_dia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        android:layout_marginTop="@dimen/paddingGeneral"
+        >
+    </Spinner>
+
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/paddingGeneral"
-        android:orientation="vertical"
-        android:weightSum="80"
+        android:id="@+id/LinearEntrada"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="8"
+
+        app:layout_constraintTop_toBottomOf="@id/sp_dia"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight ="30"
-            android:orientation="vertical"
-            >
-
-            <Spinner
-                android:id="@+id/sp_dia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </Spinner>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="8"
-                android:paddingTop="@dimen/paddingControles"
-                >
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="6"
-                    android:theme="@style/EditTextBlack">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_filtro"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Filtro"
-                        android:singleLine="true"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <Button
-                    android:id="@+id/button_buscar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Buscar"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            android:orientation="vertical"
-            >
-
-
-            <ScrollView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <HorizontalScrollView
-                    android:id="@+id/horizontalView"
-                    android:layout_height="match_parent"
-                    android:scrollbars="horizontal|vertical"
-                    android:layout_width="match_parent"
-                    >
-
-                    <TableLayout
-                        android:id="@+id/tableLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </TableLayout>
-
-                </HorizontalScrollView>
-
-            </ScrollView>
-
-
-
-        </LinearLayout>
-
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:orientation="vertical"
-            android:weightSum="4"
-            >
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_weight="6"
+            android:theme="@style/EditTextBlack"
+            android:layout_gravity="center"
             >
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_filtro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="8"
-                android:paddingTop="@dimen/paddingControles"
-                >
+                android:hint="Filtro"
+                android:singleLine="true"
+                android:layout_gravity="center"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
-                    android:id="@+id/b_quitar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    android:text="Quitar"
-                    android:drawableTop="@drawable/user_del"
-                    />
-
-                <Button
-                    android:id="@+id/b_editar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Editar"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    android:drawableTop="@drawable/user_edit"
-                    />
-
-                <Button
-                    android:id="@+id/b_subir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Subir"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    android:drawableTop="@drawable/up"
-                    />
-
-                <Button
-                    android:id="@+id/b_bajar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Bajar"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    android:drawableTop="@drawable/down"
-                    />
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="8"
-                android:paddingTop="@dimen/paddingControles"
-                >
-
-                <Button
-                    android:id="@+id/b_salir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:text="Salir"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    />
-
-                <Button
-                    android:id="@+id/b_enviar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    android:text="Enviar"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
-        </ScrollView>
-        </LinearLayout>
-
-
+        <Button
+            android:id="@+id/button_buscar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Buscar"
+            android:theme="@style/ButtonDarkSmall"
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
 
-</FrameLayout>
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/LinearEntrada"
+        app:layout_constraintBottom_toTopOf="@id/LinearBotones"
+
+        android:layout_marginLeft="@dimen/paddingGeneral"
+        android:layout_marginRight="@dimen/paddingGeneral"
+        >
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal|vertical"
+            >
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+            </TableLayout>
+        </HorizontalScrollView>
+
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/LinearBotones"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/b_salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        android:layout_marginLeft="@dimen/paddingGeneral"
+        android:layout_marginRight="@dimen/paddingGeneral"
+
+        >
+
+        <Button
+            android:id="@+id/b_quitar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:drawableTop="@drawable/user_del"
+            android:text="Quitar"
+            android:theme="@style/ButtonDarkSmall" />
+
+        <Button
+            android:id="@+id/b_editar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:drawableTop="@drawable/user_edit"
+            android:text="Editar"
+            android:theme="@style/ButtonDarkSmall" />
+
+        <Button
+            android:id="@+id/b_subir"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:drawableTop="@drawable/up"
+            android:text="Subir"
+            android:theme="@style/ButtonDarkSmall" />
+
+        <Button
+            android:id="@+id/b_bajar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:drawableTop="@drawable/down"
+            android:text="Bajar"
+            android:theme="@style/ButtonDarkSmall" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/b_salir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_salir"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/b_enviar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+
+        />
+
+    <Button
+        android:id="@+id/b_enviar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_enviar"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/b_salir"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/b_salir"
+
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

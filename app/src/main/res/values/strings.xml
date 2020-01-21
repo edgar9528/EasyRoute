@@ -140,5 +140,9 @@
     <string name="iv_descripcion">Imagen</string>
     <string name="hint_empresa">Empresa</string>
     <string name="bt_validar">Validar</string>
+    <string name="bt_imprimir">Imprimir</string>
+    <string name="bt_regresar">Regresar</string>
+    <string name="bt_enviar">Enviar</string>
+    <string name="bt_aplicar">Aplicar</string>
 
 </resources>

@@ -10,6 +10,7 @@ public class OrdenaClientesVM extends ViewModel {
     private final MutableLiveData<Integer> selectItemDia = new MutableLiveData<>();
     private final MutableLiveData<Integer> selectItemFuera = new MutableLiveData<>();
     private final MutableLiveData<Integer> moverItem = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> enviar = new MutableLiveData<>();
 
     public LiveData<ClientesNodia> getClientesNodia(){
         return clientesNoDia;
@@ -41,6 +42,14 @@ public class OrdenaClientesVM extends ViewModel {
 
     public void setMoverItem(int moverItem){
         this.moverItem.setValue(moverItem);
+    }
+
+    public LiveData<Boolean> getEnviar(){
+        return enviar;
+    }
+
+    public void setEnviar(boolean enviar){
+        this.enviar.setValue(enviar);
     }
 
 

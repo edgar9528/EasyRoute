@@ -21,8 +21,6 @@
         android:orientation="vertical"
         >
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/constraint"
@@ -32,6 +30,7 @@
         android:padding="@dimen/paddingCardView"
 
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
 
         >

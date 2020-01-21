@@ -1,221 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout8"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.Inventario.Carga2Fragment">
 
+    <Button
+        android:id="@+id/button_buscar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_buscar"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/paddingGeneral"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        />
+
+    <Spinner
+        android:id="@+id/spinnerRecargas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/button_buscar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        />
+
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/paddingGeneral"
+        android:id="@+id/LinearLayout1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        app:layout_constraintTop_toBottomOf="@id/spinnerRecargas"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
         >
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/button_buscar"
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Buscar"
-                android:theme="@style/ButtonDarkSmall"
-                android:paddingBottom="@dimen/paddingControles"
-                />
-
-
-            <Spinner
-                android:id="@+id/spinnerRecargas"
-                android:layout_width="match_parent"
+                android:text="Clave"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_rec_cve_n"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/paddingControles"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/paddingControles"
-                >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    >
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Clave"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                    <TextView
-                        android:id="@+id/tv_rec_cve_n"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    >
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Folio"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                    <TextView
-                        android:id="@+id/tv_rec_folio_str"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    >
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Fecha"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                    <TextView
-                        android:id="@+id/tv_rec_falta_dt"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    >
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Solicito"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                    <TextView
-                        android:id="@+id/tv_usu_solicita_str"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    >
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Observación"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                    <TextView
-                        android:id="@+id/tv_rec_observaciones_str"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <include
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/tabla_recargasdet"
-                />
-
-            <TableLayout
-                android:id="@+id/tableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="2">
-            </TableLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:paddingBottom="@dimen/paddingControles"
-                android:paddingTop="@dimen/paddingControles"
-                >
-
-                <Button
-                    android:id="@+id/button_salir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Salir"
-                    android:theme="@style/RaisedButtonDark"
-                    android:tag="deselec"
-                    />
-
-                <Button
-                    android:id="@+id/button_aplicar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Aplicar"
-                    android:theme="@style/RaisedButtonDark"
-                    />
-
-            </LinearLayout>
-
-
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
         </LinearLayout>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Folio"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_rec_folio_str"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
 
-        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_rec_falta_dt"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Solicito"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_usu_solicita_str"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Observación"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_rec_observaciones_str"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
-</FrameLayout>
+
+    <include
+        android:id="@+id/include1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        layout="@layout/tabla_recargasdet"
+
+        app:layout_constraintTop_toBottomOf="@id/LinearLayout1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toBottomOf="@id/include1"
+        app:layout_constraintBottom_toTopOf="@id/button_salir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        >
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        </TableLayout>
+
+    </ScrollView>
+
+
+    <Button
+        android:id="@+id/button_salir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_salir"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_aplicar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+        />
+
+    <Button
+        android:id="@+id/button_aplicar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_aplicar"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_salir"
+
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

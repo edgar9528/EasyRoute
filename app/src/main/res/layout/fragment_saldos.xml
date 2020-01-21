@@ -1,103 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.Clientes.Cartera.SaldosFragment">
 
     <LinearLayout
+        android:id="@+id/head"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="16"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:padding="@dimen/paddingGeneral"
+        android:elevation="4dp"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="15"
-            android:orientation="vertical"
-            >
-
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <HorizontalScrollView
-                    android:id="@+id/horizontalView"
-                    android:layout_height="match_parent"
-                    android:scrollbars="horizontal|vertical"
-                    android:layout_width="match_parent"
-                    >
-
-                    <TableLayout
-                        android:id="@+id/tableLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </TableLayout>
-
-                </HorizontalScrollView>
-
-            </ScrollView>
-
-        </LinearLayout>
-
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_cve"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:text="Clave"
+            android:textColor="@color/blanco"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
 
-            <TextView
-                android:id="@+id/tv_cliente"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="Saldo cliente: $"
-                >
-            </TextView>
+        <TextView
+            android:id="@+id/tv_negocio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Negocio"
+            android:textColor="@color/blanco"
+            android:textSize="18sp"
+            />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:paddingBottom="@dimen/paddingControles"
-                android:paddingTop="@dimen/paddingControles"
-                >
+        <TextView
+            android:id="@+id/tv_razon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Razón social"
+            android:textColor="@color/blanco"
+            android:textSize="18sp"
+            />
 
-                <Button
-                    android:id="@+id/button_salir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Salir"
-                    android:theme="@style/RaisedButtonDark"
-                    android:tag="deselec"
-                    />
-
-                <Button
-                    android:id="@+id/button_imprimir"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Regresar"
-                    android:theme="@style/RaisedButtonDark"
-                    />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-
+        <TextView
+            android:id="@+id/tv_cliente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saldo cliente: $"
+            android:textColor="@color/blanco"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
 
     </LinearLayout>
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/carteraRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toBottomOf="@+id/head"
+        app:layout_constraintBottom_toTopOf="@+id/button_salir"
+        android:layout_marginTop="@dimen/paddingGeneral"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <Button
+        android:id="@+id/button_salir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:tag="deselec"
+        android:text="@string/bt_salir"
+        android:theme="@style/RaisedButtonDark"
+
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_imprimir"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_imprimir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_regresar"
+        android:theme="@style/RaisedButtonDark"
+
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
+        app:layout_constraintStart_toEndOf="@+id/button_salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

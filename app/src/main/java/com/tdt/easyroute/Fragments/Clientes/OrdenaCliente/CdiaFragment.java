@@ -58,24 +58,24 @@ import java.util.zip.Inflater;
 
 public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
-    String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
-    String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
-    String clienteSeleccionado="",diaSeleccionado,nombreBase;
+    private String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
+    private String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
+    private String clienteSeleccionado="",diaSeleccionado,nombreBase;
 
-    ClientesNodia clientesNodia;
-    ClientesDia clientesDia;
+    private ClientesNodia clientesNodia;
+    private ClientesDia clientesDia;
 
-    EditText et_filtro;
-    Button b_buscar, b_quitar, b_editar, b_subir, b_bajar, b_salir,b_enviar;
-    Spinner sp_dias;
+    private EditText et_filtro;
+    private Button b_buscar, b_quitar, b_editar, b_subir, b_bajar, b_salir,b_enviar;
+    private Spinner sp_dias;
 
-    ScrollView scrollView;
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    View vista;
-    OrdenacliFragment fragment;
+    private ScrollView scrollView;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private View vista;
+    private OrdenacliFragment fragment;
 
-    boolean cambioFuera=false;
+    private boolean cambioFuera=false;
 
     public OrdenaClientesVM ordenaClientesVM;
 
@@ -109,7 +109,6 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         layoutInflater = inflater;
 
         sp_dias.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, dias));
-
 
         sp_dias.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -206,11 +205,17 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
-
+        ordenaClientesVM.getEnviar().observe(getParentFragment(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean enviar) {
+                if(enviar)
+                    enviarFrec();
+            }
+        });
     }
 
-    private class ConsultarClientes extends AsyncTask<Boolean, Integer, Boolean> {
-
+    private class ConsultarClientes extends AsyncTask<Boolean, Integer, Boolean>
+    {
         private ProgressDialog progreso;
         private int i;
 

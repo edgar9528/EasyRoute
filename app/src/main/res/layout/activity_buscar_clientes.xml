@@ -3,159 +3,168 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.Clientes.BuscarClientesActivity">
 
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="100"
-        android:padding="@dimen/paddingGeneral"
-        android:orientation="vertical"
+        android:id="@+id/layout1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="8"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        android:layout_marginTop="@dimen/paddingGeneral"
+
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="35"
-            android:orientation="vertical"
-
-            >
-
-            <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:theme="@style/EditTextBlack">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_filtro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="8"
-                android:paddingTop="@dimen/paddingControles"
-                >
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:theme="@style/EditTextBlack">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_filtro"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_filtro"
-                        android:singleLine="true"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <Button
-                    android:id="@+id/button_buscar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/bt_buscar"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    />
-
-                <Button
-                    android:id="@+id/button_borrar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/bt_borrar"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:layout_gravity="center"
-                    />
-
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="4"
-                >
-
-                <Button
-                    android:id="@+id/button_reimp"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/bt_reimprimir"
-                    android:theme="@style/ButtonDarkSmall"
-                    tools:ignore="ButtonStyle"
-                    />
-
-                <Button
-                    android:id="@+id/button_actualizar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/bt_actCliente"
-                    android:theme="@style/ButtonDarkSmall"
-                    tools:ignore="ButtonStyle" />
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="20"
-            >
-
-
-
-            <HorizontalScrollView
-                android:id="@+id/horizontalView"
-                android:layout_height="wrap_content"
-                android:scrollbars="horizontal|vertical"
-                android:layout_width="match_parent"
-
-                >
-
-                <TableLayout
-                    android:id="@+id/tableLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-                </TableLayout>
-
-            </HorizontalScrollView>
-
-        </ScrollView>
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="45"
-            android:weightSum="4"
-            >
-
-            <Button
-                android:id="@+id/button_salir"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="@string/bt_salir"
-                android:theme="@style/ButtonDarkSmall"
-                tools:ignore="ButtonStyle,NestedWeights"
+                android:hint="@string/hint_filtro"
+                android:singleLine="true"
                 />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/button_seleccionar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="@string/bt_seleccionar"
-                android:theme="@style/ButtonDarkSmall"
-                tools:ignore="ButtonStyle" />
+        <Button
+            android:id="@+id/button_buscar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/bt_buscar"
+            android:theme="@style/ButtonDarkSmall"
+            android:layout_gravity="center"
+            />
 
-        </LinearLayout>
+        <Button
+            android:id="@+id/button_borrar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/bt_borrar"
+            android:theme="@style/ButtonDarkSmall"
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout1"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        >
+
+        <Button
+            android:id="@+id/button_reimp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/bt_reimprimir"
+            android:theme="@style/ButtonDarkSmall"
+            tools:ignore="ButtonStyle"
+            />
+
+        <Button
+            android:id="@+id/button_actualizar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/bt_actCliente"
+            android:theme="@style/ButtonDarkSmall"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toBottomOf="@id/layout2"
+        app:layout_constraintBottom_toTopOf="@id/layout3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        >
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalView"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal|vertical"
+            android:layout_width="match_parent"
+            >
+
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+            </TableLayout>
+
+        </HorizontalScrollView>
+
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/layout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        >
+
+        <Button
+            android:id="@+id/button_salir"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/bt_salir"
+            android:theme="@style/ButtonDarkSmall"
+            tools:ignore="ButtonStyle,NestedWeights"
+            />
+
+        <Button
+            android:id="@+id/button_seleccionar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/bt_seleccionar"
+            android:theme="@style/ButtonDarkSmall"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

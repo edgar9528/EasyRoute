@@ -567,7 +567,7 @@ public class Utils {
     public static String strToNum(String numeroStr) {
         try {
             double numero = Double.parseDouble(numeroStr);
-            DecimalFormat df = new DecimalFormat("#.00");
+            DecimalFormat df = new DecimalFormat("00.00");
             return df.format(numero);
         } catch (Exception e) {
             return "";

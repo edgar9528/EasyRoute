@@ -1,225 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout9"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.Inventario.DevolucionesFragment">
 
 
+    <Button
+        android:id="@+id/button_buscar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Buscar"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        />
+
+
+    <Spinner
+        android:id="@+id/spinnerDevoluciones"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@+id/button_buscar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        />
+
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/paddingGeneral"
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        app:layout_constraintTop_toBottomOf="@id/spinnerDevoluciones"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
         >
-        <ScrollView
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/button_buscar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Buscar"
-                    android:theme="@style/ButtonDarkSmall"
-                    android:paddingBottom="@dimen/paddingControles"
-                    />
-
-
-                <Spinner
-                    android:id="@+id/spinnerDevoluciones"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/paddingControles"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/paddingControles"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="Clave"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                        <TextView
-                            android:id="@+id/tv_dev_cve_n"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Clave"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_dev_cve_n"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="Folio"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                        <TextView
-                            android:id="@+id/tv_dev_folio_str"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Folio"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_dev_folio_str"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="Fecha"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                        <TextView
-                            android:id="@+id/tv_dev_fecha_dt"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_dev_fecha_dt"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="Solicito"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                        <TextView
-                            android:id="@+id/tv_usu_solicita_str"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Solicito"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_usu_solicita_str"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        >
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="Observación"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                        <TextView
-                            android:id="@+id/tv_dev_observaciones_str"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Observación"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_dev_observaciones_str"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp" />
+        </LinearLayout>
 
-
-                </LinearLayout>
-
-                <HorizontalScrollView
-                    android:id="@+id/horizontalView"
-                    android:layout_height="match_parent"
-                    android:scrollbars="horizontal|vertical"
-                    android:layout_width="match_parent"
-                    >
-
-                    <TableLayout
-                        android:id="@+id/tableLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:weightSum="2">
-                    </TableLayout>
-
-                </HorizontalScrollView>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10"
-                    android:paddingBottom="@dimen/paddingControles"
-                    android:paddingTop="@dimen/paddingControles"
-                    >
-
-                    <Button
-                        android:id="@+id/button_salir"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="Salir"
-                        android:theme="@style/RaisedButtonDark"
-                        android:tag="deselec"
-                        />
-
-                    <Button
-                        android:id="@+id/button_aplicar"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:text="Aplicar"
-                        android:theme="@style/RaisedButtonDark"
-                        />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-
-        </ScrollView>
     </LinearLayout>
 
-</FrameLayout>
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@id/button_salir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        >
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalView"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal|vertical"
+            android:layout_width="match_parent"
+            >
+
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+            </TableLayout>
+
+        </HorizontalScrollView>
+
+    </ScrollView>
+
+
+
+
+    <Button
+        android:id="@+id/button_salir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Salir"
+        android:theme="@style/RaisedButtonDark"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_aplicar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+
+        />
+
+    <Button
+        android:id="@+id/button_aplicar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Aplicar"
+        android:theme="@style/RaisedButtonDark"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
+        app:layout_constraintStart_toEndOf="@+id/button_salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
