@@ -25,6 +25,13 @@ public class PrincipalFragment extends Fragment {
     private Handler handler=null;
     private Runnable myRunnable;
 
+    public static PrincipalFragment newInstance() {
+        PrincipalFragment fragment = new PrincipalFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public PrincipalFragment() {
         // Required empty public constructor
     }

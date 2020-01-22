@@ -89,28 +89,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onBackPressed() {
-
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle("Importante");
-        dialogo1.setMessage("¿Desea salir de la app?");
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                startActivity(intent);
-                finish();
-
-            }
-        });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                //cancelar();
-            }
-        });
-        dialogo1.show();
+        //cerrarSesion();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +146,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             Log.d("salida","Error: "+e.toString());
         }
 
+    }
+
+    public void cerrarSesion()
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+        dialogo1.setTitle("Importante");
+        dialogo1.setMessage("¿Desea salir de la app?");
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                //cancelar();
+            }
+        });
+        dialogo1.show();
     }
 
     //CONFIGURACION DEL MENU
@@ -300,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         //OPCIONES QUE SE MOSTRARAN EN EL MENU
 
-        List<String> title = Arrays.asList("Inicio", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día", "Catálogos");
+        List<String> title = Arrays.asList("Inicio", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día","Configuración");
 
         List<String> iniciodia = Arrays.asList("Pantalla principal","Inicio de día");
         List<String> inventario = Arrays.asList("Carga inicial","Inventario", "Recarga", "Devoluciones", "Descarga");
@@ -309,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         List<String> reportes = Arrays.asList("Arqueo", "Ventas día");
         List<String> clientes = Arrays.asList("Cartera", "Ord. Clientes", "Busq. Clientes");
         List<String> findia = Arrays.asList("Sugerido", "Transmitir", "Borrar datos", "Fin de ventas");
-        List<String> catalogos = Arrays.asList("Configuración");
+        List<String> catalogos = Arrays.asList("Catálogos","Salir");
 
         lstChild = new LinkedHashMap<>();
         lstChild.put(title.get(0), iniciodia);

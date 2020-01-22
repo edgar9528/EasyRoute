@@ -59,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Clave"
+                android:text="@string/tv_clave"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
             <TextView
@@ -83,7 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Folio"
+                android:text="@string/tv_folio"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
             <TextView
@@ -107,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Fecha"
+                android:text="@string/tv_fecha"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
             <TextView
@@ -131,7 +131,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Solicito"
+                android:text="@string/tv_solicito"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
             <TextView
@@ -155,7 +155,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Observación"
+                android:text="@string/tv_observacion"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp" />
             <TextView

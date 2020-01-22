@@ -7,35 +7,23 @@
     >
 
     <com.google.android.material.textfield.TextInputLayout
-        android:paddingTop="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/EditTextBlack">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ti_dialogUser"
+            android:id="@+id/ti_sugerido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Usuario"
+            android:hint="@string/hint_sugerido"
             android:singleLine="true"
+            android:inputType="number"
+            android:digits="0123456789"
+
             />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:theme="@style/EditTextBlack">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ti_dialogPass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            android:singleLine="true"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
 
 
 </LinearLayout>

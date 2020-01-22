@@ -177,7 +177,7 @@ public class MainsugeridoFragment extends Fragment {
 
     public void goSugerido()
     {
-        viewPager.setCurrentItem(4);
+        viewPager.setCurrentItem(3);
     }
 
     @Override

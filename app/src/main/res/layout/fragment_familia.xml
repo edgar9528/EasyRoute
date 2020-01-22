@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frameLayout11"
@@ -34,8 +35,9 @@
                 android:id="@+id/et_sku"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="SKU"
+                android:hint="@string/hint_sku"
                 android:singleLine="true"
+                android:imeOptions="actionNext"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -48,8 +50,10 @@
                 android:id="@+id/et_cant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cantidad"
+                android:hint="@string/hint_cantidad"
                 android:singleLine="true"
+                android:inputType="number"
+                android:digits="0123456789"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="✓"
+            android:text="@string/bt_correcto"
             android:textAlignment="center"
             android:theme="@style/ButtonDarkSmall"
             android:layout_gravity="center"
@@ -69,7 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="x"
+            android:text="@string/bt_incorrecto"
             android:textAlignment="center"
             android:theme="@style/ButtonRed"
             android:layout_gravity="center"

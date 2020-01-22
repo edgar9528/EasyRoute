@@ -51,7 +51,7 @@
                 android:id="@+id/et_filtro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Filtro"
+                android:hint="@string/hint_filtro"
                 android:singleLine="true"
                 android:layout_gravity="center"
                 />
@@ -62,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Buscar"
+            android:text="@string/bt_buscar"
             android:theme="@style/ButtonDarkSmall"
             android:layout_gravity="center"
             />
@@ -120,7 +120,7 @@
             android:layout_gravity="center"
             android:layout_weight="2"
             android:drawableTop="@drawable/user_del"
-            android:text="Quitar"
+            android:text="@string/bt_quitar"
             android:theme="@style/ButtonDarkSmall" />
 
         <Button
@@ -130,7 +130,7 @@
             android:layout_gravity="center"
             android:layout_weight="2"
             android:drawableTop="@drawable/user_edit"
-            android:text="Editar"
+            android:text="@string/bt_editar"
             android:theme="@style/ButtonDarkSmall" />
 
         <Button
@@ -140,7 +140,7 @@
             android:layout_gravity="center"
             android:layout_weight="2"
             android:drawableTop="@drawable/up"
-            android:text="Subir"
+            android:text="@string/bt_subir"
             android:theme="@style/ButtonDarkSmall" />
 
         <Button
@@ -150,7 +150,7 @@
             android:layout_gravity="center"
             android:layout_weight="2"
             android:drawableTop="@drawable/down"
-            android:text="Bajar"
+            android:text="@string/bt_bajar"
             android:theme="@style/ButtonDarkSmall" />
     </LinearLayout>
 

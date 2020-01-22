@@ -12,7 +12,8 @@
         android:weightSum="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:paddingStart="@dimen/paddingHeader"
+        android:paddingEnd="@dimen/paddingHeader"
         >
 
         <ImageView
@@ -20,30 +21,33 @@
             android:src="@drawable/logotdt"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:contentDescription="@string/iv_descripcion"
             />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/textViewNombre"
-        android:text="Usuario"
+        android:text="@string/tv_ejemplo"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:gravity="left|start"
+        android:paddingStart="@dimen/paddingHeader"
+        android:paddingEnd="@dimen/paddingHeader"
+        android:gravity="start"
         />
 
     <TextView
         android:id="@+id/textViewRuta"
-        android:text="Ruta"
+        android:text="@string/tv_ejemplo"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:gravity="left|start"
+        android:paddingStart="@dimen/paddingHeader"
+        android:paddingEnd="@dimen/paddingHeader"
+        android:gravity="start"
         />
 
 </LinearLayout>

@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         button_sesion = (Button) findViewById(R.id.Blogin);
         ti_usuario = (TextInputEditText) findViewById(R.id.TIusername);
         ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
-        iv_logo = findViewById(R.id.logo);
+        iv_logo = findViewById(R.id.imageView);
 
         ti_usuario.setText("AGUTIERREZ");
         ti_contrasena.setText("772");

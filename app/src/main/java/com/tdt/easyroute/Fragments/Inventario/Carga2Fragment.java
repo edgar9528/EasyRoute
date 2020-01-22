@@ -500,10 +500,11 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             {
                 tr = (TableRow) layoutInflater.inflate(R.layout.tabla_recargasdet, null);
                 rd=al_recargasDet.get(i);
+                int can = (int) Float.parseFloat( rd.getProd_cant_n() );
 
                 ((TextView) tr.findViewById(R.id.t_prod_sku_str)).setText(rd.getProd_sku_str());
                 ((TextView) tr.findViewById(R.id.t_prod_desc_str)).setText(rd.getProd_desc_str());
-                ((TextView) tr.findViewById(R.id.t_prod_cant_n)).setText(rd.getProd_cant_n());
+                ((TextView) tr.findViewById(R.id.t_prod_cant_n)).setText( String.valueOf(can)  );
 
                 tableLayout.addView(tr);
             }

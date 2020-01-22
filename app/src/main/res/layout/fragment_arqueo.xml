@@ -1,138 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frameLayout13"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.Reportes.ArqueoFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/paddingGeneral"
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_salir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginTop="@dimen/paddingGeneral"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
         >
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack"
-            android:hint="Ventas del día"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:singleLine="true"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack"
-            android:hint="Ventas contado"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack"
-            android:hint="Ventas crédito"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack"
-            android:hint="Cobranza"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-
-                android:id="@+id/et4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/EditTextBlack"
-            android:hint="Entregar a caja"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="15dp"
-            android:weightSum="6"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:orientation="vertical"
             >
 
-            <Button
-                android:id="@+id/button_salir"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Salir"
-                android:theme="@style/ButtonDarkSmall"
-                />
+                android:theme="@style/EditTextBlack"
+                android:hint="@string/hint_ventasDia"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-            <Button
-                android:id="@+id/button_imprimir"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Imprimir"
-                android:theme="@style/ButtonDarkSmall"
-                />
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/button_calcular"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Calcular"
-                android:theme="@style/ButtonDarkSmall"
-                />
+                android:theme="@style/EditTextBlack"
+                android:hint="@string/hint_ventasContado"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack"
+                android:hint="@string/hint_ventasCredito"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack"
+                android:hint="@string/hint_cobranza"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+
+                    android:id="@+id/et4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextBlack"
+                android:hint="@string/hint_ventasEntregar"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
         </LinearLayout>
 
+    </ScrollView>
 
-    </LinearLayout>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/button_salir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_salir"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_imprimir"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+        />
+
+    <Button
+        android:id="@+id/button_imprimir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_imprimir"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/button_salir"
+        app:layout_constraintStart_toEndOf="@id/button_salir"
+        app:layout_constraintEnd_toStartOf="@id/button_calcular"
+
+        />
+
+    <Button
+        android:id="@+id/button_calcular"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_calcular"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/button_salir"
+        app:layout_constraintStart_toEndOf="@id/button_imprimir"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

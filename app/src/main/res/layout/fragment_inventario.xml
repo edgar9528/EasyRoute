@@ -33,7 +33,7 @@
 
             <TableLayout
                 android:id="@+id/tableLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:weightSum="2">
             </TableLayout>
@@ -47,7 +47,7 @@
         android:id="@+id/button_salir"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Salir"
+        android:text="@string/bt_salir"
         android:theme="@style/RaisedButtonDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_imprimir"
@@ -62,7 +62,7 @@
         android:id="@+id/button_imprimir"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Imprimir"
+        android:text="@string/bt_imprimir"
         android:theme="@style/RaisedButtonDark"
 
         app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"

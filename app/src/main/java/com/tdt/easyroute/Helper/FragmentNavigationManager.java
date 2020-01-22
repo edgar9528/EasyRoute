@@ -46,7 +46,7 @@ public class FragmentNavigationManager implements NavigationManager {
     }
 
     private void configure(MainActivity mainActivity,Activity act,Usuario user) {
-        mainActivity=mainActivity;
+        this.mainActivity=mainActivity;
         activity=act;
         usuario=user;
         mFragmentManager = mainActivity.getSupportFragmentManager();
@@ -129,14 +129,18 @@ public class FragmentNavigationManager implements NavigationManager {
             case "Fin de día | Fin de ventas":
                 ft= fm.beginTransaction().replace(R.id.container, FindiaFragment.newInstance(2));
                 break;
-
-            case "Catálogos | Configuración":
+            case "Configuración | Catálogos":
                 esFragment=false;
                 Intent intent = new Intent(activity, ConfiguracionActivity.class);
                 intent.putExtra("catalogos", true);
                 intent.putExtra("usuario", usuario);
                 activity.startActivity(intent);
                 break;
+            case "Configuración | Salir":
+                esFragment=false;
+                mainActivity.cerrarSesion();
+                break;
+
             default:
                 PrincipalFragment fragmentPrincipal = new PrincipalFragment();
                 ft= fm.beginTransaction().replace(R.id.container,fragmentPrincipal);

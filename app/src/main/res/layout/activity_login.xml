@@ -12,85 +12,80 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="1"
+        android:weightSum="6"
+        android:padding="@dimen/paddingGeneral"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:padding="@dimen/paddingLogin"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             >
-
             <ImageView
-                android:id="@+id/logo"
+                android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/logotdt"
+                app:srcCompat="@drawable/logotdt"
+                android:layout_margin="@dimen/paddingGeneral"
                 android:contentDescription="@string/iv_descripcion"
-
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-
                 />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:fillViewport="true">
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:fillViewport="true"
+            android:padding="@dimen/paddingGeneral"
+            android:orientation="vertical"
+            >
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/paddingLogin"
-                android:layout_gravity="center"
+                android:theme="@style/EditTextWhite"
                 >
-
-                <com.google.android.material.textfield.TextInputLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TIusername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:theme="@style/EditTextWhite"
-                    >
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/TIusername"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="@string/hint_usuario"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/EditTextWhite"
-                    app:passwordToggleEnabled="true"
-                    >
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/TIpassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_contraseña"
-                        android:inputType="textPassword"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <Button
-                    android:id="@+id/Blogin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bt_iniciar"
-                    android:theme="@style/RaisedButtonDark"
-                    android:paddingTop="@dimen/paddingControles"
+                    android:singleLine="true"
+                    android:hint="@string/hint_usuario"
                     />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextWhite"
+                app:passwordToggleEnabled="true"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/TIpassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_contraseña"
+                    android:inputType="textPassword"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <Button
+                android:id="@+id/Blogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bt_iniciar"
+                android:theme="@style/RaisedButtonDark"
+                android:paddingTop="@dimen/paddingControles"
+                />
         </LinearLayout>
 
+
+
     </LinearLayout>
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,25 +67,21 @@ public class PresentacionFragment extends Fragment {
         b_buscar = view.findViewById(R.id.button_buscar);
         b_borrar = view.findViewById(R.id.button_borrar);
 
+        et_cant.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    buscar();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         b_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String sku = et_sku.getText().toString();
-                String can= et_cant.getText().toString();
-
-                if(!sku.isEmpty())
-                {
-                    strBuscar[0] = sku;
-                    strBuscar[1] = can;
-
-                    et_sku.setText("");
-                    et_cant.setText("");
-
-                    sugeridoVM.setStrBuscar( strBuscar );
-                }
-                else
-                    Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
+                buscar();
             }
         });
 
@@ -118,6 +115,27 @@ public class PresentacionFragment extends Fragment {
             }
         });
 
+    }
+
+    private void buscar()
+    {
+        String sku = et_sku.getText().toString();
+        String can= et_cant.getText().toString();
+
+        if(!sku.isEmpty())
+        {
+            strBuscar[0] = sku;
+            strBuscar[1] = can;
+
+            et_sku.setText("");
+            et_cant.setText("");
+
+            fragmentMain.goSugerido();
+
+            sugeridoVM.setStrBuscar( strBuscar );
+        }
+        else
+            Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
     }
 
 

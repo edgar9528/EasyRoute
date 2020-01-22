@@ -15,9 +15,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -54,7 +57,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
     Button b_buscar,b_borrar;
     EditText et_sku,et_cant;
     int sugeridoIndice=-1;
-    String sugeridoSelec="",nombreBase;
+    String sugeridoSelec="",nombreBase,sugeridoAnt="";
     Configuracion conf;
     Usuario user;
 
@@ -104,18 +107,21 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
+        et_cant.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    buscar();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         b_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String sku = et_sku.getText().toString();
-                String can= et_cant.getText().toString();
-                
-                if(!sku.isEmpty())
-                {
-                    buscarSKU(sku,can);
-                }
-                else
-                    Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
+                buscar();
             }
         });
 
@@ -187,6 +193,21 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
+    }
+
+    private void buscar()
+    {
+        String sku = et_sku.getText().toString();
+        String can= et_cant.getText().toString();
+
+        if(!sku.isEmpty())
+        {
+            et_sku.setText("");
+            et_cant.setText("");
+            buscarSKU(sku,can);
+        }
+        else
+            Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
     }
 
     private void imprimir()
@@ -574,22 +595,11 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                 sug.setProd_sug_n( String.valueOf( c ) );
                 sug.setCat_desc_str( ri.getCat_desc_str() );
 
-
                 dgSugerido.add( sug );
 
                 seleccion = dgSugerido.size()-1;
 
-                //int ra = dgSugerido.size()-1;
-
-                /* Fue sustituido por la linea:  sug.setProd_sug_n( String.valueOf( c ) );
-                if (cant.equals(""))
-                {
-                    dgSugerido.get(ra).setProd_sug_n( String.valueOf( c )  );
-                }*/
-
                 tableLayout.requestFocus();
-                fragmentMain.goSugerido();
-
             }
             else
             {
@@ -690,6 +700,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             {
                 tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
                 sugeridoSelec = dgSugerido.get(i).getProd_sku_str();
+                sugeridoAnt=sugeridoSelec;
                 sugeridoIndice = i;
             }
 
@@ -705,21 +716,77 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             TableRow tr = ((TableRow) view);
             sugeridoSelec = (String) tr.getTag(); //se obtiene la fila y tag de la seleccion
 
-            for(int i=0; i<dgSugerido.size();i++)
+            if(sugeridoAnt.equals(sugeridoSelec))
             {
-                TableRow row = (TableRow)vista.findViewWithTag(dgSugerido.get(i).getProd_sku_str());
-                row.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
-
-                if(sugeridoSelec.equals( dgSugerido.get(i).getProd_sku_str() ))
-                    sugeridoIndice = i;
+                int rowIndex = tableLayout.indexOfChild(tr)-1;
+                modificarSugerido(rowIndex);
             }
+            else
+            {
+                for(int i=0; i<dgSugerido.size();i++)
+                {
+                    TableRow row = (TableRow)vista.findViewWithTag(dgSugerido.get(i).getProd_sku_str());
+                    row.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
 
-            //pinta de azul la fila y actualiza la cve de la fila seccionada
-            tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
-            tr.requestFocus();
+                    if(sugeridoSelec.equals( dgSugerido.get(i).getProd_sku_str() ))
+                        sugeridoIndice = i;
+                }
 
+                //pinta de azul la fila y actualiza la cve de la fila seccionada
+                tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
+                tr.requestFocus();
+                sugeridoAnt=sugeridoSelec;
+            }
         }
     };
+
+    private void modificarSugerido(int index)
+    {
+        if(!dgSugerido.get(index).getCat_desc_str().equals("ENVASE"))
+        {
+            final String sku = dgSugerido.get(index).getProd_sku_str();
+            String sug = dgSugerido.get(index).getProd_sug_n();
+            String msg = getResources().getString(R.string.msg_actualizaSuge2) + ": "+sug  ;
+
+            LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
+            View view = layoutInflater.inflate(R.layout.dialog_sugerido,null);
+            final EditText editText = (EditText) view.findViewById(R.id.ti_sugerido);
+
+            final AlertDialog dialog = new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.msg_actualizaSuge)
+                    .setMessage(msg)
+                    .setView(view)
+                    .setPositiveButton(R.string.bt_aceptar, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String lectura = String.valueOf(editText.getText());
+                            buscarSKU(sku,lectura);
+                        }
+                    })
+                    .setNegativeButton(R.string.bt_cancelar, null)
+                    .create();
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            dialog.show();
+
+            editText.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        String lectura = String.valueOf(editText.getText());
+                        buscarSKU(sku,lectura);
+
+                        if(dialog.isShowing())
+                            dialog.dismiss();
+
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+        }
+
+    }
 
     @Override
     public void recibirPeticion(boolean estado, String respuesta)
@@ -749,7 +816,6 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                     }
                     Toast.makeText(getContext(), "Error al enviar el sugerido al servidor: " + ret.getMsj(), Toast.LENGTH_LONG).show();
                 }
-
             }
             else
             {

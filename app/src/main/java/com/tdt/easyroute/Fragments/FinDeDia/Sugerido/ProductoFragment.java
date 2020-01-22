@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,31 +62,26 @@ public class ProductoFragment extends Fragment {
         fragmentMain = (MainsugeridoFragment) getParentFragment();
         tableLayout = view.findViewById(R.id.tableLayout);
 
-
         et_sku = view.findViewById(R.id.et_sku);
         et_cant = view.findViewById(R.id.et_cant);
         b_buscar = view.findViewById(R.id.button_buscar);
         b_borrar = view.findViewById(R.id.button_borrar);
 
+        et_cant.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    buscar();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         b_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String sku = et_sku.getText().toString();
-                String can= et_cant.getText().toString();
-
-                if(!sku.isEmpty())
-                {
-                    strBuscar[0] = sku;
-                    strBuscar[1] = can;
-
-                    et_sku.setText("");
-                    et_cant.setText("");
-
-                    sugeridoVM.setStrBuscar( strBuscar );
-                }
-                else
-                    Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
+                buscar();
             }
         });
 
@@ -95,8 +91,6 @@ public class ProductoFragment extends Fragment {
                 sugeridoVM.setBorrar(true);
             }
         });
-
-
 
         return view;
     }
@@ -127,6 +121,27 @@ public class ProductoFragment extends Fragment {
                 obtenerProductos();
             }
         });
+    }
+
+    private void buscar()
+    {
+        String sku = et_sku.getText().toString();
+        String can= et_cant.getText().toString();
+
+        if(!sku.isEmpty())
+        {
+            strBuscar[0] = sku;
+            strBuscar[1] = can;
+
+            et_sku.setText("");
+            et_cant.setText("");
+
+            fragmentMain.goSugerido();
+
+            sugeridoVM.setStrBuscar( strBuscar );
+        }
+        else
+            Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -194,6 +209,7 @@ public class ProductoFragment extends Fragment {
             //pinta de azul la fila y actualiza la cve de la fila seccionada
             tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
 
+            fragmentMain.goSugerido();
             sugeridoVM.setProductoSKU(productoSKU);
         }
     };

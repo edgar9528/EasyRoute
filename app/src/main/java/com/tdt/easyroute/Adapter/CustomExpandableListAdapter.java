@@ -168,6 +168,9 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         if(grupo==7 && hijo==0)
             drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_ajus, null);
         else
+        if(grupo==7 && hijo==1)
+            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.icon_salir, null);
+        else
             drawable=null;
 
         return drawable;

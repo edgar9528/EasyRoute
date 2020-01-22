@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
-            android:text="Nuevo estado"
+            android:text="@string/tv_nuevoEstado"
             android:textSize="19sp"
         />
 
@@ -39,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
-            android:text="Frecuencia"
+            android:text="@string/tv_frecuencia"
             android:textSize="19sp"
             />
 
@@ -62,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
-            android:text="Coordenada:"
+            android:text="@string/tv_coordenada"
             android:textSize="19sp"
             android:paddingBottom="5dp"
             />
@@ -74,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
-            android:text="0"
+            android:text="@string/tv_valorDefecto0"
             android:textSize="22sp"
             />
 
@@ -91,14 +90,15 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                ></ImageView>
+                android:contentDescription="@string/iv_descripcion"
+                />
 
             <Button
                 android:id="@+id/b_salir"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="salir"
+                android:text="@string/bt_salir"
                 android:theme="@style/ButtonDarkSmall"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/salir"
@@ -109,7 +109,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Ubica..."
+                android:text="@string/bt_ubicacion"
                 android:theme="@style/ButtonDarkSmall"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/ubicacion"
@@ -120,7 +120,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Guardar"
+                android:text="@string/bt_guardar"
                 android:theme="@style/ButtonDarkSmall"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/guardar"

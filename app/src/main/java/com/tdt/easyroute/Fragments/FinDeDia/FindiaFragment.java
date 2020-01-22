@@ -108,7 +108,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-
     private void enviarCambios()
     {
         String ds;
@@ -723,7 +722,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
         mainActivity.validarMenu();
         Log.d("salida","ENTRO ACTUALIZAR MENU");
-
     }
 
 }

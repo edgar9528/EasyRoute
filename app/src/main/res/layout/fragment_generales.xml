@@ -36,7 +36,7 @@
                     android:id="@+id/et_empresa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Empresa"
+                    android:hint="@string/hint_empresa"
                     android:singleLine="true"
                     android:focusable="false"
                     />
@@ -51,7 +51,7 @@
                     android:id="@+id/et_ruta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ruta"
+                    android:hint="@string/hint_ruta"
                     android:singleLine="true"
                     android:focusable="false"
                     />
@@ -65,7 +65,7 @@
                     android:id="@+id/et_truta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Tipo ruta"
+                    android:hint="@string/hint_tipoRuta"
                     android:singleLine="true"
                     android:enabled="false"
                     />
@@ -81,7 +81,7 @@
                     android:id="@+id/et_vendedor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Vendedor"
+                    android:hint="@string/hint_vendedor"
                     android:singleLine="true"
                     android:enabled="false"
                     />
@@ -95,7 +95,7 @@
                     android:id="@+id/et_fecha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Fecha"
+                    android:hint="@string/tv_fecha"
                     android:singleLine="true"
                     android:enabled="false"
                     />
@@ -109,7 +109,7 @@
                     android:id="@+id/et_hora"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Hora"
+                    android:hint="@string/tv_hora"
                     android:singleLine="true"
                     android:enabled="false"
                     />
@@ -123,7 +123,7 @@
                     android:id="@+id/et_camion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Camión"
+                    android:hint="@string/hint_camion"
                     android:singleLine="true"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -136,7 +136,7 @@
                     android:id="@+id/et_kilometraje"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Kilometraje"
+                    android:hint="@string/hint_kilometraje"
                     android:singleLine="true"
                     android:inputType="number"
                     android:digits="0123456789"

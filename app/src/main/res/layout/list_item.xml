@@ -14,8 +14,8 @@
         android:layout_height="27dp"
         android:layout_gravity="center"
         android:background="@drawable/icon_ini"
-        >
-    </ImageView>
+        android:contentDescription="@string/iv_descripcion"
+    />
 
     <TextView
         android:id="@+id/expandabledListItem"
@@ -23,10 +23,11 @@
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:paddingLeft="5dp"
+        android:paddingStart="@dimen/paddingCardView"
+        android:paddingEnd="@dimen/paddingCardView"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
-        android:text="Prueba de item"
+        android:text="@string/tv_ejemplo"
         />
 
 </LinearLayout>

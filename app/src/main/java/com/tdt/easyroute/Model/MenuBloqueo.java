@@ -24,7 +24,7 @@ public class MenuBloqueo {
         boolean[] hijos4 = {true,true};
         boolean[] hijos5 = {true,true,true};
         boolean[] hijos6 = {true,true,true,true};
-        boolean[] hijos7 = {true};
+        boolean[] hijos7 = {true,true};
 
         hijos.add(hijos0);
         hijos.add(hijos1);
