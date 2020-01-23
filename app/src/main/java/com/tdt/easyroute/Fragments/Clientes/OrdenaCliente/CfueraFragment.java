@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 public class CfueraFragment extends Fragment {
 
-    private String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
+    private String[] dias;
     private String clienteSeleccionado="";
     private ClientesNodia clientesNodia;
 
@@ -53,7 +53,7 @@ public class CfueraFragment extends Fragment {
     private Button b_buscar,b_agregar,b_salir,b_enviar;
     private ScrollView scrollView;
 
-    public OrdenaClientesVM ordenaClientesVM;
+    private OrdenaClientesVM ordenaClientesVM;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,9 @@ public class CfueraFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_cfuera, container, false);
         vista=view;
+
+        String strDias = getResources().getString(R.string.diasSemana);
+        dias = strDias.split(",");
 
         et_filtro = view.findViewById(R.id.et_filtro);
         b_buscar = view.findViewById(R.id.button_buscar);
@@ -244,7 +247,7 @@ public class CfueraFragment extends Fragment {
 
         if(!palabra.isEmpty()) {
             for (int i = 0; i < clientesNodia.getClientes().size(); i++) {
-                TableRow row = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
+                TableRow row =  vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
 
                 cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
                 nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
@@ -254,7 +257,7 @@ public class CfueraFragment extends Fragment {
                 {
                     for (int j = 0; j < clientesNodia.getClientes().size(); j++)
                     {
-                        TableRow tr = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(j).getCli_cveext_str());
+                        TableRow tr =  vista.findViewWithTag(clientesNodia.getClientes().get(j).getCli_cveext_str());
                         tr.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                     }
 
@@ -312,7 +315,7 @@ public class CfueraFragment extends Fragment {
             if(!clienteSeleccionado.equals(tag))
             {
                 for (int i = 0; i < clientesNodia.getClientes().size(); i++) {
-                    TableRow row = (TableRow) vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
+                    TableRow row =  vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
                     row.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                 }
                 //pinta de azul la fila y actualiza la cve de la fila seccionada

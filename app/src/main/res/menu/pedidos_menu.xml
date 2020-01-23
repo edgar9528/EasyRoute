@@ -6,28 +6,28 @@
     <item
         android:id="@+id/action_imprimir"
         android:orderInCategory="300"
-        android:title="Imprimir"
+        android:title="@string/bt_imprimir"
         android:icon="@drawable/icon_visimp"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_buscar"
         android:orderInCategory="300"
-        android:title="Buscar"
+        android:title="@string/bt_buscar"
         android:icon="@drawable/icon_visbuscar"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_salir"
         android:orderInCategory="300"
-        android:title="Salir"
+        android:title="@string/bt_salir"
         android:icon="@drawable/icon_vissalir"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_actualizar"
         android:orderInCategory="300"
-        android:title="Actualizar clientes"
+        android:title="@string/bt_actClientes"
         android:icon="@drawable/icon_visact1"
         app:showAsAction="ifRoom" />
 </menu>

@@ -43,20 +43,18 @@ public class ServidorFragment extends Fragment {
     }
     private View viewGral;
 
-    String nombreBase;
+    private String nombreBase;
 
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    ArrayList<String> lista_catalogos;
-    ArrayList<String> metodosWS;
-    boolean[] rbSeleccionados;
-    Button button_selec,button_deselec,button_sinc,button_salir;
-    Configuracion conf=null;
-    boolean precioPreventa=false;
-    boolean catalogos;
-    boolean crut;
-    Usuario user;
-    String[] arr_estadoCat;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private ArrayList<String> lista_catalogos;
+    private ArrayList<String> metodosWS;
+    private boolean[] rbSeleccionados;
+    private Configuracion conf=null;
+    private boolean precioPreventa=false;
+    private boolean catalogos;
+    private boolean crut;
+    private String[] arr_estadoCat;
 
 
 
@@ -67,6 +65,8 @@ public class ServidorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_servidor, container, false);
         viewGral = view;
         layoutInflater = inflater;
+
+        Button button_selec,button_deselec,button_sinc,button_salir;
 
         try{
 
@@ -148,7 +148,6 @@ public class ServidorFragment extends Fragment {
             conf = activity.getConf(); //obtener la configuracion
             catalogos = activity.getCatalogosBool();
             crut = activity.getCrut();
-            user = activity.getUser();
             nombreBase = getActivity().getString( R.string.nombreBD );
 
             rbSeleccionados = new boolean[lista_catalogos.size()]; //para saber que rb estan seleccionados porque son dinamicos
@@ -173,9 +172,9 @@ public class ServidorFragment extends Fragment {
 
     }
 
-    public void mostrarCatalogos()
+    private void mostrarCatalogos()
     {
-        tableLayout = (TableLayout) viewGral.findViewById(R.id.tableLayout);
+        tableLayout = viewGral.findViewById(R.id.tableLayout);
         tableLayout.removeAllViews();
         TableRow tr;
 
@@ -189,7 +188,6 @@ public class ServidorFragment extends Fragment {
 
             ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(lista_catalogos.get(i));
             ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
-
             ((TextView) tr.findViewById(R.id.tabla_catalogo)).setTypeface(Typeface.DEFAULT);
             ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
 
@@ -236,7 +234,7 @@ public class ServidorFragment extends Fragment {
             for(int i=0; i<rbSeleccionados.length;i++)
             {
                 rbSeleccionados[i]=seleccionar;
-                RadioButton rb = (RadioButton) viewGral.findViewWithTag(i);
+                RadioButton rb =  viewGral.findViewWithTag(i);
                 rb.setChecked( seleccionar );
             }
 
@@ -249,29 +247,29 @@ public class ServidorFragment extends Fragment {
         private Context context;
         private ParametrosWS parametrosWS;
         private String resultado;
-        boolean almacenado=false;
+        boolean almacenado;
 
         //Lista de tablas descargadas
 
-        ArrayList<DataTableWS.Empresa> al_empresas=null;
-        ArrayList<DataTableWS.Estatus> al_estatus=null;
-        ArrayList<DataTableWS.Roles> al_roles=null;
-        ArrayList<DataTableWS.RolesModulos> al_rolesModulos=null;
-        ArrayList<DataTableWS.Modulos> al_modulos=null;
-        ArrayList<DataTableWS.Usuarios> al_usuarios=null;
-        ArrayList<DataTableWS.TipoRuta> al_tipoRutas=null;
-        ArrayList<DataTableWS.Ruta> al_rutas=null;
-        ArrayList<DataTableWS.CondicionesVenta> al_condicionesVenta=null;
-        ArrayList<DataTableWS.Productos> al_productos=null;
-        ArrayList<DataTableWS.ListaPrecios> al_listaPrecios=null;
-        ArrayList<DataTableWS.PrecioProductos> al_precioProductos=null;
-        ArrayList<DataTableWS.FormasPago> al_formasPago=null;
-        ArrayList<DataTableWS.FrecuenciasVisita> al_frecuenciaVisi=null;
-        ArrayList<DataTableWS.Categorias> al_categorias=null;
-        ArrayList<DataTableWS.Familias> al_familias=null;
-        ArrayList<DataTableWS.Presentaciones> al_presentaciones=null;
-        ArrayList<DataTableWS.Promociones> al_promociones=null;
-        ArrayList<DataTableWS.PromocionesKit> al_promocionesKit=null;
+        ArrayList<DataTableWS.Empresa> al_empresas;
+        ArrayList<DataTableWS.Estatus> al_estatus;
+        ArrayList<DataTableWS.Roles> al_roles;
+        ArrayList<DataTableWS.RolesModulos> al_rolesModulos;
+        ArrayList<DataTableWS.Modulos> al_modulos;
+        ArrayList<DataTableWS.Usuarios> al_usuarios;
+        ArrayList<DataTableWS.TipoRuta> al_tipoRutas;
+        ArrayList<DataTableWS.Ruta> al_rutas;
+        ArrayList<DataTableWS.CondicionesVenta> al_condicionesVenta;
+        ArrayList<DataTableWS.Productos> al_productos;
+        ArrayList<DataTableWS.ListaPrecios> al_listaPrecios;
+        ArrayList<DataTableWS.PrecioProductos> al_precioProductos;
+        ArrayList<DataTableWS.FormasPago> al_formasPago;
+        ArrayList<DataTableWS.FrecuenciasVisita> al_frecuenciaVisi;
+        ArrayList<DataTableWS.Categorias> al_categorias;
+        ArrayList<DataTableWS.Familias> al_familias;
+        ArrayList<DataTableWS.Presentaciones> al_presentaciones;
+        ArrayList<DataTableWS.Promociones> al_promociones;
+        ArrayList<DataTableWS.PromocionesKit> al_promocionesKit;
 
         public ConexionWS(Context context) {
             this.context = context;
@@ -305,7 +303,7 @@ public class ServidorFragment extends Fragment {
 
         @Override protected void onPreExecute() {
             progreso = new ProgressDialog(context);
-            progreso.setMessage("Descargando...");
+            progreso.setMessage(context.getResources().getString(R.string.msg_webserviceDescarga));
             progreso.setCancelable(false);
             progreso.show();
         }
@@ -870,7 +868,7 @@ public class ServidorFragment extends Fragment {
 
     }
 
-    public String getBool(String cad)
+    private String getBool(String cad)
     {
         if(cad.equals("true"))
         {

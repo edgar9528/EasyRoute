@@ -46,7 +46,7 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
     private String msj,peticion,folio,nombreBase;
     private Configuracion conf;
     private int id_devSeleccionada;
-    long cve = 0;
+    private long cve = 0;
 
     private Button button_salir,button_buscar,button_aplicar;
     private TextView tv1,tv2,tv3,tv4,tv5;
@@ -58,7 +58,7 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
     private ArrayList<DataTableWS.Devoluciones> dgDevolucion=null;
     private ArrayList<DataTableWS.DevolucionesDet> dgDevolucionDet=null;
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
     public DevolucionesFragment() {
         // Required empty public constructor
@@ -92,9 +92,9 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
         tv4 = view.findViewById(R.id.tv_usu_solicita_str);
         tv5 = view.findViewById(R.id.tv_dev_observaciones_str);
 
-        tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        tableLayout = view.findViewById(R.id.tableLayout);
 
-        sp_devoluciones = (Spinner) view.findViewById(R.id.spinnerDevoluciones);
+        sp_devoluciones =  view.findViewById(R.id.spinnerDevoluciones);
 
         button_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,20 +260,21 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
     private void llenarSpinnerDevoluciones()
     {
         ArrayList<String> lista_devoluciones;
+        String spTitulo = getString(R.string.sp_carga) +" "+ getString(R.string.mHijo_devolucion).toLowerCase();
         if( dgDevolucion!=null)
         {
             lista_devoluciones = new ArrayList<>();
-            lista_devoluciones.add("Seleccione una devolución");
+            lista_devoluciones.add(spTitulo);
             for(int i=0; i<dgDevolucion.size();i++)
                 lista_devoluciones.add((i+1+" - "+dgDevolucion.get(i).getDev_cve_n()));
 
-            sp_devoluciones.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, lista_devoluciones));
+            sp_devoluciones.setAdapter(new ArrayAdapter<>( getContext(), R.layout.spinner_item, lista_devoluciones));
         }
         else
         {
             lista_devoluciones = new ArrayList<>();
-            lista_devoluciones.add("Seleccione una devolución");
-            sp_devoluciones.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, lista_devoluciones));
+            lista_devoluciones.add(spTitulo);
+            sp_devoluciones.setAdapter(new ArrayAdapter<>( getContext(), R.layout.spinner_item, lista_devoluciones));
         }
 
     }
@@ -295,16 +296,18 @@ public class DevolucionesFragment extends Fragment implements AsyncResponseJSON 
                 folio =  dgDevolucion.get(id_devSeleccionada).getDev_folio_str();
                 cve =  Long.parseLong( dgDevolucion.get(id_devSeleccionada).getDev_cve_n() );
 
+                String men = string.formatSql( getString(R.string.msg_aplicarCarga),getString(R.string.mHijo_devolucion).toLowerCase(),folio );
+
                 AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-                dialogo1.setTitle("Importante");
-                dialogo1.setMessage(string.formatSql("¿Esta seguro de aplicar la {0} con folio {1}?", msj.toLowerCase(), folio));
+                dialogo1.setTitle(getString(R.string.msg_importante));
+                dialogo1.setMessage(string.formatSql(men));
                 dialogo1.setCancelable(false);
-                dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
                         peticionDevolucion();
                     }
                 });
-                dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
                         //cancelar();
                     }

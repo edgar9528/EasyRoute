@@ -1,6 +1,5 @@
 <TableRow
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -11,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:maxLines="1"
-        android:text="Sku"
+        android:text="@string/table_sku"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -22,10 +21,11 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:maxLines="1"
-        android:text="Producto"
+        android:text="@string/table_producto"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
-        android:paddingRight="10dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="10dp"
         />
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:maxLines="1"
-        android:text="Inv."
+        android:text="@string/table_invent"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:maxLines="1"
-        android:text="Dev."
+        android:text="@string/table_devolucion"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:maxLines="1"
-        android:text="Can."
+        android:text="@string/table_cantidad2"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />

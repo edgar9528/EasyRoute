@@ -33,13 +33,13 @@ public class MainVentaFragment extends Fragment {
 
 
         //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        TabLayout tabLayout =  view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Productos vendidos"));
-        tabLayout.addTab(tabLayout.newTab().setText("Total dinero"));
+        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_venta1) ));
+        tabLayout.addTab(tabLayout.newTab().setText(  getResources().getString(R.string.tl_venta2)  ));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+        final ViewPager viewPager =  view.findViewById(R.id.pager);
 
         final PagerReporteventaAdapter adapter = new PagerReporteventaAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
@@ -47,18 +47,20 @@ public class MainVentaFragment extends Fragment {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 

@@ -17,7 +17,7 @@ import com.tdt.easyroute.R;
 
 public class CarteraFragment extends Fragment {
 
-    public ViewPager viewPager;
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,13 +25,13 @@ public class CarteraFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_cartera, container, false);
 
         //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        TabLayout tabLayout =  view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Clientes"));
-        tabLayout.addTab(tabLayout.newTab().setText("Saldos"));
+        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_cart1) ));
+        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_cart2) ));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
 
         final PagerCarteraAdapter adapter = new PagerCarteraAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
@@ -39,19 +39,20 @@ public class CarteraFragment extends Fragment {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-
-                //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 

@@ -89,7 +89,8 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscar_clientes);
 
-        this.setTitle("Buscar clientes");
+        this.setTitle( getResources().getString(R.string.title_buscli));
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         layoutInflater= getLayoutInflater();
@@ -338,7 +339,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 //si no coincide, pinta todas de blanca
                 for(int i=0; i<dgClientes.size();i++)
                 {
-                    TableRow row = (TableRow)vista.findViewWithTag(dgClientes.get(i).getCli_cve_n());
+                    TableRow row = vista.findViewWithTag(dgClientes.get(i).getCli_cve_n());
                     row.setBackgroundColor(getResources().getColor(R.color.bgDefault));
                 }
 
@@ -457,8 +458,8 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         try {
             final String[] ubi = new String[1];
             final ProgressDialog progress = new ProgressDialog(this);
-            progress.setTitle("Actualizando");
-            progress.setMessage("Por favor espere");
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
             progress.show();
             progress.setCancelable(false);
 
@@ -574,7 +575,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
 
         @Override protected void onPreExecute() {
             progreso = new ProgressDialog(BuscarClientesActivity.this);
-            progreso.setMessage("Cargando...");
+            progreso.setMessage(getString(R.string.msg_cargando));
             progreso.setCancelable(false);
             progreso.show();
         }
@@ -686,13 +687,11 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 

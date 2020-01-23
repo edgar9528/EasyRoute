@@ -152,7 +152,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         pieChartVisitas.setData(pieData);
 
         Description description = new Description();
-        description.setText("Ventas");
+        description.setText(getString(R.string.graf_ventas));
         description.setTextColor(ColorTemplate.rgb("ffffff") );
         description.setTextSize(18);
 
@@ -186,7 +186,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         pieChartEfectividad.setData(pieData);
 
         Description description = new Description();
-        description.setText("Efectividad");
+        description.setText(getString(R.string.graf_efectividad));
         description.setTextColor(ColorTemplate.rgb("ffffff") );
         description.setTextSize(18);
 
@@ -375,9 +375,9 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     private void cargarClientes(ArrayList<DataTableLC.PedidosClientes> dt) {
         try {
-            ArrayList<DataTableLC.PedidosVisitas> dtCli = null;
-            ArrayList<DataTableLC.PedidosVisitas> dtCli2 = null;
-            ArrayList<DataTableLC.PedidosVisPre> dtVisPre = null;
+            ArrayList<DataTableLC.PedidosVisitas> dtCli;
+            ArrayList<DataTableLC.PedidosVisitas> dtCli2;
+            ArrayList<DataTableLC.PedidosVisPre> dtVisPre;
 
             int l = 0;
             String cveext = "";
@@ -595,14 +595,14 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         String men="",q="";
         if(tipo==1)
         {
-            men = "Motivo de no venta";
+            men = getString(R.string.msg_noVenta);
             q = string.formatSql("select mnv_cve_n mov_cve_n,mnv_desc_str mov_desc_str from motivosnoventa where " +
                     "(mnv_desc_str='PROSPECTO' and {0}=1) or (mnv_desc_str<>'PROSPECTO' and {0}=0)", rc.getCli_prospecto_n(),rc.getCli_prospecto_n() );
         }
         else
         if(tipo==2)
         {
-            men = "Motivo de no lectura";
+            men = getString(R.string.msg_noLectura);
             q = "select mnl_cve_n mov_cve_n,mnl_desc_str mov_desc_str from motivosnolectura";
         }
 
@@ -623,7 +623,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
             }
         });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.bt_cancelar), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int indice) {
 
             }

@@ -9,7 +9,7 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Cliente"
+        android:text="@string/table_cliente"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -19,7 +19,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Nombre"
+        android:text="@string/table_nombre"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -29,7 +29,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Secu"
+        android:text="@string/table_secu"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -39,7 +39,7 @@
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Frec"
+        android:text="@string/table_frecc"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -49,7 +49,7 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Estatus"
+        android:text="@string/table_estado"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -59,7 +59,7 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Coor"
+        android:text="@string/table_coordenada"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -69,7 +69,7 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="DiaSem"
+        android:text="@string/table_dia"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />

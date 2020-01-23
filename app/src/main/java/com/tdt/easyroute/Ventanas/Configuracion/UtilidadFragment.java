@@ -26,17 +26,15 @@ import java.util.ArrayList;
 
 public class UtilidadFragment extends Fragment {
 
-    EditText et_folio,et_pagos,et_credito;
-    Button bt_ver,bt_realizar,bt_radia,bt_preventa,bt_venta,bt_rapedido,bt_aauditoria,bt_dauditoria,bt_salir;
+    private EditText et_folio,et_pagos,et_credito;
+    private ArrayList<DataTableLC.VentasDet> ventasDet;
+    private DataTableLC.Pagos pagos;
+    private DataTableLC.Creditos creditos;
+    private String nombreBase;
+    private String folio;
 
-    ArrayList<DataTableLC.VentasDet> ventasDet;
-    DataTableLC.Pagos pagos;
-    DataTableLC.Creditos creditos;
-    String nombreBase;
-    String folio;
-
-    Usuario user;
-    Configuracion conf=null;
+    private Usuario user;
+    private Configuracion conf=null;
 
 
     public UtilidadFragment() {
@@ -48,6 +46,7 @@ public class UtilidadFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_utilidad, container, false);
+        Button bt_ver,bt_realizar,bt_radia,bt_preventa,bt_venta,bt_rapedido,bt_aauditoria,bt_dauditoria,bt_salir;
         nombreBase =  getContext().getString( R.string.nombreBD );
 
         try
@@ -156,7 +155,7 @@ public class UtilidadFragment extends Fragment {
         conf = activity.getConf(); //obtener la configuracion
     }
 
-    public void realizar()
+    private void realizar()
     {
         if(ventasDet!=null)
         {
@@ -206,7 +205,7 @@ public class UtilidadFragment extends Fragment {
     }
 
 
-    public void ver_click()
+    private void ver_click()
     {
         String json = BaseLocal.Select(string.formatSql("Select * from ventasdet where ven_folio_str='{0}'",folio),getContext());
         ventasDet = ConvertirRespuesta.getVentasDetJson(json);
@@ -235,7 +234,7 @@ public class UtilidadFragment extends Fragment {
 
     }
 
-    public void reactivarDia()
+    private void reactivarDia()
     {
         try{
 
@@ -283,7 +282,7 @@ public class UtilidadFragment extends Fragment {
         }
     }
 
-    public void reactivarPedido()
+    private void reactivarPedido()
     {
         try{
 
@@ -300,7 +299,7 @@ public class UtilidadFragment extends Fragment {
         }
     }
 
-    public void activarAuditoria()
+    private void activarAuditoria()
     {
         try{
 
@@ -318,7 +317,7 @@ public class UtilidadFragment extends Fragment {
     }
 
 
-    public void desactivarAuditoria()
+    private void desactivarAuditoria()
     {
         try{
 

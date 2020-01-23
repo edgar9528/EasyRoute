@@ -1,106 +1,13 @@
 <resources>
-    <string name="app_name">EasyRoute</string>
+    <string name="app_name" translatable="false">EasyRoute</string>
+    <string name="NAMESPACE" translatable="false">http://tempuri.org/</string>
+    <string name="nombreBD" translatable="false">baseLocal.db</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="large_text">
-        "Material is the metaphor.\n\n"
-
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
-
-        "Bold, graphic, intentional.\n\n"
-
-        "The foundational elements of print based design typography, grids, space, scale, color, "
-        "and use of imagery guide visual treatments. These elements do far more than please the "
-        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
-        "imagery, large scale typography, and intentional white space create a bold and graphic "
-        "interface that immerse the user in the experience.\n"
-        "An emphasis on user actions makes core functionality immediately apparent and provides "
-        "waypoints for the user.\n\n"
-
-        "Motion provides meaning.\n\n"
-
-        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
-        "inflection points that initiate motion, transforming the whole design.\n"
-        "All action takes place in a single environment. Objects are presented to the user without "
-        "breaking the continuity of experience even as they transform and reorganize.\n"
-        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
-        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
-        "3D world.\n\n"
-
-        "The material environment is a 3D space, which means all objects have x, y, and z "
-        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
-        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
-        "position along the z-axis and has a standard 1dp thickness.\n"
-        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
-        "emulated by manipulating the y-axis.\n\n"
-
-        "Light and shadow.\n\n"
-
-        "Within the material environment, virtual lights illuminate the scene. Key lights create "
-        "directional shadows, while ambient light creates soft shadows from all angles.\n"
-        "Shadows in the material environment are cast by these two light sources. In Android "
-        "development, shadows occur when light sources are blocked by sheets of material at "
-        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
-        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
-        "Resting elevation.\n\n"
-
-        "All material objects, regardless of size, have a resting elevation, or default elevation "
-        "that does not change. If an object changes elevation, it should return to its resting "
-        "elevation as soon as possible.\n\n"
-
-        "Component elevations.\n\n"
-
-        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
-        "does not vary from 6dp in one app to 16dp in another app).\n"
-        "Components may have different resting elevations across platforms, depending on the depth "
-        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
-        "Responsive elevation and dynamic elevation offsets.\n\n"
-
-        "Some component types have responsive elevation, meaning they change elevation in response "
-        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
-        "changes are consistently implemented using dynamic elevation offsets.\n"
-        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
-        "to the component’s resting state. They ensure that elevation changes are consistent "
-        "across actions and component types. For example, all components that lift on press have "
-        "the same elevation change relative to their resting elevation.\n"
-        "Once the input event is completed or cancelled, the component will return to its resting "
-        "elevation.\n\n"
-
-        "Avoiding elevation interference.\n\n"
-
-        "Components with responsive elevations may encounter other components as they move between "
-        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
-        "through other material, components avoid interfering with one another any number of ways, "
-        "whether on a per component basis or using the entire app layout.\n"
-        "On a component level, components can move or be removed before they cause interference. "
-        "For example, a floating action button (FAB) can disappear or move off screen before a "
-        "user picks up a card, or it can move if a snackbar appears.\n"
-        "On the layout level, design your app layout to minimize opportunities for interference. "
-        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
-        "when a user tries to pick up one of cards.\n\n"
-    </string>
-    <string name="action_settings">Settings</string>
-
-
     <string name="open">Abrir</string>
     <string name="close">Cerrar</string>
-    <string name="NAMESPACE" translatable="false">http://tempuri.org/</string>
-    <string name="nombreBD" translatable="false">baseLocal.db</string>
     <string name="hint_usuario">Usuario</string>
     <string name="hint_contraseña">Contraseña</string>
     <string name="bt_iniciar">Iniciar sesión</string>
@@ -157,8 +64,8 @@
     <string name="hint_ventasEntregar">Entregar a caja</string>
     <string name="bt_impPre">Imp. x Pre</string>
     <string name="bt_impSku">Imp. x SKU</string>
-    <string name="tv_cerveza">Cerveza</string>
-    <string name="tv_otros">Otros</string>
+    <string name="tv_cerveza">Cerveza: </string>
+    <string name="tv_otros">Otros: </string>
     <string name="tv_clave">Clave</string>
     <string name="tv_folio">Folio</string>
     <string name="tv_fecha">Fecha</string>
@@ -189,5 +96,112 @@
     <string name="tv_hora">Hora</string>
     <string name="hint_camion">Camión</string>
     <string name="hint_kilometraje">Kilometraje</string>
+    <string name="hint_noRuta">Sin ruta</string>
+    <string name="mPadre_inicio">Inicio</string>
+    <string name="mPadre_inventario">Inventario</string>
+    <string name="mPadre_pedidos">Pedidos</string>
+    <string name="mPadre_entregas">Entregas</string>
+    <string name="mPadre_reportes">Reportes</string>
+    <string name="mPadre_clientes">Clientes</string>
+    <string name="mPadre_findia">Fin de día</string>
+    <string name="mPadre_configuracion">Configuración</string>
+    <string name="mHijo_principal">Pantalla principal</string>
+    <string name="mHijo_inicioDia">Inicio de día</string>
+    <string name="mHijo_cargaIni">Carga inicial</string>
+    <string name="mHijo_inventario">Inventario</string>
+    <string name="mHijo_recarga">Recarga</string>
+    <string name="mHijo_devoluciones">Devoluciones</string>
+    <string name="mHijo_descarga">Descarga</string>
+    <string name="mHijo_consigna">Consigna</string>
+    <string name="mHijo_pedido">Pedido</string>
+    <string name="mHijo_devolucion">Devolución</string>
+    <string name="mHijo_arqueo">Arqueo</string>
+    <string name="mHijo_ventasDia">Ventas día</string>
+    <string name="mHijo_cartera">Cartera</string>
+    <string name="mHijo_ordClientes">Ord. Clientes</string>
+    <string name="mHijo_busClientes">Busq. Clientes</string>
+    <string name="mHijo_sugerido">Sugerido</string>
+    <string name="mHijo_transmitir">Transmitir</string>
+    <string name="mHijo_borrarDatos">Borrar datos</string>
+    <string name="mHijo_finVentas">Fin de ventas</string>
+    <string name="mHijo_catalogos">Catálogos</string>
+    <string name="msg_webservice">Conectando</string>
+    <string name="msg_webserviceDescarga">Descargando</string>
+    <string name="sp_selecRuta">Seleccione una ruta</string>
+    <string name="tl_iniDia1">Generales</string>
+    <string name="tl_iniDia2">Datos</string>
+    <string name="tl_venta1">Productos vendidos</string>
+    <string name="tl_venta2">Total dinero</string>
+    <string name="tl_cart1">Clientes</string>
+    <string name="tl_cart2">Saldos</string>
+    <string name="tl_orde1">Clientes del día</string>
+    <string name="tl_orde2">Clientes fuera</string>
+    <string name="title_buscli">Buscar clientes</string>
+    <string name="tv_saldoCliente">Saldo cliente: $</string>
+    <string name="diasSemana">Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo  </string>
+    <string name="msg_cargando">Cargando</string>
+    <string name="msg_importante">Importante</string>
+    <string name="msg_salir">¿Desea salir de la aplicación?</string>
+    <string name="msg_si">Si</string>
+    <string name="msg_no">No</string>
+    <string name="tt_opNodispo">Opción no disponible</string>
+    <string name="msg_espera">Por favor espera</string>
+    <string name="tl_sug1">Familia</string>
+    <string name="tl_sug2">Presentación</string>
+    <string name="tl_sug3">Producto</string>
+    <string name="tl_sug4">Sugerido</string>
+    <string name="msg_autoriza">Autorización</string>
+    <string name="msg_borrar">Borrado de datos</string>
+    <string name="msg_confirmaBorrar">¿Esta seguro de eliminar los datos?</string>
+    <string name="msg_findia">¿Desea finalizar el día?</string>
+    <string name="msg_findiaMen">No ha realizado la descarga.</string>
+    <string name="msg_cerrarVen">¿Esta seguro de cerrar la venta?</string>
+    <string name="msg_cerrarVen2">Al realizar esta acción no podra realizar ninguna venta, cobranza o movimiento alguno.</string>
+    <string name="sp_carga">Seleccione una</string>
+    <string name="msg_aplicarCarga">¿Esta seguro de aplicar la {0} con folio {1}?</string>
+    <string name="msg_impInv">¿Imprimir inventario?</string>
+    <string name="msg_confDescarga">La descarga solo puede realizarse a partir de las 2 de la tarde, ¿Desea continuar?</string>
+    <string name="msg_descargaDos">Ya se realizo una descarga, ¿Desea volver a realizarla?</string>
+    <string name="msg_noVenta">Motivo de no venta</string>
+    <string name="msg_noLectura">Motivo de no lectura</string>
+    <string name="bt_actClientes">Actualiza clientes</string>
+    <string name="graf_ventas">Ventas</string>
+    <string name="graf_efectividad">Efectividad</string>
+    <string name="title_detalles">Detalles</string>
+    <string name="msg_error">Error</string>
+    <string name="table_totalPago">Total pago</string>
+    <string name="table_monto">Monto</string>
+    <string name="table_sku">SKU</string>
+    <string name="table_descripcion">Descripción</string>
+    <string name="table_lp">LP</string>
+    <string name="table_total">Total</string>
+    <string name="table_selec">Sel.</string>
+    <string name="table_catalogo">Catálogo</string>
+    <string name="table_estado">Estado</string>
+    <string name="table_suge">Sug.</string>
+    <string name="table_producto">Producto</string>
+    <string name="table_familia">Familia</string>
+    <string name="table_cantidad">Cantidad</string>
+    <string name="table_cliente">Cliente</string>
+    <string name="table_nombre">Nombre</string>
+    <string name="table_secu">Secu.</string>
+    <string name="table_frecc">Frec.</string>
+    <string name="table_coordenada">Coor</string>
+    <string name="table_dia">DiaSem</string>
+    <string name="table_invent">Inv.</string>
+    <string name="table_devolucion">Dev.</string>
+    <string name="table_cantidad2">Can.</string>
+    <string name="table_cve">CVE</string>
+    <string name="table_prodCve">Pr.Cve</string>
+    <string name="table_negocio">Negocio</string>
+    <string name="table_saldo">Saldo</string>
+    <string name="table_razon">Razon social</string>
+    <string name="table_idExt">Id Ext</string>
+
+    <string name="catalogos1">Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas</string>
+    <string name="catalogos2">CondicionesVenta,Productos,Rutas,ListaPrecios,PrecioProductos,FormasPago,FrecuenciasVisita,Categorias,Familias,Presentaciones,Promociones,PromocionesKit</string>
+    <string name="catalogos3">LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas,Marcas,Unidades,CondicionesVenta,Productos,ListaPrecios,PrecioProductos,NivelCliente,FormasPago,FrecuenciasVisita,MotivosNoVenta,MotivosNoLectura,Categorias,Familias,Presentaciones,Clientes,Creditos,Direcciones,ClientesVentaMes,Promociones,PromocionesKit,Consignas</string>
+    <string name="catalogos4">,Preventa</string>
+
 
 </resources>

@@ -38,14 +38,11 @@ public class SaldosFragment extends Fragment {
     private ClientesVM clientesVM;
     private CarteraFragment fragment;
     private TextView tv_cliente,tv_negocio,tv_razon,tv_cve;
-    private Button b_imprimir,b_salir;
-    String negocio,razonSocial;
+    private String negocio,razonSocial;
 
-    RecyclerView pedidosRecyclerView;
+    private RecyclerView pedidosRecyclerView;
 
-    LayoutInflater layoutInflater;
-
-    ArrayList<DataTableLC.Saldos> dgSaldos;
+    private ArrayList<DataTableLC.Saldos> dgSaldos;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +56,8 @@ public class SaldosFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_saldos, container, false);
         fragment = (CarteraFragment) getParentFragment();
-        layoutInflater = inflater;
+
+        Button b_imprimir,b_salir;
 
         tv_cve = view.findViewById(R.id.tv_cve);
         tv_razon = view.findViewById(R.id.tv_razon);
@@ -88,9 +86,6 @@ public class SaldosFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         pedidosRecyclerView.setLayoutManager(linearLayoutManager);
-
-        tv_cliente.setText("Saldo cliente: $0.00");
-
 
         return view;
     }
@@ -178,7 +173,8 @@ public class SaldosFragment extends Fragment {
         tv_cve.setText(dgSaldos.get(0).getCli_cveext_str());
         tv_negocio.setText(negocio);
         tv_razon.setText(razonSocial);
-        tv_cliente.setText("Saldo cliente: $"+Utils.numFormat(rsc));
+        String saldoC = getResources().getString(R.string.tv_saldoCliente)+Utils.numFormat(rsc);
+        tv_cliente.setText(saldoC);
 
     }
 

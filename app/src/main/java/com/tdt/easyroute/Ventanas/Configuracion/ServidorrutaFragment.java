@@ -30,23 +30,21 @@ import in.galaxyofandroid.spinerdialog.SpinnerDialog;
 
 public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON {
 
-    EditText et_servidor,et_time,et_imp,et_ruta; //edittext
-    Button button_salir,button_guardar,button_listar,button_pruWs,button_pruImp; //botones
-    String servidor,time,empresa,ruta,imp; //variables a almacenar
-    String nombreBase,peticion,mensajeET="Clic para seleccionar ruta";
+    private EditText et_servidor,et_time,et_imp,et_ruta; //edittext
+    private String servidor,time,empresa,ruta,imp; //variables a almacenar
+    private String nombreBase,peticion,mensajeET="Clic para seleccionar ruta";
 
-    ArrayList<DataTableWS.Ruta> lista_rutas=null;
-    ArrayList<String> rutas;
+    private ArrayList<DataTableWS.Ruta> lista_rutas=null;
+    private ArrayList<String> rutas;
 
-    SpinnerDialog spinnerDialog;
+    private SpinnerDialog spinnerDialog;
 
-    boolean crut=false;
+    private boolean crut=false;
 
 
     public ServidorrutaFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +52,8 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
 
         View view = inflater.inflate(R.layout.fragment_servidorruta, container, false);
         nombreBase = getString( R.string.nombreBD );
+
+        Button button_salir,button_guardar,button_listar,button_pruWs,button_pruImp;
 
         button_guardar = view.findViewById(R.id.button_guardar);
         button_salir = view.findViewById(R.id.button_regresar);
@@ -169,7 +169,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
 
     }
 
-    public void listarRutas()
+    private void listarRutas()
     {
         crut = false;
 
@@ -228,9 +228,9 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
 
     }
 
-    public String getCveRuta(String rut_des)
+    private String getCveRuta(String rut_des)
     {
-        String cve="";
+        String cve;
         int p = rutas.indexOf(rut_des);
 
         cve = lista_rutas.get(p).getRut_cve_n();
@@ -240,7 +240,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         return cve;
     }
 
-    public String getDescRuta(String rut_cve)
+    private String getDescRuta(String rut_cve)
     {
         String des="";
 
@@ -256,7 +256,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         return des;
     }
 
-    public void guardarRutas()
+    private void guardarRutas()
     {
         try {
             if (lista_rutas != null)
@@ -279,7 +279,8 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                     Log.d("salida","guardar rutas descargadas");
                 }
 
-                bd.close();
+                if(bd.isOpen())
+                    bd.close();
             }
         }
         catch (Exception e)
@@ -289,7 +290,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         }
     }
 
-    public void cargarRutas()
+    private void cargarRutas()
     {
         if(lista_rutas!=null)
         {
@@ -305,7 +306,7 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
 
 
             //SE CREA SPINNER Y SU METODO ONCLICK
-            spinnerDialog=new SpinnerDialog(getActivity(),rutas,"Seleccione una ruta","Cerrar");
+            spinnerDialog=new SpinnerDialog(getActivity(),rutas,getResources().getString(R.string.sp_selecRuta),getResources().getString(R.string.bt_cancelar));
             //spinnerDialog=new SpinnerDialog(getActivity(),rutas,"Selecciona una ruta",R.style.DialogAnimations_SmileWindow,"Cerrar");
 
             spinnerDialog.setCancellable(true); // for cancellable

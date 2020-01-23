@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="5"
         android:maxLines="1"
-        android:text="Total pago"
+        android:text="@string/table_totalPago"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -22,7 +22,7 @@
         android:layout_weight="5"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Monto"
+        android:text="@string/table_monto"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />

@@ -64,16 +64,16 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     private ArrayList<DataTableLC.InvP> al_invP;
     private ArrayList<DataTableLC.Inv> al_inv;
 
-    String peticion,nombreBase;
-    boolean botonDescargar=false;
+    private String peticion,nombreBase;
+    private boolean botonDescargar=false;
 
-    ArrayList<DataTableLC.InvP> dtVta = new ArrayList<>();
-    String folio; String idCteEsp = "";
+    private ArrayList<DataTableLC.InvP> dtVta = new ArrayList<>();
+    private String folio, idCteEsp = "";
 
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
     private boolean entrarDescarga;
 
@@ -101,7 +101,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
         button_imprimir = view.findViewById(R.id.button_imprimir);
         button_salir = view.findViewById(R.id.button_salir);
-        tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+        tableLayout =  view.findViewById(R.id.tableLayout);
         nombreBase = getActivity().getString( R.string.nombreBD );
 
         if(descarga)
@@ -235,15 +235,15 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         if(H<14)
         {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("Importante");
-            dialogo1.setMessage("La descarga solo puede realizarse a partir de las 2 de la tarde, ¿Desea continuar?");
+            dialogo1.setTitle(getString(R.string.msg_importante));
+            dialogo1.setMessage( getString(R.string.msg_confDescarga) );
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     abrirDescarga();
                 }
             });
-            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     Utils.RegresarInicio(getActivity());
                 }
@@ -303,15 +303,15 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             if(conf.isDescarga())
             {
                 AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-                dialogo1.setTitle("Importante");
-                dialogo1.setMessage("Ya se realizo una descarga, ¿desea volver a realizarla?");
+                dialogo1.setTitle(getString(R.string.msg_importante));
+                dialogo1.setMessage( getString(R.string.msg_descargaDos));
                 dialogo1.setCancelable(false);
-                dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
                         entrarDescarga=true;
                     }
                 });
-                dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
                         entrarDescarga=false;
                     }
@@ -337,7 +337,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    public void ventaAutomatica(String coordenada)
+    private void ventaAutomatica(String coordenada)
     {
         DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -506,15 +506,10 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
         tr = (TableRow) layoutInflater.inflate(R.layout.tabla_inventario, null);
 
-        ((TextView) tr.findViewById(R.id.ti_sku)).setText("SKU");
         ((TextView) tr.findViewById(R.id.ti_sku)).setTypeface( ((TextView) tr.findViewById(R.id.ti_sku)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_producto)).setText("Producto");
         ((TextView) tr.findViewById(R.id.ti_producto)).setTypeface( ((TextView) tr.findViewById(R.id.ti_producto)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_inv)).setText("Inv.");
         ((TextView) tr.findViewById(R.id.ti_inv)).setTypeface( ((TextView) tr.findViewById(R.id.ti_inv)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_dev)).setText("Dev.");
         ((TextView) tr.findViewById(R.id.ti_dev)).setTypeface( ((TextView) tr.findViewById(R.id.ti_dev)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_can)).setText("Can.");
         ((TextView) tr.findViewById(R.id.ti_can)).setTypeface( ((TextView) tr.findViewById(R.id.ti_can)).getTypeface(), Typeface.BOLD);
 
         tableLayout.addView(tr);
@@ -634,15 +629,15 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         mensajeImp+= "\n\n";
 
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-        dialogo1.setTitle("¿Imprimir inventario?");
+        dialogo1.setTitle(getString(R.string.msg_impInv));
         dialogo1.setMessage(mensajeImp);
         dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 obtenerUbicacion("InsertBitacora");
             }
         });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 //cancelar();
             }
@@ -660,8 +655,8 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             final MainActivity mainActivity = (MainActivity) getActivity();
             final String[] ubi = new String[1];
             final ProgressDialog progress = new ProgressDialog(getContext());
-            progress.setTitle("Actualizando");
-            progress.setMessage("Por favor espere");
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
             progress.show();
             progress.setCancelable(false);
 
@@ -814,8 +809,8 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             final MainActivity mainActivity = (MainActivity) getActivity();
             final String[] ubi = new String[1];
             final ProgressDialog progress = new ProgressDialog(getContext());
-            progress.setTitle("Actualizando");
-            progress.setMessage("Por favor espere");
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
             progress.show();
             progress.setCancelable(false);
 

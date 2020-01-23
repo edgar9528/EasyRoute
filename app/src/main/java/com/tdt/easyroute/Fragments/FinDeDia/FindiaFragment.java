@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -49,12 +50,12 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
     private static int opcion;
 
-    String nombreBase;
-    String peticion="";
+    private String nombreBase;
+    private String peticion="";
 
-    MainActivity mainActivity;
-    Configuracion conf;
-    Usuario user=null,userValidar = null;
+    private MainActivity mainActivity;
+    private Configuracion conf;
+    private Usuario user=null, userValidar = null;
 
     public static FindiaFragment newInstance(int op) {
         FindiaFragment fragment = new FindiaFragment();
@@ -224,14 +225,14 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
         LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
         View view = layoutInflater.inflate(R.layout.dialog,null);
-        final EditText et_user = (EditText) view.findViewById(R.id.ti_dialogUser);
-        final EditText et_pass = (EditText) view.findViewById(R.id.ti_dialogPass);
+        final EditText et_user =  view.findViewById(R.id.ti_dialogUser);
+        final EditText et_pass =  view.findViewById(R.id.ti_dialogPass);
 
         final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("Autorización")
+                .setTitle(getString(R.string.msg_autoriza))
                 .setView(view)
-                .setPositiveButton("Aceptar", null)
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.bt_aceptar), null)
+                .setNegativeButton(getString(R.string.bt_cancelar), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Utils.RegresarInicio(getActivity());
@@ -239,6 +240,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                 })
                 .setCancelable(false)
                 .create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         dialog.show();
 
         Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -369,15 +371,15 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
     private void eliminarDatos()
     {
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-        dialogo1.setTitle("Borrado de datos");
-        dialogo1.setMessage("¿Esta seguro de eliminar los datos?");
+        dialogo1.setTitle(getString(R.string.msg_borrar));
+        dialogo1.setMessage(getString(R.string.msg_confirmaBorrar));
         dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 eliminarDatosBD();
             }
         });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 Utils.RegresarInicio(getActivity());
             }
@@ -450,32 +452,31 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         {
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("¿Desea finalizar el día?");
-            dialogo1.setMessage("No ha realizado la descarga.");
+            dialogo1.setTitle(getString(R.string.msg_findia));
+            dialogo1.setMessage(getString(R.string.msg_findiaMen));
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
 
                         AlertDialog.Builder dialogo2 = new AlertDialog.Builder(getContext());
-                        dialogo2.setTitle("¿Esta seguro de cerrar la venta?");
-                        dialogo2.setMessage("Al realizar esta acción no podra realizar ninguna venta, cobranza o movimiento alguno.");
+                        dialogo2.setTitle(getString(R.string.msg_cerrarVen));
+                        dialogo2.setMessage(getString(R.string.msg_cerrarVen2));
                         dialogo2.setCancelable(false);
-                        dialogo2.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        dialogo2.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogo1, int id) {
                                 obtenerUbicacion();
                             }
                         });
-                        dialogo2.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        dialogo2.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogo1, int id) {
                                 Utils.RegresarInicio(getActivity());
                             }
                         });
                         dialogo2.show();
-
                 }
             });
-            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     Utils.RegresarInicio(getActivity());
                 }
@@ -496,8 +497,8 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
             final MainActivity mainActivity = (MainActivity) getActivity();
             final String[] ubi = new String[1];
             final ProgressDialog progress = new ProgressDialog(getContext());
-            progress.setTitle("Actualizando");
-            progress.setMessage("Por favor espere");
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
             progress.show();
             progress.setCancelable(false);
 

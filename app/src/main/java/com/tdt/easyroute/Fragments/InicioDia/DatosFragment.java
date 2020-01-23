@@ -314,7 +314,7 @@ public class DatosFragment extends Fragment {
 
         @Override protected void onPreExecute() {
             progreso = new ProgressDialog(context);
-            progreso.setMessage("Descargando...");
+            progreso.setMessage(getString(R.string.msg_webserviceDescarga));
             progreso.setCancelable(false);
             progreso.show();
         }

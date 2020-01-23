@@ -36,18 +36,18 @@ import java.util.ArrayList;
 
 public class ClientesFragment extends Fragment {
 
-    Button b_imprimir,b_salir;
-    TextView tv_ruta;
+    private Button b_imprimir,b_salir;
+    private TextView tv_ruta;
 
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    View vista;
-    String cveSeleccionada=""; //inicia con la seleccion de filas vacia
-    CarteraFragment fragment;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private View vista;
+    private String cveSeleccionada=""; //inicia con la seleccion de filas vacia
+    private CarteraFragment fragment;
 
-    Usuario user;
+    private Usuario user;
 
-    ArrayList<DataTableLC.ClientesSaldo> dgCartera=null;
+    private ArrayList<DataTableLC.ClientesSaldo> dgCartera=null;
 
     private ClientesVM clientesVM;
 
@@ -103,20 +103,21 @@ public class ClientesFragment extends Fragment {
             dgCartera = ConvertirRespuesta.getClientesSaldoJson(json);
 
             double rs=0.00;
-
+            String saldoStr;
             if(dgCartera!=null)
             {
                 for(int i=0; i<dgCartera.size();i++)
                 {
                     rs+= dgCartera.get(i).getSaldo();
                 }
-
-                tv_ruta.setText("Saldo ruta: $"+Utils.numFormat(rs));
+                saldoStr = getResources().getString(R.string.tv_saldoRuta) +Utils.numFormat(rs);
+                tv_ruta.setText(saldoStr);
                 mostrarCartera();
             }
             else
             {
-                tv_ruta.setText("Saldo ruta: $0.00");
+                saldoStr = getResources().getString(R.string.tv_saldoRuta) +"0.00";
+                tv_ruta.setText(saldoStr);
             }
 
 
@@ -187,7 +188,7 @@ public class ClientesFragment extends Fragment {
                 //si no coincide, pinta todas de blanca
                 for(int i=0; i<dgCartera.size();i++)
                 {
-                    TableRow row = (TableRow)vista.findViewWithTag(dgCartera.get(i).getCli_cve_n());
+                    TableRow row = vista.findViewWithTag(dgCartera.get(i).getCli_cve_n());
                     row.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                 }
 
@@ -218,7 +219,7 @@ public class ClientesFragment extends Fragment {
             menImp+="CLIENTE      NEGOCIO      SALDO\n\n";
 
 
-            Double TotCartera=0.0;
+            double TotCartera=0.0;
             String negocio;
             for(int i=0; i<dgCartera.size();i++)
             {

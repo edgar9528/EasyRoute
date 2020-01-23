@@ -29,11 +29,11 @@ import com.tdt.easyroute.ViewModel.SugeridoVM;
 public class MainsugeridoFragment extends Fragment {
 
     private static Usuario user;
-    ViewPager viewPager;
+    private ViewPager viewPager;
 
-    SugeridoVM sugeridoVM;
+    private SugeridoVM sugeridoVM;
 
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
 
     public static MainsugeridoFragment newInstance(Usuario u) {
         MainsugeridoFragment fragment = new MainsugeridoFragment();
@@ -65,16 +65,16 @@ public class MainsugeridoFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
 
         //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        TabLayout tabLayout =  view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Familia"));
-        tabLayout.addTab(tabLayout.newTab().setText("Presentación"));
-        tabLayout.addTab(tabLayout.newTab().setText("Producto"));
-        tabLayout.addTab(tabLayout.newTab().setText("Sugerido"));
+        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug1) ));
+        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug2) ));
+        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug3) ));
+        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug4) ));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
 
         final PagerSugeridoAdapter adapter = new PagerSugeridoAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
@@ -84,18 +84,20 @@ public class MainsugeridoFragment extends Fragment {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
@@ -140,7 +142,7 @@ public class MainsugeridoFragment extends Fragment {
 
     private void verificarInicio()
     {
-        Configuracion conf = null;
+        Configuracion conf;
         conf = Utils.ObtenerConf(getActivity().getApplication());
 
         if ( conf.getPreventa() == 2)

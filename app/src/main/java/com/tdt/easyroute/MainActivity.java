@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private boolean bloquear=false;
 
     private TextView tv_nombre,tv_ruta;
-    Usuario usuario;
-    MenuBloqueo menuBloqueo;
+    private Usuario usuario;
+    private MenuBloqueo menuBloqueo;
 
     //region VARIABLES PARA UBICACION
     private static final String LOGTAG = "android-localizacion";
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final int PETICION_CONFIG_UBICACION = 201;
     private GoogleApiClient apiClient;
     private LocationRequest locRequest;
-    String latLon=null;
+    private String latLon=null;
     //endregion
 
     @Override
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         setContentView(R.layout.activity_main);
         menuBloqueo = new MenuBloqueo();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         try {
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             usuario = (Usuario) intent.getSerializableExtra("usuario");
 
             //init view
-            mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mDrawerLayout =  findViewById(R.id.drawer_layout);
             expandableListView= findViewById(R.id.navList);
             navigationManager= FragmentNavigationManager.getmInstance(this,this,usuario);
 
@@ -151,17 +151,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void cerrarSesion()
     {
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle("Importante");
-        dialogo1.setMessage("¿Desea salir de la app?");
+        dialogo1.setTitle(getResources().getString(R.string.msg_importante));
+        dialogo1.setMessage( getResources().getString(R.string.msg_salir) );
         dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+        dialogo1.setPositiveButton(getResources().getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        dialogo1.setNegativeButton(getResources().getString(R.string.msg_no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 //cancelar();
             }
@@ -187,9 +187,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void selectFirsItemAsDefault() {
         if(navigationManager!= null)
         {
-            String firtsItem = "Inicio";
-            navigationManager.showFragment(firtsItem);
-            getSupportActionBar().setTitle(firtsItem);
+            String title = getString(R.string.mPadre_inicio) +" | "+ getString(R.string.mHijo_principal);
+            navigationManager.showFragment("0|0");
+            getSupportActionBar().setTitle(title);
         }
     }
 
@@ -204,9 +204,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
 
-                if(menuBloqueo.grupos[i]!=true)
+                if(!menuBloqueo.grupos[i])
                 {
-                    Toast.makeText(MainActivity.this, "Opción no disponible", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.tt_opNodispo), Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 else
@@ -238,32 +238,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                String selectedItem = ((List) (lstChild.get(lstTitle.get(groupPosition))))
-                        .get(childPosition).toString();
+                String selectedItem = ((List) (lstChild.get(lstTitle.get(groupPosition)))).get(childPosition).toString();
 
                 String clave = lstTitle.get(groupPosition) + " | " + selectedItem;
+                String seleccion = groupPosition +"|"+ childPosition;
+
                 Log.d("Salida", clave);
 
-                getSupportActionBar().setTitle(clave);
-
-                if(menuBloqueo.hijos.get(groupPosition)[childPosition]!=false)
+                if(!seleccion.equals("7|0") && !seleccion.equals("7|1") &&
+                   !seleccion.equals("5|2") && menuBloqueo.hijos.get(groupPosition)[childPosition])
                 {
-                    navigationManager.showFragment(clave);
+                    getSupportActionBar().setTitle(clave);
+                }
+
+                if(menuBloqueo.hijos.get(groupPosition)[childPosition])
+                {
+                    navigationManager.showFragment(seleccion);
                     mDrawerLayout.closeDrawer(GravityCompat.START);
                     ultimoGrupo = -1;
                     expandableListView.collapseGroup(groupPosition);
-
-                    /*if(clave.equals("Pedidos | Clientes"))
-                        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), android.R.color.transparent));
-                    else
-                        toolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-
-                     */
-
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "Opción no disponible", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.tt_opNodispo), Toast.LENGTH_SHORT).show();
                 }
 
                 return false;
@@ -301,16 +298,41 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         //OPCIONES QUE SE MOSTRARAN EN EL MENU
 
-        List<String> title = Arrays.asList("Inicio", "Inventario", "Pedidos", "Entregas", "Reportes", "Clientes", "Fin de día","Configuración");
+        List<String> title = Arrays.asList(getString(R.string.mPadre_inicio),
+                                           getString(R.string.mPadre_inventario),
+                                           getString(R.string.mPadre_pedidos),
+                                           getString(R.string.mPadre_entregas),
+                                           getString(R.string.mPadre_reportes),
+                                           getString(R.string.mPadre_clientes),
+                                           getString(R.string.mPadre_findia),
+                                           getString(R.string.mPadre_configuracion));
 
-        List<String> iniciodia = Arrays.asList("Pantalla principal","Inicio de día");
-        List<String> inventario = Arrays.asList("Carga inicial","Inventario", "Recarga", "Devoluciones", "Descarga");
-        List<String> pedidos = Arrays.asList("Clientes");
-        List<String> entregas = Arrays.asList("Consigna", "Pedido", "Devolución");
-        List<String> reportes = Arrays.asList("Arqueo", "Ventas día");
-        List<String> clientes = Arrays.asList("Cartera", "Ord. Clientes", "Busq. Clientes");
-        List<String> findia = Arrays.asList("Sugerido", "Transmitir", "Borrar datos", "Fin de ventas");
-        List<String> catalogos = Arrays.asList("Catálogos","Salir");
+        List<String> iniciodia = Arrays.asList(getString(R.string.mHijo_principal),getString(R.string.mHijo_inicioDia));
+
+        List<String> inventario = Arrays.asList(getString(R.string.mHijo_cargaIni),
+                                                getString(R.string.mHijo_inventario),
+                                                getString(R.string.mHijo_recarga),
+                                                getString(R.string.mHijo_devoluciones),
+                                                getString(R.string.mHijo_descarga));
+
+        List<String> pedidos = Arrays.asList(getString(R.string.mPadre_clientes));
+
+        List<String> entregas = Arrays.asList(getString(R.string.mHijo_consigna),
+                                              getString(R.string.mHijo_pedido),
+                                              getString(R.string.mHijo_devolucion));
+
+        List<String> reportes = Arrays.asList(getString(R.string.mHijo_arqueo), getString(R.string.mHijo_ventasDia));
+
+        List<String> clientes = Arrays.asList(getString(R.string.mHijo_cartera),
+                                              getString(R.string.mHijo_ordClientes),
+                                              getString(R.string.mHijo_busClientes));
+
+        List<String> findia = Arrays.asList(getString(R.string.mHijo_sugerido),
+                                            getString(R.string.mHijo_transmitir),
+                                            getString(R.string.mHijo_borrarDatos),
+                                            getString(R.string.mHijo_finVentas));
+
+        List<String> catalogos = Arrays.asList(getString(R.string.mHijo_catalogos),getString(R.string.bt_salir));
 
         lstChild = new LinkedHashMap<>();
         lstChild.put(title.get(0), iniciodia);
@@ -344,8 +366,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void regresarInicio()
     {
-        getSupportActionBar().setTitle("Inicio");
-        navigationManager.showFragment("Inicio");
+        navigationManager.showFragment("0|0");
+        String title = getResources().getString(R.string.mPadre_inicio) +" | "+ getResources().getString(R.string.mHijo_principal);
+        getSupportActionBar().setTitle( title );
     }
 
     //TERMINA CONFIGURACION DEL MENU
@@ -358,16 +381,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             tv_nombre = findViewById(R.id.textViewNombre);
             tv_ruta = findViewById(R.id.textViewRuta);
 
-            tv_nombre.setText(usuario.getNombre()+" "+usuario.getAppat());
+            String nomUser = usuario.getNombre()+" "+usuario.getAppat();
+            tv_nombre.setText(nomUser);
 
 
             String rutaCve = Utils.LeefConfig("ruta",getApplication());
             String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}",rutaCve),getApplicationContext());
 
+            String rutaMostrar;
+
             if(rutaDes!=null)
-                tv_ruta.setText("Ruta: "+rutaDes);
+            {
+                rutaMostrar = getResources().getString(R.string.hint_ruta) +": "+ rutaDes;
+                tv_ruta.setText(rutaMostrar);
+            }
             else
-                tv_ruta.setText("SIN RUTA");
+            {
+                rutaMostrar = getResources().getString( R.string.hint_noRuta);
+                tv_ruta.setText(rutaMostrar);
+            }
+
 
         }
         catch (Exception e)
@@ -375,7 +408,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.d("salida","Error: "+e.getMessage());
         }
-
     }
 
     public void validarMenu()
@@ -431,9 +463,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             dt = ConvertirRespuesta.getCargaInicialJson(json);
 
 
-
             if(dt!=null)
-                carga =  dt.get(0).getCini_cargado_n().equals("1")?true:false;
+                carga =  dt.get(0).getCini_cargado_n().equals("1");
 
             if(carga)
             {
@@ -461,6 +492,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 menuBloqueo.hijos.get(1)[3]=false; //devoluciones
                 menuBloqueo.hijos.get(1)[4]=false; //descarga
             }
+
         }catch (Exception e)
         {
             Toast.makeText(this, "Error al validar menu", Toast.LENGTH_SHORT).show();

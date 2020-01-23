@@ -65,8 +65,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
     private TableLayout tableLayout;
     private LayoutInflater layoutInflater;
 
-    private Button button_buscar,button_aplicar,button_salir;
-    private String peticion,mensaje,nombreBase,cve,folio,rectxt;
+    private String peticion,mensaje,nombreBase,cve,folio,rectxt,spTitulo;
 
     private MainActivity mainActivity;
 
@@ -92,16 +91,19 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
         mainActivity = (MainActivity) getActivity();
 
+        Button button_buscar,button_aplicar,button_salir;
+
         conf = Utils.ObtenerConf(getActivity().getApplication());
         nombreBase = getActivity().getString( R.string.nombreBD );
 
+
+
         if(recarga)
-        {
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Inventario | Recarga");
-            mensaje="Recarga";
-        }
+            mensaje= getString(R.string.mHijo_recarga).toLowerCase();
         else
-            mensaje="Carga Inicial";
+            mensaje= getString(R.string.mHijo_cargaIni).toLowerCase();
+
+        spTitulo = getString(R.string.sp_carga) +" "+ mensaje;
 
         button_buscar = view.findViewById(R.id.button_buscar);
         button_aplicar = view.findViewById(R.id.button_aplicar);
@@ -131,16 +133,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
         button_salir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (cautivo)
-                {
-                    if(al_recargas!=null && al_recargas.size()>0 )
-                        Toast.makeText(getContext(), "Debe de aceptar todas las recargas para poder salir y continuar", Toast.LENGTH_SHORT).show();
-                    else
-                        Utils.RegresarInicio(getActivity());
-                }
-                else
-                    Utils.RegresarInicio(getActivity());
-
+                salir();
             }
         });
 
@@ -148,7 +141,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = sp_recargas.getSelectedItem().toString();
-                if(!item.equals("Seleccione una "+mensaje))
+                if(!item.equals(spTitulo))
                 {
                     mostrarRecarga(i-1); //menos 1 porque el primero es el mensaje
                     buscarRecargaDet(i-1);
@@ -171,19 +164,11 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             }
         });
 
-        inicializar();
+        buscarRecargas();
 
         return view;
     }
 
-    public void inicializar()
-    {
-        recargas = new ArrayList<>();
-        recargas.add("Seleccione una "+mensaje);
-        sp_recargas.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, recargas));
-
-        buscarRecargas();
-    }
 
     private void aplicar()
     {
@@ -194,18 +179,18 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
             if(al_recargasDet!=null&&al_recargasDet.size()>0)
             {
-                String men = string.formatSql( "¿Esta seguro de aplicar la {0} con folio {1}?",mensaje,folio );
+                String men = string.formatSql( getString(R.string.msg_aplicarCarga),mensaje,folio );
 
                 AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-                dialogo1.setTitle("Importante");
+                dialogo1.setTitle(getString(R.string.msg_importante));
                 dialogo1.setMessage(men);
                 dialogo1.setCancelable(false);
-                dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
                         obtenerUbicacion(); //EN ESTA FUNCION SE LLAMA A aplicarCargaInicial();
                     }
                 });
-                dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
                         //cancelar();
                     }
@@ -231,8 +216,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             final MainActivity mainActivity = (MainActivity) getActivity();
             final String[] ubi = new String[1];
             final ProgressDialog progress = new ProgressDialog(getContext());
-            progress.setTitle("Actualizando");
-            progress.setMessage("Por favor espere");
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
             progress.show();
             progress.setCancelable(false);
 
@@ -452,11 +437,11 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
     private void llenarSpinnerRecargas()
     {
         recargas = new ArrayList<>();
-        recargas.add("Seleccione una "+mensaje);
+        recargas.add(spTitulo);
         for(int i=0; i<al_recargas.size();i++)
             recargas.add((i+1+" - "+al_recargas.get(i).getRec_folio_str()));
 
-        sp_recargas.setAdapter(new ArrayAdapter<String>( getContext(), R.layout.spinner_item, recargas));
+        sp_recargas.setAdapter(new ArrayAdapter<>( getContext(), R.layout.spinner_item, recargas));
 
     }
 
@@ -508,6 +493,19 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
                 tableLayout.addView(tr);
             }
+    }
+
+    private void salir()
+    {
+        if (cautivo)
+        {
+            if(al_recargas!=null && al_recargas.size()>0 )
+                Toast.makeText(getContext(), "Debe de aceptar todas las recargas para poder salir y continuar", Toast.LENGTH_SHORT).show();
+            else
+                Utils.RegresarInicio(getActivity());
+        }
+        else
+            Utils.RegresarInicio(getActivity());
     }
 
     @Override

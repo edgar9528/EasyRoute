@@ -25,7 +25,7 @@ public class OrdenacliFragment extends Fragment {
         return fragment;
     }
 
-    ViewPager viewPager;
+    private ViewPager viewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,13 +41,13 @@ public class OrdenacliFragment extends Fragment {
 
 
         //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        TabLayout tabLayout =  view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Clientes del día"));
-        tabLayout.addTab(tabLayout.newTab().setText("Clientes fuera"));
+        tabLayout.addTab(tabLayout.newTab().setText(  getResources().getString(R.string.tl_orde1)  ));
+        tabLayout.addTab(tabLayout.newTab().setText(  getResources().getString(R.string.tl_orde2) ));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager =  view.findViewById(R.id.pager);
 
         final PagerOrdenacliAdapter adapter = new PagerOrdenacliAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
@@ -55,19 +55,20 @@ public class OrdenacliFragment extends Fragment {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-
-                //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 

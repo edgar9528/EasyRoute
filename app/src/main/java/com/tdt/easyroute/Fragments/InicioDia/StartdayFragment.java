@@ -34,8 +34,8 @@ public class StartdayFragment extends Fragment {
         //CONFIGURACION DE LAS TABS
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Generales"));
-        tabLayout.addTab(tabLayout.newTab().setText("Datos"));
+        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_iniDia1) ));
+        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_iniDia2) ));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager =  view.findViewById(R.id.pager);

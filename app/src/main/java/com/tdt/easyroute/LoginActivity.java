@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
@@ -41,22 +43,21 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
     private static String nombreBase;
     private String rut_cve;
 
-    Button button_sesion;
-    TextInputEditText ti_usuario,ti_contrasena;
-    Usuario u;
-    String user,pass;
+    private TextInputEditText ti_usuario,ti_contrasena;
+    private Usuario u;
+    private String user,pass;
     boolean bloq;
 
-    ImageView iv_logo;
+    private ImageView iv_logo;
 
     @Override
     public void onBackPressed() {
 
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle("Importante");
-        dialogo1.setMessage("¿Desea salir de la app?");
+        dialogo1.setTitle(getString(R.string.msg_importante));
+        dialogo1.setMessage(getString(R.string.msg_salir));
         dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
 
                 Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -66,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
             }
         });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 //cancelar();
             }
@@ -79,13 +80,14 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Button button_sesion;
         nombreBase = getString( R.string.nombreBD );
 
         crearBaseLocal();
 
-        button_sesion = (Button) findViewById(R.id.Blogin);
-        ti_usuario = (TextInputEditText) findViewById(R.id.TIusername);
-        ti_contrasena = (TextInputEditText) findViewById(R.id.TIpassword);
+        button_sesion =  findViewById(R.id.Blogin);
+        ti_usuario =  findViewById(R.id.TIusername);
+        ti_contrasena = findViewById(R.id.TIpassword);
         iv_logo = findViewById(R.id.imageView);
 
         ti_usuario.setText("AGUTIERREZ");
@@ -130,7 +132,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             }});
 
     }
-
 
     public void clickBotonIniciar()
     {
@@ -208,7 +209,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
             Log.d(TAG,e.getMessage());
         }
-
     }
 
 
@@ -398,10 +398,10 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
                     Log.d("salida", "roles actualizados");
                 }
-
+                bd.close();
             }
 
-            bd.close();
+
 
         }catch (Exception e)
         {
@@ -475,9 +475,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                 bd.execSQL(Querys.Modulos.DelModulos);
 
                 for (int i = 0; i < u.getPermisos().size(); i++) {
-                    if (bd != null) {
                         bd.execSQL(string.formatSql(Querys.Modulos.InsModulos, String.valueOf(p.get(i).getMod_cve_n()), p.get(i).getMod_desc_str()));
-                    }
                 }
 
                 String con = string.formatSql("select * from roles where rol_cve_n={0}", String.valueOf(u.getRol()));
@@ -501,9 +499,9 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
                     Log.d("salida", "roles actualizados");
                 }
-            }
 
-            bd.close();
+                bd.close();
+            }
 
         }catch (Exception e)
         {
@@ -573,7 +571,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         }catch (Exception e)
         {
             Log.d("salida",e.toString());
-            Log.d("salida",e.getMessage().toString());
+            Log.d("salida",e.getMessage());
             Toast.makeText(this, "Error al crear base", Toast.LENGTH_LONG).show();
         }
 
@@ -608,7 +606,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                     bd.execSQL(con);
                 }
 
-                bd.close();
+                if(bd.isOpen())
+                    bd.close();
 
                 Log.d(TAG, "usuario o contraseña incorrectos");
                 Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();

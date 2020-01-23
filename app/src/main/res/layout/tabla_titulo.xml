@@ -1,6 +1,5 @@
 <TableRow
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="6"
@@ -14,7 +13,7 @@
         android:maxLines="10"
         android:layout_column="0"
         android:layout_weight="1"
-        android:text="Sel."
+        android:text="@string/table_selec"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -27,7 +26,7 @@
         android:maxLines="10"
         android:layout_column="0"
         android:layout_weight="3"
-        android:text="Catálogo"
+        android:text="@string/table_catalogo"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -46,7 +45,7 @@
         android:maxLines="10"
         android:layout_column="1"
         android:layout_weight="2"
-        android:text="Estado"
+        android:text="@string/table_estado"
         android:textColor="@color/colorPrimaryDark"
         />
 

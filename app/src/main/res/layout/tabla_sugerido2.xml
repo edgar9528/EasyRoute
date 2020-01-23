@@ -9,7 +9,7 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="SKU"
+        android:text="@string/table_sku"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -19,7 +19,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Sug."
+        android:text="@string/table_suge"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -29,7 +29,7 @@
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Producto"
+        android:text="@string/table_producto"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />

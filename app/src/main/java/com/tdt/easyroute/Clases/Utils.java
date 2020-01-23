@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,7 +12,12 @@ import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.Creditos;
@@ -208,7 +214,7 @@ public class Utils {
     }
 
     public static boolean getBool(String cad) {
-        boolean var=false;
+        boolean var;
 
         try {
             if (cad.equals("true") || cad.equals("1")) {
@@ -256,7 +262,7 @@ public class Utils {
     }
 
     public static boolean FechasIguales(String local, String ws) {
-        boolean iguales = false;
+        boolean iguales;
 
         try {
 
@@ -792,6 +798,20 @@ public class Utils {
         }
 
         return vis;
+    }
+
+    public static void msgError(Context context,String mensaje, String exception)
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(context);
+        dialogo1.setTitle(context.getResources().getString(R.string.msg_error));
+        dialogo1.setMessage(mensaje +"\n\n"+exception);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(context.getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+
+            }
+        });
+        dialogo1.show();
     }
 
 }

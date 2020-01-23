@@ -41,19 +41,19 @@ import java.util.zip.Inflater;
 
 public class ProductosvenFragment extends Fragment {
 
-    ArrayList<DataTableLC.Dtproven> dtprodvenlist= null;
-    ArrayList<DataTableLC.Dtprogral> dtProdVenGral= null;
-    ArrayList<DataTableLC.Dtcobros> dtcobros= null;
+    private ArrayList<DataTableLC.Dtproven> dtprodvenlist= null;
+    private ArrayList<DataTableLC.Dtprogral> dtProdVenGral= null;
+    private ArrayList<DataTableLC.Dtcobros> dtcobros= null;
 
-    Button b_salir,b_impPre, b_impSku;
-    TextView tv_cerveza, tv_otros;
+    private Button b_salir,b_impPre, b_impSku;
+    private TextView tv_cerveza, tv_otros;
 
-    Configuracion conf;
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    VentasDiaVM ventasDiaVM;
+    private Configuracion conf;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private VentasDiaVM ventasDiaVM;
 
-    Usuario user;
+    private Usuario user;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -230,9 +230,12 @@ public class ProductosvenFragment extends Fragment {
                     }
                 }
 
-                tv_cerveza.setText( "CERVEZA: "+ suma );
+                String str1,str2;
 
-                tv_otros.setText("OTROS: "+suma2);
+                str1 = getResources().getString(R.string.tv_cerveza) + suma;
+                str2 = getResources().getString(R.string.tv_otros) + suma2;
+                tv_cerveza.setText( str1 );
+                tv_otros.setText( str2);
 
                 mostrarVentas();
             }
@@ -306,12 +309,12 @@ public class ProductosvenFragment extends Fragment {
 
         try {
             String imp = "", json, con;
-            String ruta = "";
-            String asesor = "";
+            String ruta;
+            String asesor;
 
-            ArrayList<DataTableLC.Env> dtEnv = null;
-            ArrayList<DataTableLC.EnvPrev> dtEnvPrev = null;
-            ArrayList<DataTableLC.SaldoEnvase> dtSalEnv = null;
+            ArrayList<DataTableLC.Env> dtEnv;
+            ArrayList<DataTableLC.EnvPrev> dtEnvPrev;
+            ArrayList<DataTableLC.SaldoEnvase> dtSalEnv;
 
             con = "Select p.prod_cve_n,p.prod_sku_str,p.prod_desc_str," +
                     "coalesce(iv.inv_inicial_n,0) inv_inicial_n, 0 inv_cargo_n, 0 inv_abono_n," +
@@ -449,12 +452,12 @@ public class ProductosvenFragment extends Fragment {
     {
         try {
             String imp = "", json, con;
-            String ruta = "";
-            String asesor = "";
+            String ruta;
+            String asesor;
 
-            ArrayList<DataTableLC.Env> dtEnv = null;
-            ArrayList<DataTableLC.EnvPrev> dtEnvPrev = null;
-            ArrayList<DataTableLC.SaldoEnvase> dtSalEnv = null;
+            ArrayList<DataTableLC.Env> dtEnv;
+            ArrayList<DataTableLC.EnvPrev> dtEnvPrev;
+            ArrayList<DataTableLC.SaldoEnvase> dtSalEnv;
 
             con = "Select p.prod_cve_n,p.prod_sku_str,p.prod_desc_str," +
                     "coalesce(iv.inv_inicial_n,0) inv_inicial_n, 0 inv_cargo_n, 0 inv_abono_n," +

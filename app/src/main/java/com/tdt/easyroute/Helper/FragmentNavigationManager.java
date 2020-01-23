@@ -62,81 +62,82 @@ public class FragmentNavigationManager implements NavigationManager {
         
         switch (title)
         {
-            case "Inicio | Inicio de día":
+            case "0|1":
                 StartdayFragment startdayFragment= new StartdayFragment();
                 ft= fm.beginTransaction().replace(R.id.container, startdayFragment);
                 break;
 
-            case "Inventario | Carga inicial":
+            case "1|0":
                 ft= fm.beginTransaction().replace(R.id.container,Carga2Fragment.newInstance(false,false));
                 break;
 
-            case "Inventario | Recarga":
-                ft= fm.beginTransaction().replace(R.id.container,Carga2Fragment.newInstance(true,false));
-                break;
-
-            case "Inventario | Inventario":
+            case "1|1":
                 ft= fm.beginTransaction().replace(R.id.container, InventarioFragment.newInstance(usuario,false));
                 break;
 
-            case "Inventario | Descarga":
-                ft= fm.beginTransaction().replace(R.id.container, InventarioFragment.newInstance(usuario,true));
+            case "1|2":
+                ft= fm.beginTransaction().replace(R.id.container,Carga2Fragment.newInstance(true,false));
                 break;
 
-            case "Inventario | Devoluciones":
+            case "1|3":
                 ft= fm.beginTransaction().replace(R.id.container, DevolucionesFragment.newInstance(usuario));
                 break;
 
-            case "Pedidos | Clientes":
+            case "1|4":
+                ft= fm.beginTransaction().replace(R.id.container, InventarioFragment.newInstance(usuario,true));
+                break;
+
+
+            case "2|0":
                 ft= fm.beginTransaction().replace(R.id.container, PedidosFragment.newInstance());
                 break;
 
-            case "Reportes | Arqueo":
+            case "4|0":
                 ft= fm.beginTransaction().replace(R.id.container, ArqueoFragment.newInstance());
                 break;
 
-            case "Reportes | Ventas día":
+            case "4|1":
                 ft= fm.beginTransaction().replace(R.id.container, MainVentaFragment.newInstance());
                 break;
 
-            case "Clientes | Cartera":
+            case "5|0":
                 CarteraFragment carteraFragment = new CarteraFragment();
                 ft= fm.beginTransaction().replace(R.id.container, carteraFragment);
                 break;
 
-            case "Clientes | Busq. Clientes":
+            case "5|1":
+                ft= fm.beginTransaction().replace(R.id.container, OrdenacliFragment.newInstance());
+                break;
+
+            case "5|2":
                 esFragment=false;
                 Intent intent1 = new Intent(activity, BuscarClientesActivity.class);
                 activity.startActivity(intent1);
                 break;
 
-            case "Clientes | Ord. Clientes":
-                ft= fm.beginTransaction().replace(R.id.container, OrdenacliFragment.newInstance());
-                break;
-
-            case "Fin de día | Sugerido":
+            case "6|0":
                 ft= fm.beginTransaction().replace(R.id.container, MainsugeridoFragment.newInstance(usuario));
                 break;
 
-            case "Fin de día | Transmitir":
+            case "6|1":
                 ft= fm.beginTransaction().replace(R.id.container, FindiaFragment.newInstance(0));
                 break;
 
-            case "Fin de día | Borrar datos":
+            case "6|2":
                 ft= fm.beginTransaction().replace(R.id.container, FindiaFragment.newInstance(1));
                 break;
 
-            case "Fin de día | Fin de ventas":
+            case "6|3":
                 ft= fm.beginTransaction().replace(R.id.container, FindiaFragment.newInstance(2));
                 break;
-            case "Configuración | Catálogos":
+            case "7|0":
                 esFragment=false;
                 Intent intent = new Intent(activity, ConfiguracionActivity.class);
                 intent.putExtra("catalogos", true);
                 intent.putExtra("usuario", usuario);
                 activity.startActivity(intent);
                 break;
-            case "Configuración | Salir":
+            case "7|1":
                 esFragment=false;
                 mainActivity.cerrarSesion();
                 break;
@@ -150,7 +151,7 @@ public class FragmentNavigationManager implements NavigationManager {
         if(esFragment)
         {
             ft.addToBackStack(null);
-            if (false || !BuildConfig.DEBUG)
+            if (!BuildConfig.DEBUG)
                 ft.commitAllowingStateLoss();
             else
                 ft.commit();

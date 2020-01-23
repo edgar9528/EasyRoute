@@ -24,8 +24,10 @@ public class MainDetallesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_detalles);
 
-        this.setTitle("Detalles");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.setTitle(getString(R.string.title_detalles));
+
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         cliente = (DataTableLC.PedidosLv) intent.getSerializableExtra("cliente");
@@ -33,7 +35,7 @@ public class MainDetallesActivity extends AppCompatActivity {
         Log.d("salida","Detalles de los clientes: "+cliente.getCli_cve_n());
 
         //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout =  findViewById(R.id.tab_layout);
 
         tabLayout.addTab(tabLayout.newTab().setText("Datos"));
         tabLayout.addTab(tabLayout.newTab().setText("Domicilio"));
@@ -42,7 +44,7 @@ public class MainDetallesActivity extends AppCompatActivity {
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final ViewPager viewPager =  findViewById(R.id.pager);
         final PagerDetallesCliAdapter adapter = new PagerDetallesCliAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
 
@@ -52,15 +54,15 @@ public class MainDetallesActivity extends AppCompatActivity {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //Log.d("salida", "TAB SELECCIONADA: "+ tab.getText().toString() );
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+
             }
 
             @Override
@@ -74,13 +76,11 @@ public class MainDetallesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public DataTableLC.PedidosLv getCliente()

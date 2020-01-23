@@ -218,13 +218,10 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
     private void actualizaCatalogos()
     {
 
-        String catalogos = "LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas," +
-                "Marcas,Unidades,CondicionesVenta,Productos,ListaPrecios,PrecioProductos,NivelCliente,FormasPago," +
-                "FrecuenciasVisita,MotivosNoVenta,MotivosNoLectura,Categorias,Familias,Presentaciones,Clientes," +
-                "Creditos,Direcciones,ClientesVentaMes,Promociones,PromocionesKit,Consignas";
+        String catalogos = getString(R.string.catalogos3);
 
         if (tipoRuta.equals("REPARTO"))
-            catalogos += ",Preventa";
+            catalogos += getString(R.string.catalogos4);
 
         startdayVM.setCatalogos(catalogos);
 
@@ -325,8 +322,8 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             final MainActivity mainActivity = (MainActivity) getActivity();
             final String[] ubi = new String[1];
             final ProgressDialog progress = new ProgressDialog(getContext());
-            progress.setTitle("Actualizando");
-            progress.setMessage("Por favor espere");
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
             progress.show();
             progress.setCancelable(false);
 
@@ -378,7 +375,15 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
             }
         }
         else
+        {
+            if(campos[6].isEmpty())
+                et_camion.requestFocus();
+            else
+                et_km.requestFocus();
+
             Toast.makeText(getContext(), "Rellena todos los campos", Toast.LENGTH_SHORT).show();
+        }
+
 
 
     }

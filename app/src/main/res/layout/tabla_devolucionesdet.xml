@@ -1,6 +1,5 @@
 <TableRow
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -10,7 +9,7 @@
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="CVE"
+        android:text="@string/table_cve"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -20,7 +19,7 @@
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="PR.CVE"
+        android:text="@string/table_prodCve"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -30,7 +29,7 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="SKU"
+        android:text="@string/table_sku"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -40,7 +39,7 @@
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Descripción"
+        android:text="@string/table_descripcion"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />
@@ -50,7 +49,7 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Cantidad"
+        android:text="@string/table_cantidad"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />

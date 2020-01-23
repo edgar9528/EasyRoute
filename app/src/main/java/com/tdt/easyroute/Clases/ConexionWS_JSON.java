@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.R;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -33,7 +35,7 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
 
     @Override protected void onPreExecute() {
         progreso = new ProgressDialog(context);
-        progreso.setMessage("Conectando...");
+        progreso.setMessage(context.getResources().getString(R.string.msg_webservice));
         progreso.setCancelable(false);
         progreso.show();
     }
@@ -41,7 +43,7 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
     @Override
     protected Boolean doInBackground(String... strings) {
 
-        boolean result = true;
+        boolean result;
         respuesta=null;
 
         if(timeout!=0) //ESTO ES EN CASO DE HACER LA PRUEBA DEL SERVIDOR

@@ -4,25 +4,25 @@
     <item
         android:id="@+id/op_guardar"
         app:showAsAction="never"
-        android:title="Guardar">
+        android:title="@string/bt_guardar">
     </item>
 
     <item
         android:id="@+id/op_enviar"
         app:showAsAction="never"
-        android:title="Enviar">
+        android:title="@string/bt_enviar">
     </item>
 
     <item
         android:id="@+id/op_imprimir"
         app:showAsAction="never"
-        android:title="Imprimir">
+        android:title="@string/bt_imprimir">
     </item>
 
     <item
         android:id="@+id/op_salir"
         app:showAsAction="never"
-        android:title="Salir">
+        android:title="@string/bt_salir">
     </item>
 
 </menu>

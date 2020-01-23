@@ -58,7 +58,7 @@ import java.util.zip.Inflater;
 
 public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
-    private String dias[] = {"Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"};
+    private String[] dias;
     private String diasCve[] = {"cli_lun_n","cli_mar_n","cli_mie_n","cli_jue_n","cli_vie_n","cli_sab_n","cli_dom_n"};
     private String clienteSeleccionado="",diaSeleccionado,nombreBase;
 
@@ -66,7 +66,6 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
     private ClientesDia clientesDia;
 
     private EditText et_filtro;
-    private Button b_buscar, b_quitar, b_editar, b_subir, b_bajar, b_salir,b_enviar;
     private Spinner sp_dias;
 
     private ScrollView scrollView;
@@ -77,7 +76,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
     private boolean cambioFuera=false;
 
-    public OrdenaClientesVM ordenaClientesVM;
+    private OrdenaClientesVM ordenaClientesVM;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +91,11 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         View view = inflater.inflate(R.layout.fragment_cdia, container, false);
         vista=view;
         fragment =  (OrdenacliFragment) getParentFragment();
+
+        Button b_buscar, b_quitar, b_editar, b_subir, b_bajar, b_salir,b_enviar;
+
+        String strDias = getResources().getString(R.string.diasSemana);
+        dias = strDias.split(",");
 
         nombreBase = getContext().getString( R.string.nombreBD );
 
@@ -108,7 +112,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         tableLayout = view.findViewById(R.id.tableLayout);
         layoutInflater = inflater;
 
-        sp_dias.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, dias));
+        sp_dias.setAdapter(new ArrayAdapter<>(getContext(), R.layout.spinner_item, dias));
 
         sp_dias.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -226,7 +230,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         @Override
         protected void onPreExecute() {
             progreso = new ProgressDialog(getContext());
-            progreso.setMessage("Cargando...");
+            progreso.setMessage( getResources().getString(R.string.msg_cargando) );
             progreso.setCancelable(false);
             progreso.show();
             super.onPreExecute();
@@ -273,9 +277,9 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
     {
         String filtro = diasCve[dia];
         String qry,json;
-        ArrayList<DataTableLC.FrecPunteo> dt2 = null;
-        ArrayList<DataTableLC.ClientesOrdenar> clientes=null;
-        boolean conDatos=false;
+        ArrayList<DataTableLC.FrecPunteo> dt2;
+        ArrayList<DataTableLC.ClientesOrdenar> clientes;
+        boolean conDatos;
         clienteSeleccionado="";
 
         json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM = '{0}' and sec=0 ", filtro),getContext() ) ;
@@ -320,9 +324,9 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
     {
         String filtro = diasCve[dia];
         String qry,json;
-        ArrayList<DataTableLC.FrecPunteo> dt2 = null;
-        ArrayList<DataTableLC.ClientesOrdenar> clientes=null;
-        boolean conDatos=false;
+        ArrayList<DataTableLC.FrecPunteo> dt2;
+        ArrayList<DataTableLC.ClientesOrdenar> clientes;
+        boolean conDatos;
         clienteSeleccionado="";
 
         json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM ='{0}' ", filtro),getContext() ) ;
@@ -560,7 +564,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
         if(!palabra.isEmpty()) {
             for (int i = 0; i < clientesDia.getClientes().size(); i++) {
-                TableRow row = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
+                TableRow row =  vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
 
                 cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
                 nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
@@ -568,7 +572,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
                 if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra)) {
                     for (int j = 0; j < clientesDia.getClientes().size(); j++) {
-                        TableRow tr = (TableRow) vista.findViewWithTag(clientesDia.getClientes().get(j).getCli_cveext_str());
+                        TableRow tr = vista.findViewWithTag(clientesDia.getClientes().get(j).getCli_cveext_str());
                         tr.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
                     }
 
@@ -743,7 +747,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
                 //Actualizar información en la bd
                 String qry = string.formatSql( "SELECT * FROM FRECPUNTEO WHERE CLI_CVEEXT_STR = '{0}' AND DIASEM= '{1}'", cli.getCli_cveext_str(), cli.getDiasem()  );
 
-                ArrayList<DataTableLC.FrecPunteo> dt=null;
+                ArrayList<DataTableLC.FrecPunteo> dt;
                 String json = BaseLocal.Select(qry,getContext());
                 dt = ConvertirRespuesta.getFrecPunteoJson(json);
 

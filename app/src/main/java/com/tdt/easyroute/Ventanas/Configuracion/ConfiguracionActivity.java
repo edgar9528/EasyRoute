@@ -34,7 +34,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
     boolean mnGuardar = true;
     boolean crut = false;
     private boolean[] tabs;
-    String cat="Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas";
+    String cat;
 
     ArrayList<DataTableWS.Ruta> lista_rutas;
     ArrayList<String> lista_catalogos;
@@ -49,6 +49,8 @@ public class ConfiguracionActivity extends AppCompatActivity {
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        cat=getString(R.string.catalogos1);
 
         try {
 
@@ -178,7 +180,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
                 tabs[0]=false;
                 tabs[2]=false;
 
-                cat = "CondicionesVenta,Productos,Rutas,ListaPrecios,PrecioProductos,FormasPago,FrecuenciasVisita,Categorias,Familias,Presentaciones,Promociones,PromocionesKit";
+                cat = getString(R.string.catalogos2);
 
                 catalogos();
             }
