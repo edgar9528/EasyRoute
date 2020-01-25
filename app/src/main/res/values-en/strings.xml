@@ -305,5 +305,8 @@
     <string name="tt_cierreDia">Full day closure</string>
     <string name="tt_errorTrans">Error transmitting</string>
 
+    <string name="err_sug1">Suggested startup error</string>
+    <string name="err_sug2">Error loading family window</string>
+
 
 </resources>
