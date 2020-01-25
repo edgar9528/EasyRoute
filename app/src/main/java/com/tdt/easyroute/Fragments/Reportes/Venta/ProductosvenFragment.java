@@ -426,15 +426,15 @@ public class ProductosvenFragment extends Fragment {
 
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("¿Imprimir por precio?");
+            dialogo1.setTitle(getString(R.string.msg_importante));
             dialogo1.setMessage(imp);
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
                 }
             });
-            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     //cancelar();
                 }
@@ -569,15 +569,15 @@ public class ProductosvenFragment extends Fragment {
 
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("¿Imprimir por sku?");
+            dialogo1.setTitle(getString(R.string.msg_impSku));
             dialogo1.setMessage(imp);
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
                 }
             });
-            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     //cancelar();
                 }

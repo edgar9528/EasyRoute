@@ -62,58 +62,64 @@ public class MainsugeridoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_mainsugerido, container, false);
 
-        mainActivity = (MainActivity) getActivity();
+        try {
 
-        //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout =  view.findViewById(R.id.tab_layout);
+            mainActivity = (MainActivity) getActivity();
 
-        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug1) ));
-        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug2) ));
-        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug3) ));
-        tabLayout.addTab(tabLayout.newTab().setText( getString(R.string.tl_sug4) ));
+            //CONFIGURACION DE LAS TABS
+            TabLayout tabLayout = view.findViewById(R.id.tab_layout);
 
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tl_sug1)));
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tl_sug2)));
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tl_sug3)));
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tl_sug4)));
 
-        viewPager = view.findViewById(R.id.pager);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final PagerSugeridoAdapter adapter = new PagerSugeridoAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+            viewPager = view.findViewById(R.id.pager);
 
-        viewPager.setOffscreenPageLimit(3);
+            final PagerSugeridoAdapter adapter = new PagerSugeridoAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
-        viewPager.setAdapter(adapter);
+            viewPager.setOffscreenPageLimit(3);
 
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            viewPager.setAdapter(adapter);
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
 
-            }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                }
 
-            }
-        });
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-        //TERMINA CONFIGURACION DE LAS TABS
+                }
+            });
+
+            //TERMINA CONFIGURACION DE LAS TABS
 
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                verificarInicio();
-            }
-        }, 150);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    verificarInicio();
+                }
+            }, 150);
 
-        sugeridoVM.setOpcion("Recibiendo información");
+            sugeridoVM.setOpcion("Recibiendo información");
 
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_sug1),e.getMessage());
+        }
 
         return view;
     }
@@ -142,19 +148,21 @@ public class MainsugeridoFragment extends Fragment {
 
     private void verificarInicio()
     {
-        Configuracion conf;
-        conf = Utils.ObtenerConf(getActivity().getApplication());
+        try {
+            Configuracion conf;
+            conf = Utils.ObtenerConf(getActivity().getApplication());
 
-        if ( conf.getPreventa() == 2)
+            if (conf.getPreventa() == 2) {
+                Toast.makeText(getContext(), "Las rutas de reparto no pueden enviar sugerido", Toast.LENGTH_LONG).show();
+                Utils.RegresarInicio(getActivity());
+            }
+            if (conf.getPreventa() == 1) {
+                Toast.makeText(getContext(), "Asegurese de haber transmitido su información antes de enviar el sugerido de su reparto.", Toast.LENGTH_LONG).show();
+            }
+        }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Las rutas de reparto no pueden enviar sugerido", Toast.LENGTH_LONG).show();
-            Utils.RegresarInicio(getActivity());
+            Utils.msgError(getContext(), getString(R.string.err_sug1),e.getMessage());
         }
-        if (conf.getPreventa() == 1)
-        {
-            Toast.makeText(getContext(), "Asegurese de haber transmitido su información antes de enviar el sugerido de su reparto.", Toast.LENGTH_LONG).show();
-        }
-
     }
 
     public Usuario getUserMainSugerido()

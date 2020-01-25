@@ -106,13 +106,13 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
         if(descarga)
         {
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Descarga de inventario");
-            button_imprimir.setText("Descargar");
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( getString(R.string.title_inventario1) );
+            button_imprimir.setText(getString(R.string.bt_descargar));
         }
         else
         {
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Inventario actual");
-            button_imprimir.setText("Imprimir");
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( getString(R.string.title_inventario2) );
+            button_imprimir.setText(getString(R.string.bt_imprimir));
         }
 
         conf = Utils.ObtenerConf(getActivity().getApplication());
@@ -534,11 +534,11 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
     private void verificarImpresion()
     {
-        if(button_imprimir.getText().toString().equals("Imprimir"))
+        if(button_imprimir.getText().toString().equals( getString(R.string.bt_imprimir) ))
         {
             imprimir();
         }
-        else if(button_imprimir.getText().toString().equals("Descargar"))
+        else if(button_imprimir.getText().toString().equals( getString(R.string.bt_descargar) ))
         {
             try
             {

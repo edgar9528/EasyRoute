@@ -89,103 +89,111 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_cdia, container, false);
-        vista=view;
-        fragment =  (OrdenacliFragment) getParentFragment();
 
-        Button b_buscar, b_quitar, b_editar, b_subir, b_bajar, b_salir,b_enviar;
+        try {
 
-        String strDias = getResources().getString(R.string.diasSemana);
-        dias = strDias.split(",");
+            vista = view;
+            fragment = (OrdenacliFragment) getParentFragment();
 
-        nombreBase = getContext().getString( R.string.nombreBD );
+            Button b_buscar, b_quitar, b_editar, b_subir, b_bajar, b_salir, b_enviar;
 
-        et_filtro = view.findViewById(R.id.et_filtro);
-        b_subir = view.findViewById(R.id.b_subir);
-        b_bajar = view.findViewById(R.id.b_bajar);
-        b_buscar = view.findViewById(R.id.button_buscar);
-        b_salir = view.findViewById(R.id.b_salir);
-        b_enviar = view.findViewById(R.id.b_enviar);
-        b_quitar = view.findViewById(R.id.b_quitar);
-        b_editar = view.findViewById(R.id.b_editar);
-        sp_dias = view.findViewById(R.id.sp_dia);
-        scrollView = view.findViewById(R.id.scrollView);
-        tableLayout = view.findViewById(R.id.tableLayout);
-        layoutInflater = inflater;
+            String strDias = getResources().getString(R.string.diasSemana);
+            dias = strDias.split(",");
 
-        sp_dias.setAdapter(new ArrayAdapter<>(getContext(), R.layout.spinner_item, dias));
+            nombreBase = getContext().getString(R.string.nombreBD);
 
-        sp_dias.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            et_filtro = view.findViewById(R.id.et_filtro);
+            b_subir = view.findViewById(R.id.b_subir);
+            b_bajar = view.findViewById(R.id.b_bajar);
+            b_buscar = view.findViewById(R.id.button_buscar);
+            b_salir = view.findViewById(R.id.b_salir);
+            b_enviar = view.findViewById(R.id.b_enviar);
+            b_quitar = view.findViewById(R.id.b_quitar);
+            b_editar = view.findViewById(R.id.b_editar);
+            sp_dias = view.findViewById(R.id.sp_dia);
+            scrollView = view.findViewById(R.id.scrollView);
+            tableLayout = view.findViewById(R.id.tableLayout);
+            layoutInflater = inflater;
 
-                diaSeleccionado = diasCve[i];
+            sp_dias.setAdapter(new ArrayAdapter<>(getContext(), R.layout.spinner_item, dias));
 
-                if(!cambioFuera)
-                    ordenaClientesVM.setSelectItemDia(i);
-                else
-                    cambioFuera=false;
+            sp_dias.setOnItemSelectedListener(new OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                ConsultarClientes consultarClientes = new ConsultarClientes(i);
-                consultarClientes.execute();
-            }
+                    diaSeleccionado = diasCve[i];
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+                    if (!cambioFuera)
+                        ordenaClientesVM.setSelectItemDia(i);
+                    else
+                        cambioFuera = false;
 
-            }
-        });
+                    ConsultarClientes consultarClientes = new ConsultarClientes(i);
+                    consultarClientes.execute();
+                }
 
-        b_salir.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.RegresarInicio(getActivity());
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
 
-        b_quitar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                quitarItem();
-            }
-        });
+                }
+            });
 
-        b_subir.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                subirItem();
-            }
-        });
+            b_salir.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
 
-        b_bajar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bajarItem();
-            }
-        });
+            b_quitar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    quitarItem();
+                }
+            });
 
-        b_buscar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buscarItem(et_filtro.getText().toString());
-            }
-        });
+            b_subir.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    subirItem();
+                }
+            });
 
-        b_editar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editarItem();
-            }
-        });
+            b_bajar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    bajarItem();
+                }
+            });
 
-        b_enviar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                enviarFrec();
-            }
-        });
+            b_buscar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    buscarItem(et_filtro.getText().toString());
+                }
+            });
 
-        int dia = Utils.diaActualL_D();
-        sp_dias.setSelection(dia);
+            b_editar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    editarItem();
+                }
+            });
+
+            b_enviar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    enviarFrec();
+                }
+            });
+
+            int dia = Utils.diaActualL_D();
+            sp_dias.setSelection(dia);
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ord1), e.getMessage());
+        }
 
         return  view;
     }
@@ -267,7 +275,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
             }
             else
             {
-                Toast.makeText(getContext(), "Error al cargar clientes", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error_cargarInfo), Toast.LENGTH_SHORT).show();
             }
             progreso.dismiss();
         }
@@ -275,97 +283,102 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
     private void listarClientesNodia(int dia)
     {
-        String filtro = diasCve[dia];
-        String qry,json;
-        ArrayList<DataTableLC.FrecPunteo> dt2;
-        ArrayList<DataTableLC.ClientesOrdenar> clientes;
-        boolean conDatos;
-        clienteSeleccionado="";
+        try {
+            String filtro = diasCve[dia];
+            String qry, json;
+            ArrayList<DataTableLC.FrecPunteo> dt2;
+            ArrayList<DataTableLC.ClientesOrdenar> clientes;
+            boolean conDatos;
+            clienteSeleccionado = "";
 
-        json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM = '{0}' and sec=0 ", filtro),getContext() ) ;
-        dt2 = ConvertirRespuesta.getFrecPunteoJson(json);
+            json = BaseLocal.Select(string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM = '{0}' and sec=0 ", filtro), getContext());
+            dt2 = ConvertirRespuesta.getFrecPunteoJson(json);
 
-        if(dt2==null)
+            if (dt2 == null) {
+                qry = string.formatSql("SELECT CLI.CLI_CVEEXT_STR,CLI.CLI_RAZONSOCIAL_STR,cli.cli_nombrenegocio_str,CLI.FREC_CVE_N, " +
+                        "FV.FREC_DESC_STR,FV.FREC_DIAS_N,CLI.EST_CVE_STR est_cve_n " +
+                        "FROM CLIENTES CLI LEFT JOIN FRECUENCIASVISITA FV ON " +
+                        "FV.FREC_CVE_N = CLI.FREC_CVE_N " +
+                        "WHERE CLI.{0} = 0 " +
+                        "ORDER BY CLI.CLI_CVEEXT_STR ", filtro);
+
+                json = BaseLocal.Select(qry, getContext());
+
+                clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
+
+                conDatos = false;
+            } else {
+                qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
+                        "from frecpunteo fp left join clientes c " +
+                        "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
+                        "on fp.frec_cve_n=fv.frec_cve_n where fp.sec=0 and diasem='{0}' order by fp.sec", filtro);
+
+                json = BaseLocal.Select(qry, getContext());
+
+                clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
+
+                conDatos = true;
+            }
+
+            Log.d("salida", "Clientes fuera Condatos: " + conDatos);
+
+            clientesNodia = new ClientesNodia(clientes, conDatos, filtro);
+
+        }catch (Exception e)
         {
-            qry = string.formatSql("SELECT CLI.CLI_CVEEXT_STR,CLI.CLI_RAZONSOCIAL_STR,cli.cli_nombrenegocio_str,CLI.FREC_CVE_N, " +
-                    "FV.FREC_DESC_STR,FV.FREC_DIAS_N,CLI.EST_CVE_STR est_cve_n " +
-                    "FROM CLIENTES CLI LEFT JOIN FRECUENCIASVISITA FV ON " +
-                    "FV.FREC_CVE_N = CLI.FREC_CVE_N " +
-                    "WHERE CLI.{0} = 0 " +
-                    "ORDER BY CLI.CLI_CVEEXT_STR ", filtro);
-
-            json = BaseLocal.Select(qry,getContext());
-
-            clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
-
-            conDatos = false;
+            Utils.msgError(getContext(), getString(R.string.err_ord2), e.getMessage());
         }
-        else
-        {
-            qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
-                    "from frecpunteo fp left join clientes c " +
-                    "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
-                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec=0 and diasem='{0}' order by fp.sec",filtro);
-
-            json = BaseLocal.Select(qry,getContext());
-
-            clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
-
-            conDatos = true;
-        }
-
-        Log.d("salida","Clientes fuera Condatos: "+conDatos);
-
-        clientesNodia = new ClientesNodia(clientes,conDatos,filtro);
 
     }
 
     private void listarClientesDia(int dia)
     {
-        String filtro = diasCve[dia];
-        String qry,json;
-        ArrayList<DataTableLC.FrecPunteo> dt2;
-        ArrayList<DataTableLC.ClientesOrdenar> clientes;
-        boolean conDatos;
-        clienteSeleccionado="";
+        try {
+            String filtro = diasCve[dia];
+            String qry, json;
+            ArrayList<DataTableLC.FrecPunteo> dt2;
+            ArrayList<DataTableLC.ClientesOrdenar> clientes;
+            boolean conDatos;
+            clienteSeleccionado = "";
 
-        json = BaseLocal.Select( string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM ='{0}' ", filtro),getContext() ) ;
-        dt2 = ConvertirRespuesta.getFrecPunteoJson(json);
+            json = BaseLocal.Select(string.formatSql("SELECT * FROM FRECPUNTEO WHERE DIASEM ='{0}' ", filtro), getContext());
+            dt2 = ConvertirRespuesta.getFrecPunteoJson(json);
 
-        if(dt2==null)
+            if (dt2 == null) {
+                qry = string.formatSql("SELECT CLI.CLI_CVEEXT_STR,CLI.CLI_RAZONSOCIAL_STR,cli.cli_nombrenegocio_str,CLI.FREC_CVE_N, " +
+                        "FV.FREC_DESC_STR,FV.FREC_DIAS_N,CLI.EST_CVE_STR est_cve_n " +
+                        "FROM CLIENTES CLI LEFT JOIN FRECUENCIASVISITA FV ON " +
+                        "FV.FREC_CVE_N = CLI.FREC_CVE_N " +
+                        "WHERE CLI.{0} > 0 " +
+                        "ORDER BY CLI.CLI_CVEEXT_STR ", filtro);
+
+                json = BaseLocal.Select(qry, getContext());
+
+                clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
+
+                conDatos = false;
+
+            } else {
+                qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
+                        "from frecpunteo fp left join clientes c " +
+                        "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
+                        "on fp.frec_cve_n=fv.frec_cve_n where fp.sec>0 and diasem='{0}' order by fp.sec", filtro);
+
+                json = BaseLocal.Select(qry, getContext());
+
+                clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
+
+                conDatos = true;
+
+            }
+
+            Log.d("salida", "Clientes dia Condatos: " + conDatos);
+
+            clientesDia = new ClientesDia(clientes, conDatos, filtro);
+        }catch (Exception e)
         {
-            qry = string.formatSql("SELECT CLI.CLI_CVEEXT_STR,CLI.CLI_RAZONSOCIAL_STR,cli.cli_nombrenegocio_str,CLI.FREC_CVE_N, " +
-                    "FV.FREC_DESC_STR,FV.FREC_DIAS_N,CLI.EST_CVE_STR est_cve_n " +
-                    "FROM CLIENTES CLI LEFT JOIN FRECUENCIASVISITA FV ON " +
-                    "FV.FREC_CVE_N = CLI.FREC_CVE_N " +
-                    "WHERE CLI.{0} > 0 " +
-                    "ORDER BY CLI.CLI_CVEEXT_STR ", filtro);
-
-            json = BaseLocal.Select(qry,getContext());
-
-            clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
-
-            conDatos = false;
-
+            Utils.msgError(getContext(), getString(R.string.err_ord3), e.getMessage());
         }
-        else
-        {
-            qry = string.formatSql("select fp.*,c.cli_razonsocial_str,c.cli_nombrenegocio_str,fv.frec_desc_str,fv.frec_dias_n " +
-                    "from frecpunteo fp left join clientes c " +
-                    "on fp.cli_cveext_str=c.cli_cveext_str inner join frecuenciasvisita fv " +
-                    "on fp.frec_cve_n=fv.frec_cve_n where fp.sec>0 and diasem='{0}' order by fp.sec",filtro);
-
-            json = BaseLocal.Select(qry,getContext());
-
-            clientes = ConvertirRespuesta.getClientesOrdenarJson(json);
-
-            conDatos = true;
-
-        }
-
-        Log.d("salida","Clientes dia Condatos: "+conDatos);
-
-        clientesDia = new ClientesDia(clientes,conDatos,filtro);
     }
 
     private void cargarClientesDia()
@@ -400,105 +413,120 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Log.d("salida","Error: cargar"+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
         }
     }
 
     private void mostrarTitulo()
     {
-        tableLayout.removeAllViews();
+        try {
+            tableLayout.removeAllViews();
 
-        TableRow tr;
+            TableRow tr;
 
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
 
-        ((TextView) tr.findViewById(R.id.t_cliente)).setTypeface( ((TextView) tr.findViewById(R.id.t_cliente)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_nombre)).setTypeface( ((TextView) tr.findViewById(R.id.t_nombre)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_secu)).setTypeface( ((TextView) tr.findViewById(R.id.t_secu)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_frec)).setTypeface( ((TextView) tr.findViewById(R.id.t_frec)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_estatus)).setTypeface( ((TextView) tr.findViewById(R.id.t_estatus)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_coor)).setTypeface( ((TextView) tr.findViewById(R.id.t_coor)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_dia)).setTypeface( ((TextView) tr.findViewById(R.id.t_dia)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_cliente)).setTypeface(((TextView) tr.findViewById(R.id.t_cliente)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_nombre)).setTypeface(((TextView) tr.findViewById(R.id.t_nombre)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_secu)).setTypeface(((TextView) tr.findViewById(R.id.t_secu)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_frec)).setTypeface(((TextView) tr.findViewById(R.id.t_frec)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_estatus)).setTypeface(((TextView) tr.findViewById(R.id.t_estatus)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_coor)).setTypeface(((TextView) tr.findViewById(R.id.t_coor)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_dia)).setTypeface(((TextView) tr.findViewById(R.id.t_dia)).getTypeface(), Typeface.BOLD);
 
-        tableLayout.addView(tr);
+            tableLayout.addView(tr);
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
+        }
     }
 
     private void mostrarClientesDia(String cliente, String nombre, String secu, String frec, String status, String coor, String dia)
     {
-        TableRow tr;
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
+        try {
+            TableRow tr;
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
 
-        ((TextView) tr.findViewById(R.id.t_cliente)).setText(cliente);
-        ((TextView) tr.findViewById(R.id.t_nombre)).setText(nombre);
-        ((TextView) tr.findViewById(R.id.t_secu)).setText(secu);
-        ((TextView) tr.findViewById(R.id.t_frec)).setText(frec);
-        ((TextView) tr.findViewById(R.id.t_estatus)).setText( status);
-        ((TextView) tr.findViewById(R.id.t_coor)).setText( coor );
-        ((TextView) tr.findViewById(R.id.t_dia)).setText( dia);
+            ((TextView) tr.findViewById(R.id.t_cliente)).setText(cliente);
+            ((TextView) tr.findViewById(R.id.t_nombre)).setText(nombre);
+            ((TextView) tr.findViewById(R.id.t_secu)).setText(secu);
+            ((TextView) tr.findViewById(R.id.t_frec)).setText(frec);
+            ((TextView) tr.findViewById(R.id.t_estatus)).setText(status);
+            ((TextView) tr.findViewById(R.id.t_coor)).setText(coor);
+            ((TextView) tr.findViewById(R.id.t_dia)).setText(dia);
 
-        tr.setTag(cliente);
-        tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
+            tr.setTag(cliente);
+            tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
 
-        if(cliente.equals(clienteSeleccionado))
-            tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            if (cliente.equals(clienteSeleccionado))
+                tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
-        tableLayout.addView(tr);
+            tableLayout.addView(tr);
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
+        }
     }
 
     private void bajarItem()
     {
-        if(!clienteSeleccionado.isEmpty())
+        try {
+            if (!clienteSeleccionado.isEmpty()) {
+                int posicion = getClienteSeleccionado();
+
+                if (posicion < clientesDia.getClientes().size() - 1) {
+                    DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion);
+                    DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion + 1);
+
+                    String vUp = cliUp.getSec();
+                    String vDown = cliDown.getSec();
+
+                    clientesDia.getClientes().set(posicion + 1, cliUp);
+                    clientesDia.getClientes().set(posicion, cliDown);
+
+                    clientesDia.getClientes().get(posicion + 1).setSec(vDown);
+                    clientesDia.getClientes().get(posicion).setSec(vUp);
+
+                    actualizarPosicionBase(vUp, vDown, posicion, false);
+                    cargarClientesDia();
+                }
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
         {
-            int posicion= getClienteSeleccionado();
-
-            if(posicion<clientesDia.getClientes().size()-1)
-            {
-                DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion);
-                DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion+1);
-
-                String vUp =  cliUp.getSec();
-                String vDown = cliDown.getSec();
-
-                clientesDia.getClientes().set(posicion+1, cliUp);
-                clientesDia.getClientes().set(posicion, cliDown);
-
-                clientesDia.getClientes().get(posicion+1).setSec( vDown  );
-                clientesDia.getClientes().get(posicion).setSec(  vUp );
-
-                actualizarPosicionBase(vUp,vDown,posicion,false);
-                cargarClientesDia();
-            }
+            Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage());
         }
-        else
-            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
     }
 
     private void subirItem()
     {
-        if(!clienteSeleccionado.isEmpty())
+        try {
+            if (!clienteSeleccionado.isEmpty()) {
+                int posicion = getClienteSeleccionado();
+
+                if (posicion > 0) {
+                    DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion - 1);
+                    DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion);
+
+                    String vUp = cliUp.getSec();
+                    String vDown = cliDown.getSec();
+
+                    clientesDia.getClientes().set(posicion - 1, cliDown);
+                    clientesDia.getClientes().set(posicion, cliUp);
+
+                    clientesDia.getClientes().get(posicion - 1).setSec(vUp);
+                    clientesDia.getClientes().get(posicion).setSec(vDown);
+
+                    actualizarPosicionBase(vUp, vDown, posicion, true);
+                    cargarClientesDia();
+                }
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
         {
-            int posicion= getClienteSeleccionado();
-
-            if(posicion>0)
-            {
-                DataTableLC.ClientesOrdenar cliUp = clientesDia.getClientes().get(posicion - 1);
-                DataTableLC.ClientesOrdenar cliDown = clientesDia.getClientes().get(posicion);
-
-                String vUp =  cliUp.getSec();
-                String vDown = cliDown.getSec();
-
-                clientesDia.getClientes().set(posicion - 1, cliDown);
-                clientesDia.getClientes().set(posicion, cliUp);
-
-                clientesDia.getClientes().get(posicion-1).setSec( vUp  );
-                clientesDia.getClientes().get(posicion).setSec(  vDown );
-
-                actualizarPosicionBase(vUp,vDown,posicion,true);
-                cargarClientesDia();
-            }
+            Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage());
         }
-        else
-            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
     }
 
     private int getClienteSeleccionado()
@@ -546,7 +574,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
             db.close();
         }
         finally {
@@ -558,239 +586,242 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
 
     private void buscarItem(String palabra)
     {
-        String cliente;
-        String nombre;
-        boolean encontrado=false;
+        try {
 
-        if(!palabra.isEmpty()) {
-            for (int i = 0; i < clientesDia.getClientes().size(); i++) {
-                TableRow row =  vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
+            String cliente;
+            String nombre;
+            boolean encontrado = false;
 
-                cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
-                nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
-                palabra = palabra.toLowerCase();
+            if (!palabra.isEmpty()) {
+                for (int i = 0; i < clientesDia.getClientes().size(); i++) {
+                    TableRow row = vista.findViewWithTag(clientesDia.getClientes().get(i).getCli_cveext_str());
 
-                if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra)) {
-                    for (int j = 0; j < clientesDia.getClientes().size(); j++) {
-                        TableRow tr = vista.findViewWithTag(clientesDia.getClientes().get(j).getCli_cveext_str());
-                        tr.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
+                    cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
+                    nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
+                    palabra = palabra.toLowerCase();
+
+                    if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra)) {
+                        for (int j = 0; j < clientesDia.getClientes().size(); j++) {
+                            TableRow tr = vista.findViewWithTag(clientesDia.getClientes().get(j).getCli_cveext_str());
+                            tr.setBackgroundColor(getResources().getColor(R.color.bgDefault));
+                        }
+
+                        row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        clienteSeleccionado = cliente;
+                        i = clientesDia.getClientes().size();
+
+                        scrollView.scrollTo(0, row.getTop());
+
+                        encontrado = true;
                     }
-
-                    row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    clienteSeleccionado = cliente;
-                    i = clientesDia.getClientes().size();
-
-                    scrollView.scrollTo(0, row.getTop());
-
-                    encontrado = true;
                 }
-            }
 
-            if (!encontrado)
-                Toast.makeText(getContext(), "Cliente no encontrado en 'Clientes del dia'", Toast.LENGTH_LONG).show();
+                if (!encontrado)
+                    Toast.makeText(getContext(), getString(R.string.tt_noEncontrado), Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage() );
         }
-        else
-            Toast.makeText(getContext(), "Escriba el texto a buscar", Toast.LENGTH_SHORT).show();
 
     }
 
     private void quitarItem()
     {
-        if(!clienteSeleccionado.isEmpty())
-        {
-            int posicion = getClienteSeleccionado();
+        try {
+            if (!clienteSeleccionado.isEmpty()) {
+                int posicion = getClienteSeleccionado();
 
-            DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
-            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-            try{
-                db.beginTransaction();
+                try {
+                    db.beginTransaction();
 
-                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
-                        "0", clientesDia.getClientes().get(posicion).getCli_cveext_str(), clientesDia.getClientes().get(posicion).getDiasem()) );
-                db.execSQL(string.formatSql("update frecpunteo set sec=sec-100 where sec>={0} and diasem='{1}'",
-                        clientesDia.getClientes().get(posicion).getSec(), clientesDia.getClientes().get(posicion).getDiasem() ));
+                    db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                            "0", clientesDia.getClientes().get(posicion).getCli_cveext_str(), clientesDia.getClientes().get(posicion).getDiasem()));
+                    db.execSQL(string.formatSql("update frecpunteo set sec=sec-100 where sec>={0} and diasem='{1}'",
+                            clientesDia.getClientes().get(posicion).getSec(), clientesDia.getClientes().get(posicion).getDiasem()));
 
-                db.setTransactionSuccessful();
+                    db.setTransactionSuccessful();
 
-                String sec;
-                for(int i=posicion; i<clientesDia.getClientes().size();i++)
-                {
-                    sec = String.valueOf( Integer.parseInt( clientesDia.getClientes().get(i).getSec() ) -100 );
-                    clientesDia.getClientes().get(i).setSec( sec );
+                    String sec;
+                    for (int i = posicion; i < clientesDia.getClientes().size(); i++) {
+                        sec = String.valueOf(Integer.parseInt(clientesDia.getClientes().get(i).getSec()) - 100);
+                        clientesDia.getClientes().get(i).setSec(sec);
+                    }
+
+                    clientesDia.getClientes().get(posicion).setSec("0");
+                    clientesNodia.getClientes().add(clientesDia.getClientes().get(posicion));
+                    clientesDia.getClientes().remove(posicion);
+
+                    clienteSeleccionado = "";
+
+                    cargarClientesDia();
+                    ordenaClientesVM.setClientesNodia(clientesNodia);
+
+                } catch (Exception e) {
+                    Log.d("salida", "Error: " + e.getMessage());
+                    Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage());
+                    db.endTransaction();
+                    db.close();
+                } finally {
+                    db.endTransaction();
+                    db.close();
                 }
 
-                clientesDia.getClientes().get(posicion).setSec("0");
-                clientesNodia.getClientes().add( clientesDia.getClientes().get(posicion) );
-                clientesDia.getClientes().remove(posicion);
-
-                clienteSeleccionado="";
-
-                cargarClientesDia();
-                ordenaClientesVM.setClientesNodia(  clientesNodia );
-
-            }
-            catch (Exception e)
-            {
-                Log.d("salida","Error: "+e.getMessage());
-                Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
-                db.endTransaction();
-                db.close();
-            }
-            finally {
-                db.endTransaction();
-                db.close();
-            }
-
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage());
         }
-        else
-            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
     }
 
     private void agregarItem(int indice)
     {
-        if(!clienteSeleccionado.isEmpty())
-        {
-            int posicion = getClienteSeleccionado();
+        try {
+            if (!clienteSeleccionado.isEmpty()) {
+                int posicion = getClienteSeleccionado();
 
-            DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
-            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-            try{
-                db.beginTransaction();
+                try {
+                    db.beginTransaction();
 
-                db.execSQL(string.formatSql("update frecpunteo set sec=sec+100 where sec>={0} and diasem='{1}'",
-                        clientesDia.getClientes().get(posicion).getSec(),clientesDia.getClientes().get(posicion).getDiasem()));
-                db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
-                        clientesDia.getClientes().get(posicion).getSec(),clientesNodia.getClientes().get(indice).getCli_cveext_str(), clientesNodia.getClientes().get(indice).getDiasem() ));
+                    db.execSQL(string.formatSql("update frecpunteo set sec=sec+100 where sec>={0} and diasem='{1}'",
+                            clientesDia.getClientes().get(posicion).getSec(), clientesDia.getClientes().get(posicion).getDiasem()));
+                    db.execSQL(string.formatSql("update frecpunteo set sec={0} where cli_cveext_str='{1}' and diasem='{2}'",
+                            clientesDia.getClientes().get(posicion).getSec(), clientesNodia.getClientes().get(indice).getCli_cveext_str(), clientesNodia.getClientes().get(indice).getDiasem()));
 
-                db.setTransactionSuccessful();
+                    db.setTransactionSuccessful();
 
-                clientesNodia.getClientes().get(indice).setSec(  clientesDia.getClientes().get(posicion).getSec()  );
+                    clientesNodia.getClientes().get(indice).setSec(clientesDia.getClientes().get(posicion).getSec());
 
-                clientesDia.getClientes().add(posicion, clientesNodia.getClientes().get(indice));
+                    clientesDia.getClientes().add(posicion, clientesNodia.getClientes().get(indice));
 
-                String sec;
-                for(int i=posicion+1;i<clientesDia.getClientes().size();i++)
-                {
-                    sec = String.valueOf( Integer.parseInt( clientesDia.getClientes().get(i).getSec() ) + 100 );
-                    clientesDia.getClientes().get(i).setSec(  sec     );
+                    String sec;
+                    for (int i = posicion + 1; i < clientesDia.getClientes().size(); i++) {
+                        sec = String.valueOf(Integer.parseInt(clientesDia.getClientes().get(i).getSec()) + 100);
+                        clientesDia.getClientes().get(i).setSec(sec);
+                    }
+
+                    clientesNodia.getClientes().remove(indice);
+
+                    cargarClientesDia();
+                    ordenaClientesVM.setClientesNodia(clientesNodia);
+
+                    fragment.goClientesDiaFragment();
+                    buscarItem(clientesDia.getClientes().get(posicion).getCli_cveext_str());
+                } catch (Exception e) {
+                    Log.d("salida", "Error: " + e.getMessage());
+                    Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage());
+                    db.endTransaction();
+                    db.close();
+                } finally {
+                    db.endTransaction();
+                    db.close();
                 }
 
-                clientesNodia.getClientes().remove(indice);
-
-                cargarClientesDia();
-                ordenaClientesVM.setClientesNodia(  clientesNodia );
-
-                fragment.goClientesDiaFragment();
-                buscarItem( clientesDia.getClientes().get(posicion).getCli_cveext_str() );
-            }
-            catch (Exception e)
-            {
-                Log.d("salida","Error: "+e.getMessage());
-                Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
-                db.endTransaction();
-                db.close();
-            }
-            finally {
-                db.endTransaction();
-                db.close();
-            }
-
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage());
         }
-        else
-            Toast.makeText(getContext(), "Selecciona un cliente del día", Toast.LENGTH_SHORT).show();
     }
 
     private void editarItem()
     {
-        if(!clienteSeleccionado.isEmpty())
+        try {
+
+            if (!clienteSeleccionado.isEmpty()) {
+                int id = getClienteSeleccionado();
+
+                DataTableLC.ClientesOrdenar cli = clientesDia.getClientes().get(id);
+
+                Intent intent = new Intent(getContext(), EditarclienteActivity.class);
+                CamposEditar camposEditar = new CamposEditar(cli.getEst_cve_n(), cli.getFrec_cve_n(), cli.getCoor());
+                intent.putExtra("CamposEditar", camposEditar);
+                startActivityForResult(intent, 0);
+
+                //se recibe la respuesta en onActivityResult
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
         {
-            int id = getClienteSeleccionado();
-
-            DataTableLC.ClientesOrdenar cli = clientesDia.getClientes().get(id);
-
-            Intent intent = new Intent(getContext(), EditarclienteActivity.class);
-            CamposEditar camposEditar = new CamposEditar( cli.getEst_cve_n(), cli.getFrec_cve_n(), cli.getCoor()  );
-            intent.putExtra("CamposEditar",camposEditar);
-            startActivityForResult(intent,0);
-
-            //se recibe la respuesta en onActivityResult
+            Utils.msgError(getContext(), getString(R.string.err_ord5), e.getMessage());
         }
-        else
-            Toast.makeText(getContext(), "Selecciona un cliente", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(resultCode== Activity.RESULT_OK)
-        {
-            try
-            {
-                CamposEditar camposEditar = (CamposEditar) data.getExtras().getSerializable("CamposEditar");
-                int i = getClienteSeleccionado();
+        try {
 
-                //actualizar información en la lista
-                clientesDia.getClientes().get(i).setFrec_cve_n(camposEditar.getFrecuencia());
-                clientesDia.getClientes().get(i).setFrec_desc_str(camposEditar.getFrecuencia_desc());
-                clientesDia.getClientes().get(i).setCoor( camposEditar.getCoordenadas() );
-                clientesDia.getClientes().get(i).setEst_cve_n(camposEditar.getEstado());
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    CamposEditar camposEditar = (CamposEditar) data.getExtras().getSerializable("CamposEditar");
+                    int i = getClienteSeleccionado();
 
-                DataTableLC.ClientesOrdenar cli = clientesDia.getClientes().get(i);
+                    //actualizar información en la lista
+                    clientesDia.getClientes().get(i).setFrec_cve_n(camposEditar.getFrecuencia());
+                    clientesDia.getClientes().get(i).setFrec_desc_str(camposEditar.getFrecuencia_desc());
+                    clientesDia.getClientes().get(i).setCoor(camposEditar.getCoordenadas());
+                    clientesDia.getClientes().get(i).setEst_cve_n(camposEditar.getEstado());
 
-                //actualizar información que se muestra
-                TableRow row = (TableRow) vista.findViewWithTag(clienteSeleccionado);
-                ((TextView) row.findViewById(R.id.t_frec)).setText(camposEditar.getFrecuencia_desc());
-                ((TextView) row.findViewById(R.id.t_estatus)).setText(camposEditar.getEstado());
+                    DataTableLC.ClientesOrdenar cli = clientesDia.getClientes().get(i);
 
-                //Actualizar información en la bd
-                String qry = string.formatSql( "SELECT * FROM FRECPUNTEO WHERE CLI_CVEEXT_STR = '{0}' AND DIASEM= '{1}'", cli.getCli_cveext_str(), cli.getDiasem()  );
+                    //actualizar información que se muestra
+                    TableRow row = (TableRow) vista.findViewWithTag(clienteSeleccionado);
+                    ((TextView) row.findViewById(R.id.t_frec)).setText(camposEditar.getFrecuencia_desc());
+                    ((TextView) row.findViewById(R.id.t_estatus)).setText(camposEditar.getEstado());
 
-                ArrayList<DataTableLC.FrecPunteo> dt;
-                String json = BaseLocal.Select(qry,getContext());
-                dt = ConvertirRespuesta.getFrecPunteoJson(json);
+                    //Actualizar información en la bd
+                    String qry = string.formatSql("SELECT * FROM FRECPUNTEO WHERE CLI_CVEEXT_STR = '{0}' AND DIASEM= '{1}'", cli.getCli_cveext_str(), cli.getDiasem());
 
-                if(dt!=null)
-                {
-                    qry = "UPDATE FRECPUNTEO SET SEC={0},FREC_CVE_N= {1},EST_CVE_N = '{2}',COOR = '{3}' WHERE CLI_CVEEXT_STR = '{4}' AND DIASEM= '{5}'";
-                    qry = string.formatSql(qry, cli.getSec(), cli.getFrec_cve_n(), cli.getEst_cve_n(),cli.getCoor(), cli.getCli_cveext_str(), cli.getDiasem() );
-                    BaseLocal.Insert(qry,getContext());
+                    ArrayList<DataTableLC.FrecPunteo> dt;
+                    String json = BaseLocal.Select(qry, getContext());
+                    dt = ConvertirRespuesta.getFrecPunteoJson(json);
+
+                    if (dt != null) {
+                        qry = "UPDATE FRECPUNTEO SET SEC={0},FREC_CVE_N= {1},EST_CVE_N = '{2}',COOR = '{3}' WHERE CLI_CVEEXT_STR = '{4}' AND DIASEM= '{5}'";
+                        qry = string.formatSql(qry, cli.getSec(), cli.getFrec_cve_n(), cli.getEst_cve_n(), cli.getCoor(), cli.getCli_cveext_str(), cli.getDiasem());
+                        BaseLocal.Insert(qry, getContext());
+                    } else {
+                        qry = "INSERT INTO FRECPUNTEO VALUES ('{0}',{1},{2},'{3}','{4}','{5}')";
+                        qry = string.formatSql(qry, cli.getCli_cveext_str(), cli.getSec(), cli.getFrec_cve_n(), cli.getEst_cve_n(), cli.getCoor(), cli.getDiasem());
+
+                        BaseLocal.Insert(qry, getContext());
+                    }
+
+                    Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.d("salida", e.getMessage());
+                    Utils.msgError(getContext(), getString(R.string.error_actCliente), e.getMessage());
                 }
-                else
-                {
-                    qry = "INSERT INTO FRECPUNTEO VALUES ('{0}',{1},{2},'{3}','{4}','{5}')";
-                    qry = string.formatSql( qry, cli.getCli_cveext_str(), cli.getSec(), cli.getFrec_cve_n(), cli.getEst_cve_n(), cli.getCoor(), cli.getDiasem() );
-
-                    BaseLocal.Insert(qry,getContext());
-                }
-
-                Toast.makeText(getContext(), "Cliente actualizado", Toast.LENGTH_SHORT).show();
             }
-            catch (Exception e)
-            {
-                Log.d("salida",e.getMessage());
-                Toast.makeText(getContext(), "Error al actualizar cliente", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
+        }catch (Exception e)
         {
-            Log.d("salida","Actualización cancelada");
-            Toast.makeText(getContext(), "Actualización cancelada", Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_actCliente), e.getMessage());
         }
 
     }
 
     private void guardar()
     {
-        String query,json;
-        String qry;
-
-        ArrayList<DataTableLC.ClientesOrdenar> lvClientes = clientesDia.getClientes();
-        ArrayList<DataTableLC.ClientesOrdenar> lvClientesNoDia = clientesNodia.getClientes();
-
         try
         {
+            String query,json;
+            String qry;
+
+            ArrayList<DataTableLC.ClientesOrdenar> lvClientes = clientesDia.getClientes();
+            ArrayList<DataTableLC.ClientesOrdenar> lvClientesNoDia = clientesNodia.getClientes();
+
             DatabaseHelper databaseHelper = new DatabaseHelper(getContext(), nombreBase, null, 1);
             SQLiteDatabase bd = databaseHelper.getWritableDatabase();
 
@@ -840,7 +871,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
         }
     }
 
@@ -870,28 +901,35 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida","Error al enviar: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al enviar: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_intPeticion), e.getMessage() );
         }
 
     }
 
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
-        if(estado)
-        {
-            if (respuesta != null)
+
+        try {
+
+            if (estado)
             {
-                DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
-                Toast.makeText(getContext(), retVal.getMsj(), Toast.LENGTH_LONG).show();
+                if (respuesta != null)
+                {
+                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+                    Toast.makeText(getContext(), retVal.getMsj(), Toast.LENGTH_LONG).show();
+                } else
+                {
+                    Utils.msgError(getContext(), getString(R.string.error_peticion),"");
+                }
             }
             else
             {
-                Toast.makeText(getContext(), "Error al enviar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
             }
-        }
-        else
+
+        }catch (Exception e)
         {
-            Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_peticion), e.getMessage());
         }
     }
 

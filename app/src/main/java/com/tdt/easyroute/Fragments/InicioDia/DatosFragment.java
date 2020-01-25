@@ -54,8 +54,6 @@ public class DatosFragment extends Fragment {
     private ArrayList<String> al_catalogos;
     private String[] arr_estadoCat;
 
-    private Button b_sincronizar,b_selec,b_deselec,b_salir;
-
     private boolean[] rbSeleccionados;
     private TableLayout tableLayout;
     private LayoutInflater layoutInflater;
@@ -83,33 +81,40 @@ public class DatosFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_datos, container, false);
-        layoutInflater = inflater;
-        viewGral = view;
 
-        mainActivity = (MainActivity) getActivity();
-        startdayFragment = (StartdayFragment) getParentFragment();
+        try {
 
-        b_selec = view.findViewById(R.id.button_selec);
-        b_deselec = view.findViewById(R.id.button_desSelec);
-        b_sincronizar = view.findViewById(R.id.button_sincronizar);
-        b_salir = view.findViewById(R.id.button_salir);
+            Button b_sincronizar,b_salir;
 
-        nombreBase = getActivity().getString( R.string.nombreBD );
+            layoutInflater = inflater;
+            viewGral = view;
 
-        b_sincronizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sincronizar();
-            }
-        });
+            mainActivity = (MainActivity) getActivity();
+            startdayFragment = (StartdayFragment) getParentFragment();
 
-        b_salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.RegresarInicio(getActivity());
-            }
-        });
+            b_sincronizar = view.findViewById(R.id.button_sincronizar);
+            b_salir = view.findViewById(R.id.button_salir);
 
+            nombreBase = getActivity().getString(R.string.nombreBD);
+
+            b_sincronizar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sincronizar();
+                }
+            });
+
+            b_salir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_inidia1),e.getMessage());
+        }
 
         return view;
     }
@@ -145,93 +150,98 @@ public class DatosFragment extends Fragment {
 
     private void obtenerCatalogos()
     {
-        String[] s = catalogos.split(",");
-        al_catalogos = new ArrayList<>();
+        try {
+            String[] s = catalogos.split(",");
+            al_catalogos = new ArrayList<>();
 
-        //AGREGAR LOS CATALOGOS AL ARRAY
-        Collections.addAll(al_catalogos, s);
+            //AGREGAR LOS CATALOGOS AL ARRAY
+            Collections.addAll(al_catalogos, s);
 
-        arr_estadoCat = new String[al_catalogos.size()];
-        rbSeleccionados = new boolean[al_catalogos.size()];
+            arr_estadoCat = new String[al_catalogos.size()];
+            rbSeleccionados = new boolean[al_catalogos.size()];
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_inidia2),e.getMessage());
+        }
     }
 
-    private void mostrarCatalogos()
-    {
+    private void mostrarCatalogos() {
+        try {
+            if (!Boolean.getBoolean(String.valueOf(startdayVM.getActualizoRutaEmpresa()))) {
 
-        if( !Boolean.getBoolean(String.valueOf(startdayVM.getActualizoRutaEmpresa()))  ) {
+                tableLayout = viewGral.findViewById(R.id.tableLayout);
+                tableLayout.removeAllViews();
+                TableRow tr;
 
-            tableLayout = viewGral.findViewById(R.id.tableLayout);
-            tableLayout.removeAllViews();
-            TableRow tr;
+                for (int i = 0; i < al_catalogos.size(); i++) {
+                    tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
 
-            for (int i = 0; i < al_catalogos.size(); i++) {
-                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
+                    RadioButton rb = tr.findViewById(R.id.tabla_radio);
+                    rb.setId(i);
+                    rb.setTag(i);
+                    rb.setOnClickListener(rbListener);
+                    rb.setChecked(true);
 
-                RadioButton rb = tr.findViewById(R.id.tabla_radio);
-                rb.setId(i);
-                rb.setTag(i);
-                rb.setOnClickListener(rbListener);
-                rb.setChecked(true);
+                    ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(al_catalogos.get(i));
+                    ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
 
-                ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(al_catalogos.get(i));
-                ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
+                    ((TextView) tr.findViewById(R.id.tabla_catalogo)).setTypeface(Typeface.DEFAULT);
+                    ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
 
-                ((TextView) tr.findViewById(R.id.tabla_catalogo)).setTypeface(Typeface.DEFAULT);
-                ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
-
-                tableLayout.addView(tr);
-                rbSeleccionados[i] = true;
+                    tableLayout.addView(tr);
+                    rbSeleccionados[i] = true;
+                }
             }
+        } catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_inidia3),e.getMessage());
         }
 
     }
 
     private void sincronizar()
     {
-        if(metodosWS!=null)
-            metodosWS.clear();
-        metodosWS = new ArrayList<>();
-        boolean rbSelec=false;
-        for(int i=0; i<rbSeleccionados.length;i++)
-        {
-            if(rbSeleccionados[i])
-            {
-                rbSelec=true;
+        try {
+            if (metodosWS != null)
+                metodosWS.clear();
+            metodosWS = new ArrayList<>();
+            boolean rbSelec = false;
+            for (int i = 0; i < rbSeleccionados.length; i++) {
+                if (rbSeleccionados[i]) {
+                    rbSelec = true;
 
-                if(tipoRuta.equals("PREVENTA"))
-                {
-                    switch (al_catalogos.get(i))
-                    {
-                        case "Clientes":
-                            metodosWS.add("Obtener"+"ClientesPreventa"+"J");
-                            break;
-                        case "Creditos":
-                            metodosWS.add("Obtener"+"CreditosPreventa"+"J");
-                            break;
-                        case "Direcciones":
-                            metodosWS.add("Obtener"+"DireccionesPreventa"+"J");
-                            break;
-                        default:
-                            metodosWS.add("Obtener"+al_catalogos.get(i)+"J");
-                            break;
+                    if (tipoRuta.equals("PREVENTA")) {
+                        switch (al_catalogos.get(i)) {
+                            case "Clientes":
+                                metodosWS.add("Obtener" + "ClientesPreventa" + "J");
+                                break;
+                            case "Creditos":
+                                metodosWS.add("Obtener" + "CreditosPreventa" + "J");
+                                break;
+                            case "Direcciones":
+                                metodosWS.add("Obtener" + "DireccionesPreventa" + "J");
+                                break;
+                            default:
+                                metodosWS.add("Obtener" + al_catalogos.get(i) + "J");
+                                break;
+                        }
+                    } else {
+                        metodosWS.add("Obtener" + al_catalogos.get(i) + "J");
                     }
                 }
-                else
-                {
-                    metodosWS.add("Obtener"+al_catalogos.get(i)+"J");
-                }
             }
-        }
 
-        if(rbSelec)
+            if (rbSelec) {
+                //Descargar información
+                ConexionWS conexionWS = new ConexionWS(getContext());
+                conexionWS.execute();
+            } else {
+                Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e)
         {
-            //Descargar información
-            ConexionWS conexionWS = new ConexionWS(getContext());
-            conexionWS.execute();
-        }
-        else
-        {
-            Toast.makeText(getContext(), "Debe seleccionar algun elemento", Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_inidia4),e.getMessage());
         }
     }
 
@@ -432,7 +442,7 @@ public class DatosFragment extends Fragment {
 
                     startdayVM.setSincro(true); //actualiza el valor de la variable startday
 
-                    Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
 
                     startdayFragment.goGenerales();
 

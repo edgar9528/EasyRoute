@@ -91,90 +91,103 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
 
         this.setTitle( getResources().getString(R.string.title_buscli));
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
 
-        layoutInflater= getLayoutInflater();
-        vista = getWindow().getDecorView().getRootView();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tableLayout = findViewById(R.id.tableLayout);
-        button_buscar = findViewById(R.id.button_buscar);
-        button_borrar = findViewById(R.id.button_borrar);
-        button_reimp = findViewById(R.id.button_reimp);
-        button_act = findViewById(R.id.button_actualizar);
-        button_seleccionar = findViewById(R.id.button_seleccionar);
-        button_salir = findViewById(R.id.button_salir);
-        et_filtro = findViewById(R.id.et_filtro);
+            layoutInflater = getLayoutInflater();
+            vista = getWindow().getDecorView().getRootView();
 
-        button_salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+            tableLayout = findViewById(R.id.tableLayout);
+            button_buscar = findViewById(R.id.button_buscar);
+            button_borrar = findViewById(R.id.button_borrar);
+            button_reimp = findViewById(R.id.button_reimp);
+            button_act = findViewById(R.id.button_actualizar);
+            button_seleccionar = findViewById(R.id.button_seleccionar);
+            button_salir = findViewById(R.id.button_salir);
+            et_filtro = findViewById(R.id.et_filtro);
 
-        button_buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String filtro= et_filtro.getText().toString();
-                mostrarClientes(filtro.toUpperCase());
-            }
-        });
+            button_salir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
 
-        button_borrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                et_filtro.setText("");
-                mostrarClientes("");
-            }
-        });
+            button_buscar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String filtro = et_filtro.getText().toString();
+                    mostrarClientes(filtro.toUpperCase());
+                }
+            });
 
-        button_reimp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imprimir();
-            }
-        });
+            button_borrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    et_filtro.setText("");
+                    mostrarClientes("");
+                }
+            });
 
-        button_seleccionar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                seleccionar(cli_cve_nSelec);
-            }
-        });
+            button_reimp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imprimir();
+                }
+            });
 
-        button_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actualizaCliente();
-            }
-        });
+            button_seleccionar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    seleccionar(cli_cve_nSelec);
+                }
+            });
 
-        //CONFIGURACION DE UBICACION
+            button_act.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    actualizaCliente();
+                }
+            });
 
-        //Construcción cliente API Google
-        apiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .build();
+            //CONFIGURACION DE UBICACION
+
+            //Construcción cliente API Google
+            apiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this, this)
+                    .addConnectionCallbacks(this)
+                    .addApi(LocationServices.API)
+                    .build();
 
 
-        inicializar();
+            inicializar();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.err_busq1),e.getMessage());
+        }
 
     }
 
     private void inicializar()
     {
-        conf = Utils.ObtenerConf2(getApplication());
-        Day = diaActual();
+        try {
+            conf = Utils.ObtenerConf2(getApplication());
+            Day = diaActual();
 
-        mostrarTitulo();
+            mostrarTitulo();
 
-        InicializarAsync inicializarAsync = new InicializarAsync();
-        inicializarAsync.execute();
+            InicializarAsync inicializarAsync = new InicializarAsync();
+            inicializarAsync.execute();
 
-        if (buscar) {
-            button_seleccionar.setEnabled(false);
+            if (buscar) {
+                button_seleccionar.setEnabled(false);
+            }
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.err_busq1),e.getMessage());
         }
     }
 
@@ -230,7 +243,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
 
     private void cargarClientes()
     {
-
         String consulta;
         try
         {
@@ -252,73 +264,79 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_LONG).show();
+            Utils.msgError(this, getString(R.string.error_cargarInfo),e.getMessage());
         }
     }
 
     private void mostrarTitulo()
     {
-        tableLayout.removeAllViews();
-        TableRow tr;
+        try {
+            tableLayout.removeAllViews();
+            TableRow tr;
 
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_buscarclientes, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_buscarclientes, null);
 
-        ((TextView) tr.findViewById(R.id.t_idExt)).setTypeface(((TextView) tr.findViewById(R.id.t_idExt)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_Negocio)).setTypeface(((TextView) tr.findViewById(R.id.t_Negocio)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_Razon)).setTypeface(((TextView) tr.findViewById(R.id.t_Razon)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_idExt)).setTypeface(((TextView) tr.findViewById(R.id.t_idExt)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_Negocio)).setTypeface(((TextView) tr.findViewById(R.id.t_Negocio)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_Razon)).setTypeface(((TextView) tr.findViewById(R.id.t_Razon)).getTypeface(), Typeface.BOLD);
 
-        tableLayout.addView(tr);
+            tableLayout.addView(tr);
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.error_mostrarInfo),e.getMessage());
+        }
     }
 
     private void mostrarClientes(String filtro)
     {
-        mostrarTitulo();
-        dgClientes=null;
-        cli_cve_nSelec="";
-        if(bsClientes!=null && bsClientes.size()>0)
+        try
         {
-            TableRow tr;
-            DataTableWS.Clientes c;
+            mostrarTitulo();
+            dgClientes = null;
+            cli_cve_nSelec = "";
+            if (bsClientes != null && bsClientes.size() > 0) {
+                TableRow tr;
+                DataTableWS.Clientes c;
 
-            dgClientes = new ArrayList<>();
+                dgClientes = new ArrayList<>();
 
-            for(int i=0; i<bsClientes.size();i++)
-            {
-                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_buscarclientes, null);
-                c= bsClientes.get(i);
+                for (int i = 0; i < bsClientes.size(); i++) {
+                    tr = (TableRow) layoutInflater.inflate(R.layout.tabla_buscarclientes, null);
+                    c = bsClientes.get(i);
 
-                if(!filtro.equals(""))
-                {
+                    if (!filtro.equals("")) {
 
-                    if(c.getCli_cveext_str().toUpperCase().contains(filtro) ||
-                            c.getCli_nombrenegocio_str().toUpperCase().contains(filtro) ||
-                            c.getCli_razonsocial_str().toUpperCase().contains(filtro)   )
-                    {
+                        if (c.getCli_cveext_str().toUpperCase().contains(filtro) ||
+                                c.getCli_nombrenegocio_str().toUpperCase().contains(filtro) ||
+                                c.getCli_razonsocial_str().toUpperCase().contains(filtro)) {
 
+                            ((TextView) tr.findViewById(R.id.t_idExt)).setText(c.getCli_cveext_str());
+                            ((TextView) tr.findViewById(R.id.t_Negocio)).setText(c.getCli_nombrenegocio_str());
+                            ((TextView) tr.findViewById(R.id.t_Razon)).setText(c.getCli_razonsocial_str());
+                            tr.setTag(c.getCli_cve_n());
+                            tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
+
+                            tableLayout.addView(tr);
+                            dgClientes.add(c);
+                        }
+                    } else {
                         ((TextView) tr.findViewById(R.id.t_idExt)).setText(c.getCli_cveext_str());
                         ((TextView) tr.findViewById(R.id.t_Negocio)).setText(c.getCli_nombrenegocio_str());
                         ((TextView) tr.findViewById(R.id.t_Razon)).setText(c.getCli_razonsocial_str());
-                        tr.setTag( c.getCli_cve_n());
+                        tr.setTag(c.getCli_cve_n());
                         tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
 
                         tableLayout.addView(tr);
                         dgClientes.add(c);
                     }
+
+
                 }
-                else
-                {
-                    ((TextView) tr.findViewById(R.id.t_idExt)).setText(c.getCli_cveext_str());
-                    ((TextView) tr.findViewById(R.id.t_Negocio)).setText(c.getCli_nombrenegocio_str());
-                    ((TextView) tr.findViewById(R.id.t_Razon)).setText(c.getCli_razonsocial_str());
-                    tr.setTag( c.getCli_cve_n());
-                    tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
-
-                    tableLayout.addView(tr);
-                    dgClientes.add(c);
-                }
-
-
             }
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.error_mostrarInfo),e.getMessage());
         }
     }
 
@@ -346,7 +364,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 //pinta de azul la fila y actualiza la cve de la fila seccionada
                 tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
                 cli_cve_nSelec=tag;
-
             }
 
         }
@@ -431,7 +448,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                         if (diaVisitar <= 0) {
                             consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "EL CLIENTE NO SE VISITA HOY", "{0}");
                             obtenerUbicacion(consulta);
-                            Toast.makeText(getApplicationContext(), "El cliente no se visita hoy", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.tt_noVisita), Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
@@ -443,13 +460,13 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 finish();
 
             } else {
-                Toast.makeText(getApplicationContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
             }
 
         }catch (Exception e)
         {
             Log.d( "salida","Error: "+e.getMessage());
-            Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(this, getString(R.string.err_busq2),e.getMessage());
         }
     }
 
@@ -483,7 +500,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
 
         }catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(this, getString(R.string.error_ubicacion),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -492,7 +509,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
     {
         try
         {
-
             if(cli_cve_nSelec!="")
             {
                 DataTableWS.Clientes rc=null;
@@ -509,15 +525,13 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 //else
                 //Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(cliente), true);
 
-
             }
             else
-                Toast.makeText(getApplicationContext(), "No ha seleccionado ningún cliente", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(getApplicationContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
         }
         catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(this, getString(R.string.error_imprimir),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -554,13 +568,13 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
             }
             else
             {
-                Toast.makeText(getApplicationContext(), "Debe seleccionar un cliente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
             }
 
         }catch (Exception e)
         {
             Log.d( "salida","Error: "+e.getMessage());
-            Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(this, getString(R.string.error_actCliente),e.getMessage());
         }
     }
 
@@ -619,54 +633,51 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
 
-        if(estado)
-        {
-            if (respuesta != null)
-            {
-                ArrayList<DataTableWS.Clientes> clientes;
-                clientes = ConvertirRespuesta.getClientesJson(respuesta);
+        try {
 
-                if(clientes!=null && clientes.size()>0)
-                {
-                    DataTableWS.Clientes r = clientes.get(0);
+            if (estado) {
+                if (respuesta != null) {
+                    ArrayList<DataTableWS.Clientes> clientes;
+                    clientes = ConvertirRespuesta.getClientesJson(respuesta);
 
-                    try {
+                    if (clientes != null && clientes.size() > 0) {
+                        DataTableWS.Clientes r = clientes.get(0);
 
-                        String consulta=string.formatSql(Querys.Clientes.UpClientes4, r.getCli_cveext_str() , getBool( r.getCli_padre_n() ),
-                                r.getCli_cvepadre_n(),r.getCli_razonsocial_str(), r.getCli_rfc_Str() , getBool( r.getCli_reqfact_n() ) ,r.getCli_nombrenegocio_str(),
-                                r.getCli_nom_str(), r.getCli_app_str(),r.getCli_apm_str(),r.getCli_fnac_dt(), r.getCli_genero_str(),r.getLpre_cve_n(),
-                                r.getNota_cve_n(), r.getFpag_cve_n(), getBool( r.getCli_consigna_n() ) , getBool( r.getCli_credito_n() ) ,r.getCli_montocredito_n(),
-                                r.getCli_plazocredito_n(),r.getCli_credenvases_n(),r.getCli_estcredito_str(), getBool( r.getCli_fba_n()) ,
-                                r.getCli_porcentajefba_n(),r.getRut_cve_n(),r.getNvc_cve_n(),r.getGiro_cve_n(),r.getCli_email_str(),
-                                r.getCli_dirfact_n(), r.getCli_dirent_n(), r.getCli_Tel1_str(),r.getCli_tel2_str(),r.getEmp_cve_n(),
-                                r.getCli_coordenadaini_str(),r.getEst_cve_str(),r.getTcli_cve_n(),r.getCli_lun_n(),
-                                r.getCli_mar_n(), r.getCli_mie_n(), r.getCli_jue_n(), r.getCli_vie_n(),r.getCli_sab_n(),r.getCli_dom_n(),
-                                r.getFrec_cve_n(), getBool( r.getCli_especial_n() ) , getBool( r.getCli_esvallejo_n() ) , r.getNpro_cve_n(),r.getCli_huixdesc_n(),
-                                getBool( r.getCli_eshuix_n() ) , getBool( r.getCli_prospecto_n() ) , getBool( r.getCli_invalidafrecuencia_n() ) , getBool( r.getCli_invalidagps_n() ) ,
-                                getBool( r.getCli_dobleventa_n() ), getBool(r.getCli_comodato_n()) , r.getSeg_cve_n(), getBool( r.getCli_dispersion_n() ) ,
-                                r.getCli_dispersioncant_n(), r.getCli_limitemes_n(), r.getCli_cve_n());
+                        try {
 
-                        BaseLocal.Insert( consulta,getApplicationContext());
+                            String consulta = string.formatSql(Querys.Clientes.UpClientes4, r.getCli_cveext_str(), getBool(r.getCli_padre_n()),
+                                    r.getCli_cvepadre_n(), r.getCli_razonsocial_str(), r.getCli_rfc_Str(), getBool(r.getCli_reqfact_n()), r.getCli_nombrenegocio_str(),
+                                    r.getCli_nom_str(), r.getCli_app_str(), r.getCli_apm_str(), r.getCli_fnac_dt(), r.getCli_genero_str(), r.getLpre_cve_n(),
+                                    r.getNota_cve_n(), r.getFpag_cve_n(), getBool(r.getCli_consigna_n()), getBool(r.getCli_credito_n()), r.getCli_montocredito_n(),
+                                    r.getCli_plazocredito_n(), r.getCli_credenvases_n(), r.getCli_estcredito_str(), getBool(r.getCli_fba_n()),
+                                    r.getCli_porcentajefba_n(), r.getRut_cve_n(), r.getNvc_cve_n(), r.getGiro_cve_n(), r.getCli_email_str(),
+                                    r.getCli_dirfact_n(), r.getCli_dirent_n(), r.getCli_Tel1_str(), r.getCli_tel2_str(), r.getEmp_cve_n(),
+                                    r.getCli_coordenadaini_str(), r.getEst_cve_str(), r.getTcli_cve_n(), r.getCli_lun_n(),
+                                    r.getCli_mar_n(), r.getCli_mie_n(), r.getCli_jue_n(), r.getCli_vie_n(), r.getCli_sab_n(), r.getCli_dom_n(),
+                                    r.getFrec_cve_n(), getBool(r.getCli_especial_n()), getBool(r.getCli_esvallejo_n()), r.getNpro_cve_n(), r.getCli_huixdesc_n(),
+                                    getBool(r.getCli_eshuix_n()), getBool(r.getCli_prospecto_n()), getBool(r.getCli_invalidafrecuencia_n()), getBool(r.getCli_invalidagps_n()),
+                                    getBool(r.getCli_dobleventa_n()), getBool(r.getCli_comodato_n()), r.getSeg_cve_n(), getBool(r.getCli_dispersion_n()),
+                                    r.getCli_dispersioncant_n(), r.getCli_limitemes_n(), r.getCli_cve_n());
 
-                        Toast.makeText(getApplicationContext(), "Cliente actualizado", Toast.LENGTH_SHORT).show();
-                        onBackPressed();
+                            BaseLocal.Insert(consulta, getApplicationContext());
 
+                            Toast.makeText(getApplicationContext(), getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+
+                        } catch (Exception e) {
+                            Log.d("salida", "Error: " + e.getMessage());
+                            Utils.msgError(this, getString(R.string.error_peticion),e.getMessage());
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Log.d("salida", "Error: "+e.getMessage());
-                        Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.tt_noInformacion), Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(getApplicationContext(), respuesta, Toast.LENGTH_LONG).show();
             }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "No se encontro el cliente", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
+        }catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(), respuesta, Toast.LENGTH_LONG).show();
+            Utils.msgError(this, getString(R.string.error_peticion),e.getMessage());
         }
     }
 

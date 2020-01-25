@@ -1,7 +1,6 @@
 package com.tdt.easyroute;
 
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,13 +10,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
@@ -80,56 +75,45 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button button_sesion;
-        nombreBase = getString( R.string.nombreBD );
+        try {
 
-        crearBaseLocal();
+            Button button_sesion;
+            nombreBase = getString(R.string.nombreBD);
 
-        button_sesion =  findViewById(R.id.Blogin);
-        ti_usuario =  findViewById(R.id.TIusername);
-        ti_contrasena = findViewById(R.id.TIpassword);
-        iv_logo = findViewById(R.id.imageView);
+            button_sesion = findViewById(R.id.Blogin);
+            ti_usuario = findViewById(R.id.TIusername);
+            ti_contrasena = findViewById(R.id.TIpassword);
+            iv_logo = findViewById(R.id.imageView);
 
-        ti_usuario.setText("AGUTIERREZ");
-        ti_contrasena.setText("772");
+            ti_usuario.setText("AGUTIERREZ");
+            ti_contrasena.setText("772");
 
-        //AGUTIERREZ
-        //772
+            //AGUTIERREZ -  victore
+            //772        -  04321
 
-        //victore
-        //04321
-
-        button_sesion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    clickBotonIniciar();
-            }
-        });
-
-        //Doble click en imagen
-        iv_logo.setOnTouchListener(new View.OnTouchListener() {
-            private GestureDetector gestureDetector = new GestureDetector(LoginActivity.this, new GestureDetector.SimpleOnGestureListener() {
+            button_sesion.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onDoubleTap(MotionEvent e) {
-
-                    Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
-                    intent.putExtra("admin", true);
-                    startActivity(intent);
-
-                    return super.onDoubleTap(e);
+                public void onClick(View v) {
+                    clickBotonIniciar();
                 }
             });
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //un click
+            //Doble click en imagen
+            iv_logo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
+                    intent.putExtra("admin", true);
+                    startActivity(intent);
+                }
+            });
 
-                //Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
-                //startActivity(intent);
+            crearBaseLocal();
 
-                gestureDetector.onTouchEvent(event);
-                return true;
-            }});
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.error1), e.getMessage());
+        }
 
     }
 
@@ -185,9 +169,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                         piPass.setValue(pass);
                         propertyInfos.add(piPass);
 
-                        //victore
-                        //MAA0ADMAMgAxAA==
-
                         //conexion con el metodo
                         ConexionWS_JSON conexionWS = new ConexionWS_JSON(LoginActivity.this, "ValidarUsuarioJ");
                         conexionWS.delegate = LoginActivity.this;
@@ -202,55 +183,58 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
             }
             else
-                Toast.makeText(LoginActivity.this, "Rellena todos los campos", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.tt_camposVacios), Toast.LENGTH_LONG).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.d(TAG,e.getMessage());
+            Utils.msgError(this, getString(R.string.error2), e.getMessage());
         }
     }
 
-
     public void obtenerRoles()
     {
-        Log.d("salida","OBTENIENDO ROLES...");
+        try {
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
-        SQLiteDatabase bd = databaseHelper.getReadableDatabase();
+            Log.d("salida", "OBTENIENDO ROLES...");
 
-        String cons = string.formatSql( Querys.Login.PermisosEfectivos3, String.valueOf( u.getRol()) );
-        Cursor cursor2 = bd.rawQuery(cons,null);
+            DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
+            SQLiteDatabase bd = databaseHelper.getReadableDatabase();
 
-        if(cursor2!=null) {
+            String cons = string.formatSql(Querys.Login.PermisosEfectivos3, String.valueOf(u.getRol()));
+            Cursor cursor2 = bd.rawQuery(cons, null);
 
-            Log.d("salida","CURSOR CON INFORMACION:"+cursor2.getCount());
+            if (cursor2 != null) {
 
-            List<Permisos> permisos = new ArrayList<>();
+                Log.d("salida", "CURSOR CON INFORMACION:" + cursor2.getCount());
 
-            while ( cursor2.moveToNext()){
+                List<Permisos> permisos = new ArrayList<>();
 
-                Permisos permiso = new Permisos();
+                while (cursor2.moveToNext()) {
 
-                permiso.setMod_cve_n( Integer.parseInt(cursor2.getString(0)) );
-                permiso.setMod_desc_str(cursor2.getString(1));
-                permiso.setLectura(Byte.parseByte(cursor2.getString(2)));
-                permiso.setEscritura(Byte.parseByte(cursor2.getString(3)));
-                permiso.setModificacion(Byte.parseByte(cursor2.getString(4)));
-                permiso.setEliminacion(Byte.parseByte(cursor2.getString(5)));
+                    Permisos permiso = new Permisos();
 
-                permisos.add(permiso);
+                    permiso.setMod_cve_n(Integer.parseInt(cursor2.getString(0)));
+                    permiso.setMod_desc_str(cursor2.getString(1));
+                    permiso.setLectura(Byte.parseByte(cursor2.getString(2)));
+                    permiso.setEscritura(Byte.parseByte(cursor2.getString(3)));
+                    permiso.setModificacion(Byte.parseByte(cursor2.getString(4)));
+                    permiso.setEliminacion(Byte.parseByte(cursor2.getString(5)));
+
+                    permisos.add(permiso);
+                }
+
+                u.setPermisos(permisos);
+
+            } else {
+                Log.d("salida", "CURSOR VACIO");
             }
 
-            u.setPermisos(permisos);
+            bd.close();
 
-        }
-        else
+        }catch (Exception e)
         {
-            Log.d("salida","CURSOR VACIO");
+            Utils.msgError(this, getString(R.string.error3), e.getMessage());
         }
-
-        bd.close();
     }
 
     public void almacenarInformacion()
@@ -287,7 +271,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                     bd.execSQL(con);
 
                     Log.d("salida","El usuario se encuentra bloqueado o deshabilitado");
-                    Toast.makeText(this, "El usuario se encuentra bloqueado o deshabilitado", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.tt_login2), Toast.LENGTH_LONG).show();
                 }
                 else
                 {
@@ -304,36 +288,42 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
         }catch (Exception e)
         {
-            bd.close();
+            if(bd.isOpen())
+                bd.close();
+            Utils.msgError(this, getString(R.string.error4), e.getMessage());
             Log.d(TAG,"Error: "+e.toString());
-            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     public void iniciarSesion()
     {
-        //el usuario fue encontrado, aqui se verifica que permisos tiene
-        Log.d("salida","inicia sesion: "+u.getNombrerol());
+        try {
 
-        switch (u.getNombrerol())
+            //el usuario fue encontrado, aqui se verifica que permisos tiene
+            Log.d("salida", "inicia sesion: " + u.getNombrerol());
+
+            switch (u.getNombrerol()) {
+                case "ALMACEN LLENO":
+                    Log.d(TAG, "inicia almacen lleno");
+                    break;
+                case "ALMACEN VACIO":
+                    Log.d(TAG, "inicia almacen vacio");
+                    break;
+                case "ASESOR DE VENTAS":
+                case "SUPERVISOR DE VENTAS":
+                    Log.d(TAG, "inicia menu completo");
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtra("usuario", u);
+                    startActivity(intent);
+                    break;
+                default:
+                    Toast.makeText(this,  getString(R.string.tt_login3), Toast.LENGTH_LONG).show();
+                    break;
+
+            }
+        }catch (Exception e)
         {
-            case "ALMACEN LLENO":
-                    Log.d(TAG,"inicia almacen lleno");
-                break;
-            case "ALMACEN VACIO":
-                Log.d(TAG,"inicia almacen vacio");
-                break;
-            case "ASESOR DE VENTAS":
-            case "SUPERVISOR DE VENTAS":
-                Log.d(TAG,"inicia menu completo");
-                Intent intent = new Intent(this,MainActivity.class);
-                intent.putExtra("usuario", u);
-                startActivity(intent);
-                break;
-            default:
-                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
-                break;
-
+            Utils.msgError(this,getString(R.string.error2),e.getMessage());
         }
     }
 
@@ -405,9 +395,10 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
         }catch (Exception e)
         {
-            bd.close();
-            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.d(TAG,"Error actUser"+e.toString());
+            if(bd.isOpen())
+                bd.close();
+
+            Utils.msgError(this, getString(R.string.error5),e.getMessage() );
         }
 
     }
@@ -505,7 +496,11 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
         }catch (Exception e)
         {
-            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            if(bd.isOpen())
+                bd.close();
+
+            Utils.msgError(this, getString(R.string.error6),e.getMessage());
+
             Log.d(TAG,"Error actUser"+e.toString());
         }
 
@@ -516,49 +511,55 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
         SQLiteDatabase bd = databaseHelper.getReadableDatabase();
 
-        String consulta = string.formatSql(Querys.Login.SeleccionarUsuario,user,pass);
+        try {
 
-        Cursor cursor = bd.rawQuery(consulta,null);
+            String consulta = string.formatSql(Querys.Login.SeleccionarUsuario, user, pass);
 
-        boolean encontro=false;
+            Cursor cursor = bd.rawQuery(consulta, null);
 
-        while(cursor.moveToNext()){
-            encontro=true;
-            Log.d(TAG,"Encontro usuario local");
+            boolean encontro = false;
 
-            u= new Usuario();
+            while (cursor.moveToNext()) {
+                encontro = true;
+                Log.d(TAG, "Encontro usuario local");
 
-            u.setUsuario( cursor.getString(0) );
-            u.setContrasena( cursor.getString(1) );
-            u.setNombre( cursor.getString(2) );
-            u.setAppat( cursor.getString(3) );
-            u.setApmat( cursor.getString(4) );
-            u.setRol( Integer.parseInt(cursor.getString(5)) );
-            u.setEstatus( cursor.getString(6) );
-            u.setBloqueado( Byte.parseByte( cursor.getString(8) ) );
-            //u.setEsadmin();
-            //u.setNombrerol();
-        }
+                u = new Usuario();
 
-        if(encontro)
-        {
-            consulta = string.formatSql(Querys.Login.ObtenerRol, String.valueOf( u.getRol() ) );
-            cursor = bd.rawQuery(consulta,null);
-
-            while(cursor.moveToNext()) {
-                u.setNombrerol( cursor.getString(1) );
-                u.setEsadmin( Byte.valueOf( cursor.getString(2) ) );
+                u.setUsuario(cursor.getString(0));
+                u.setContrasena(cursor.getString(1));
+                u.setNombre(cursor.getString(2));
+                u.setAppat(cursor.getString(3));
+                u.setApmat(cursor.getString(4));
+                u.setRol(Integer.parseInt(cursor.getString(5)));
+                u.setEstatus(cursor.getString(6));
+                u.setBloqueado(Byte.parseByte(cursor.getString(8)));
+                //u.setEsadmin();
+                //u.setNombrerol();
             }
-            obtenerRoles();
-        }
-        else
+
+            if (encontro) {
+                consulta = string.formatSql(Querys.Login.ObtenerRol, String.valueOf(u.getRol()));
+                cursor = bd.rawQuery(consulta, null);
+
+                while (cursor.moveToNext()) {
+                    u.setNombrerol(cursor.getString(1));
+                    u.setEsadmin(Byte.valueOf(cursor.getString(2)));
+                }
+                obtenerRoles();
+            } else {
+
+                u = null;
+                Log.d(TAG, "No encontro usuario local");
+            }
+
+            bd.close();
+        }catch (Exception e)
         {
+            if(bd.isOpen())
+                bd.close();
 
-            u=null;
-            Log.d(TAG,"No encontro usuario local");
+            Utils.msgError(this, getString(R.string.error7), e.getMessage());
         }
-
-        bd.close();
     }
 
     private void crearBaseLocal()
@@ -571,8 +572,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         }catch (Exception e)
         {
             Log.d("salida",e.toString());
-            Log.d("salida",e.getMessage());
-            Toast.makeText(this, "Error al crear base", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -580,42 +579,44 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
 
-        if(estado)
-        {
-            if (respuesta != null) {
-                Log.d(TAG, "Encontro usuario ws");
-                //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
+        try {
 
-                u = ConvertirRespuesta.getUsuarioJson(respuesta);
+            if (estado) {
+                if (respuesta != null) {
+                    Log.d(TAG, "Encontro usuario ws");
+                    //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
 
-                Log.d( "salida","usuario permisos: "+u.getPermisos().get(0).getMod_desc_str() );
+                    u = ConvertirRespuesta.getUsuarioJson(respuesta);
 
-                almacenarInformacion();
-            }
-            else
-            {
-                Log.d(TAG, "No encontro usuario ws");
+                    Log.d("salida", "usuario permisos: " + u.getPermisos().get(0).getMod_desc_str());
 
-                DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
-                SQLiteDatabase bd = databaseHelper.getWritableDatabase();
+                    almacenarInformacion();
+                } else {
+                    Log.d(TAG, "No encontro usuario ws");
 
-                if (bd != null) {
-                    String cad = Querys.Trabajo.InsertBitacoraHHSesion;
-                    String con = string.formatSql(cad, user, string.formatSql("INICIO DE SESION V{0}", Utils.Version()), "USUARIO O CONTRASEÑA INVALIDOS", rut_cve, "");
+                    DatabaseHelper databaseHelper = new DatabaseHelper(getApplication(), nombreBase, null, 1);
+                    SQLiteDatabase bd = databaseHelper.getWritableDatabase();
 
-                    bd.execSQL(con);
+                    if (bd != null) {
+                        String cad = Querys.Trabajo.InsertBitacoraHHSesion;
+                        String con = string.formatSql(cad, user, string.formatSql("INICIO DE SESION V{0}", Utils.Version()), "USUARIO O CONTRASEÑA INVALIDOS", rut_cve, "");
+
+                        bd.execSQL(con);
+                    }
+
+                    if (bd.isOpen())
+                        bd.close();
+
+                    Log.d(TAG, "usuario o contraseña incorrectos");
+                    Toast.makeText(this,  getString(R.string.tt_login1), Toast.LENGTH_LONG).show();
                 }
-
-                if(bd.isOpen())
-                    bd.close();
-
-                Log.d(TAG, "usuario o contraseña incorrectos");
-                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
             }
-        }
-        else
+
+        }catch (Exception e)
         {
-            Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
+            Utils.msgError(this, getString(R.string.error_peticion),e.getMessage());
         }
 
     }

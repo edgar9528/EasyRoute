@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
         catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(), "Eror: "+e.toString(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(this,getString(R.string.err_main1),e.getMessage());
             Log.d("salida","Error: "+e.toString());
         }
 
@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
         catch (Exception e)
         {
-            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(this, getString(R.string.err_main2),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -447,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         }catch (Exception e)
         {
-            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(this,getString(R.string.err_main3),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -495,7 +495,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         }catch (Exception e)
         {
-            Toast.makeText(this, "Error al validar menu", Toast.LENGTH_SHORT).show();
+            Utils.msgError(this,getString(R.string.err_main3),e.getMessage());
         }
     }
 

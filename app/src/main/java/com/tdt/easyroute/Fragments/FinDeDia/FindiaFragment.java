@@ -70,22 +70,30 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_findia, container, false);
 
-        mainActivity = (MainActivity) getActivity();
-        user = mainActivity.getUsuario();
-        conf = Utils.ObtenerConf(getActivity().getApplication());
-        nombreBase = getActivity().getString( R.string.nombreBD );
+        try {
 
-        //transmitir 0
-        //borrar datos 1
-        //fin de ventas 2
+            mainActivity = (MainActivity) getActivity();
+            user = mainActivity.getUsuario();
+            conf = Utils.ObtenerConf(getActivity().getApplication());
+            nombreBase = getActivity().getString(R.string.nombreBD);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                verificarOpcion();
-            }
-        }, 150);
+            //transmitir 0
+            //borrar datos 1
+            //fin de ventas 2
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    verificarOpcion();
+                }
+            }, 150);
+
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_find1 ), e.getMessage());
+        }
 
         return view;
     }
@@ -111,9 +119,10 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
     private void enviarCambios()
     {
-        String ds;
         try
         {
+            String ds;
+
             // Establecer ventas a enviar
             BaseLocal.Insert("update ventas set trans_est_n=1 where trans_est_n=0",getContext());
             // Leer Ventas
@@ -183,7 +192,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_intPeticion), e.getMessage() );
         }
     }
 
@@ -216,84 +225,81 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
         }catch (Exception e)
         {
-
+            Utils.msgError(getContext(), getString(R.string.err_find2), e.getMessage());
         }
     }
 
     private void solicitarUsuario()
     {
+        try {
 
-        LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
-        View view = layoutInflater.inflate(R.layout.dialog,null);
-        final EditText et_user =  view.findViewById(R.id.ti_dialogUser);
-        final EditText et_pass =  view.findViewById(R.id.ti_dialogPass);
+            LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
+            View view = layoutInflater.inflate(R.layout.dialog, null);
+            final EditText et_user = view.findViewById(R.id.ti_dialogUser);
+            final EditText et_pass = view.findViewById(R.id.ti_dialogPass);
 
-        final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle(getString(R.string.msg_autoriza))
-                .setView(view)
-                .setPositiveButton(getString(R.string.bt_aceptar), null)
-                .setNegativeButton(getString(R.string.bt_cancelar), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Utils.RegresarInicio(getActivity());
-                    }
-                })
-                .setCancelable(false)
-                .create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        dialog.show();
-
-        Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String usuario = et_user.getText().toString();
-                String contra = et_pass.getText().toString();
-
-                if(!usuario.isEmpty() && !contra.isEmpty())
-                {
-                    boolean validar = validarUsuario(usuario,contra);
-
-                    if(validar)
-                    {
-                        Permisos p = null;
-                        Usuario AuxU = null;
-
-                        if(userValidar.getPermisos()!=null)
-                        {
-                            for(int i=0; i<userValidar.getPermisos().size();i++)
-                                if( userValidar.getPermisos().get(i).getMod_desc_str().equals("CONFIGURACION") && userValidar.getPermisos().get(i).getEliminacion()>0)
-                                    p=userValidar.getPermisos().get(i);
-
-                            if(p!=null)
-                                AuxU=userValidar;
-                        }
-
-                        if(userValidar.getUsuario().equals("123")&& Utils.DesEncriptar( userValidar.getContrasena()).equals("123"))
-                        {
-                            AuxU=userValidar;
-                        }
-
-                        if(AuxU!=null)
-                        {
-                            eliminarDatos();
-                            dialog.dismiss();
+            final AlertDialog dialog = new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.msg_autoriza))
+                    .setView(view)
+                    .setPositiveButton(getString(R.string.bt_aceptar), null)
+                    .setNegativeButton(getString(R.string.bt_cancelar), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
                             Utils.RegresarInicio(getActivity());
                         }
-                        else
-                        {
-                            Toast.makeText(getContext(), "No tiene permisos para esta opción", Toast.LENGTH_SHORT).show();
-                            Utils.RegresarInicio(getActivity());
-                        }
-                    }
+                    })
+                    .setCancelable(false)
+                    .create();
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            dialog.show();
 
+            Button b = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String usuario = et_user.getText().toString();
+                    String contra = et_pass.getText().toString();
+
+                    if (!usuario.isEmpty() && !contra.isEmpty()) {
+                        boolean validar = validarUsuario(usuario, contra);
+
+                        if (validar) {
+                            Permisos p = null;
+                            Usuario AuxU = null;
+
+                            if (userValidar.getPermisos() != null) {
+                                for (int i = 0; i < userValidar.getPermisos().size(); i++)
+                                    if (userValidar.getPermisos().get(i).getMod_desc_str().equals("CONFIGURACION") && userValidar.getPermisos().get(i).getEliminacion() > 0)
+                                        p = userValidar.getPermisos().get(i);
+
+                                if (p != null)
+                                    AuxU = userValidar;
+                            }
+
+                            if (userValidar.getUsuario().equals("123") && Utils.DesEncriptar(userValidar.getContrasena()).equals("123")) {
+                                AuxU = userValidar;
+                            }
+
+                            if (AuxU != null) {
+                                eliminarDatos();
+                                dialog.dismiss();
+                                Utils.RegresarInicio(getActivity());
+                            } else {
+                                Toast.makeText(getContext(),  getString(R.string.tt_noPermisos), Toast.LENGTH_SHORT).show();
+                                Utils.RegresarInicio(getActivity());
+                            }
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.tt_login1), Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else
-                {
-                    Toast.makeText(getContext(), "Ingrese un usuario y/o contraseña", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+            });
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_find3), e.getMessage() );
+        }
 
     }
 
@@ -315,13 +321,13 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                 if(!ru.getEst_cve_str().equals("H") )
                 {
 
-                    Toast.makeText(getContext(), "Usuario o password incorrecto [E]", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.tt_login1) +" [E]", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
                 if(!ru.getUsu_bloqueado_n().equals("0"))
                 {
-                    Toast.makeText(getContext(), "Usuario o password incorrecto [B]", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.tt_login1) +" [B]", Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
@@ -345,13 +351,13 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                 }
                 else
                 {
-                    Toast.makeText(getContext(), "El usuario no tiene permisos para este modulo.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.tt_noPermisos), Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
             else
             {
-                Toast.makeText(getContext(), "Usuario o contraseña invalidos.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.tt_login1), Toast.LENGTH_SHORT).show();
                 Log.d("salida","entro aqui, incorrecto");
                 return false;
             }
@@ -361,7 +367,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         }
         catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error al validar usuario", Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_find4),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
             return false;
         }
@@ -431,11 +437,11 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
             db.setTransactionSuccessful();
 
-            Toast.makeText(getContext(), "Datos eliminados con exito", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_LONG).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error el eliminar datos: "+e.toString(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage() );
         }
         finally {
             if(db.isOpen())
@@ -448,15 +454,15 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
     private void finVentas()
     {
-        if ((!conf.isDescarga()) && conf.getPreventa()!=1)
-        {
+        try {
+            if ((!conf.isDescarga()) && conf.getPreventa() != 1) {
 
-            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle(getString(R.string.msg_findia));
-            dialogo1.setMessage(getString(R.string.msg_findiaMen));
-            dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+                dialogo1.setTitle(getString(R.string.msg_findia));
+                dialogo1.setMessage(getString(R.string.msg_findiaMen));
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
 
 
                         AlertDialog.Builder dialogo2 = new AlertDialog.Builder(getContext());
@@ -474,19 +480,21 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
                             }
                         });
                         dialogo2.show();
-                }
-            });
-            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-                    Utils.RegresarInicio(getActivity());
-                }
-            });
-            dialogo1.show();
+                    }
+                });
+                dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        Utils.RegresarInicio(getActivity());
+                    }
+                });
+                dialogo1.show();
 
-        }
-        else
+            } else {
+                obtenerUbicacion();
+            }
+        }catch (Exception e)
         {
-            obtenerUbicacion();
+            Utils.msgError(getContext(), getString(R.string.err_find6), e.getMessage());
         }
     }
 
@@ -521,8 +529,7 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.d("salida","Error: "+e.getMessage());
+            Utils.msgError(getContext(), getString(R.string.error_ubicacion), e.getMessage());
             Utils.RegresarInicio(getActivity());
         }
     }
@@ -546,11 +553,11 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
             db.setTransactionSuccessful();
 
-            Toast.makeText(getContext(), "Cierre de día completo", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.tt_cierreDia), Toast.LENGTH_LONG).show();
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al cerrar día: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(),getString(R.string.err_find5), e.getMessage());
             Utils.RegresarInicio(getActivity());
         }
         finally
@@ -595,85 +602,75 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al enviar bitacora", Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_bitacora), e.getMessage() );
             Utils.RegresarInicio(getActivity());
         }
     }
 
     @Override
-    public void recibirPeticion(boolean estado, String respuesta) {
+    public void recibirPeticion(boolean estado, String respuesta)
+    {
+        try {
 
-        if(estado)
-        {
-            //recibio información
-            if (respuesta != null)
-            {
-                if(peticion.equals("enviarBitacora"))
-                {
-                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+            if (estado) {
+                //recibio información
+                if (respuesta != null) {
+                    if (peticion.equals("enviarBitacora")) {
+                        DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
 
-                    if(retVal!=null)
-                    {
-                        if(retVal.getRet().equals("true"))
-                        {
-                            actualizarBitacora(true);
-                        }
-                        else
+                        if (retVal != null) {
+                            if (retVal.getRet().equals("true")) {
+                                actualizarBitacora(true);
+                            } else
+                                actualizarBitacora(false);
+                        } else {
                             actualizarBitacora(false);
+                        }
+                    } else if (peticion.equals("RecibirDatos")) {
+                        DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+
+                        if (retVal != null) {
+                            if (retVal.getRet().equals("true"))
+                                establecerEnviado(retVal.getMsj());
+                            else
+                                establecerNoEnviado(retVal.getMsj());
+                        } else {
+                            establecerNoEnviado("No se encontro información");
+                        }
                     }
-                    else
-                    {
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.tt_errorTrans), Toast.LENGTH_LONG).show();
+                    if (peticion.equals("enviarBitacora"))
                         actualizarBitacora(false);
-                    }
-                }
-                else
-                if(peticion.equals("RecibirDatos"))
-                {
-                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
-
-                    if(retVal!=null)
-                    {
-                        if(retVal.getRet().equals("true"))
-                            establecerEnviado(retVal.getMsj());
-                        else
-                            establecerNoEnviado(retVal.getMsj());
-                    }
-                    else
-                    {
+                    if (peticion.equals("RecibirDatos"))
                         establecerNoEnviado("No se encontro información");
-                    }
                 }
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Error transmitir:", Toast.LENGTH_LONG).show();
-                if(peticion.equals("enviarBitacora"))
+            } else {
+                Toast.makeText(getContext(), getString(R.string.tt_errorTrans) +" " + respuesta, Toast.LENGTH_SHORT).show();
+                if (peticion.equals("enviarBitacora"))
                     actualizarBitacora(false);
-                if(peticion.equals("RecibirDatos"))
-                    establecerNoEnviado("No se encontro información");
-            }
-        }
-        else
-        {
-            Toast.makeText(getContext(),"Error al transmitir: "+ respuesta, Toast.LENGTH_SHORT).show();
-            if(peticion.equals("enviarBitacora"))
-                actualizarBitacora(false);
 
-            if(peticion.equals("RecibirDatos"))
-                establecerNoEnviado(respuesta);
+                if (peticion.equals("RecibirDatos"))
+                    establecerNoEnviado(respuesta);
+            }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_peticion), e.getMessage());
         }
     }
 
     private void actualizarBitacora(boolean enviado)
     {
-        if(enviado)
+        try {
+            if (enviado) {
+                // Establecer Bitacora como enviadas
+                BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            } else {
+                BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1", getContext());
+            }
+        }catch (Exception e)
         {
-            // Establecer Bitacora como enviadas
-            BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        }
-        else
-        {
-            BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
         }
 
         Utils.RegresarInicio(getActivity());
@@ -681,38 +678,51 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
 
     private void establecerEnviado(String men)
     {
-        // Establecer ventas como enviadas
-        BaseLocal.Insert("update ventas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Creditos como enviados
-        BaseLocal.Insert("update creditos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Pagos como enviados
-        BaseLocal.Insert("update Pagos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Visitas como enviadas
-        BaseLocal.Insert("update visitas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Bitacora como enviadas
-        BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        try {
+            // Establecer ventas como enviadas
+            BaseLocal.Insert("update ventas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Creditos como enviados
+            BaseLocal.Insert("update creditos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Pagos como enviados
+            BaseLocal.Insert("update Pagos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Visitas como enviadas
+            BaseLocal.Insert("update visitas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Bitacora como enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
 
-        Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_LONG).show();
-        Log.d("salida","servidor: "+men);
+            Toast.makeText(getContext(), getString(R.string.msg_servidor)+ " "+ men, Toast.LENGTH_LONG).show();
+            Log.d("salida", "servidor: " + men);
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar),e.getMessage());
+        }
 
         Utils.RegresarInicio(getActivity());
 
     }
 
-    private void establecerNoEnviado(String men)
-    {
-        // Establecer ventas como no enviadas
-        BaseLocal.Insert("update ventas set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Creditos como no enviados
-        BaseLocal.Insert("update creditos set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Pagos como no enviados
-        BaseLocal.Insert("update Pagos set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Visitas como no enviadas
-        BaseLocal.Insert("update visitas set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Bitacora como no enviadas
-        BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
-        Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_LONG).show();
-        Log.d("salida","servidor: "+men);
+    private void establecerNoEnviado(String men) {
+
+        try {
+
+            // Establecer ventas como no enviadas
+            BaseLocal.Insert("update ventas set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Creditos como no enviados
+            BaseLocal.Insert("update creditos set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Pagos como no enviados
+            BaseLocal.Insert("update Pagos set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Visitas como no enviadas
+            BaseLocal.Insert("update visitas set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Bitacora como no enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1", getContext());
+            Toast.makeText(getContext(), getString(R.string.msg_servidor)+ " "+ men, Toast.LENGTH_LONG).show();
+            Log.d("salida", "servidor: " + men);
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar),e.getMessage());
+        }
 
         Utils.RegresarInicio(getActivity());
     }

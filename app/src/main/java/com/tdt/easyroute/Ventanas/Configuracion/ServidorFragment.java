@@ -23,6 +23,7 @@ import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
+import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.Model.Usuario;
@@ -72,7 +73,6 @@ public class ServidorFragment extends Fragment {
 
             inicializar();
 
-
             button_selec = view.findViewById(R.id.button_selec);
             button_deselec = view.findViewById(R.id.button_desSelec);
             button_sinc = view.findViewById(R.id.button_sincronizar);
@@ -114,7 +114,7 @@ public class ServidorFragment extends Fragment {
                     }
                     else
                     {
-                        Toast.makeText(getContext(), "Debe seleccionar algun elemento", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -130,9 +130,8 @@ public class ServidorFragment extends Fragment {
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf4),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
-
         }
 
 
@@ -166,7 +165,7 @@ public class ServidorFragment extends Fragment {
         }
         catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf5),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
 
@@ -174,25 +173,32 @@ public class ServidorFragment extends Fragment {
 
     private void mostrarCatalogos()
     {
-        tableLayout = viewGral.findViewById(R.id.tableLayout);
-        tableLayout.removeAllViews();
-        TableRow tr;
+        try {
 
-        for (int i = 0; i < lista_catalogos.size(); i++) {
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
 
-            RadioButton rb = tr.findViewById(R.id.tabla_radio);
-            rb.setId(i);
-            rb.setTag(i);
-            rb.setOnClickListener(rbListener);
+            tableLayout = viewGral.findViewById(R.id.tableLayout);
+            tableLayout.removeAllViews();
+            TableRow tr;
 
-            ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(lista_catalogos.get(i));
-            ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
-            ((TextView) tr.findViewById(R.id.tabla_catalogo)).setTypeface(Typeface.DEFAULT);
-            ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
+            for (int i = 0; i < lista_catalogos.size(); i++) {
+                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
 
-            tableLayout.addView(tr);
-            rbSeleccionados[i]=false;
+                RadioButton rb = tr.findViewById(R.id.tabla_radio);
+                rb.setId(i);
+                rb.setTag(i);
+                rb.setOnClickListener(rbListener);
+
+                ((TextView) tr.findViewById(R.id.tabla_catalogo)).setText(lista_catalogos.get(i));
+                ((TextView) tr.findViewById(R.id.tabla_estado)).setText(arr_estadoCat[i]);
+                ((TextView) tr.findViewById(R.id.tabla_catalogo)).setTypeface(Typeface.DEFAULT);
+                ((TextView) tr.findViewById(R.id.tabla_estado)).setTypeface(Typeface.DEFAULT);
+
+                tableLayout.addView(tr);
+                rbSeleccionados[i] = false;
+            }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_conf6),e.getMessage());
         }
     }
 
@@ -389,7 +395,7 @@ public class ServidorFragment extends Fragment {
             {
                 if(almacenado)
                 {
-                    Toast.makeText(context, "Información actualizada correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -855,6 +861,7 @@ public class ServidorFragment extends Fragment {
                 almacenado=true;
             }catch (Exception e)
             {
+                Utils.msgError(getContext(), getString(R.string.error_almacenar),e.getMessage());
                 Log.d("salida","Error: "+e.toString());
                 resultado = "Error: "+e.toString();
                 almacenado=false;
@@ -881,8 +888,5 @@ public class ServidorFragment extends Fragment {
 
         return cad;
     }
-
-
-
 
 }

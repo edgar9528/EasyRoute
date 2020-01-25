@@ -50,9 +50,9 @@ public class ConfiguracionActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        cat=getString(R.string.catalogos1);
-
         try {
+
+            cat=getString(R.string.catalogos1);
 
             Intent intent = getIntent();
             user = (Usuario) intent.getSerializableExtra("usuario");
@@ -116,7 +116,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
         }catch (Exception e)
         {
-            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(this, getString(R.string.err_conf1),e.getMessage());
             Log.d("salida","Error: "+e.toString());
         }
     }
@@ -251,7 +251,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
         }catch (Exception e)
         {
-            Log.d("salida",e.toString());
+            Utils.msgError(this, getString(R.string.err_conf2),e.getMessage());
         }
 
     }
@@ -302,7 +302,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
         catch (Exception e)
         {
             Log.d("salida",e.toString());
-            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(this, getString(R.string.err_conf3),e.getMessage());
         }
     }
 

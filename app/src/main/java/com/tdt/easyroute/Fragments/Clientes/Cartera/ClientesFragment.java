@@ -36,9 +36,7 @@ import java.util.ArrayList;
 
 public class ClientesFragment extends Fragment {
 
-    private Button b_imprimir,b_salir;
     private TextView tv_ruta;
-
     private TableLayout tableLayout;
     private LayoutInflater layoutInflater;
     private View vista;
@@ -46,9 +44,7 @@ public class ClientesFragment extends Fragment {
     private CarteraFragment fragment;
 
     private Usuario user;
-
     private ArrayList<DataTableLC.ClientesSaldo> dgCartera=null;
-
     private ClientesVM clientesVM;
 
     @Override
@@ -62,35 +58,44 @@ public class ClientesFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_clientes, container, false);
 
-        MainActivity mainActivity = (MainActivity) getActivity();
-        user = mainActivity.getUsuario();
+        try {
 
-        vista=view;
-        fragment = (CarteraFragment) getParentFragment();
-        layoutInflater = inflater;
+            MainActivity mainActivity = (MainActivity) getActivity();
+            user = mainActivity.getUsuario();
 
-        tableLayout = view.findViewById(R.id.tableLayout);
-        b_imprimir = view.findViewById(R.id.button_imprimir);
-        b_salir = view.findViewById(R.id.button_salir);
-        tv_ruta = view.findViewById(R.id.tv_ruta);
+            Button b_imprimir, b_salir;
 
-        b_salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.RegresarInicio(getActivity());
-            }
-        });
+            vista = view;
+            fragment = (CarteraFragment) getParentFragment();
+            layoutInflater = inflater;
 
-        b_imprimir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imprimir();
-            }
-        });
+            tableLayout = view.findViewById(R.id.tableLayout);
+            b_imprimir = view.findViewById(R.id.button_imprimir);
+            b_salir = view.findViewById(R.id.button_salir);
+            tv_ruta = view.findViewById(R.id.tv_ruta);
+
+            b_salir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
+
+            b_imprimir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imprimir();
+                }
+            });
 
 
-        mostrarTitulo();
-        cargarCartera();
+            mostrarTitulo();
+            cargarCartera();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_cart1), e.getMessage() );
+        }
 
         return view;
     }
@@ -124,47 +129,56 @@ public class ClientesFragment extends Fragment {
         }catch (Exception e)
         {
             Log.d("Salida","Error:"+e.toString());
-            Toast.makeText(getContext(), "Error:"+e.toString(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_cart2), e.getMessage() );
         }
     }
 
     private void mostrarTitulo()
     {
-        tableLayout.removeAllViews();
-        TableRow tr;
+        try {
+            tableLayout.removeAllViews();
+            TableRow tr;
 
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_cartera, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_cartera, null);
 
-        ((TextView) tr.findViewById(R.id.t_cliente)).setTypeface( ((TextView) tr.findViewById(R.id.t_cliente)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_negocio)).setTypeface( ((TextView) tr.findViewById(R.id.t_negocio)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_saldo)).setTypeface( ((TextView) tr.findViewById(R.id.t_saldo)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_razon)).setTypeface( ((TextView) tr.findViewById(R.id.t_razon)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_cliente)).setTypeface(((TextView) tr.findViewById(R.id.t_cliente)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_negocio)).setTypeface(((TextView) tr.findViewById(R.id.t_negocio)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_saldo)).setTypeface(((TextView) tr.findViewById(R.id.t_saldo)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_razon)).setTypeface(((TextView) tr.findViewById(R.id.t_razon)).getTypeface(), Typeface.BOLD);
 
-        tableLayout.addView(tr);
+            tableLayout.addView(tr);
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_cart3), e.getMessage() );
+        }
     }
 
     private void mostrarCartera()
     {
-        mostrarTitulo();
+        try {
+            mostrarTitulo();
 
-        TableRow tr;
-        DataTableLC.ClientesSaldo d;
-        cveSeleccionada="";
+            TableRow tr;
+            DataTableLC.ClientesSaldo d;
+            cveSeleccionada = "";
 
-        for(int i=0; i<dgCartera.size();i++)
+            for (int i = 0; i < dgCartera.size(); i++) {
+                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_cartera, null);
+                d = dgCartera.get(i);
+
+                ((TextView) tr.findViewById(R.id.t_cliente)).setText(d.getCli_cveext_str());
+                ((TextView) tr.findViewById(R.id.t_negocio)).setText(d.getCli_nombrenegocio_str());
+                ((TextView) tr.findViewById(R.id.t_saldo)).setText("$" + Utils.numFormat(d.getSaldo()));
+                ((TextView) tr.findViewById(R.id.t_razon)).setText(d.getCli_razonsocial_str());
+                tr.setTag(d.getCli_cve_n()); //se le asigna el cve a la final
+
+                tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
+
+                tableLayout.addView(tr);
+            }
+        }catch (Exception e)
         {
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_cartera, null);
-            d= dgCartera.get(i);
-
-            ((TextView) tr.findViewById(R.id.t_cliente)).setText(d.getCli_cveext_str());
-            ((TextView) tr.findViewById(R.id.t_negocio)).setText(d.getCli_nombrenegocio_str());
-            ((TextView) tr.findViewById(R.id.t_saldo)).setText( "$"+Utils.numFormat(d.getSaldo())  );
-            ((TextView) tr.findViewById(R.id.t_razon)).setText(d.getCli_razonsocial_str());
-            tr.setTag(d.getCli_cve_n()); //se le asigna el cve a la final
-
-            tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
-
-            tableLayout.addView(tr);
+            Utils.msgError(getContext(), getString(R.string.err_cart3), e.getMessage() );
         }
     }
 
@@ -237,15 +251,15 @@ public class ClientesFragment extends Fragment {
 
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("¿Imprimir inventario?");
+            dialogo1.setTitle(getString(R.string.msg_impInv));
             dialogo1.setMessage(menImp);
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
                 }
             });
-            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     //cancelar();
                 }
@@ -257,7 +271,7 @@ public class ClientesFragment extends Fragment {
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage() );
         }
     }
 }

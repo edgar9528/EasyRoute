@@ -74,7 +74,7 @@ public class UtilidadFragment extends Fragment {
                         ver_click();
                     }
                     else
-                        Toast.makeText(getContext(), "Ingresa un folio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -142,7 +142,8 @@ public class UtilidadFragment extends Fragment {
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
+
+            Utils.msgError(getContext(), getString(R.string.err_conf14), e.getMessage() );
         }
 
         return view;
@@ -184,12 +185,12 @@ public class UtilidadFragment extends Fragment {
                 
                 db.setTransactionSuccessful();
 
-                Toast.makeText(getContext(), "Proceso terminado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
                 
             }catch (Exception e)
             {
                 Log.d("salida","Error: "+e.toString());
-                Toast.makeText(getContext(), "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
+                Utils.msgError(getContext(), getString(R.string.err_cargarInfo),e.getMessage());
             }
             finally
             {
@@ -200,37 +201,38 @@ public class UtilidadFragment extends Fragment {
         }
         else
         {
-            Toast.makeText(getContext(), "Primero realice una busqueda", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_realizaBusqueda), Toast.LENGTH_SHORT).show();
         }
     }
 
 
     private void ver_click()
     {
-        String json = BaseLocal.Select(string.formatSql("Select * from ventasdet where ven_folio_str='{0}'",folio),getContext());
-        ventasDet = ConvertirRespuesta.getVentasDetJson(json);
+        try {
+            String json = BaseLocal.Select(string.formatSql("Select * from ventasdet where ven_folio_str='{0}'", folio), getContext());
+            ventasDet = ConvertirRespuesta.getVentasDetJson(json);
 
-        String json2 = BaseLocal.Select(string.formatSql("select * from pagos where pag_referencia_str='{0}'",folio),getContext());
-        pagos = ConvertirRespuesta.getPagosJson(json2);
+            String json2 = BaseLocal.Select(string.formatSql("select * from pagos where pag_referencia_str='{0}'", folio), getContext());
+            pagos = ConvertirRespuesta.getPagosJson(json2);
 
-        String json3 = BaseLocal.Select(string.formatSql("select * from creditos where cred_referencia_str='{0}'",folio),getContext());
-        creditos = ConvertirRespuesta.getCreditosJson(json3);
+            String json3 = BaseLocal.Select(string.formatSql("select * from creditos where cred_referencia_str='{0}'", folio), getContext());
+            creditos = ConvertirRespuesta.getCreditosJson(json3);
 
 
-        if(pagos!=null)
+            if (pagos != null) {
+                et_pagos.setText(pagos.getPag_abono_n());
+            } else
+                et_pagos.setText("0");
+
+            if (creditos != null) {
+                et_credito.setText(creditos.getCred_monto_n());
+            } else
+                et_credito.setText("0");
+
+        }catch (Exception e)
         {
-            et_pagos.setText(pagos.getPag_abono_n());
+            Utils.msgError(getContext(), getString(R.string.err_cargarInfo),e.getMessage() );
         }
-        else
-            et_pagos.setText("0");
-
-        if(creditos!=null)
-        {
-            et_credito.setText(creditos.getCred_monto_n());
-        }
-        else
-            et_credito.setText("0");
-
 
     }
 
@@ -241,13 +243,12 @@ public class UtilidadFragment extends Fragment {
             BaseLocal.Insert(Querys.ConfiguracionHH.ReactivarDia,getContext());
 
             String consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(), "CIERRE DE DIA", "DIA REACTIVADO POR SISTEMAS", String.valueOf(conf.getRuta()) , "Posicion" );
-
             BaseLocal.Insert(consulta,getContext());
-            Toast.makeText(getContext(), "Día Reactivado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_reacDia), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf13),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -258,11 +259,11 @@ public class UtilidadFragment extends Fragment {
 
             BaseLocal.Insert(Querys.ConfiguracionHH.ActivarPreventa,getContext());
 
-            Toast.makeText(getContext(), "Preventa activada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_prevenAct), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf12),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -273,11 +274,11 @@ public class UtilidadFragment extends Fragment {
 
             BaseLocal.Insert(Querys.ConfiguracionHH.DesactivarPreventa,getContext());
 
-            Toast.makeText(getContext(), "Preventa desactivada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_prevenDes), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf11),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -290,11 +291,11 @@ public class UtilidadFragment extends Fragment {
             String con = string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(), string.formatSql("REACTIVAR PEDIDOS", Utils.Version()), "", String.valueOf( conf.getRuta() ) , "");
             BaseLocal.Insert(con,getContext());
 
-            Toast.makeText(getContext(), "Pedidos reactivados", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_pedidosAct), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf10),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
@@ -307,15 +308,14 @@ public class UtilidadFragment extends Fragment {
             String con = string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(), string.formatSql("MODO AUDITORIA", Utils.Version()), "ACTIVO", String.valueOf( conf.getRuta() ) , "");
             BaseLocal.Insert(con,getContext());
 
-            Toast.makeText(getContext(), "Auditoria activada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_audiAct), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf9),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }
-
 
     private void desactivarAuditoria()
     {
@@ -325,11 +325,11 @@ public class UtilidadFragment extends Fragment {
             String con = string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, user.getUsuario(), string.formatSql("MODO AUDITORIA", Utils.Version()), "INACTIVO", String.valueOf( conf.getRuta() ) , "");
             BaseLocal.Insert(con,getContext());
 
-            Toast.makeText(getContext(), "Auditoria activada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_audiDes), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf8),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
     }

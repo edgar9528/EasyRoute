@@ -41,7 +41,6 @@ public class SaldosFragment extends Fragment {
     private String negocio,razonSocial;
 
     private RecyclerView pedidosRecyclerView;
-
     private ArrayList<DataTableLC.Saldos> dgSaldos;
 
     @Override
@@ -55,37 +54,44 @@ public class SaldosFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_saldos, container, false);
-        fragment = (CarteraFragment) getParentFragment();
 
-        Button b_imprimir,b_salir;
+        try {
 
-        tv_cve = view.findViewById(R.id.tv_cve);
-        tv_razon = view.findViewById(R.id.tv_razon);
-        tv_negocio = view.findViewById(R.id.tv_negocio);
-        tv_cliente = view.findViewById(R.id.tv_cliente);
-        b_imprimir = view.findViewById(R.id.button_imprimir);
-        b_salir = view.findViewById(R.id.button_salir);
+            fragment = (CarteraFragment) getParentFragment();
+            Button b_imprimir, b_salir;
 
-        b_imprimir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                regresar();
-            }
-        });
+            tv_cve = view.findViewById(R.id.tv_cve);
+            tv_razon = view.findViewById(R.id.tv_razon);
+            tv_negocio = view.findViewById(R.id.tv_negocio);
+            tv_cliente = view.findViewById(R.id.tv_cliente);
+            b_imprimir = view.findViewById(R.id.button_imprimir);
+            b_salir = view.findViewById(R.id.button_salir);
 
-        b_salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.RegresarInicio(getActivity());
-            }
-        });
+            b_imprimir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    regresar();
+                }
+            });
+
+            b_salir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
 
 
-        pedidosRecyclerView = view.findViewById(R.id.carteraRecycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            pedidosRecyclerView = view.findViewById(R.id.carteraRecycler);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        pedidosRecyclerView.setLayoutManager(linearLayoutManager);
+            pedidosRecyclerView.setLayoutManager(linearLayoutManager);
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_cart4), e.getMessage() );
+        }
 
         return view;
     }
@@ -140,7 +146,7 @@ public class SaldosFragment extends Fragment {
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_cart5), e.getMessage() );
         }
 
     }
@@ -148,33 +154,39 @@ public class SaldosFragment extends Fragment {
 
     private void mostrarSaldos(String cve)
     {
-        String credito,monto,abono,saldoStr;
-        double rsc= 0;
+        try {
 
-        ArrayList<CarteraCardView> carteraCardViews = new ArrayList<>();
-        for(int i=0; i<dgSaldos.size();i++)
-        {
-            DataTableLC.Saldos s = dgSaldos.get(i);
+            String credito, monto, abono, saldoStr;
+            double rsc = 0;
 
-            double saldo = Double.parseDouble( s.getCred_monto_n() ) - Double.parseDouble(s.getAbono()) ;
-            rsc += saldo;
+            ArrayList<CarteraCardView> carteraCardViews = new ArrayList<>();
+            for (int i = 0; i < dgSaldos.size(); i++) {
+                DataTableLC.Saldos s = dgSaldos.get(i);
 
-            credito = s.getCred_referencia_str();
-            monto = "$"+ Utils.strToNum( s.getCred_monto_n());
-            abono = "$"+ Utils.strToNum( s.getAbono());
-            saldoStr = "$"+ Utils.numFormat( saldo );
+                double saldo = Double.parseDouble(s.getCred_monto_n()) - Double.parseDouble(s.getAbono());
+                rsc += saldo;
 
-            carteraCardViews.add( new CarteraCardView( credito, monto, abono, saldoStr ));
+                credito = s.getCred_referencia_str();
+                monto = "$" + Utils.strToNum(s.getCred_monto_n());
+                abono = "$" + Utils.strToNum(s.getAbono());
+                saldoStr = "$" + Utils.numFormat(saldo);
+
+                carteraCardViews.add(new CarteraCardView(credito, monto, abono, saldoStr));
+            }
+
+            CarteraAdapterRecyclerView carteraAdapterRecyclerView = new CarteraAdapterRecyclerView(carteraCardViews, R.layout.cardview_cartera);
+            pedidosRecyclerView.setAdapter(carteraAdapterRecyclerView);
+
+            tv_cve.setText(dgSaldos.get(0).getCli_cveext_str());
+            tv_negocio.setText(negocio);
+            tv_razon.setText(razonSocial);
+            String saldoC = getResources().getString(R.string.tv_saldoCliente) + Utils.numFormat(rsc);
+            tv_cliente.setText(saldoC);
         }
-
-        CarteraAdapterRecyclerView carteraAdapterRecyclerView = new CarteraAdapterRecyclerView (carteraCardViews,R.layout.cardview_cartera);
-        pedidosRecyclerView.setAdapter(carteraAdapterRecyclerView);
-
-        tv_cve.setText(dgSaldos.get(0).getCli_cveext_str());
-        tv_negocio.setText(negocio);
-        tv_razon.setText(razonSocial);
-        String saldoC = getResources().getString(R.string.tv_saldoCliente)+Utils.numFormat(rsc);
-        tv_cliente.setText(saldoC);
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage() );
+        }
 
     }
 

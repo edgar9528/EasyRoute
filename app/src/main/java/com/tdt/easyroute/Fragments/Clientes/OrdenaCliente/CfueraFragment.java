@@ -1,9 +1,6 @@
 package com.tdt.easyroute.Fragments.Clientes.OrdenaCliente;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -46,11 +43,8 @@ public class CfueraFragment extends Fragment {
     private View vista;
 
     private Spinner sp_dias;
-
     private boolean primerCambio=true,cambioDia=false;
-
     private EditText et_filtro;
-    private Button b_buscar,b_agregar,b_salir,b_enviar;
     private ScrollView scrollView;
 
     private OrdenaClientesVM ordenaClientesVM;
@@ -65,78 +59,82 @@ public class CfueraFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_cfuera, container, false);
-        vista=view;
 
-        String strDias = getResources().getString(R.string.diasSemana);
-        dias = strDias.split(",");
+        try {
 
-        et_filtro = view.findViewById(R.id.et_filtro);
-        b_buscar = view.findViewById(R.id.button_buscar);
-        b_agregar = view.findViewById(R.id.b_agregar);
-        b_salir = view.findViewById(R.id.b_salir);
-        b_enviar = view.findViewById(R.id.b_enviar);
-        sp_dias = view.findViewById(R.id.sp_dia);
-        tableLayout = view.findViewById(R.id.tableLayout);
-        layoutInflater = inflater;
-        scrollView = view.findViewById(R.id.scrollView);
+            vista = view;
+            String strDias = getResources().getString(R.string.diasSemana);
+            dias = strDias.split(",");
 
-        sp_dias.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, dias));
+            Button b_buscar, b_agregar, b_salir, b_enviar;
 
-        sp_dias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            et_filtro = view.findViewById(R.id.et_filtro);
+            b_buscar = view.findViewById(R.id.button_buscar);
+            b_agregar = view.findViewById(R.id.b_agregar);
+            b_salir = view.findViewById(R.id.b_salir);
+            b_enviar = view.findViewById(R.id.b_enviar);
+            sp_dias = view.findViewById(R.id.sp_dia);
+            tableLayout = view.findViewById(R.id.tableLayout);
+            layoutInflater = inflater;
+            scrollView = view.findViewById(R.id.scrollView);
 
-                if(!primerCambio)
-                {
-                    if(!cambioDia)
-                        ordenaClientesVM.setSelectItemFuera(i);
-                    else
-                        cambioDia=false;
+            sp_dias.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, dias));
+
+            sp_dias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    if (!primerCambio) {
+                        if (!cambioDia)
+                            ordenaClientesVM.setSelectItemFuera(i);
+                        else
+                            cambioDia = false;
+                    } else {
+                        primerCambio = false;
+                    }
                 }
-                else
-                {
-                    primerCambio=false;
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
                 }
+            });
 
-            }
+            b_buscar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    buscarItem(et_filtro.getText().toString());
+                }
+            });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            b_agregar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    agregarItem();
+                }
+            });
 
-            }
-        });
+            b_enviar.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ordenaClientesVM.setEnviar(true);
+                }
+            });
 
-        b_buscar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buscarItem(et_filtro.getText().toString());
-            }
-        });
-
-        b_agregar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                agregarItem();
-            }
-        });
-
-        b_enviar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ordenaClientesVM.setEnviar(true);
-            }
-        });
-
-        b_salir.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.RegresarInicio(getActivity());
-            }
-        });
+            b_salir.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
 
 
-        mostrarTitulo();
+            mostrarTitulo();
 
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ord6), e.getMessage() );
+        }
 
         return view;
     }
@@ -167,21 +165,27 @@ public class CfueraFragment extends Fragment {
 
     private void mostrarTitulo()
     {
-        tableLayout.removeAllViews();
+        try {
+            tableLayout.removeAllViews();
 
-        TableRow tr;
+            TableRow tr;
 
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
 
-        ((TextView) tr.findViewById(R.id.t_cliente)).setTypeface( ((TextView) tr.findViewById(R.id.t_cliente)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_nombre)).setTypeface( ((TextView) tr.findViewById(R.id.t_nombre)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_secu)).setTypeface( ((TextView) tr.findViewById(R.id.t_secu)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_frec)).setTypeface( ((TextView) tr.findViewById(R.id.t_frec)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_estatus)).setTypeface( ((TextView) tr.findViewById(R.id.t_estatus)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_coor)).setTypeface( ((TextView) tr.findViewById(R.id.t_coor)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_dia)).setTypeface( ((TextView) tr.findViewById(R.id.t_dia)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_cliente)).setTypeface(((TextView) tr.findViewById(R.id.t_cliente)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_nombre)).setTypeface(((TextView) tr.findViewById(R.id.t_nombre)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_secu)).setTypeface(((TextView) tr.findViewById(R.id.t_secu)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_frec)).setTypeface(((TextView) tr.findViewById(R.id.t_frec)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_estatus)).setTypeface(((TextView) tr.findViewById(R.id.t_estatus)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_coor)).setTypeface(((TextView) tr.findViewById(R.id.t_coor)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_dia)).setTypeface(((TextView) tr.findViewById(R.id.t_dia)).getTypeface(), Typeface.BOLD);
 
-        tableLayout.addView(tr);
+            tableLayout.addView(tr);
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage() );
+        }
     }
 
     private void cargarClientesNoDia()
@@ -216,78 +220,92 @@ public class CfueraFragment extends Fragment {
         }catch (Exception e)
         {
             Log.d("salida","Error: cargar"+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage() );
         }
     }
 
     private void mostrarClientesDia(String cliente, String nombre, String secu, String frec, String status, String coor, String dia)
     {
-        TableRow tr;
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
+        try {
+            TableRow tr;
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ordclientes, null);
 
-        ((TextView) tr.findViewById(R.id.t_cliente)).setText(cliente);
-        ((TextView) tr.findViewById(R.id.t_nombre)).setText(nombre);
-        ((TextView) tr.findViewById(R.id.t_secu)).setText(secu);
-        ((TextView) tr.findViewById(R.id.t_frec)).setText(frec);
-        ((TextView) tr.findViewById(R.id.t_estatus)).setText( status);
-        ((TextView) tr.findViewById(R.id.t_coor)).setText( coor );
-        ((TextView) tr.findViewById(R.id.t_dia)).setText( dia);
+            ((TextView) tr.findViewById(R.id.t_cliente)).setText(cliente);
+            ((TextView) tr.findViewById(R.id.t_nombre)).setText(nombre);
+            ((TextView) tr.findViewById(R.id.t_secu)).setText(secu);
+            ((TextView) tr.findViewById(R.id.t_frec)).setText(frec);
+            ((TextView) tr.findViewById(R.id.t_estatus)).setText(status);
+            ((TextView) tr.findViewById(R.id.t_coor)).setText(coor);
+            ((TextView) tr.findViewById(R.id.t_dia)).setText(dia);
 
-        tr.setTag(cliente);
-        tr.setOnClickListener(tableListener);
+            tr.setTag(cliente);
+            tr.setOnClickListener(tableListener);
 
-        tableLayout.addView(tr);
+            tableLayout.addView(tr);
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage() );
+        }
     }
 
     private void buscarItem(String palabra)
     {
-        String cliente;
-        String nombre;
-        boolean encontrado=false;
+        try {
+            String cliente;
+            String nombre;
+            boolean encontrado = false;
 
-        if(!palabra.isEmpty()) {
-            for (int i = 0; i < clientesNodia.getClientes().size(); i++) {
-                TableRow row =  vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
+            if (!palabra.isEmpty()) {
+                for (int i = 0; i < clientesNodia.getClientes().size(); i++) {
+                    TableRow row = vista.findViewWithTag(clientesNodia.getClientes().get(i).getCli_cveext_str());
 
-                cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
-                nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
-                palabra = palabra.toLowerCase();
+                    cliente = ((TextView) row.findViewById(R.id.t_cliente)).getText().toString();
+                    nombre = ((TextView) row.findViewById(R.id.t_nombre)).getText().toString();
+                    palabra = palabra.toLowerCase();
 
-                if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra))
-                {
-                    for (int j = 0; j < clientesNodia.getClientes().size(); j++)
-                    {
-                        TableRow tr =  vista.findViewWithTag(clientesNodia.getClientes().get(j).getCli_cveext_str());
-                        tr.setBackgroundColor( getResources().getColor(R.color.bgDefault) );
+                    if (cliente.toLowerCase().contains(palabra) || nombre.toLowerCase().contains(palabra)) {
+                        for (int j = 0; j < clientesNodia.getClientes().size(); j++) {
+                            TableRow tr = vista.findViewWithTag(clientesNodia.getClientes().get(j).getCli_cveext_str());
+                            tr.setBackgroundColor(getResources().getColor(R.color.bgDefault));
+                        }
+
+                        row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                        clienteSeleccionado = cliente;
+                        i = clientesNodia.getClientes().size();
+
+                        scrollView.scrollTo(0, row.getTop());
+
+                        encontrado = true;
                     }
-
-                    row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    clienteSeleccionado = cliente;
-                    i = clientesNodia.getClientes().size();
-
-                    scrollView.scrollTo(0, row.getTop());
-
-                    encontrado = true;
                 }
-            }
 
-            if (!encontrado)
-                Toast.makeText(getContext(), "Cliente no encontrado en 'Clientes del dia'", Toast.LENGTH_LONG).show();
+                if (!encontrado)
+                    Toast.makeText(getContext(), getString(R.string.tt_noEncontrado), Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(getContext(), "Escriba el texto a buscar", Toast.LENGTH_SHORT).show();
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage() );
+        }
 
     }
 
     private void agregarItem()
     {
-        if(!clienteSeleccionado.isEmpty())
+        try
         {
-            int indice = getClienteSeleccionado();
-            ordenaClientesVM.setMoverItem(indice);
+            if (!clienteSeleccionado.isEmpty()) {
+                int indice = getClienteSeleccionado();
+                ordenaClientesVM.setMoverItem(indice);
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ord4), e.getMessage() );
         }
-        else
-            Toast.makeText(getContext(), "Seleccion un cliente para mover", Toast.LENGTH_SHORT).show();
     }
 
     private int getClienteSeleccionado()

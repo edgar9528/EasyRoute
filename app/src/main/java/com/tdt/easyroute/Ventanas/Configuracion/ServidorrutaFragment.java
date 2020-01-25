@@ -51,145 +51,151 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_servidorruta, container, false);
-        nombreBase = getString( R.string.nombreBD );
 
-        Button button_salir,button_guardar,button_listar,button_pruWs,button_pruImp;
+        try {
 
-        button_guardar = view.findViewById(R.id.button_guardar);
-        button_salir = view.findViewById(R.id.button_regresar);
-        button_listar = view.findViewById(R.id.button_listar);
-        button_pruWs = view.findViewById(R.id.button_pruebaWs);
-        button_pruImp = view.findViewById(R.id.button_pruebaImp);
+            nombreBase = getString(R.string.nombreBD);
 
-        et_servidor = view.findViewById(R.id.et_servidor);
-        et_time = view.findViewById(R.id.et_timeout);
-        et_imp = view.findViewById(R.id.et_comImpresora);
-        et_ruta = view.findViewById(R.id.et_ruta);
+            Button button_salir, button_guardar, button_listar, button_pruWs, button_pruImp;
 
-        inicializar();
+            button_guardar = view.findViewById(R.id.button_guardar);
+            button_salir = view.findViewById(R.id.button_regresar);
+            button_listar = view.findViewById(R.id.button_listar);
+            button_pruWs = view.findViewById(R.id.button_pruebaWs);
+            button_pruImp = view.findViewById(R.id.button_pruebaImp);
 
-        button_pruWs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            et_servidor = view.findViewById(R.id.et_servidor);
+            et_time = view.findViewById(R.id.et_timeout);
+            et_imp = view.findViewById(R.id.et_comImpresora);
+            et_ruta = view.findViewById(R.id.et_ruta);
 
-                servidor =et_servidor.getText().toString();
-                time = et_time.getText().toString();
+            inicializar();
 
-                if( !servidor.isEmpty() && !time.isEmpty() )
-                {
-                    peticion="prueba";
-                    ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), "Prueba");
-                    ws.delegate = ServidorrutaFragment.this;
-                    ws.propertyInfos=null;
-                    ws.servidor = servidor;
-                    ws.timeout = Integer.parseInt(time);
-                    ws.execute();
+            button_pruWs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    servidor = et_servidor.getText().toString();
+                    time = et_time.getText().toString();
+
+                    if (!servidor.isEmpty() && !time.isEmpty()) {
+                        peticion = "prueba";
+                        ConexionWS_JSON ws = new ConexionWS_JSON(getContext(), "Prueba");
+                        ws.delegate = ServidorrutaFragment.this;
+                        ws.propertyInfos = null;
+                        ws.servidor = servidor;
+                        ws.timeout = Integer.parseInt(time);
+                        ws.execute();
+                    } else {
+                        Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_LONG).show();
+                    }
                 }
-                else
-                {
-                    Toast.makeText(getContext(), "Ingresa un servidor y TimeOut", Toast.LENGTH_LONG).show();
+            });
+
+            button_guardar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    servidor = et_servidor.getText().toString();
+                    time = et_time.getText().toString();
+                    imp = et_imp.getText().toString();
+                    empresa = "1";
+
+                    Log.d("salida", "COINCIDIO:|" + et_ruta.getText() + "|" + mensajeET + "|");
+                    if (et_ruta.getText().toString().equals(mensajeET)) {
+                        ruta = "0";
+                    } else {
+                        ruta = getCveRuta(et_ruta.getText().toString());
+                    }
+
+                    if (!servidor.isEmpty() && !time.isEmpty() && !ruta.isEmpty() && !imp.isEmpty()) {
+                        Utils.CreafConfig(servidor, time, empresa, ruta, imp, getActivity().getApplication());
+                        Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_LONG).show();
+                        getActivity().finish();
+                    } else
+                        Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_LONG).show();
                 }
-            }
-        });
+            });
 
-        button_guardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                servidor = et_servidor.getText().toString();
-                time = et_time.getText().toString();
-                imp = et_imp.getText().toString();
-                empresa="1";
-
-                Log.d("salida","COINCIDIO:|"+et_ruta.getText()+"|"+mensajeET+"|");
-                if(et_ruta.getText().toString().equals(mensajeET))
-                {
-                    ruta="0";
+            button_salir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivity().finish();
                 }
-                else
-                {
-                    ruta= getCveRuta( et_ruta.getText().toString());
+            });
+
+
+            button_listar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listarRutas();
                 }
+            });
 
-                if(!servidor.isEmpty()&&!time.isEmpty()&&!ruta.isEmpty()&&!imp.isEmpty())
-                {
-                    Utils.CreafConfig(servidor,time,empresa,ruta,imp,getActivity().getApplication());
-                    Toast.makeText(getContext(), "Información guardada", Toast.LENGTH_LONG).show();
+
+            et_ruta.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (spinnerDialog != null)
+                        spinnerDialog.showSpinerDialog();
+                    else {
+                        Toast.makeText(getContext(), getString(R.string.tt_listarInfo), Toast.LENGTH_LONG).show();
+                    }
                 }
-                else
-                    Toast.makeText(getContext(), "Rellena todos los campos", Toast.LENGTH_LONG).show();
-            }
-        });
+            });
 
-        button_salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().finish();
-            }
-        });
-
-
-        button_listar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listarRutas();
-            }
-        });
-
-
-        et_ruta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(spinnerDialog!=null)
-                    spinnerDialog.showSpinerDialog();
-                else
-                {
-                    Toast.makeText(getContext(), "Primero listar información", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_conf7),e.getMessage());
+        }
 
         return view;
     }
 
     public void inicializar()
     {
-        //Mostrar valores almacenados
-        et_servidor.setText(Utils.LeefConfig("servidor",getActivity().getApplication()));
-        et_time.setText(Utils.LeefConfig("timeout",getActivity().getApplication()));
-        et_imp.setText(Utils.LeefConfig("imp",getActivity().getApplication()));
+        try {
+            //Mostrar valores almacenados
+            et_servidor.setText(Utils.LeefConfig("servidor", getActivity().getApplication()));
+            et_time.setText(Utils.LeefConfig("timeout", getActivity().getApplication()));
+            et_imp.setText(Utils.LeefConfig("imp", getActivity().getApplication()));
 
-        ConfiguracionActivity activity = (ConfiguracionActivity) getActivity();
-        lista_rutas= activity.getRutas();
+            ConfiguracionActivity activity = (ConfiguracionActivity) getActivity();
+            lista_rutas = activity.getRutas();
 
-        et_ruta.setText(mensajeET);
+            et_ruta.setText(mensajeET);
 
-        cargarRutas();
+            cargarRutas();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_conf7), e.getMessage() );
+        }
 
     }
 
     private void listarRutas()
     {
-        crut = false;
+        try {
+            crut = false;
 
-        servidor = et_servidor.getText().toString();
-        time = et_time.getText().toString();
+            servidor = et_servidor.getText().toString();
+            time = et_time.getText().toString();
 
+            if (!servidor.isEmpty() && !time.isEmpty()) {
+                peticion = "listarRutas";
+                ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(), "ObtenerRutasJ");
+                conexionWS_json.delegate = ServidorrutaFragment.this;
+                conexionWS_json.propertyInfos = null;
+                conexionWS_json.servidor = servidor;
+                conexionWS_json.timeout = Integer.parseInt(time);
+                conexionWS_json.execute();
+            } else {
+                Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_LONG).show();
+            }
 
-        if( !servidor.isEmpty() && !time.isEmpty() )
+        }catch (Exception e)
         {
-            peticion="listarRutas";
-            ConexionWS_JSON conexionWS_json = new ConexionWS_JSON(getContext(),"ObtenerRutasJ");
-            conexionWS_json.delegate = ServidorrutaFragment.this;
-            conexionWS_json.propertyInfos=null;
-            conexionWS_json.servidor = servidor;
-            conexionWS_json.timeout = Integer.parseInt(time);
-            conexionWS_json.execute();
-        }
-        else
-        {
-            Toast.makeText(getContext(), "Ingresa un servidor y TimeOut", Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.err_conf15), e.getMessage());
         }
 
     }
@@ -197,35 +203,32 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
 
-        //Se realizo la conexion con el ws
-        if(estado)
-        {
-            //recibio información
-            if (respuesta != null)
-            {
-                if (peticion.equals("listarRutas"))
-                {
-                    lista_rutas=null;
-                    lista_rutas = ConvertirRespuesta.getRutasJson(respuesta);
+        try {
+            //Se realizo la conexion con el ws
+            if (estado) {
+                //recibio información
+                if (respuesta != null) {
+                    if (peticion.equals("listarRutas")) {
+                        lista_rutas = null;
+                        lista_rutas = ConvertirRespuesta.getRutasJson(respuesta);
 
-                    guardarRutas();
-                    cargarRutas();
+                        guardarRutas();
+                        cargarRutas();
+                    }
+                    if (peticion.equals("prueba")) {
+                        Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.tt_noInformacion), Toast.LENGTH_LONG).show();
                 }
-                if(peticion.equals("prueba"))
-                {
-                    Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
-                }
+            } else {
+                Toast.makeText(getContext(), respuesta, Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                Toast.makeText(getContext(), "No se encontro información", Toast.LENGTH_LONG).show();
-            }
-        }
-        else
-        {
-            Toast.makeText(getContext(), respuesta, Toast.LENGTH_SHORT).show();
-        }
 
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_peticion),e.getMessage());
+        }
     }
 
     private String getCveRuta(String rut_des)
@@ -285,42 +288,49 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
         }
         catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error"+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(),getString(R.string.error_almacenar),e.getMessage());
             Log.d("salida","Error:"+e.getMessage());
         }
     }
 
     private void cargarRutas()
     {
-        if(lista_rutas!=null)
+        try {
+
+            if (lista_rutas != null) {
+                rutas = new ArrayList<>();
+                for (int i = 0; i < lista_rutas.size(); i++)
+                    rutas.add(lista_rutas.get(i).getRut_desc_str());
+
+                //Mostrar la ruta almacenada
+                String cve_ruta = Utils.LeefConfig("ruta", getActivity().getApplication());
+                String des_ruta = getDescRuta(cve_ruta);
+                if (!des_ruta.isEmpty())
+                    et_ruta.setText(des_ruta);
+
+
+                //SE CREA SPINNER Y SU METODO ONCLICK
+                spinnerDialog = new SpinnerDialog(getActivity(), rutas, getResources().getString(R.string.sp_selecRuta), getResources().getString(R.string.bt_cancelar));
+                //spinnerDialog=new SpinnerDialog(getActivity(),rutas,"Selecciona una ruta",R.style.DialogAnimations_SmileWindow,"Cerrar");
+
+                spinnerDialog.setCancellable(true); // for cancellable
+                spinnerDialog.setShowKeyboard(false);// for open keyboard by default
+
+                spinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+                    @Override
+                    public void onClick(String item, int position) {
+                        et_ruta.setText(item);
+                        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        mgr.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+
+                    }
+                });
+
+            }
+
+        }catch (Exception e)
         {
-            rutas = new ArrayList<>();
-            for (int i = 0; i < lista_rutas.size(); i++)
-                rutas.add( lista_rutas.get(i).getRut_desc_str() );
-
-            //Mostrar la ruta almacenada
-            String cve_ruta = Utils.LeefConfig("ruta",getActivity().getApplication());
-            String des_ruta = getDescRuta(cve_ruta);
-            if(!des_ruta.isEmpty())
-                et_ruta.setText(des_ruta);
-
-
-            //SE CREA SPINNER Y SU METODO ONCLICK
-            spinnerDialog=new SpinnerDialog(getActivity(),rutas,getResources().getString(R.string.sp_selecRuta),getResources().getString(R.string.bt_cancelar));
-            //spinnerDialog=new SpinnerDialog(getActivity(),rutas,"Selecciona una ruta",R.style.DialogAnimations_SmileWindow,"Cerrar");
-
-            spinnerDialog.setCancellable(true); // for cancellable
-            spinnerDialog.setShowKeyboard(false);// for open keyboard by default
-
-            spinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
-                @Override
-                public void onClick(String item, int position) {
-                    et_ruta.setText(item);
-                    InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService (Context.INPUT_METHOD_SERVICE); mgr.hideSoftInputFromWindow (getView().getWindowToken (), 0);
-                    //Toast.makeText(getContext(), item + "  " + position+"", Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            Utils.msgError(getContext(), getString(R.string.err_conf15),e.getMessage());
         }
 
     }

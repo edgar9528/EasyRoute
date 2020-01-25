@@ -802,9 +802,13 @@ public class Utils {
 
     public static void msgError(Context context,String mensaje, String exception)
     {
+        String mensajeStr = mensaje +"\n\n"+
+                            context.getResources().getString(R.string.title_detalles)
+                            +": "+exception;
+
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(context);
         dialogo1.setTitle(context.getResources().getString(R.string.msg_error));
-        dialogo1.setMessage(mensaje +"\n\n"+exception);
+        dialogo1.setMessage(mensajeStr);
         dialogo1.setCancelable(false);
         dialogo1.setPositiveButton(context.getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {

@@ -166,7 +166,7 @@
     <string name="graf_efectividad">Effectiveness</string>
     <string name="title_detalles">Details</string>
 
-    <string name="msg_error">Error</string>
+    <string name="msg_error">Something went wrong</string>
     <string name="table_totalPago">Total payment</string>
     <string name="table_monto">Amount</string>
     <string name="table_sku">SKU</string>
@@ -195,10 +195,115 @@
     <string name="table_saldo">Balance</string>
     <string name="table_razon">Business name</string>
     <string name="table_idExt">Id Ext</string>
-
     <string name="catalogos1">Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas</string>
     <string name="catalogos2">CondicionesVenta,Productos,Rutas,ListaPrecios,PrecioProductos,FormasPago,FrecuenciasVisita,Categorias,Familias,Presentaciones,Promociones,PromocionesKit</string>
     <string name="catalogos3">LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas,Marcas,Unidades,CondicionesVenta,Productos,ListaPrecios,PrecioProductos,NivelCliente,FormasPago,FrecuenciasVisita,MotivosNoVenta,MotivosNoLectura,Categorias,Familias,Presentaciones,Clientes,Creditos,Direcciones,ClientesVentaMes,Promociones,PromocionesKit,Consignas</string>
     <string name="catalogos4">,Preventa</string>
+    <string name="title_inventario1">Inventory download</string>
+    <string name="title_inventario2">Current inventory</string>
+    <string name="bt_descargar">Download</string>
+    <string name="msg_impSku">Print by SKU?</string>
+    <string name="msg_impPre">Print by price?</string>
+    <string name="error1">Error opening login</string>
+    <string name="msg_advertencia">Warning</string>
+
+
+    <string name="tt_camposVacios">Fill in all fields</string>
+    <string name="error2">Failed to login</string>
+    <string name="error3">Error getting roles</string>
+    <string name="error4">Error storing information</string>
+    <string name="error5">Error saving user</string>
+    <string name="error6">Error saving user</string>
+    <string name="error7">Error validating user</string>
+    <string name="tt_login1">Incorrect username or password</string>
+    <string name="tt_login2">The user is locked or disabled</string>
+    <string name="tt_login3">Incorrect username or password</string>
+    <string name="err_main1">Error starting main activity</string>
+    <string name="err_main2">Error initializing main activity</string>
+    <string name="err_main3">Error validating menu</string>
+    <string name="err_conf1">Error starting configuration</string>
+    <string name="err_conf2">Error initializing configuration</string>
+    <string name="err_conf3">Error getting routes</string>
+    <string name="err_conf4">Error starting server window</string>
+    <string name="err_conf5">Error initializing server window</string>
+    <string name="err_conf6">Error displaying catalogs</string>
+    <string name="error_almacenar">Error storing information in the database</string>
+    <string name="err_conf7">Error loading server / route</string>
+    <string name="tt_infoActu">Information updated successfully</string>
+    <string name="tt_seleccionarUno">You must select an item</string>
+    <string name="tt_listarInfo">First list information</string>
+    <string name="tt_noInformacion">No information found</string>
+    <string name="tt_audiAct">Audit activated</string>
+    <string name="err_conf8">Error deactivating audit</string>
+    <string name="tt_audiDes">Audit Off</string>
+    <string name="err_conf9">Error activating audit</string>
+    <string name="tt_pedidosAct">Orders reactivated</string>
+    <string name="err_conf10">Error reactivating orders</string>
+    <string name="tt_prevenDes">Presale deactivated</string>
+    <string name="err_conf11">Error deactivating presale</string>
+    <string name="tt_prevenAct">Presale activated</string>
+    <string name="err_conf12">Error activating presale</string>
+    <string name="tt_reacDia">Reactivated day</string>
+    <string name="err_conf13">Error reactivating day</string>
+    <string name="err_cargarInfo">Error loading information</string>
+    <string name="tt_realizaBusqueda">First perform a search</string>
+    <string name="err_conf14">Error loading utility window</string>
+    <string name="err_conf15">Error listing routes</string>
+
+    <string name="err_prin1">Error loading main window</string>
+    <string name="err_prin2">Error displaying date and time</string>
+    <string name="err_inidia1">Error loading data window</string>
+    <string name="err_inidia2">Error getting catalogs</string>
+    <string name="err_inidia3">Error displaying catalogs</string>
+    <string name="err_inidia4">Error trying to sync</string>
+    <string name="err_inidia5">Error loading generals</string>
+    <string name="err_inidia6">Error loading companies and routes</string>
+    <string name="error_ubicacion">Error getting location</string>
+    <string name="error_validar">Error validating information</string>
+    <string name="error_intPeticion">Request failed</string>
+    <string name="err_inidia7">Error creating HH configuration</string>
+    <string name="error_bitacora">Error trying to transmit HH logbook</string>
+    <string name="msg_fechaInco">To continue you must correctly configure the date / time of the device</string>
+    <string name="bt_configurar">Set up</string>
+    <string name="tt_noEmpresas">No companies found</string>
+    <string name="tt_noRutas">No routes found</string>
+    <string name="tt_noSincroniza">You have not synchronized</string>
+    <string name="error_iniDia">Error starting the day on the server, please contact systems.</string>
+
+
+    <string name="error_peticion">Error receiving request</string>
+    <string name="err_cart1">Error loading client window</string>
+    <string name="err_cart2">Error loading portfolio</string>
+    <string name="err_cart3">Error displaying portfolio information</string>
+    <string name="error_imprimir">Error while trying to print</string>
+    <string name="err_cart4">Error loading balance window</string>
+    <string name="err_cart5">Error loading balances</string>
+    <string name="error_mostrarInfo">Error displaying information</string>
+    <string name="err_ord1">Error starting customers day window</string>
+    <string name="err_ord2">Error listing clients no day</string>
+    <string name="err_ord3">Error listing clients of the day</string>
+    <string name="err_ord4">Error when ordering items</string>
+    <string name="error_actCliente">Error updating client</string>
+    <string name="err_ord5">Error editing client</string>
+    <string name="error_cargarInfo">Error loading information</string>
+    <string name="tt_noEncontrado">Client not found in "Customers of the day"</string>
+    <string name="err_ord6">Error loading clients out</string>
+    <string name="error_buscarInfo">Error searching for information</string>
+
+    <string name="err_busq1">Error starting search clients</string>
+    <string name="err_busq2">Error selecting client</string>
+    <string name="tt_noVisita">The client is not visited today</string>
+
+    <string name="err_find1">Error starting end of day</string>
+    <string name="err_find2">Error deleting data</string>
+    <string name="err_find3">User request failed</string>
+    <string name="err_find4">Error validating user</string>
+    <string name="err_find5">Error closing day</string>
+    <string name="msg_servidor">Server Message: </string>
+    <string name="err_find6">Error at the end of the day</string>
+    <string name="tt_noPermisos">You do not have permissions for this option</string>
+    <string name="tt_cierreDia">Full day closure</string>
+    <string name="tt_errorTrans">Error transmitting</string>
+
 
 </resources>

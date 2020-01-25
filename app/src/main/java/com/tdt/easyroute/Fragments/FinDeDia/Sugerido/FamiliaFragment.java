@@ -41,24 +41,22 @@ import java.util.zip.Inflater;
 
 public class FamiliaFragment extends Fragment {
 
-    ArrayList<DataTableLC.Productos_Sug> dtProd=null;
-    ArrayList<DataTableLC.Sugerido> dgSugerido=null;
-    ArrayList<String> lvFamilias=null;
+    private ArrayList<DataTableLC.Productos_Sug> dtProd=null;
+    private ArrayList<DataTableLC.Sugerido> dgSugerido=null;
+    private ArrayList<String> lvFamilias=null;
 
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    View vista;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private View vista;
 
-    MainsugeridoFragment fragmentMain;
-    Configuracion conf;
+    private MainsugeridoFragment fragmentMain;
+    private Configuracion conf;
 
-    String consulta,json;
-    String[] strBuscar =  new String[2];
+    private String consulta,json;
+    private String[] strBuscar =  new String[2];
 
-    EditText et_sku,et_cant;
-    Button b_buscar,b_borrar;
-
-    SugeridoVM sugeridoVM;
+    private EditText et_sku,et_cant;
+    private SugeridoVM sugeridoVM;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -78,80 +76,94 @@ public class FamiliaFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_familia, container, false);
-        layoutInflater = inflater;
-        vista=view;
 
-        conf = Utils.ObtenerConf(getActivity().getApplication());
-        fragmentMain = (MainsugeridoFragment) getParentFragment();
+        try
+        {
+            layoutInflater = inflater;
+            vista = view;
 
-        et_sku = view.findViewById(R.id.et_sku);
-        et_cant = view.findViewById(R.id.et_cant);
-        b_buscar = view.findViewById(R.id.button_buscar);
-        b_borrar = view.findViewById(R.id.button_borrar);
+            Button b_buscar, b_borrar;
 
-        tableLayout = view.findViewById(R.id.tableLayout);
+            conf = Utils.ObtenerConf(getActivity().getApplication());
+            fragmentMain = (MainsugeridoFragment) getParentFragment();
 
-        et_cant.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    buscar();
-                    return true;
+            et_sku = view.findViewById(R.id.et_sku);
+            et_cant = view.findViewById(R.id.et_cant);
+            b_buscar = view.findViewById(R.id.button_buscar);
+            b_borrar = view.findViewById(R.id.button_borrar);
+
+            tableLayout = view.findViewById(R.id.tableLayout);
+
+            et_cant.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        buscar();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
+            });
+
+            dgSugerido = new ArrayList<>();
+
+            b_buscar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    buscar();
+                }
+            });
+
+            b_borrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sugeridoVM.setBorrar(true);
+                }
+            });
+
+            cargarProductos();
+            obtenerFamilias();
+
+            if (conf.getPreventa() == 1) {
+                creaSugeridoPrev();
+            } else {
+                recuperarSugerido();
             }
-        });
 
-        dgSugerido = new ArrayList<>();
+            sugeridoVM.setDtProd(dtProd);
 
-        b_buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buscar();
-            }
-        });
-
-        b_borrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sugeridoVM.setBorrar(true);
-            }
-        });
-
-        cargarProductos();
-        obtenerFamilias();
-
-        if(conf.getPreventa()==1) {
-            creaSugeridoPrev();
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_sug2), e.getMessage());
         }
-        else {
-            recuperarSugerido();
-        }
-
-        sugeridoVM.setDtProd(dtProd);
 
         return view;
     }
 
     private void buscar()
     {
-        String sku = et_sku.getText().toString();
-        String can= et_cant.getText().toString();
-
-        if(!sku.isEmpty())
+        try
         {
-            strBuscar[0] = sku;
-            strBuscar[1] = can;
+            String sku = et_sku.getText().toString();
+            String can = et_cant.getText().toString();
 
-            et_sku.setText("");
-            et_cant.setText("");
+            if (!sku.isEmpty()) {
+                strBuscar[0] = sku;
+                strBuscar[1] = can;
 
-            fragmentMain.goSugerido();
+                et_sku.setText("");
+                et_cant.setText("");
 
-            sugeridoVM.setStrBuscar( strBuscar );
+                fragmentMain.goSugerido();
+
+                sugeridoVM.setStrBuscar(strBuscar);
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage());
         }
-        else
-            Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
     }
 
     private void cargarProductos()
