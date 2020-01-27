@@ -51,22 +51,20 @@ import java.util.ArrayList;
 
 public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
 
-    ArrayList<DataTableLC.Productos_Sug> dtProd=null;
-    ArrayList<DataTableLC.Sugerido> dgSugerido=null;
+    private ArrayList<DataTableLC.Productos_Sug> dtProd=null;
+    private ArrayList<DataTableLC.Sugerido> dgSugerido=null;
 
-    Button b_buscar,b_borrar;
-    EditText et_sku,et_cant;
-    int sugeridoIndice=-1;
-    String sugeridoSelec="",nombreBase,sugeridoAnt="";
-    Configuracion conf;
-    Usuario user;
+    private EditText et_sku,et_cant;
+    private int sugeridoIndice=-1;
+    private String sugeridoSelec="",nombreBase,sugeridoAnt="";
+    private Configuracion conf;
+    private Usuario user;
 
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    View vista;
-    MainsugeridoFragment fragmentMain;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private View vista;
 
-    SugeridoVM sugeridoVM;
+    private SugeridoVM sugeridoVM;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,50 +78,59 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_familia, container, false);
 
-        fragmentMain = (MainsugeridoFragment) getParentFragment();
+        try {
 
-        nombreBase = getContext().getString( R.string.nombreBD );
-        dgSugerido = new ArrayList<>();
+            MainsugeridoFragment fragmentMain = (MainsugeridoFragment) getParentFragment();
 
-        conf = Utils.ObtenerConf(getActivity().getApplication());
-        user = fragmentMain.getUserMainSugerido();
+            Button b_buscar, b_borrar;
 
-        layoutInflater = inflater;
-        vista=view;
-        tableLayout = view.findViewById(R.id.tableLayout);
+            nombreBase = getContext().getString(R.string.nombreBD);
+            dgSugerido = new ArrayList<>();
 
-        b_buscar = view.findViewById(R.id.button_buscar);
-        b_borrar = view.findViewById(R.id.button_borrar);
+            conf = Utils.ObtenerConf(getActivity().getApplication());
+            user = fragmentMain.getUserMainSugerido();
 
-        et_sku = view.findViewById(R.id.et_sku);
-        et_cant = view.findViewById(R.id.et_cant);
+            layoutInflater = inflater;
+            vista = view;
+            tableLayout = view.findViewById(R.id.tableLayout);
 
-        mostrarTitulo();
+            b_buscar = view.findViewById(R.id.button_buscar);
+            b_borrar = view.findViewById(R.id.button_borrar);
 
-        b_borrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                borrar();
-            }
-        });
+            et_sku = view.findViewById(R.id.et_sku);
+            et_cant = view.findViewById(R.id.et_cant);
 
-        et_cant.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    buscar();
-                    return true;
+            mostrarTitulo();
+
+            b_borrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    borrar();
                 }
-                return false;
-            }
-        });
+            });
 
-        b_buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buscar();
-            }
-        });
+            et_cant.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        buscar();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            b_buscar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    buscar();
+                }
+            });
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_sug10), e.getMessage());
+        }
 
         return view;
     }
@@ -197,17 +204,22 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
 
     private void buscar()
     {
-        String sku = et_sku.getText().toString();
-        String can= et_cant.getText().toString();
-
-        if(!sku.isEmpty())
+        try
         {
-            et_sku.setText("");
-            et_cant.setText("");
-            buscarSKU(sku,can);
+            String sku = et_sku.getText().toString();
+            String can = et_cant.getText().toString();
+
+            if (!sku.isEmpty()) {
+                et_sku.setText("");
+                et_cant.setText("");
+                buscarSKU(sku, can);
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage());
         }
-        else
-            Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
     }
 
     private void imprimir()
@@ -216,8 +228,8 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         ArrayList<DataTableWS.Ruta> dtRutas = null;
         long cerv = 0, env = 0;
 
-        try {
-
+        try
+        {
             String rutaCve = String.valueOf(conf.getRuta());
             String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}", rutaCve), getContext());
 
@@ -284,7 +296,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al imprimir: "+e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_imprimir), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -299,15 +311,15 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
 
 
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-        dialogo1.setTitle("¿Imprimir sugerido?");
+        dialogo1.setTitle(getString(R.string.msg_impSug));
         dialogo1.setMessage(mensajeImp);
         dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
 
             }
         });
-        dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
                 //cancelar();
             }
@@ -377,15 +389,15 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             menImp += "\nTOTAL CERVEZA: " + cerv + "\n";
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("¿Imprimir sugerido ruta?");
+            dialogo1.setTitle(getString(R.string.msg_impSug));
             dialogo1.setMessage(menImp);
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
                 }
             });
-            dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     //cancelar();
                 }
@@ -397,13 +409,12 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida", "Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al imprimir sugerido ruta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_imprimir), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void peticionEnviar()
     {
-
         try
         {
             //guardar();
@@ -439,7 +450,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             }
             else
             {
-                Toast.makeText(getContext(), "Sugerido se encuentra vacio", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.tt_sug1), Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -447,6 +458,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         {
             Log.d("salida","Error: "+e.getMessage());
             Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_intPeticion), e.getMessage());
         }
 
 
@@ -472,12 +484,12 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             }
             db.setTransactionSuccessful();
 
-            Toast.makeText(getContext(), "Sugerido guardado con exito", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al guardar sugerido", Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
         }
         finally {
             db.endTransaction();
@@ -518,193 +530,193 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             }
             else
             {
-                Toast.makeText(getContext(), "Selecciona un producto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
             }
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
+            Utils.msgError(getContext(), getString(R.string.error_borrar), e.getMessage());
         }
     }
 
     private void buscarSKU(String sku,String cant)
     {
-
-        Log.d("salida","SKU BUSCAR: "+sku + "   can:"+cant);
-        int seleccion = -1;
-        sugeridoSelec="";
-        int c = -1;
         try
         {
-            if( cant==null || cant.isEmpty() )
-                c=0;
-            else
-                c = Integer.parseInt(cant);
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(getContext(), "Capture una cantidad correcta", Toast.LENGTH_SHORT).show();
-            return;
-        }
+            Log.d("salida", "SKU BUSCAR: " + sku + "   can:" + cant);
+            int seleccion = -1;
+            sugeridoSelec = "";
+            int c = -1;
 
-        int k = -1;
-
-        DataTableLC.Sugerido r=null;
-
-        for(int i=0; i < dgSugerido.size();i++)
-        {
-            if( sku.equals( dgSugerido.get(i).getProd_sku_str() ) )
-            {
-                r= dgSugerido.get(i);
-                k=i;
-                i=dgSugerido.size();
+            try {
+                if (cant == null || cant.isEmpty())
+                    c = 0;
+                else
+                    c = Integer.parseInt(cant);
+            } catch (Exception e) {
+                Toast.makeText(getContext(), getString(R.string.tt_canCorrecta), Toast.LENGTH_SHORT).show();
+                return;
             }
-        }
 
-        if(r!=null)
-        {
-            et_sku.setText("");
-            et_cant.setText("");
+            int k = -1;
 
-            seleccion = k;
-            dgSugerido.get(k).setProd_sug_n( String.valueOf( c )  );
-        }
-        else
-        {
-            DataTableLC.Productos_Sug ri=null;
+            DataTableLC.Sugerido r = null;
 
-            for(int i=0; i < dtProd.size();i++)
-            {
-                if( sku.equals( dtProd.get(i).getProd_sku_str() ) )
-                {
-                    ri= dtProd.get(i);
-                    i=dtProd.size();
+            for (int i = 0; i < dgSugerido.size(); i++) {
+                if (sku.equals(dgSugerido.get(i).getProd_sku_str())) {
+                    r = dgSugerido.get(i);
+                    k = i;
+                    i = dgSugerido.size();
                 }
             }
 
-            if(ri!=null)
-            {
+            if (r != null) {
                 et_sku.setText("");
                 et_cant.setText("");
 
-                DataTableLC.Sugerido sug = new DataTableLC.Sugerido();
+                seleccion = k;
+                dgSugerido.get(k).setProd_sug_n(String.valueOf(c));
+            } else {
+                DataTableLC.Productos_Sug ri = null;
 
-                sug.setProd_cve_n( ri.getProd_cve_n() );
-                sug.setProd_sku_str( ri.getProd_sku_str() );
-                sug.setProd_desc_str( ri.getProd_desc_str() );
-                sug.setId_envase_n( ri.getId_envase_n() );
-                sug.setProd_sug_n( String.valueOf( c ) );
-                sug.setCat_desc_str( ri.getCat_desc_str() );
+                for (int i = 0; i < dtProd.size(); i++) {
+                    if (sku.equals(dtProd.get(i).getProd_sku_str())) {
+                        ri = dtProd.get(i);
+                        i = dtProd.size();
+                    }
+                }
 
-                dgSugerido.add( sug );
+                if (ri != null) {
+                    et_sku.setText("");
+                    et_cant.setText("");
 
-                seleccion = dgSugerido.size()-1;
+                    DataTableLC.Sugerido sug = new DataTableLC.Sugerido();
 
-                tableLayout.requestFocus();
+                    sug.setProd_cve_n(ri.getProd_cve_n());
+                    sug.setProd_sku_str(ri.getProd_sku_str());
+                    sug.setProd_desc_str(ri.getProd_desc_str());
+                    sug.setId_envase_n(ri.getId_envase_n());
+                    sug.setProd_sug_n(String.valueOf(c));
+                    sug.setCat_desc_str(ri.getCat_desc_str());
+
+                    dgSugerido.add(sug);
+
+                    seleccion = dgSugerido.size() - 1;
+
+                    tableLayout.requestFocus();
+                } else {
+                    Log.d("salida", "Entro aqui, ri nulo");
+
+                    seleccion = -1;
+                    sugeridoSelec = "";
+                    sugeridoIndice = -1;
+
+                    Toast.makeText(getContext(), getString(R.string.tt_skuNo), Toast.LENGTH_SHORT).show();
+                }
             }
-            else
-            {
-                Log.d("salida","Entro aqui, ri nulo");
 
-                seleccion=-1;
-                sugeridoSelec = "";
-                sugeridoIndice = -1;
+            calcularEnvase();
+            mostrarSugerido(seleccion);
 
-                Toast.makeText(getContext(), "El sku no existe", Toast.LENGTH_SHORT).show();
-            }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage() );
         }
-
-        calcularEnvase();
-        mostrarSugerido(seleccion);
     }
 
     private void calcularEnvase()
     {
-        for(int i=0; i< dtProd.size(); i++)
-        {
-            if(dtProd.get(i).getCat_desc_str().equals("ENVASE"))
-            {
+        try {
+            for (int i = 0; i < dtProd.size(); i++) {
+                if (dtProd.get(i).getCat_desc_str().equals("ENVASE")) {
 
-                int k=-1;
-                int o=0;
-                DataTableLC.Sugerido e=null;
-                for(int j=0; j<dgSugerido.size();j++)
-                {
-                    if(dgSugerido.get(j).getProd_cve_n().equals(dtProd.get(i).getProd_cve_n()))
-                    {
-                        e = dgSugerido.get(j);
-                        k=j;
+                    int k = -1;
+                    int o = 0;
+                    DataTableLC.Sugerido e = null;
+                    for (int j = 0; j < dgSugerido.size(); j++) {
+                        if (dgSugerido.get(j).getProd_cve_n().equals(dtProd.get(i).getProd_cve_n())) {
+                            e = dgSugerido.get(j);
+                            k = j;
+                        }
+
+                        if (dgSugerido.get(j).getId_envase_n().equals(dtProd.get(i).getProd_cve_n())) {
+                            o = o + Integer.parseInt(dgSugerido.get(j).getProd_sug_n());
+                        }
+
                     }
 
-                    if(dgSugerido.get(j).getId_envase_n().equals(  dtProd.get(i).getProd_cve_n()  ))
-                    {
-                        o = o + Integer.parseInt(  dgSugerido.get(j).getProd_sug_n()  );
+                    if (e != null) {
+
+                    } else {
+                        DataTableLC.Sugerido ri = new DataTableLC.Sugerido();
+                        ri.setProd_cve_n(dtProd.get(i).getProd_cve_n());
+                        ri.setProd_sku_str(dtProd.get(i).getProd_sku_str());
+                        ri.setProd_desc_str(dtProd.get(i).getProd_desc_str());
+                        ri.setId_envase_n(dtProd.get(i).getId_envase_n());
+                        ri.setProd_sug_n("0");
+                        ri.setCat_desc_str(dtProd.get(i).getCat_desc_str());
+                        dgSugerido.add(ri);
+
+                        k = dgSugerido.size() - 1;
+
                     }
-
+                    dgSugerido.get(k).setProd_sug_n(String.valueOf(o));
                 }
-
-                if(e!=null)
-                {
-
-                }
-                else
-                {
-                    DataTableLC.Sugerido ri = new DataTableLC.Sugerido();
-                    ri.setProd_cve_n( dtProd.get(i).getProd_cve_n() );
-                    ri.setProd_sku_str( dtProd.get(i).getProd_sku_str() );
-                    ri.setProd_desc_str( dtProd.get(i).getProd_desc_str()  );
-                    ri.setId_envase_n( dtProd.get(i).getId_envase_n() );
-                    ri.setProd_sug_n("0");
-                    ri.setCat_desc_str( dtProd.get(i).getCat_desc_str() );
-                    dgSugerido.add(ri);
-
-                    k = dgSugerido.size()-1;
-
-                }
-                dgSugerido.get(k).setProd_sug_n( String.valueOf(o) );
             }
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_sug5), e.getMessage() );
         }
     }
 
     private void mostrarTitulo()
     {
-        tableLayout.removeAllViews();
-        TableRow tr;
+        try {
+            tableLayout.removeAllViews();
+            TableRow tr;
 
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido2, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido2, null);
 
-        ((TextView) tr.findViewById(R.id.t_sku)).setTypeface( ((TextView) tr.findViewById(R.id.t_sku)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_producto)).setTypeface( ((TextView) tr.findViewById(R.id.t_producto)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.t_sugerido)).setTypeface( ((TextView) tr.findViewById(R.id.t_sugerido)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_sku)).setTypeface(((TextView) tr.findViewById(R.id.t_sku)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_producto)).setTypeface(((TextView) tr.findViewById(R.id.t_producto)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.t_sugerido)).setTypeface(((TextView) tr.findViewById(R.id.t_sugerido)).getTypeface(), Typeface.BOLD);
 
-        tableLayout.addView(tr);
-
+            tableLayout.addView(tr);
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
+        }
     }
 
     private void mostrarSugerido(int seleccion)
     {
-        mostrarTitulo();
+        try {
+            mostrarTitulo();
 
-        for(int i=0; i<dgSugerido.size();i++)
-        {
-            TableRow tr;
+            for (int i = 0; i < dgSugerido.size(); i++) {
+                TableRow tr;
 
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido2, null);
-            ((TextView) tr.findViewById(R.id.t_sku)).setText( dgSugerido.get(i).getProd_sku_str() );
-            ((TextView) tr.findViewById(R.id.t_producto)).setText( dgSugerido.get(i).getProd_desc_str() );
-            ((TextView) tr.findViewById(R.id.t_sugerido)).setText( dgSugerido.get(i).getProd_sug_n() );
+                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido2, null);
+                ((TextView) tr.findViewById(R.id.t_sku)).setText(dgSugerido.get(i).getProd_sku_str());
+                ((TextView) tr.findViewById(R.id.t_producto)).setText(dgSugerido.get(i).getProd_desc_str());
+                ((TextView) tr.findViewById(R.id.t_sugerido)).setText(dgSugerido.get(i).getProd_sug_n());
 
-            tr.setTag(dgSugerido.get(i).getProd_sku_str());
-            tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
+                tr.setTag(dgSugerido.get(i).getProd_sku_str());
+                tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
 
-            if(i==seleccion)
-            {
-                tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
-                sugeridoSelec = dgSugerido.get(i).getProd_sku_str();
-                sugeridoAnt=sugeridoSelec;
-                sugeridoIndice = i;
+                if (i == seleccion) {
+                    tr.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    sugeridoSelec = dgSugerido.get(i).getProd_sku_str();
+                    sugeridoAnt = sugeridoSelec;
+                    sugeridoIndice = i;
+                }
+
+                tableLayout.addView(tr);
             }
-
-            tableLayout.addView(tr);
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
         }
     }
 
@@ -742,90 +754,87 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
 
     private void modificarSugerido(int index)
     {
-        if(!dgSugerido.get(index).getCat_desc_str().equals("ENVASE"))
+        try
         {
-            final String sku = dgSugerido.get(index).getProd_sku_str();
-            String sug = dgSugerido.get(index).getProd_sug_n();
-            String msg = getResources().getString(R.string.msg_actualizaSuge2) + ": "+sug  ;
+            if (!dgSugerido.get(index).getCat_desc_str().equals("ENVASE")) {
+                final String sku = dgSugerido.get(index).getProd_sku_str();
+                String sug = dgSugerido.get(index).getProd_sug_n();
+                String msg = getResources().getString(R.string.msg_actualizaSuge2) + ": " + sug;
 
-            LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
-            View view = layoutInflater.inflate(R.layout.dialog_sugerido,null);
-            final EditText editText = (EditText) view.findViewById(R.id.ti_sugerido);
+                LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
+                View view = layoutInflater.inflate(R.layout.dialog_sugerido, null);
+                final EditText editText = (EditText) view.findViewById(R.id.ti_sugerido);
 
-            final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.msg_actualizaSuge)
-                    .setMessage(msg)
-                    .setView(view)
-                    .setPositiveButton(R.string.bt_aceptar, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                final AlertDialog dialog = new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.msg_actualizaSuge)
+                        .setMessage(msg)
+                        .setView(view)
+                        .setPositiveButton(R.string.bt_aceptar, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String lectura = String.valueOf(editText.getText());
+                                buscarSKU(sku, lectura);
+                            }
+                        })
+                        .setNegativeButton(R.string.bt_cancelar, null)
+                        .create();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                dialog.show();
+
+                editText.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                             String lectura = String.valueOf(editText.getText());
-                            buscarSKU(sku,lectura);
+                            buscarSKU(sku, lectura);
+
+                            if (dialog.isShowing())
+                                dialog.dismiss();
+
+                            return true;
                         }
-                    })
-                    .setNegativeButton(R.string.bt_cancelar, null)
-                    .create();
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            dialog.show();
-
-            editText.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                        String lectura = String.valueOf(editText.getText());
-                        buscarSKU(sku,lectura);
-
-                        if(dialog.isShowing())
-                            dialog.dismiss();
-
-                        return true;
+                        return false;
                     }
-                    return false;
-                }
-            });
-
+                });
+            }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_sug11), e.getMessage());
         }
-
     }
 
     @Override
     public void recibirPeticion(boolean estado, String respuesta)
     {
-        if(estado)
-        {
-            if (respuesta != null) {
-                //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
-                DataTableWS.RetValInicioDia ret = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+        try {
+            if (estado) {
+                if (respuesta != null) {
+                    //Obtenemos el objeto usuario con los valores del servidor, lo guardamos en u
+                    DataTableWS.RetValInicioDia ret = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
 
-                if(ret.getRet().equals("true"))
-                {
-                    if (conf.getPreventa() == 1)
-                    {
-                        BaseLocal.Insert( Querys.ConfiguracionHH.DesactivarPedidos, getContext()  );
-                    }
-                    Toast.makeText(getContext(), "Datos enviados con exito. " + ret.getMsj(), Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    if (conf.getPreventa() == 1 && !conf.isDescarga())
-                    {
-                        if (ret.getMsj().contains("Ya existe una descarga previa de preventa"))
-                        {
-                            BaseLocal.Insert( Querys.ConfiguracionHH.DesactivarPedidos , getContext());
+                    if (ret.getRet().equals("true")) {
+                        if (conf.getPreventa() == 1) {
+                            BaseLocal.Insert(Querys.ConfiguracionHH.DesactivarPedidos, getContext());
                         }
-                    }
-                    Toast.makeText(getContext(), "Error al enviar el sugerido al servidor: " + ret.getMsj(), Toast.LENGTH_LONG).show();
-                }
-            }
-            else
-            {
-                Toast.makeText(getContext(), "Error al enviar sugerido", Toast.LENGTH_LONG).show();
-            }
-        }
-        else
-        {
-            Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
-        }
+                        Toast.makeText(getContext(), getString(R.string.tt_infoActu)+" " +ret.getMsj(), Toast.LENGTH_LONG).show();
+                    } else {
+                        if (conf.getPreventa() == 1 && !conf.isDescarga()) {
+                            if (ret.getMsj().contains("Ya existe una descarga previa de preventa")) {
+                                BaseLocal.Insert(Querys.ConfiguracionHH.DesactivarPedidos, getContext());
+                            }
+                        }
+                        Utils.msgError(getContext(), getString(R.string.error_transmitir), ret.getMsj());
 
+                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.error_transmitir), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+            }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_peticion), e.getMessage());
+        }
     }
 }

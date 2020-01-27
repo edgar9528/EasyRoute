@@ -22,6 +22,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.SugeridoVM;
@@ -31,19 +32,18 @@ import java.util.ArrayList;
 
 public class PresentacionFragment extends Fragment {
 
-    ArrayList<DataTableLC.Productos_Sug> dtProd=null;
-    ArrayList<String> lvPresentacion=null;
-    String familiaSelec;
+    private ArrayList<DataTableLC.Productos_Sug> dtProd=null;
+    private ArrayList<String> lvPresentacion=null;
+    private String familiaSelec;
 
-    String[] strBuscar =  new String[2];
-    EditText et_sku,et_cant;
-    Button b_buscar,b_borrar;
+    private String[] strBuscar =  new String[2];
+    private EditText et_sku,et_cant;
 
-    TableLayout tableLayout;
-    LayoutInflater layoutInflater;
-    View vista;
-    MainsugeridoFragment fragmentMain;
-    SugeridoVM sugeridoVM;
+    private TableLayout tableLayout;
+    private LayoutInflater layoutInflater;
+    private View vista;
+    private MainsugeridoFragment fragmentMain;
+    private SugeridoVM sugeridoVM;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,40 +57,48 @@ public class PresentacionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_familia, container, false);
 
-        layoutInflater = inflater;
-        vista=view;
-        fragmentMain = (MainsugeridoFragment) getParentFragment();
-        tableLayout = view.findViewById(R.id.tableLayout);
+        try {
 
-        et_sku = view.findViewById(R.id.et_sku);
-        et_cant = view.findViewById(R.id.et_cant);
-        b_buscar = view.findViewById(R.id.button_buscar);
-        b_borrar = view.findViewById(R.id.button_borrar);
+            layoutInflater = inflater;
+            vista = view;
+            fragmentMain = (MainsugeridoFragment) getParentFragment();
+            tableLayout = view.findViewById(R.id.tableLayout);
+            Button b_buscar, b_borrar;
 
-        et_cant.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    buscar();
-                    return true;
+            et_sku = view.findViewById(R.id.et_sku);
+            et_cant = view.findViewById(R.id.et_cant);
+            b_buscar = view.findViewById(R.id.button_buscar);
+            b_borrar = view.findViewById(R.id.button_borrar);
+
+            et_cant.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        buscar();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        b_buscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buscar();
-            }
-        });
+            b_buscar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    buscar();
+                }
+            });
 
-        b_borrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sugeridoVM.setBorrar(true);
-            }
-        });
+            b_borrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sugeridoVM.setBorrar(true);
+                }
+            });
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_sug8), e.getMessage() );
+        }
 
 
         return  view;
@@ -119,55 +127,61 @@ public class PresentacionFragment extends Fragment {
 
     private void buscar()
     {
-        String sku = et_sku.getText().toString();
-        String can= et_cant.getText().toString();
-
-        if(!sku.isEmpty())
+        try
         {
-            strBuscar[0] = sku;
-            strBuscar[1] = can;
+            String sku = et_sku.getText().toString();
+            String can = et_cant.getText().toString();
 
-            et_sku.setText("");
-            et_cant.setText("");
+            if (!sku.isEmpty()) {
+                strBuscar[0] = sku;
+                strBuscar[1] = can;
 
-            fragmentMain.goSugerido();
+                et_sku.setText("");
+                et_cant.setText("");
 
-            sugeridoVM.setStrBuscar( strBuscar );
+                fragmentMain.goSugerido();
+
+                sugeridoVM.setStrBuscar(strBuscar);
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(getContext(), "Ingresa un sku a buscar", Toast.LENGTH_SHORT).show();
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage() );
+        }
     }
 
 
     private void obtenerPresentaciones()
     {
-        if(dtProd!=null)
+        try
         {
-            lvPresentacion = new ArrayList<>();
-            tableLayout.removeAllViews();
-            String presentacion;
+            if (dtProd != null) {
+                lvPresentacion = new ArrayList<>();
+                tableLayout.removeAllViews();
+                String presentacion;
 
-            for (int i = 0; i < dtProd.size(); i++)
-            {
-                if (familiaSelec.equals(dtProd.get(i).getFam_desc_str()))
-                {
-                    presentacion = dtProd.get(i).getPres_desc_str();
+                for (int i = 0; i < dtProd.size(); i++) {
+                    if (familiaSelec.equals(dtProd.get(i).getFam_desc_str())) {
+                        presentacion = dtProd.get(i).getPres_desc_str();
 
-                    if(!lvPresentacion.contains( presentacion ))
-                    {
-                        lvPresentacion.add(presentacion);
+                        if (!lvPresentacion.contains(presentacion)) {
+                            lvPresentacion.add(presentacion);
 
-                        TableRow tr;
+                            TableRow tr;
 
-                        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido1, null);
-                        ((TextView) tr.findViewById(R.id.t_titulo)).setText( presentacion );
-                        tr.setTag(presentacion);
-                        tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
-                        tableLayout.addView(tr);
+                            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido1, null);
+                            ((TextView) tr.findViewById(R.id.t_titulo)).setText(presentacion);
+                            tr.setTag(presentacion);
+                            tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
+                            tableLayout.addView(tr);
+                        }
                     }
                 }
             }
-
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 

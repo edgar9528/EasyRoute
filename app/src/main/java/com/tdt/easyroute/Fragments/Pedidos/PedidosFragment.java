@@ -101,32 +101,38 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pedidos, container, false);
 
-        toolbar = view.findViewById(R.id.toolbarPedidos);
-        toolbar.inflateMenu(R.menu.pedidos_menu);
+        try
+        {
+            toolbar = view.findViewById(R.id.toolbarPedidos);
+            toolbar.inflateMenu(R.menu.pedidos_menu);
 
-        pieChartVisitas= view.findViewById(R.id.pieChart1);
-        pieChartEfectividad = view.findViewById(R.id.pieChart2);
+            pieChartVisitas = view.findViewById(R.id.pieChart1);
+            pieChartEfectividad = view.findViewById(R.id.pieChart2);
 
-        nombreBase = getContext().getString(R.string.nombreBD);
+            nombreBase = getContext().getString(R.string.nombreBD);
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return clickItemToolbar(item);
-            }
-        });
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return clickItemToolbar(item);
+                }
+            });
 
-        conf = Utils.ObtenerConf(getActivity().getApplication());
-        vista=view;
+            conf = Utils.ObtenerConf(getActivity().getApplication());
+            vista = view;
 
-        graficoVisitas();
-        graficoEfectividad();
+            graficoVisitas();
+            graficoEfectividad();
 
-        //crearPedidos(view);
+            //crearPedidos(view);
 
-        InicializarAsync inicializar = new InicializarAsync();
-        inicializar.execute();
+            InicializarAsync inicializar = new InicializarAsync();
+            inicializar.execute();
 
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped1), e.getMessage());
+        }
 
         return view;
     }
@@ -135,70 +141,81 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     private void graficoVisitas()
     {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        PieDataSet pieDataSet ;
-        PieData pieData ;
+        try {
+            ArrayList<PieEntry> entries = new ArrayList<>();
+            PieDataSet pieDataSet;
+            PieData pieData;
 
 
-        entries.add(new PieEntry(3,"Cumplidas" ));
-        entries.add(new PieEntry(48, "Faltantes"));
+            entries.add(new PieEntry(3, "Cumplidas"));
+            entries.add(new PieEntry(48, "Faltantes"));
 
-        pieDataSet = new PieDataSet(entries, "");
+            pieDataSet = new PieDataSet(entries, "");
 
-        pieData = new PieData( pieDataSet);
+            pieData = new PieData(pieDataSet);
 
-        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+            pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
 
-        pieChartVisitas.setData(pieData);
+            pieChartVisitas.setData(pieData);
 
-        Description description = new Description();
-        description.setText(getString(R.string.graf_ventas));
-        description.setTextColor(ColorTemplate.rgb("ffffff") );
-        description.setTextSize(18);
+            Description description = new Description();
+            description.setText(getString(R.string.graf_ventas));
+            description.setTextColor(ColorTemplate.rgb("ffffff"));
+            description.setTextSize(18);
 
-        pieChartVisitas.setCenterText(60+"%");
-        pieChartVisitas.setCenterTextSize(18);
-        pieChartVisitas.setCenterTextColor( ColorTemplate.rgb("ffffff") );
+            pieChartVisitas.setCenterText(60 + "%");
+            pieChartVisitas.setCenterTextSize(18);
+            pieChartVisitas.setCenterTextColor(ColorTemplate.rgb("ffffff"));
 
-        pieChartVisitas.getLegend().setEnabled(false);
-        pieChartVisitas.setDrawEntryLabels(false);
-        pieChartVisitas.setDescription(description);
-        pieChartVisitas.setHoleColor( ColorTemplate.COLOR_NONE );
-        pieChartVisitas.animateY(500);
+            pieChartVisitas.getLegend().setEnabled(false);
+            pieChartVisitas.setDrawEntryLabels(false);
+            pieChartVisitas.setDescription(description);
+            pieChartVisitas.setHoleColor(ColorTemplate.COLOR_NONE);
+            pieChartVisitas.animateY(500);
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_graficas), e.getMessage());
+        }
     }
 
     private void graficoEfectividad()
     {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        PieDataSet pieDataSet ;
-        PieData pieData ;
+        try {
 
+            ArrayList<PieEntry> entries = new ArrayList<>();
+            PieDataSet pieDataSet;
+            PieData pieData;
 
-        entries.add(new PieEntry(60,"Efectividad" ));
-        entries.add(new PieEntry(40,"Restante" ));
+            entries.add(new PieEntry(60, "Efectividad"));
+            entries.add(new PieEntry(40, "Restante"));
 
-        pieDataSet = new PieDataSet(entries, "");
+            pieDataSet = new PieDataSet(entries, "");
 
-        pieData = new PieData( pieDataSet);
+            pieData = new PieData(pieDataSet);
 
-        pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+            pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
 
-        pieChartEfectividad.setData(pieData);
+            pieChartEfectividad.setData(pieData);
 
-        Description description = new Description();
-        description.setText(getString(R.string.graf_efectividad));
-        description.setTextColor(ColorTemplate.rgb("ffffff") );
-        description.setTextSize(18);
+            Description description = new Description();
+            description.setText(getString(R.string.graf_efectividad));
+            description.setTextColor(ColorTemplate.rgb("ffffff"));
+            description.setTextSize(18);
 
-        pieChartEfectividad.setCenterText(60+"%");
-        pieChartEfectividad.setCenterTextSize(18);
-        pieChartEfectividad.setCenterTextColor( ColorTemplate.rgb("ffffff") );
+            pieChartEfectividad.setCenterText(60 + "%");
+            pieChartEfectividad.setCenterTextSize(18);
+            pieChartEfectividad.setCenterTextColor(ColorTemplate.rgb("ffffff"));
 
-        pieChartEfectividad.getLegend().setEnabled(false);
-        pieChartEfectividad.setDrawEntryLabels(false);
-        pieChartEfectividad.setDescription(description);
-        pieChartEfectividad.setHoleColor( ColorTemplate.COLOR_NONE );
-        pieChartEfectividad.animateY(500);
+            pieChartEfectividad.getLegend().setEnabled(false);
+            pieChartEfectividad.setDrawEntryLabels(false);
+            pieChartEfectividad.setDescription(description);
+            pieChartEfectividad.setHoleColor(ColorTemplate.COLOR_NONE);
+            pieChartEfectividad.animateY(500);
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_graficas), e.getMessage());
+        }
     }
 
     private void imprimir()
@@ -275,13 +292,15 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             }
             else
             {
-                Toast.makeText(getContext(), "Error: "+mensaje, Toast.LENGTH_LONG).show();
+                Utils.msgError(getContext(), "Error", mensaje);
             }
         }
     }
 
-    private void listarClientes(boolean dia) {
-        try {
+    private void listarClientes(boolean dia)
+    {
+        try
+        {
             String filtro = "";
             String qry = "";
             String qryc = "";
@@ -369,12 +388,13 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             }
         } catch (Exception e) {
             Log.d("salida", "Error: " + e.toString());
-            Toast.makeText(getContext(), "Error al listar clientes: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 
     private void cargarClientes(ArrayList<DataTableLC.PedidosClientes> dt) {
-        try {
+        try
+        {
             ArrayList<DataTableLC.PedidosVisitas> dtCli;
             ArrayList<DataTableLC.PedidosVisitas> dtCli2;
             ArrayList<DataTableLC.PedidosVisPre> dtVisPre;
@@ -463,44 +483,49 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
         } catch (Exception e) {
             Log.d("salida", "Error: " + e.toString());
-            Toast.makeText(getContext(), "Error al cargar clientes: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 
 
-    private void mostrarClientes() {
+    private void mostrarClientes()
+    {
+        try {
 
-        Drawable[] iconos = new Drawable[6];
-        iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-        iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-        iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-        iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-        iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-        iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            Drawable[] iconos = new Drawable[6];
+            iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
 
-        if (lvClientes != null)
-        {
+            if (lvClientes != null) {
 
-            RecyclerView pedidosRecyclerView = vista.findViewById(R.id.pedidosRecycler);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                RecyclerView pedidosRecyclerView = vista.findViewById(R.id.pedidosRecycler);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-            pedidosRecyclerView.setLayoutManager(linearLayoutManager);
-            ArrayList<PedidosCardView> pedidosCardViews = new ArrayList<>();
+                pedidosRecyclerView.setLayoutManager(linearLayoutManager);
+                ArrayList<PedidosCardView> pedidosCardViews = new ArrayList<>();
 
-            String clave, nombre;
-            for (int i = 0; i < lvClientes.size(); i++) {
+                String clave, nombre;
+                for (int i = 0; i < lvClientes.size(); i++) {
 
-                clave = lvClientes.get(i).getCli_est() +" | "+lvClientes.get(i).getCli_cveext_n();
-                nombre= lvClientes.get(i).getCli_nombre();
-                if(nombre.length()>20)
-                    nombre= nombre.substring(0,20)+"...";
+                    clave = lvClientes.get(i).getCli_est() + " | " + lvClientes.get(i).getCli_cveext_n();
+                    nombre = lvClientes.get(i).getCli_nombre();
+                    if (nombre.length() > 20)
+                        nombre = nombre.substring(0, 20) + "...";
 
-                pedidosCardViews.add( new PedidosCardView( clave,nombre, lvClientes.get(i) ));
+                    pedidosCardViews.add(new PedidosCardView(clave, nombre, lvClientes.get(i)));
+                }
+
+                PedidosAdapterRecyclerView pedidosAdapterRecyclerView = new PedidosAdapterRecyclerView(pedidosCardViews, R.layout.cardview_pedidos, this);
+                pedidosRecyclerView.setAdapter(pedidosAdapterRecyclerView);
             }
-
-            PedidosAdapterRecyclerView pedidosAdapterRecyclerView = new PedidosAdapterRecyclerView(pedidosCardViews,R.layout.cardview_pedidos,this);
-            pedidosRecyclerView.setAdapter(pedidosAdapterRecyclerView);
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
         }
 
     }
@@ -524,7 +549,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Log.d( "salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 
@@ -549,7 +574,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 
@@ -560,27 +585,24 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     public void noVisita(DataTableLC.PedidosLv item)
     {
-        if(item.getIconoInt() ==1 )
-        {
-            Toast.makeText(getContext(), "El cliente ya tiene una venta registrada.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        else
-        if(item.getIconoInt() ==2 )
-        {
-            Toast.makeText(getContext(), "El cliente ya registro cobranza.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        else
-        if(item.getIconoInt() ==3 )
-        {
-            Toast.makeText(getContext(), "El cliente ya tiene un motivo de no venta.", Toast.LENGTH_LONG).show();
-            return;
-        }
+        try {
+            if (item.getIconoInt() == 1) {
+                Toast.makeText(getContext(), getString(R.string.tt_ped1), Toast.LENGTH_LONG).show();
+                return;
+            } else if (item.getIconoInt() == 2) {
+                Toast.makeText(getContext(), getString(R.string.tt_ped2), Toast.LENGTH_LONG).show();
+                return;
+            } else if (item.getIconoInt() == 3) {
+                Toast.makeText(getContext(), getString(R.string.tt_ped3), Toast.LENGTH_LONG).show();
+                return;
+            }
+            tipo = 1;
+            mostrarMsj(item);
 
-        tipo = 1;
-        mostrarMsj(item);
-
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
+        }
     }
 
     private void mostrarMsj(DataTableLC.PedidosLv item)
@@ -589,8 +611,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             return;
 
         DataTableLC.DtCliVenta rc = getDetcli(item.getCli_cve_n());
-
-
 
         String men="",q="";
         if(tipo==1)
@@ -632,10 +652,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-
-
-
-
     }
 
     private DataTableLC.DtCliVenta getDetcli(String cliente)
@@ -653,54 +669,52 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     @Override
     public void recibirPeticion(boolean estado, String respuesta) {
-        if(estado)
-        {
-            if (respuesta != null)
-            {
-                ArrayList<DataTableWS.Clientes> clientes;
-                clientes = ConvertirRespuesta.getClientesJson(respuesta);
 
-                if(clientes!=null && clientes.size()>0)
-                {
-                    DataTableWS.Clientes r = clientes.get(0);
+        try {
 
-                    try {
+            if (estado) {
+                if (respuesta != null) {
+                    ArrayList<DataTableWS.Clientes> clientes;
+                    clientes = ConvertirRespuesta.getClientesJson(respuesta);
 
-                        String consulta=string.formatSql(Querys.Clientes.UpClientes4, r.getCli_cveext_str() , getBool( r.getCli_padre_n() ),
-                                r.getCli_cvepadre_n(),r.getCli_razonsocial_str(), r.getCli_rfc_Str() , getBool( r.getCli_reqfact_n() ) ,r.getCli_nombrenegocio_str(),
-                                r.getCli_nom_str(), r.getCli_app_str(),r.getCli_apm_str(),r.getCli_fnac_dt(), r.getCli_genero_str(),r.getLpre_cve_n(),
-                                r.getNota_cve_n(), r.getFpag_cve_n(), getBool( r.getCli_consigna_n() ) , getBool( r.getCli_credito_n() ) ,r.getCli_montocredito_n(),
-                                r.getCli_plazocredito_n(),r.getCli_credenvases_n(),r.getCli_estcredito_str(), getBool( r.getCli_fba_n()) ,
-                                r.getCli_porcentajefba_n(),r.getRut_cve_n(),r.getNvc_cve_n(),r.getGiro_cve_n(),r.getCli_email_str(),
-                                r.getCli_dirfact_n(), r.getCli_dirent_n(), r.getCli_Tel1_str(),r.getCli_tel2_str(),r.getEmp_cve_n(),
-                                r.getCli_coordenadaini_str(),r.getEst_cve_str(),r.getTcli_cve_n(),r.getCli_lun_n(),
-                                r.getCli_mar_n(), r.getCli_mie_n(), r.getCli_jue_n(), r.getCli_vie_n(),r.getCli_sab_n(),r.getCli_dom_n(),
-                                r.getFrec_cve_n(), getBool( r.getCli_especial_n() ) , getBool( r.getCli_esvallejo_n() ) , r.getNpro_cve_n(),r.getCli_huixdesc_n(),
-                                getBool( r.getCli_eshuix_n() ) , getBool( r.getCli_prospecto_n() ) , getBool( r.getCli_invalidafrecuencia_n() ) , getBool( r.getCli_invalidagps_n() ) ,
-                                getBool( r.getCli_dobleventa_n() ), getBool(r.getCli_comodato_n()) , r.getSeg_cve_n(), getBool( r.getCli_dispersion_n() ) ,
-                                r.getCli_dispersioncant_n(), r.getCli_limitemes_n(), r.getCli_cve_n());
+                    if (clientes != null && clientes.size() > 0) {
+                        DataTableWS.Clientes r = clientes.get(0);
 
-                        BaseLocal.Insert( consulta,getContext());
+                        try {
 
-                        Toast.makeText(getContext(), "Cliente actualizado", Toast.LENGTH_SHORT).show();
+                            String consulta = string.formatSql(Querys.Clientes.UpClientes4, r.getCli_cveext_str(), getBool(r.getCli_padre_n()),
+                                    r.getCli_cvepadre_n(), r.getCli_razonsocial_str(), r.getCli_rfc_Str(), getBool(r.getCli_reqfact_n()), r.getCli_nombrenegocio_str(),
+                                    r.getCli_nom_str(), r.getCli_app_str(), r.getCli_apm_str(), r.getCli_fnac_dt(), r.getCli_genero_str(), r.getLpre_cve_n(),
+                                    r.getNota_cve_n(), r.getFpag_cve_n(), getBool(r.getCli_consigna_n()), getBool(r.getCli_credito_n()), r.getCli_montocredito_n(),
+                                    r.getCli_plazocredito_n(), r.getCli_credenvases_n(), r.getCli_estcredito_str(), getBool(r.getCli_fba_n()),
+                                    r.getCli_porcentajefba_n(), r.getRut_cve_n(), r.getNvc_cve_n(), r.getGiro_cve_n(), r.getCli_email_str(),
+                                    r.getCli_dirfact_n(), r.getCli_dirent_n(), r.getCli_Tel1_str(), r.getCli_tel2_str(), r.getEmp_cve_n(),
+                                    r.getCli_coordenadaini_str(), r.getEst_cve_str(), r.getTcli_cve_n(), r.getCli_lun_n(),
+                                    r.getCli_mar_n(), r.getCli_mie_n(), r.getCli_jue_n(), r.getCli_vie_n(), r.getCli_sab_n(), r.getCli_dom_n(),
+                                    r.getFrec_cve_n(), getBool(r.getCli_especial_n()), getBool(r.getCli_esvallejo_n()), r.getNpro_cve_n(), r.getCli_huixdesc_n(),
+                                    getBool(r.getCli_eshuix_n()), getBool(r.getCli_prospecto_n()), getBool(r.getCli_invalidafrecuencia_n()), getBool(r.getCli_invalidagps_n()),
+                                    getBool(r.getCli_dobleventa_n()), getBool(r.getCli_comodato_n()), r.getSeg_cve_n(), getBool(r.getCli_dispersion_n()),
+                                    r.getCli_dispersioncant_n(), r.getCli_limitemes_n(), r.getCli_cve_n());
 
+                            BaseLocal.Insert(consulta, getContext());
 
+                            Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            Log.d("salida", "Error: " + e.getMessage());
+                            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Log.d("salida", "Error: "+e.getMessage());
-                        Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.tt_noInformacion), Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
             }
-            else
-            {
-                Toast.makeText(getContext(), "No se encontro el cliente", Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
+
+        }catch (Exception e)
         {
-            Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(), getString(R.string.error_peticion), e.getMessage());
         }
 
     }
@@ -727,16 +741,12 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             try {
                 //String editar = (String) data.getExtras().getSerializable("CamposEditar");
                 String editar = (String) data.getStringExtra("clave");
-
                 Toast.makeText(getContext(), "Cliente a editar: " + editar, Toast.LENGTH_SHORT).show();
 
             } catch (Exception e) {
                 Log.d("salida", e.getMessage());
-                Toast.makeText(getContext(), "Error al buscar clientes", Toast.LENGTH_SHORT).show();
+                Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage());
             }
-        } else {
-            Log.d("salida", "Busqueda cancelada");
-            Toast.makeText(getContext(), "Busqueda cancelada", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -760,7 +770,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             conexionWS.execute();
         } catch (Exception e) {
             Log.d("salida", "Error al actualizar: " + e.getMessage());
-            Toast.makeText(getContext(), "Error al actualizar clientes", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_cargarInfo), Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -174,7 +174,8 @@ public class DatosFragment extends Fragment {
                 tableLayout.removeAllViews();
                 TableRow tr;
 
-                for (int i = 0; i < al_catalogos.size(); i++) {
+                for (int i = 0; i < al_catalogos.size(); i++)
+                {
                     tr = (TableRow) layoutInflater.inflate(R.layout.tabla_catalogos, null);
 
                     RadioButton rb = tr.findViewById(R.id.tabla_radio);

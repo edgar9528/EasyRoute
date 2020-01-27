@@ -153,11 +153,11 @@ public class MainsugeridoFragment extends Fragment {
             conf = Utils.ObtenerConf(getActivity().getApplication());
 
             if (conf.getPreventa() == 2) {
-                Toast.makeText(getContext(), "Las rutas de reparto no pueden enviar sugerido", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.err_sug6), Toast.LENGTH_LONG).show();
                 Utils.RegresarInicio(getActivity());
             }
             if (conf.getPreventa() == 1) {
-                Toast.makeText(getContext(), "Asegurese de haber transmitido su información antes de enviar el sugerido de su reparto.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.err_sug7), Toast.LENGTH_LONG).show();
             }
         }catch (Exception e)
         {

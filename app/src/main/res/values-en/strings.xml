@@ -308,5 +308,51 @@
     <string name="err_sug1">Suggested startup error</string>
     <string name="err_sug2">Error loading family window</string>
 
+    <string name="error_cargarProduc">Error loading products</string>
+    <string name="err_sug3">Error getting families</string>
+    <string name="err_sug4">Suggested loading error</string>
+    <string name="err_sug5">Error calculating container</string>
+    <string name="err_sug6">Delivery routes cannot send suggested</string>
+    <string name="err_sug7">Make sure you have transmitted your information before submitting the suggested delivery.</string>
+    <string name="err_sug8">Error loading fragment presentation</string>
+    <string name="err_sug9">Error loading fragment products</string>
+    <string name="err_sug10">Error loading suggested fragment</string>
+    <string name="msg_impSug">Print suggested route?</string>
+    <string name="tt_sug1">Suggested is empty</string>
+    <string name="error_borrar">Error deleting information</string>
+    <string name="tt_canCorrecta">Capture a correct amount</string>
+    <string name="tt_skuNo">The sku does not exist</string>
+    <string name="err_sug11">Suggested Modify Error</string>
+    <string name="error_transmitir">Error transmitting information</string>
+
+
+    <string name="err_inv1">Error loading fragment initial load</string>
+    <string name="err_inv2">Error applying</string>
+    <string name="tt_selecInv">Please select a {0} with products to continue.</string>
+    <string name="tt_selecInv2">Please select a {0} to continue.</string>
+    <string name="err_inv3">Error processing</string>
+    <string name="error_salir">Error leaving</string>
+    <string name="tt_inv1">You must accept all recharges in order to leave and continue.</string>
+    <string name="err_inv4">Error loading fragment returns</string>
+    <string name="msg_invDev1">Please select a load to continue.</string>
+    <string name="msg_invDev2">Please select a load with products to continue.</string>
+    <string name="msg_devolucion">Devolution</string>
+    <string name="err_inv5">Error loading inventory</string>
+    <string name="tt_menServido">Server Message:</string>
+    <string name="err_inv6">Error creating automatic sale</string>
+    <string name="err_inv7">Error validating products</string>
+    <string name="err_inv8">Error loading inventory fragment</string>
+    <string name="tt_inv2">There are {0} required products to sell. An automatic sale to special customers will be generated.</string>
+    <string name="tt_inv3">We inform you that you have not covered your productivity quota missing {0} visits to be able to make your download.</string>
+    <string name="tt_inv4">We inform you that you have not covered your effectiveness quota missing {0} sales to be able to make your download.</string>
+    <string name="err_inv9">Error downloading inventory</string>
+    <string name="err_invNoinfo">No information found</string>
+    <string name="err_ped1">Error initializing orders</string>
+    <string name="error_graficas">Error starting graphs</string>
+    <string name="tt_ped1">The customer already has a registered sale.</string>
+    <string name="tt_ped2">The customer already registered collection.</string>
+    <string name="tt_ped3">The customer already has a reason for not selling.</string>
+
+
 
 </resources>

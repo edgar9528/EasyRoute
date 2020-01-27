@@ -95,48 +95,50 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inventario, container, false);
-        layoutInflater = inflater;
 
-        mainActivity = (MainActivity) getActivity();
+        try {
 
-        button_imprimir = view.findViewById(R.id.button_imprimir);
-        button_salir = view.findViewById(R.id.button_salir);
-        tableLayout =  view.findViewById(R.id.tableLayout);
-        nombreBase = getActivity().getString( R.string.nombreBD );
+            layoutInflater = inflater;
+            mainActivity = (MainActivity) getActivity();
 
-        if(descarga)
-        {
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( getString(R.string.title_inventario1) );
-            button_imprimir.setText(getString(R.string.bt_descargar));
-        }
-        else
-        {
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( getString(R.string.title_inventario2) );
-            button_imprimir.setText(getString(R.string.bt_imprimir));
-        }
+            button_imprimir = view.findViewById(R.id.button_imprimir);
+            button_salir = view.findViewById(R.id.button_salir);
+            tableLayout = view.findViewById(R.id.tableLayout);
+            nombreBase = getActivity().getString(R.string.nombreBD);
 
-        conf = Utils.ObtenerConf(getActivity().getApplication());
-        crearEnvaseAut();
-        cargarInventario(conf.getRuta());
-
-
-        button_imprimir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                verificarImpresion();
+            if (descarga) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_inventario1));
+                button_imprimir.setText(getString(R.string.bt_descargar));
+            } else {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_inventario2));
+                button_imprimir.setText(getString(R.string.bt_imprimir));
             }
-        });
 
-        button_salir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.RegresarInicio(getActivity());
+            conf = Utils.ObtenerConf(getActivity().getApplication());
+            crearEnvaseAut();
+            cargarInventario(conf.getRuta());
+
+
+            button_imprimir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    verificarImpresion();
+                }
+            });
+
+            button_salir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.RegresarInicio(getActivity());
+                }
+            });
+
+            if (descarga) {
+                validarProductosMismoDia();
             }
-        });
-
-        if(descarga)
+        }catch (Exception e)
         {
-            validarProductosMismoDia();
+            Utils.msgError(getContext(), getString(R.string.err_inv8), e.getMessage());
         }
 
         return view;
@@ -154,170 +156,165 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
     private void validarProductosMismoDia()
     {
-        float CantVta=0;
+        try {
 
-        for(int i=0; i<al_invP.size();i++)
+            float CantVta = 0;
+
+            for (int i = 0; i < al_invP.size(); i++) {
+                if (Integer.parseInt(al_invP.get(i).getProd_vtamismodia_n()) == 1 && Integer.parseInt(al_invP.get(i).getProd_cant_n()) > 0) {
+                    dtVta.add(al_invP.get(i));
+                    if (al_invP.get(i).getProd_cant_n() != null)
+                        CantVta += Float.parseFloat(al_invP.get(i).getProd_cant_n());
+                }
+            }
+
+            if (dtVta.size() > 0) {
+                Toast.makeText(getContext(), string.formatSql(getString(R.string.tt_inv2), String.valueOf(CantVta)), Toast.LENGTH_LONG).show();
+
+                //Obtener la ruta actual
+                DataTableWS.Ruta dtRut = null;
+                String jsonRuta = BaseLocal.Select(string.formatSql("select * from rutas where rut_cve_n={0}", String.valueOf(conf.getRuta())), getContext());
+                if (ConvertirRespuesta.getRutasJson(jsonRuta) != null && ConvertirRespuesta.getRutasJson(jsonRuta).size() > 0)
+                    dtRut = ConvertirRespuesta.getRutasJson(jsonRuta).get(0);
+
+                DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+                try {
+                    String fecha = Utils.FechaLocal().replace("-", "");
+                    String rut = String.valueOf(conf.getRuta());
+                    String ceros = "";
+                    if (rut.length() < 3) {
+                        for (int i = rut.length(); i < 3; i++) ceros = ceros.concat("0");
+                        rut = ceros + rut;
+                    }
+
+                    Cursor cursor = db.rawQuery("select max(ven_folio_str) from ventas", null);
+                    if (cursor.moveToFirst() && cursor.getString(0) != null) {
+                        folio = cursor.getString(0);
+                        folio = folio.substring(11);
+                        folio = String.valueOf(Integer.parseInt(folio) + 1);
+
+                        folio = fecha + rut + folio;
+                    } else {
+                        folio = fecha + rut + "001";
+                    }
+
+                    if (dtRut != null) {
+                        idCteEsp = dtRut.getRut_idcteesp_n();
+                    }
+
+                    db.close();
+
+                    obtenerUbicacion("VentaAutomatica");
+
+                } catch (Exception e) {
+                    Utils.msgError(getContext(), getString(R.string.err_inv7), e.getMessage());
+                    Log.d("salida", "Error: " + e.getMessage());
+                } finally {
+                    db.close();
+                }
+            }
+
+            verficarDescarga();
+
+        }catch (Exception e)
         {
-            if(  Integer.parseInt( al_invP.get(i).getProd_vtamismodia_n() )==1 && Integer.parseInt( al_invP.get(i).getProd_cant_n() )>0   )
-            {
-                dtVta.add(al_invP.get(i));
-                if(al_invP.get(i).getProd_cant_n()!=null)
-                    CantVta+= Float.parseFloat( al_invP.get(i).getProd_cant_n() ) ;
-            }
+            Utils.msgError(getContext(), getString(R.string.err_inv7), e.getMessage());
         }
-
-        if(dtVta.size()>0)
-        {
-            Toast.makeText(getContext(), string.formatSql("Faltan {0} productos obligatorios por vender. Se generara una venta automatica a clientes especiales.", String.valueOf(CantVta) ), Toast.LENGTH_LONG).show();
-
-            //Obtener la ruta actual
-            DataTableWS.Ruta dtRut = null;
-            String jsonRuta = BaseLocal.Select( string.formatSql("select * from rutas where rut_cve_n={0}", String.valueOf( conf.getRuta() ) ) ,getContext());
-            if(ConvertirRespuesta.getRutasJson(jsonRuta)!=null && ConvertirRespuesta.getRutasJson(jsonRuta).size()>0 )
-                dtRut = ConvertirRespuesta.getRutasJson(jsonRuta).get(0);
-
-            DatabaseHelper databaseHelper = new DatabaseHelper(getActivity(), nombreBase, null, 1);
-            SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
-            try
-            {
-                String fecha= Utils.FechaLocal().replace("-","");
-                String rut = String.valueOf( conf.getRuta() );
-                String ceros ="";
-                if(rut.length()<3) {
-                    for (int i = rut.length(); i < 3; i++) ceros = ceros.concat("0");
-                    rut = ceros+rut;
-                }
-
-                Cursor cursor = db.rawQuery("select max(ven_folio_str) from ventas", null);
-                if(cursor.moveToFirst() && cursor.getString(0)!=null)
-                {
-                    folio= cursor.getString(0);
-                    folio = folio.substring(11);
-                    folio= String.valueOf(Integer.parseInt(folio) + 1);
-
-                    folio= fecha+rut+folio;
-                }
-                else
-                {
-                    folio= fecha+rut+"001";
-                }
-
-                if(dtRut!=null)
-                {
-                    idCteEsp = dtRut.getRut_idcteesp_n();
-                }
-
-                db.close();
-
-                obtenerUbicacion("VentaAutomatica");
-
-            }catch (Exception e)
-            {
-                Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d("salida", "Error: "+e.getMessage() );
-            }
-            finally
-            {
-                db.close();
-            }
-        }
-
-        verficarDescarga();
-
 
     }
 
     private void verficarDescarga()
     {
-        int H = Integer.parseInt(Utils.HoraLocal().substring(0,2)) ;
+        try
+        {
+            int H = Integer.parseInt(Utils.HoraLocal().substring(0, 2));
 
-        if(H<14)
+            if (H < 14) {
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+                dialogo1.setTitle(getString(R.string.msg_importante));
+                dialogo1.setMessage(getString(R.string.msg_confDescarga));
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        abrirDescarga();
+                    }
+                });
+                dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        Utils.RegresarInicio(getActivity());
+                    }
+                });
+                dialogo1.show();
+            } else {
+                abrirDescarga();
+            }
+        }catch (Exception e)
         {
-            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle(getString(R.string.msg_importante));
-            dialogo1.setMessage( getString(R.string.msg_confDescarga) );
-            dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-                    abrirDescarga();
-                }
-            });
-            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-                    Utils.RegresarInicio(getActivity());
-                }
-            });
-            dialogo1.show();
-        }
-        else
-        {
-            abrirDescarga();
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 
     private void abrirDescarga()
     {
-        String[] dias={"Domingo","Lunes","Martes", "Miércoles","Jueves","Viernes","Sábado"};
-
-        Modelos.Indicadores ip;
-
-        Calendar cal= Calendar.getInstance();
-        cal.setTime(new Date());
-        String dia = dias[cal.get(Calendar.DAY_OF_WEEK)-1] ;
-
-
-        if(dia.equals("Domingo"))
+        try
         {
-            ip = new Modelos.Indicadores();
-            ip.setPorcentajeRequerido(0);
-            ip.setPorcentajeRealizado(1);
-            ip.setPorcentajeRequeridoVentas(0);
-            ip.setPorcentajeRealizadoVentas(1);
-        }
-        else
-        {
-            ip = Utils.ObtenerProductividad( conf.getRuta(),  getActivity().getApplication());
-        }
+            String[] dias = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+
+            Modelos.Indicadores ip;
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            String dia = dias[cal.get(Calendar.DAY_OF_WEEK) - 1];
 
 
-        String mensaje="";
-        entrarDescarga=true;
-
-        if(ip.getPorcentajeRealizado() < ip.getPorcentajeRequerido())
-        {
-            mensaje = string.formatSql("Te informamos que no has cubierto tu cuota de productividad te faltan {0} visitas para poder realizar tu descarga.", String.valueOf(ip.getVisitasRequeridas() - ip.getVisitasClientes()) ) ;
-            Toast.makeText(getContext(),mensaje,Toast.LENGTH_LONG).show();
-            entrarDescarga=false;
-        }
-        else
-        if(ip.getPorcentajeRealizadoVentas() < ip.getPorcentajeRequeridoVentas())
-        {
-            mensaje = string.formatSql( "Te informamos que no has cubierto tu cuota de efectividad te faltan {0} ventas para poder realizar tu descarga.", String.valueOf(ip.getVentasRequeridas() - ip.getConVenta())  );
-            Toast.makeText(getContext(),mensaje,Toast.LENGTH_LONG).show();
-            entrarDescarga=false;
-        }
-
-        if(entrarDescarga)
-        {
-            if(conf.isDescarga())
-            {
-                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-                dialogo1.setTitle(getString(R.string.msg_importante));
-                dialogo1.setMessage( getString(R.string.msg_descargaDos));
-                dialogo1.setCancelable(false);
-                dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogo1, int id) {
-                        entrarDescarga=true;
-                    }
-                });
-                dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogo1, int id) {
-                        entrarDescarga=false;
-                    }
-                });
-                dialogo1.show();
+            if (dia.equals("Domingo")) {
+                ip = new Modelos.Indicadores();
+                ip.setPorcentajeRequerido(0);
+                ip.setPorcentajeRealizado(1);
+                ip.setPorcentajeRequeridoVentas(0);
+                ip.setPorcentajeRealizadoVentas(1);
+            } else {
+                ip = Utils.ObtenerProductividad(conf.getRuta(), getActivity().getApplication());
             }
+
+
+            String mensaje = "";
+            entrarDescarga = true;
+
+            if (ip.getPorcentajeRealizado() < ip.getPorcentajeRequerido()) {
+                mensaje = string.formatSql(getString(R.string.tt_inv3), String.valueOf(ip.getVisitasRequeridas() - ip.getVisitasClientes()));
+                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                entrarDescarga = false;
+            } else if (ip.getPorcentajeRealizadoVentas() < ip.getPorcentajeRequeridoVentas()) {
+                mensaje = string.formatSql(getString(R.string.tt_inv4), String.valueOf(ip.getVentasRequeridas() - ip.getConVenta()));
+                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                entrarDescarga = false;
+            }
+
+            if (entrarDescarga) {
+                if (conf.isDescarga()) {
+                    AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+                    dialogo1.setTitle(getString(R.string.msg_importante));
+                    dialogo1.setMessage(getString(R.string.msg_descargaDos));
+                    dialogo1.setCancelable(false);
+                    dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogo1, int id) {
+                            entrarDescarga = true;
+                        }
+                    });
+                    dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogo1, int id) {
+                            entrarDescarga = false;
+                        }
+                    });
+                    dialogo1.show();
+                }
+            }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 
@@ -398,7 +395,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             db.close();
 
 
-            Toast.makeText(getContext(), "Venta automática guardada con exito.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_SHORT).show();
 
             enviarCambios();
 
@@ -406,7 +403,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_inv6), e.getMessage());
             Log.d("salida", "Error: "+e.getMessage() );
         }
         finally
@@ -436,14 +433,15 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         {
             al_envaseAut=null;
             Log.d("salida","Error tabla envase automatico: "+e.getMessage());
-            Toast.makeText(getContext(), "Error tabla envase automatico: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
 
     }
 
     private void cargarInventario(int rut)
     {
-        try{
+        try
+        {
             String res = BaseLocal.Select(Querys.Inventario.LayoutInventario,getContext());
             al_invP = ConvertirRespuesta.getInvPJson(res);
             Log.d("salida",res);
@@ -493,158 +491,169 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Log.d("salida","Error al cargar el inventario: "+e.toString());
-            Toast.makeText(getContext(), "Error al cargar el inventario: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.err_inv5), e.getMessage());
         }
-
     }
 
     private void mostrarInventario()
     {
-        tableLayout.removeAllViews();
-        TableRow tr;
-        DataTableLC.InvP inv;
+        try
+        {
+            tableLayout.removeAllViews();
+            TableRow tr;
+            DataTableLC.InvP inv;
 
-        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_inventario, null);
+            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_inventario, null);
 
-        ((TextView) tr.findViewById(R.id.ti_sku)).setTypeface( ((TextView) tr.findViewById(R.id.ti_sku)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_producto)).setTypeface( ((TextView) tr.findViewById(R.id.ti_producto)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_inv)).setTypeface( ((TextView) tr.findViewById(R.id.ti_inv)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_dev)).setTypeface( ((TextView) tr.findViewById(R.id.ti_dev)).getTypeface(), Typeface.BOLD);
-        ((TextView) tr.findViewById(R.id.ti_can)).setTypeface( ((TextView) tr.findViewById(R.id.ti_can)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.ti_sku)).setTypeface(((TextView) tr.findViewById(R.id.ti_sku)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.ti_producto)).setTypeface(((TextView) tr.findViewById(R.id.ti_producto)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.ti_inv)).setTypeface(((TextView) tr.findViewById(R.id.ti_inv)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.ti_dev)).setTypeface(((TextView) tr.findViewById(R.id.ti_dev)).getTypeface(), Typeface.BOLD);
+            ((TextView) tr.findViewById(R.id.ti_can)).setTypeface(((TextView) tr.findViewById(R.id.ti_can)).getTypeface(), Typeface.BOLD);
 
-        tableLayout.addView(tr);
+            tableLayout.addView(tr);
 
 
-        if(al_invP!=null)
-            for(int i=0; i<al_invP.size();i++)
-            {
+            if (al_invP != null)
+                for (int i = 0; i < al_invP.size(); i++) {
 
-                tr = (TableRow) layoutInflater.inflate(R.layout.tabla_inventario, null);
-                inv=al_invP.get(i);
+                    tr = (TableRow) layoutInflater.inflate(R.layout.tabla_inventario, null);
+                    inv = al_invP.get(i);
 
-                ((TextView) tr.findViewById(R.id.ti_sku)).setText(inv.getProd_sku_str());
-                ((TextView) tr.findViewById(R.id.ti_producto)).setText(inv.getProd_desc_str());
-                ((TextView) tr.findViewById(R.id.ti_inv)).setText(inv.getProd_cant_n());
-                ((TextView) tr.findViewById(R.id.ti_dev)).setText(inv.getProd_devuelto_n());
-                ((TextView) tr.findViewById(R.id.ti_can)).setText(inv.getProd_cancelado_n());
+                    ((TextView) tr.findViewById(R.id.ti_sku)).setText(inv.getProd_sku_str());
+                    ((TextView) tr.findViewById(R.id.ti_producto)).setText(inv.getProd_desc_str());
+                    ((TextView) tr.findViewById(R.id.ti_inv)).setText(inv.getProd_cant_n());
+                    ((TextView) tr.findViewById(R.id.ti_dev)).setText(inv.getProd_devuelto_n());
+                    ((TextView) tr.findViewById(R.id.ti_can)).setText(inv.getProd_cancelado_n());
 
-                tableLayout.addView(tr);
-            }
+                    tableLayout.addView(tr);
+                }
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
+        }
     }
 
     private void verificarImpresion()
     {
-        if(button_imprimir.getText().toString().equals( getString(R.string.bt_imprimir) ))
+        try
         {
-            imprimir();
-        }
-        else if(button_imprimir.getText().toString().equals( getString(R.string.bt_descargar) ))
-        {
-            try
-            {
-                botonDescargar=true;
-                enviarCambios();
-                //al terminar enviar cambios, se ejecuta peticionDescarga();
+            if (button_imprimir.getText().toString().equals(getString(R.string.bt_imprimir))) {
+                imprimir();
+            } else if (button_imprimir.getText().toString().equals(getString(R.string.bt_descargar))) {
+                try {
+                    botonDescargar = true;
+                    enviarCambios();
+                    //al terminar enviar cambios, se ejecuta peticionDescarga();
 
-            }catch (Exception e)
-            {
-                Log.d("salida","Error: "+ e.getMessage());
-                Toast.makeText(getContext(), "Error: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.d("salida", "Error: " + e.getMessage());
+                    Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage());
+                }
             }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage());
         }
     }
 
     private void imprimir()
     {
-        String mensajeImp="\n";
-        String rutaCve = Utils.LeefConfig("ruta",getContext());
-        String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}",rutaCve),getContext());
-
-        mensajeImp+= "Ruta: "+ rutaDes+"\n";
-
-        mensajeImp+= string.formatSql("ASESOR: {0} {1} {2}\r\n", user.getNombre(), user.getAppat(),user.getApmat());
-
-        mensajeImp+= "FECHA IMPRESION: " +Utils.FechaLocal()+" "+Utils.HoraLocal()+"\n\n";
-        mensajeImp+= "I N V E N T A R I O\n\n";
-
-        ArrayList<DataTableLC.InvP> dgInventario = al_invP;
-        ArrayList<DataTableLC.InvP> dtProdAux = new ArrayList<>();
-        ArrayList<DataTableLC.InvP> dtVacio = new ArrayList<>();
-        DataTableLC.InvP dg; String des;
-
-        final int maxCaracteres=14;
-        long cerv = 0;
-        long env = 0;
-
-        mensajeImp+= string.formatSql("{0} {1} {2} {3}", "  SKU ", "    PRODUCTO       ", "CANT", " CAN") + "\n";
-
-        for(int i=0; i<dgInventario.size();i++)
+        try
         {
-            dg=dgInventario.get(i);
-            if( Integer.parseInt( dg.getProd_cant_n() )>0  &&  !dg.getCat_desc_str().equals("ENVASE") )
-            {
-                dtProdAux.add(dg);
-                des = dg.getProd_desc_str();
-                if(des.length()>maxCaracteres)
-                    des = des.substring(0,maxCaracteres);
-                else
-                {
-                    for(int j=des.length();j<maxCaracteres;j++) { des=des.concat(" "); }
+            String mensajeImp = "\n";
+            String rutaCve = Utils.LeefConfig("ruta", getContext());
+            String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}", rutaCve), getContext());
+
+            mensajeImp += "Ruta: " + rutaDes + "\n";
+
+            mensajeImp += string.formatSql("ASESOR: {0} {1} {2}\r\n", user.getNombre(), user.getAppat(), user.getApmat());
+
+            mensajeImp += "FECHA IMPRESION: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+            mensajeImp += "I N V E N T A R I O\n\n";
+
+            ArrayList<DataTableLC.InvP> dgInventario = al_invP;
+            ArrayList<DataTableLC.InvP> dtProdAux = new ArrayList<>();
+            ArrayList<DataTableLC.InvP> dtVacio = new ArrayList<>();
+            DataTableLC.InvP dg;
+            String des;
+
+            final int maxCaracteres = 14;
+            long cerv = 0;
+            long env = 0;
+
+            mensajeImp += string.formatSql("{0} {1} {2} {3}", "  SKU ", "    PRODUCTO       ", "CANT", " CAN") + "\n";
+
+            for (int i = 0; i < dgInventario.size(); i++) {
+                dg = dgInventario.get(i);
+                if (Integer.parseInt(dg.getProd_cant_n()) > 0 && !dg.getCat_desc_str().equals("ENVASE")) {
+                    dtProdAux.add(dg);
+                    des = dg.getProd_desc_str();
+                    if (des.length() > maxCaracteres)
+                        des = des.substring(0, maxCaracteres);
+                    else {
+                        for (int j = des.length(); j < maxCaracteres; j++) {
+                            des = des.concat(" ");
+                        }
+                    }
+                    mensajeImp += string.formatSql("{0}    {1}   {2}    {3}", dg.getProd_sku_str(), des, dg.getProd_cant_n(), dg.getProd_cancelado_n()) + "\n";
+
+                    cerv += Integer.parseInt(dg.getProd_cant_n());
                 }
-                mensajeImp+= string.formatSql("{0}    {1}   {2}    {3}",dg.getProd_sku_str(),des,dg.getProd_cant_n(),dg.getProd_cancelado_n())+"\n";
-
-                cerv+= Integer.parseInt( dg.getProd_cant_n() );
             }
-        }
 
 
-        mensajeImp+= "\n\n"+ string.formatSql("{0} {1} {2} {3} {4}", "SKU  ", " ENVASE     ","LLENO", "VACIO", "CAN")+"\n";
+            mensajeImp += "\n\n" + string.formatSql("{0} {1} {2} {3} {4}", "SKU  ", " ENVASE     ", "LLENO", "VACIO", "CAN") + "\n";
 
-        for(int i=0; i<dgInventario.size();i++)
+            for (int i = 0; i < dgInventario.size(); i++) {
+                dg = dgInventario.get(i);
+                if (dg.getCat_desc_str().equals("ENVASE")) {
+                    dtVacio.add(dg);
+                    des = dg.getProd_desc_str();
+                    if (des.length() > maxCaracteres) {
+                        des = des.substring(0, maxCaracteres);
+                    } else {
+                        for (int j = des.length(); j < maxCaracteres; j++) {
+                            des = des.concat(" ");
+                        }
+                    }
+                    mensajeImp += string.formatSql("{0}   {1}  {2}   {3}   {4}", dg.getProd_sku_str(), des, "0", "0", dg.getProd_cancelado_n()) + "\n";
+
+                    env += Integer.parseInt(dg.getProd_cant_n());
+                }
+            }
+
+            mensajeImp += "\n";
+
+
+            mensajeImp += "TOTAL CERVEZA: " + cerv + "\n";
+            mensajeImp += "TOTAL ENVASE: " + env;
+
+            mensajeImp += "\n\n";
+
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+            dialogo1.setTitle(getString(R.string.msg_impInv));
+            dialogo1.setMessage(mensajeImp);
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    obtenerUbicacion("InsertBitacora");
+                }
+            });
+            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    //cancelar();
+                }
+            });
+            dialogo1.show();
+
+            Log.d("salida", mensajeImp);
+
+        }catch (Exception e)
         {
-            dg=dgInventario.get(i);
-            if( dg.getCat_desc_str().equals("ENVASE") )
-            {
-                dtVacio.add(dg);
-                des = dg.getProd_desc_str();
-                if(des.length()>maxCaracteres) {
-                    des = des.substring(0, maxCaracteres);
-                }
-                else
-                {
-                    for(int j=des.length();j<maxCaracteres;j++) { des=des.concat(" "); }
-                }
-                mensajeImp+= string.formatSql("{0}   {1}  {2}   {3}   {4}",dg.getProd_sku_str(),des,"0","0",dg.getProd_cancelado_n())+"\n";
-
-                env+= Integer.parseInt( dg.getProd_cant_n() );
-            }
+            Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage());
         }
-
-        mensajeImp+= "\n";
-
-
-        mensajeImp+= "TOTAL CERVEZA: "+cerv+"\n";
-        mensajeImp+= "TOTAL ENVASE: "+env;
-
-        mensajeImp+= "\n\n";
-
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-        dialogo1.setTitle(getString(R.string.msg_impInv));
-        dialogo1.setMessage(mensajeImp);
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                obtenerUbicacion("InsertBitacora");
-            }
-        });
-        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                //cancelar();
-            }
-        });
-        dialogo1.show();
-
-        Log.d("salida",mensajeImp);
 
     }
 
@@ -688,7 +697,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_ubicacion), e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
 
@@ -768,38 +777,43 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Log.d("salida","Error: "+e.toString());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_intPeticion), e.getMessage());
         }
     }
 
     private void peticionDescarga()
     {
-        peticion="RecibirDescarga";
+        try {
+            peticion = "RecibirDescarga";
 
-        String dtJson = new Gson().toJson(al_invP);
+            String dtJson = new Gson().toJson(al_invP);
 
-        //parametros del metodo
-        ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
-        PropertyInfo piTable = new PropertyInfo();
-        piTable.setName("dt");
-        piTable.setValue(dtJson);
-        propertyInfos.add(piTable);
+            //parametros del metodo
+            ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+            PropertyInfo piTable = new PropertyInfo();
+            piTable.setName("dt");
+            piTable.setValue(dtJson);
+            propertyInfos.add(piTable);
 
-        PropertyInfo piRuta = new PropertyInfo();
-        piRuta.setName("ruta");
-        piRuta.setValue(conf.getRuta());
-        propertyInfos.add(piRuta);
+            PropertyInfo piRuta = new PropertyInfo();
+            piRuta.setName("ruta");
+            piRuta.setValue(conf.getRuta());
+            propertyInfos.add(piRuta);
 
-        PropertyInfo piUser = new PropertyInfo();
-        piUser.setName("usuario");
-        piUser.setValue(conf.getUsuario());
-        propertyInfos.add(piUser);
+            PropertyInfo piUser = new PropertyInfo();
+            piUser.setName("usuario");
+            piUser.setValue(conf.getUsuario());
+            propertyInfos.add(piUser);
 
-        //conexion con el metodo
-        ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "RecibirDescarga2J");
-        conexionWS.delegate = InventarioFragment.this;
-        conexionWS.propertyInfos = propertyInfos;
-        conexionWS.execute();
+            //conexion con el metodo
+            ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "RecibirDescarga2J");
+            conexionWS.delegate = InventarioFragment.this;
+            conexionWS.propertyInfos = propertyInfos;
+            conexionWS.execute();
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_intPeticion), e.getMessage());
+        }
     }
 
     private void recibirDescarga(final String mensaje)
@@ -831,7 +845,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
                     BaseLocal.Insert(Querys.ConfiguracionHH.DesactivarPedidos,getContext());
                     BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion, conf.getUsuario(), "INVENTARIO", "DESCARGA DE INVENTARIO", String.valueOf(conf.getRuta()) , ubi[0]),getContext());
-                    Toast.makeText(getContext(), "Descarga completada. " + mensaje, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), getString(R.string.tt_infoActu)+". "+ mensaje, Toast.LENGTH_LONG).show();
 
 
                 }
@@ -839,110 +853,109 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
         }catch (Exception e)
         {
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
         }
 
     }
 
     @Override
-    public void recibirPeticion(boolean estado, String respuesta) {
-        if(estado)
-        {
-            //recibio información
-            if (respuesta != null)
-            {
-                if(peticion.equals("RecibirDatos"))
-                {
-                    Log.d("salida","resWS: "+respuesta);
-                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+    public void recibirPeticion(boolean estado, String respuesta)
+    {
+        try {
+            if (estado) {
+                //recibio información
+                if (respuesta != null) {
+                    if (peticion.equals("RecibirDatos")) {
+                        Log.d("salida", "resWS: " + respuesta);
+                        DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
 
-                    if(retVal!=null)
-                    {
-                        if(retVal.getRet().equals("true"))
-                            establecerEnviado(retVal.getMsj());
-                        else
-                            establecerNoEnviado(retVal.getMsj());
-                    }
-                    else
-                    {
-                        establecerNoEnviado("No se encontro información");
-                    }
-
-                    if(botonDescargar) {
-                        botonDescargar=false;
-                        peticionDescarga();
-                    }
-
-                }
-                else
-                if(peticion.equals("RecibirDescarga"))
-                {
-                    Log.d("salida","resWS: "+respuesta);
-
-                    DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
-
-                    if(retVal!=null)
-                    {
-                        if(retVal.getRet().equals("true"))
-                        {
-                            recibirDescarga(retVal.getMsj());
+                        if (retVal != null) {
+                            if (retVal.getRet().equals("true"))
+                                establecerEnviado(retVal.getMsj());
+                            else
+                                establecerNoEnviado(retVal.getMsj());
+                        } else {
+                            establecerNoEnviado(getString(R.string.err_invNoinfo));
                         }
-                        else
-                        {
-                            Toast.makeText(getContext(), retVal.getMsj(), Toast.LENGTH_LONG).show();
+
+                        if (botonDescargar) {
+                            botonDescargar = false;
+                            peticionDescarga();
+                        }
+
+                    } else if (peticion.equals("RecibirDescarga")) {
+                        Log.d("salida", "resWS: " + respuesta);
+
+                        DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+
+                        if (retVal != null) {
+                            if (retVal.getRet().equals("true")) {
+                                recibirDescarga(retVal.getMsj());
+                            } else {
+                                Toast.makeText(getContext(), retVal.getMsj(), Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.err_inv9), Toast.LENGTH_LONG).show();
                         }
                     }
-                    else
-                    {
-                        Toast.makeText(getContext(), "Error al descargar inventario", Toast.LENGTH_LONG).show();
-                    }
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.err_inv9), Toast.LENGTH_LONG).show();
+                    if (peticion.equals("RecibirDatos"))
+                        establecerNoEnviado(getString(R.string.err_invNoinfo));
                 }
+            } else {
+                Toast.makeText(getContext(), respuesta, Toast.LENGTH_SHORT).show();
+                if (peticion.equals("RecibirDatos"))
+                    establecerNoEnviado(respuesta);
             }
-            else
-            {
-                Toast.makeText(getContext(), "Error al descargar inventario", Toast.LENGTH_LONG).show();
-                if(peticion.equals("RecibirDatos"))
-                    establecerNoEnviado("No se encontro información");
-            }
-        }
-        else
+        }catch (Exception e)
         {
-            Toast.makeText(getContext(), respuesta, Toast.LENGTH_SHORT).show();
-            if(peticion.equals("RecibirDatos"))
-                establecerNoEnviado(respuesta);
+            Utils.msgError(getContext(), getString(R.string.error_peticion), e.getMessage() );
         }
     }
 
     private void establecerEnviado(String men)
     {
-        // Establecer ventas como enviadas
-        BaseLocal.Insert("update ventas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Creditos como enviados
-        BaseLocal.Insert("update creditos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Pagos como enviados
-        BaseLocal.Insert("update Pagos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Visitas como enviadas
-        BaseLocal.Insert("update visitas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
-        // Establecer Bitacora como enviadas
-        BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1",getContext());
+        try
+        {
+            // Establecer ventas como enviadas
+            BaseLocal.Insert("update ventas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Creditos como enviados
+            BaseLocal.Insert("update creditos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Pagos como enviados
+            BaseLocal.Insert("update Pagos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Visitas como enviadas
+            BaseLocal.Insert("update visitas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Bitacora como enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
 
-        Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),  getString(R.string.tt_menServido)+" " + men, Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar),e.getMessage());
+        }
     }
 
     private void establecerNoEnviado(String men)
     {
-        // Establecer ventas como no enviadas
-        BaseLocal.Insert("update ventas set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Creditos como no enviados
-        BaseLocal.Insert("update creditos set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Pagos como no enviados
-        BaseLocal.Insert("update Pagos set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Visitas como no enviadas
-        BaseLocal.Insert("update visitas set trans_est_n=0 where trans_est_n=1",getContext());
-        // Establecer Bitacora como no enviadas
-        BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1",getContext());
-        Toast.makeText(getContext(), "Mensaje del servidor: "+men, Toast.LENGTH_SHORT).show();
+        try {
+            // Establecer ventas como no enviadas
+            BaseLocal.Insert("update ventas set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Creditos como no enviados
+            BaseLocal.Insert("update creditos set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Pagos como no enviados
+            BaseLocal.Insert("update Pagos set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Visitas como no enviadas
+            BaseLocal.Insert("update visitas set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Bitacora como no enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1", getContext());
+            Toast.makeText(getContext(), getString(R.string.tt_menServido)+" " + men, Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar),e.getMessage());
+        }
     }
 
     @Override

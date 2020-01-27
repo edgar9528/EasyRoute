@@ -169,7 +169,6 @@ public class FamiliaFragment extends Fragment {
     private void cargarProductos()
     {
         try{
-
             consulta= "select p.prod_cve_n,p.prod_sku_str,p.prod_desc_str,p.id_envase_n, " +
                     "f.fam_desc_str,pr.pres_desc_str,c.cat_desc_str from productos p " +
                     "inner join familias f on p.fam_cve_n=f.fam_cve_n " +
@@ -178,130 +177,130 @@ public class FamiliaFragment extends Fragment {
 
             json = BaseLocal.Select(consulta,getContext());
             dtProd = ConvertirRespuesta.getProductos_SugJson(json);
-
         }
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al cargar productos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.error_cargarProduc), Toast.LENGTH_SHORT).show();
         }
 
     }
 
     private void obtenerFamilias()
     {
-        if(dtProd!=null)
+        try
         {
-            lvFamilias= new ArrayList<>();
-            String fam;
-            TableRow tr;
-
-            for(int i=0; i< dtProd.size();i++)
+            if (dtProd != null)
             {
-                if(!lvFamilias.contains( dtProd.get(i).getFam_desc_str() ))
-                {
-                    fam= dtProd.get(i).getFam_desc_str();
+                lvFamilias = new ArrayList<>();
+                String fam;
+                TableRow tr;
 
-                    lvFamilias.add(fam);
+                for (int i = 0; i < dtProd.size(); i++) {
+                    if (!lvFamilias.contains(dtProd.get(i).getFam_desc_str())) {
+                        fam = dtProd.get(i).getFam_desc_str();
 
-                    tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido1, null);
-                    ((TextView) tr.findViewById(R.id.t_titulo)).setText( fam );
-                    tr.setTag(fam);
-                    tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
-                    tableLayout.addView(tr);
+                        lvFamilias.add(fam);
+
+                        tr = (TableRow) layoutInflater.inflate(R.layout.tabla_sugerido1, null);
+                        ((TextView) tr.findViewById(R.id.t_titulo)).setText(fam);
+                        tr.setTag(fam);
+                        tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
+                        tableLayout.addView(tr);
+                    }
                 }
             }
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), getString(R.string.err_sug3), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void creaSugeridoPrev()
     {
-        ArrayList<DataTableLC.SugPreventa> dts = null;
+        try {
+            ArrayList<DataTableLC.SugPreventa> dts = null;
 
-        json = BaseLocal.Select("select prod_cve_n,sum(prod_cant_n) prod_sug_n from preventadet group by prod_cve_n",getContext());
-        dts = ConvertirRespuesta.getSugPreventaJson(json);
+            json = BaseLocal.Select("select prod_cve_n,sum(prod_cant_n) prod_sug_n from preventadet group by prod_cve_n", getContext());
+            dts = ConvertirRespuesta.getSugPreventaJson(json);
 
-        if(dts!=null)
-        {
-            for(int i=0; i<dts.size();i++)
-            {
-                //para hacer la consulta
-                DataTableLC.Productos_Sug dri=null;
-                for(int j=0; j < dtProd.size();j++)
-                {
-                    if(dtProd.get(j).getProd_cve_n().equals(dts.get(i).getProd_cve_n()))
-                    {
-                         dri= dtProd.get(j);
-                         j = dtProd.size();
+            if (dts != null) {
+                for (int i = 0; i < dts.size(); i++) {
+                    //para hacer la consulta
+                    DataTableLC.Productos_Sug dri = null;
+                    for (int j = 0; j < dtProd.size(); j++) {
+                        if (dtProd.get(j).getProd_cve_n().equals(dts.get(i).getProd_cve_n())) {
+                            dri = dtProd.get(j);
+                            j = dtProd.size();
+                        }
+                    }
+
+                    if (dri != null) {
+                        DataTableLC.Sugerido ri = new DataTableLC.Sugerido();
+
+                        ri.setProd_cve_n(dri.getProd_cve_n());
+                        ri.setProd_sku_str(dri.getProd_sku_str());
+                        ri.setProd_desc_str(dri.getProd_desc_str());
+                        ri.setId_envase_n(dri.getId_envase_n());
+                        ri.setProd_sug_n(dts.get(i).getProd_sug_n());
+                        ri.setCat_desc_str(dri.getCat_desc_str());
+
+                        dgSugerido.add(ri);
                     }
                 }
 
-                if(dri!=null)
-                {
-                    DataTableLC.Sugerido ri = new DataTableLC.Sugerido();
-
-                    ri.setProd_cve_n( dri.getProd_cve_n() );
-                    ri.setProd_sku_str( dri.getProd_sku_str() );
-                    ri.setProd_desc_str( dri.getProd_desc_str() );
-                    ri.setId_envase_n( dri.getId_envase_n() );
-                    ri.setProd_sug_n(  dts.get(i).getProd_sug_n()  );
-                    ri.setCat_desc_str( dri.getCat_desc_str() );
-
-                    dgSugerido.add(ri);
-                }
+                calcularEnvase();
+                sugeridoVM.setDgSugerido(dgSugerido);
+                fragmentMain.goSugerido();
             }
-
-            calcularEnvase();
-            sugeridoVM.setDgSugerido( dgSugerido );
-            fragmentMain.goSugerido();
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), getString(R.string.err_sug4), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void calcularEnvase()
     {
-        for(int i=0; i< dtProd.size(); i++)
-        {
-            if(dtProd.get(i).getCat_desc_str().equals("ENVASE"))
-            {
+        try {
+            for (int i = 0; i < dtProd.size(); i++) {
+                if (dtProd.get(i).getCat_desc_str().equals("ENVASE")) {
 
-                int k=-1;
-                int o=0;
-                DataTableLC.Sugerido e=null;
-                for(int j=0; j<dgSugerido.size();j++)
-                {
-                    if(dgSugerido.get(j).getProd_cve_n().equals(dtProd.get(i).getProd_cve_n()))
-                    {
-                        e = dgSugerido.get(j);
-                        k=j;
+                    int k = -1;
+                    int o = 0;
+                    DataTableLC.Sugerido e = null;
+                    for (int j = 0; j < dgSugerido.size(); j++) {
+                        if (dgSugerido.get(j).getProd_cve_n().equals(dtProd.get(i).getProd_cve_n())) {
+                            e = dgSugerido.get(j);
+                            k = j;
+                        }
+
+                        if (dgSugerido.get(j).getId_envase_n().equals(dtProd.get(i).getProd_cve_n())) {
+                            o = o + Integer.parseInt(dgSugerido.get(j).getProd_sug_n());
+                        }
+
                     }
 
-                    if(dgSugerido.get(j).getId_envase_n().equals(  dtProd.get(i).getProd_cve_n()  ))
-                    {
-                        o = o + Integer.parseInt(  dgSugerido.get(j).getProd_sug_n()  );
+                    if (e != null) {
+
+                    } else {
+                        DataTableLC.Sugerido ri = new DataTableLC.Sugerido();
+                        ri.setProd_cve_n(dtProd.get(i).getProd_cve_n());
+                        ri.setProd_sku_str(dtProd.get(i).getProd_sku_str());
+                        ri.setProd_desc_str(dtProd.get(i).getProd_desc_str());
+                        ri.setId_envase_n(dtProd.get(i).getId_envase_n());
+                        ri.setProd_sug_n("0");
+                        ri.setCat_desc_str(dtProd.get(i).getCat_desc_str());
+                        dgSugerido.add(ri);
+
+                        k = dgSugerido.size() - 1;
+
                     }
-
+                    dgSugerido.get(k).setProd_sug_n(String.valueOf(o));
                 }
-
-                if(e!=null)
-                {
-
-                }
-                else
-                {
-                    DataTableLC.Sugerido ri = new DataTableLC.Sugerido();
-                    ri.setProd_cve_n( dtProd.get(i).getProd_cve_n() );
-                    ri.setProd_sku_str( dtProd.get(i).getProd_sku_str() );
-                    ri.setProd_desc_str( dtProd.get(i).getProd_desc_str()  );
-                    ri.setId_envase_n( dtProd.get(i).getId_envase_n() );
-                    ri.setProd_sug_n("0");
-                    ri.setCat_desc_str( dtProd.get(i).getCat_desc_str() );
-                    dgSugerido.add(ri);
-
-                    k = dgSugerido.size()-1;
-
-                }
-                dgSugerido.get(k).setProd_sug_n( String.valueOf(o) );
             }
+        }catch (Exception e)
+        {
+            Toast.makeText(getContext(), getString(R.string.err_sug5), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -355,7 +354,7 @@ public class FamiliaFragment extends Fragment {
         catch (Exception e)
         {
             Log.d("salida","Error cargar sugerido: "+e.getMessage());
-            Toast.makeText(getContext(), "Error al cargar sugerido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.err_sug4), Toast.LENGTH_SHORT).show();
         }
     }
 
