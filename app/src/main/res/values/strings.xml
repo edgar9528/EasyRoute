@@ -359,6 +359,7 @@
     <string name="rb_prospecto">Prospecto</string>
     <string name="rb_fba">FBA</string>
     <string name="rb_comoDato">Comodato</string>
+
     <string name="tl_datos">Datos</string>
     <string name="tl_domicilio">Domicilio</string>
     <string name="tv_direccion">Dirección</string>
@@ -369,6 +370,7 @@
     <string name="hint_num1">Teléfono 1</string>
     <string name="hint_num2">Teléfono 2</string>
     <string name="hint_calle">Calle</string>
+    <string name="err_ped3">Error al mostrar dirección</string>
 
 
 </resources>

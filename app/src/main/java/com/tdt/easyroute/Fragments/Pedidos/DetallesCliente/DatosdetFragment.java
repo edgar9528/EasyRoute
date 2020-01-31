@@ -1,12 +1,9 @@
 package com.tdt.easyroute.Fragments.Pedidos.DetallesCliente;
 
-import android.content.Context;
-import android.net.Uri;
+
 import android.os.Bundle;
-
-import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
-
+import androidx.lifecycle.ViewModelProviders;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
-
+import com.tdt.easyroute.ViewModel.DetallesCliVM;
 import java.util.ArrayList;
-
 
 public class DatosdetFragment extends Fragment {
 
@@ -35,6 +29,8 @@ public class DatosdetFragment extends Fragment {
 
     private EditText et_codigo, et_razon, et_negocio,et_rfc, et_limCredito, et_plazo, et_envases, et_coord;
     private RadioButton rb_reqfact, rb_prospectp, rb_fba,rb_comodato;
+
+    private DetallesCliVM detallesCliVM;
 
     public DatosdetFragment() {
         // Required empty public constructor
@@ -51,7 +47,7 @@ public class DatosdetFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        detallesCliVM = ViewModelProviders.of ( getActivity() ).get(DetallesCliVM.class);
     }
 
     @Override
@@ -60,8 +56,8 @@ public class DatosdetFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_datosdet, container, false);
 
-        try {
-
+        try
+        {
             MainDetallesActivity mainDetallesActivity = (MainDetallesActivity) getActivity();
             rc = mainDetallesActivity.getCliente();
             Button button_salir, button_ubicacion, button_ruta;
@@ -98,14 +94,14 @@ public class DatosdetFragment extends Fragment {
             button_ubicacion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    detallesCliVM.setBt_ubicacion(true);
                 }
             });
 
             button_ruta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    detallesCliVM.setBt_ruta(true);
                 }
             });
 
@@ -116,15 +112,13 @@ public class DatosdetFragment extends Fragment {
             Utils.msgError(getContext(), getString(R.string.err_det1), e.getMessage());
         }
 
-
         return view;
     }
 
     private void inicializar()
     {
-
-        try {
-
+        try
+        {
             et_codigo.setText(rc.getCli_cveext_str());
             et_razon.setText(rc.getCli_razonsocial_str());
             et_negocio.setText(rc.getCli_nombrenegocio_str());
@@ -134,11 +128,12 @@ public class DatosdetFragment extends Fragment {
             et_envases.setText( rc.getCli_credenvases_n() );
             et_coord.setText( rc.getCli_coordenadaini_str() );
 
+            detallesCliVM.setUbiCliente( rc.getCli_coordenadaini_str() );
+
             if(rc.getCli_prospecto_n().equals("0")) rb_prospectp.setChecked(true);
             if(rc.getCli_fba_n().equals("0")) rb_fba.setChecked(true);
             if(rc.getCli_reqfact_n().equals("0")) rb_reqfact.setChecked(true);
             if(rc.getCli_comodato_n().equals("0")) rb_comodato.setChecked(true);
-
 
             Log.d("salida","CLI_REQFAC: "+rc.getCli_reqfact_n());
 
@@ -156,20 +151,16 @@ public class DatosdetFragment extends Fragment {
                         indice=i;
                 }
 
-                sp_estado.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.spinner_item, estatus));
+                sp_estado.setAdapter(new ArrayAdapter<>(getContext(), R.layout.spinner_item, estatus));
 
                 if(indice!=-1)
                     sp_estado.setSelection(indice);
             }
-
-
-
-
         }
         catch (Exception e)
         {
             Log.d("salida","Error: "+e.getMessage());
-            Toast.makeText(getContext(), "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Utils.msgError(getContext(),getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
 

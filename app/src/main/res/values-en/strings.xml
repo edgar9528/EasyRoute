@@ -366,6 +366,17 @@
     <string name="rb_fba">FBA</string>
     <string name="rb_comoDato">As data</string>
 
+    <string name="tl_datos">Data</string>
+    <string name="tl_domicilio">Address</string>
+    <string name="tv_direccion">Address</string>
+    <string name="hint_numExt">Outdoor Number</string>
+    <string name="hint_numInt">Interior number</string>
+    <string name="hint_colonia">Suburb</string>
+    <string name="hint_municipio">Municipality</string>
+    <string name="hint_num1">Telephone number 1</string>
+    <string name="hint_num2">Telephone number 2</string>
+    <string name="hint_calle">Street</string>
+    <string name="err_ped3">Error displaying address</string>
 
 
 </resources>
