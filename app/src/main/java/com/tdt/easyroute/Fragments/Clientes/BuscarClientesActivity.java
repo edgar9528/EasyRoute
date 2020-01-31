@@ -3,6 +3,8 @@ package com.tdt.easyroute.Fragments.Clientes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,9 +18,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -37,6 +43,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.tdt.easyroute.CardViews.Adapter.BuscarAdapterRecyclerView;
+import com.tdt.easyroute.CardViews.Model.BuscarCardView;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
@@ -59,7 +67,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                                                                         GoogleApiClient.ConnectionCallbacks,
                                                                         LocationListener {
 
-    Button button_buscar, button_borrar, button_reimp, button_act, button_salir,button_seleccionar;
+    Button button_buscar, button_borrar, button_salir;
     EditText et_filtro;
     boolean buscar = false;
 
@@ -101,9 +109,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
             tableLayout = findViewById(R.id.tableLayout);
             button_buscar = findViewById(R.id.button_buscar);
             button_borrar = findViewById(R.id.button_borrar);
-            button_reimp = findViewById(R.id.button_reimp);
-            button_act = findViewById(R.id.button_actualizar);
-            button_seleccionar = findViewById(R.id.button_seleccionar);
             button_salir = findViewById(R.id.button_salir);
             et_filtro = findViewById(R.id.et_filtro);
 
@@ -111,6 +116,19 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 @Override
                 public void onClick(View view) {
                     onBackPressed();
+                }
+            });
+
+            et_filtro.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(actionId == EditorInfo.IME_ACTION_DONE){
+                        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        String filtro = et_filtro.getText().toString();
+                        mostrarClientes(filtro.toUpperCase());
+                        return true;
+                    }
+                    return false;
                 }
             });
 
@@ -130,26 +148,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 }
             });
 
-            button_reimp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    imprimir();
-                }
-            });
-
-            button_seleccionar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    seleccionar(cli_cve_nSelec);
-                }
-            });
-
-            button_act.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    actualizaCliente();
-                }
-            });
 
             //CONFIGURACION DE UBICACION
 
@@ -159,7 +157,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                     .addConnectionCallbacks(this)
                     .addApi(LocationServices.API)
                     .build();
-
 
             inicializar();
 
@@ -176,14 +173,11 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
             conf = Utils.ObtenerConf2(getApplication());
             Day = diaActual();
 
-            mostrarTitulo();
+            //mostrarTitulo();
 
             InicializarAsync inicializarAsync = new InicializarAsync();
             inicializarAsync.execute();
 
-            if (buscar) {
-                button_seleccionar.setEnabled(false);
-            }
         }
         catch (Exception e)
         {
@@ -243,9 +237,9 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
 
     private void cargarClientes()
     {
-        String consulta;
         try
         {
+            String consulta;
             if(conf.getPreventa()==1)
             {
                 consulta = string.formatSql("Select cli_cve_n,cli_cveext_str,cli_razonsocial_str,cli_nombrenegocio_str,cli_especial_n " +
@@ -255,7 +249,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
             {
                 consulta = string.formatSql("Select cli_cve_n,cli_cveext_str,cli_razonsocial_str,cli_nombrenegocio_str,cli_especial_n " +
                         "from clientes where rut_cve_n={0} and est_cve_str='A'", String.valueOf(conf.getRuta()));
-
             }
 
             String json = BaseLocal.Select( consulta ,getApplicationContext());
@@ -268,205 +261,53 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         }
     }
 
-    private void mostrarTitulo()
-    {
-        try {
-            tableLayout.removeAllViews();
-            TableRow tr;
-
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_buscarclientes, null);
-
-            ((TextView) tr.findViewById(R.id.t_idExt)).setTypeface(((TextView) tr.findViewById(R.id.t_idExt)).getTypeface(), Typeface.BOLD);
-            ((TextView) tr.findViewById(R.id.t_Negocio)).setTypeface(((TextView) tr.findViewById(R.id.t_Negocio)).getTypeface(), Typeface.BOLD);
-            ((TextView) tr.findViewById(R.id.t_Razon)).setTypeface(((TextView) tr.findViewById(R.id.t_Razon)).getTypeface(), Typeface.BOLD);
-
-            tableLayout.addView(tr);
-        }
-        catch (Exception e)
-        {
-            Utils.msgError(this, getString(R.string.error_mostrarInfo),e.getMessage());
-        }
-    }
-
     private void mostrarClientes(String filtro)
     {
         try
         {
-            mostrarTitulo();
-            dgClientes = null;
-            cli_cve_nSelec = "";
-            if (bsClientes != null && bsClientes.size() > 0) {
-                TableRow tr;
+            if (bsClientes!=null)
+            {
+                RecyclerView buscarRecyclerView = findViewById(R.id.buscarRecycler);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+                buscarRecyclerView.setLayoutManager(linearLayoutManager);
+                ArrayList<BuscarCardView> buscarCardViews = new ArrayList<>();
+
+                String idExt, negocio, razonSoc;
                 DataTableWS.Clientes c;
 
-                dgClientes = new ArrayList<>();
-
-                for (int i = 0; i < bsClientes.size(); i++) {
-                    tr = (TableRow) layoutInflater.inflate(R.layout.tabla_buscarclientes, null);
+                for (int i = 0; i < bsClientes.size(); i++)
+                {
                     c = bsClientes.get(i);
 
-                    if (!filtro.equals("")) {
+                    idExt = c.getCli_cveext_str();
+                    negocio = c.getCli_nombrenegocio_str();
+                    razonSoc = c.getCli_razonsocial_str();
 
-                        if (c.getCli_cveext_str().toUpperCase().contains(filtro) ||
-                                c.getCli_nombrenegocio_str().toUpperCase().contains(filtro) ||
-                                c.getCli_razonsocial_str().toUpperCase().contains(filtro)) {
-
-                            ((TextView) tr.findViewById(R.id.t_idExt)).setText(c.getCli_cveext_str());
-                            ((TextView) tr.findViewById(R.id.t_Negocio)).setText(c.getCli_nombrenegocio_str());
-                            ((TextView) tr.findViewById(R.id.t_Razon)).setText(c.getCli_razonsocial_str());
-                            tr.setTag(c.getCli_cve_n());
-                            tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
-
-                            tableLayout.addView(tr);
-                            dgClientes.add(c);
-                        }
-                    } else {
-                        ((TextView) tr.findViewById(R.id.t_idExt)).setText(c.getCli_cveext_str());
-                        ((TextView) tr.findViewById(R.id.t_Negocio)).setText(c.getCli_nombrenegocio_str());
-                        ((TextView) tr.findViewById(R.id.t_Razon)).setText(c.getCli_razonsocial_str());
-                        tr.setTag(c.getCli_cve_n());
-                        tr.setOnClickListener(tableListener); //evento cuando se da clic a la fila
-
-                        tableLayout.addView(tr);
-                        dgClientes.add(c);
-                    }
-
-
-                }
-            }
-        }catch (Exception e)
-        {
-            Utils.msgError(this, getString(R.string.error_mostrarInfo),e.getMessage());
-        }
-    }
-
-    //region evento del clic a la fila
-    private View.OnClickListener tableListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            TableRow tr = ((TableRow) view);
-            String tag = (String) tr.getTag(); //se obtiene la fila y tag de la seleccion
-
-            if(cli_cve_nSelec.equals(tag)) //si coincide con el anterior, quiere decir que dio doble clic
-            {
-                seleccionar(cli_cve_nSelec);
-            }
-            else
-            {
-                //si no coincide, pinta todas de blanca
-                for(int i=0; i<dgClientes.size();i++)
-                {
-                    TableRow row = vista.findViewWithTag(dgClientes.get(i).getCli_cve_n());
-                    row.setBackgroundColor(getResources().getColor(R.color.bgDefault));
-                }
-
-                //pinta de azul la fila y actualiza la cve de la fila seccionada
-                tr.setBackgroundColor( getResources().getColor(R.color.colorPrimary) );
-                cli_cve_nSelec=tag;
-            }
-
-        }
-    };
-    //endregion
-
-    private void seleccionar(String cle_cve_n)
-    {
-        try {
-
-            String consulta, json;
-            if (!cle_cve_n.isEmpty())
-            {
-                DataTableWS.Clientes dgCliente = null;
-
-                for (int i = 0; i < dgClientes.size(); i++)
-                    if (dgClientes.get(i).getCli_cve_n().equals(cli_cve_nSelec))
-                        dgCliente = dgClientes.get(i);
-
-
-                String cliente = dgCliente.getCli_cve_n();
-                String IdExt = dgCliente.getCli_cveext_str();
-
-                boolean cli_especial_n = Utils.getBool(dgCliente.getCli_especial_n());
-
-                ArrayList<DataTableWS.Clientes2> dtca = null;
-                DataTableWS.Clientes2 rc = null;
-
-                consulta = string.formatSql("select c.*,r.rut_invalidafrecuencia_n from clientes c  left join rutas r on c.rut_cve_n=r.rut_cve_n where c.cli_cve_n={1}", cliente);
-                json = BaseLocal.Select(consulta, getApplicationContext());
-
-                Log.d("salida",json);
-
-                dtca = ConvertirRespuesta.getClientes2Json(json);
-
-                if (dtca != null) {
-                    rc = dtca.get(0);
-                }
-
-                if (Utils.getBool(rc.getCli_invalidafrecuencia_n()))
-                {
-                    consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS", "{0}");
-                    obtenerUbicacion(consulta);
-                } else if (Utils.getBool(rc.getRut_invalidafrecuencia_n()))
-                {
-                    consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS NIVEL RUTA", "{0}");
-                    obtenerUbicacion(consulta);
-                }
-                else
-                {
-                    if (conf.isAuditoria())
+                    if (!filtro.equals(""))
                     {
-                        consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR AUDITORIA", "{0}");
-                        obtenerUbicacion(consulta);
-                    } else {
 
-                        int diaVisitar = 0;
-                        switch (Day) {
-                            case "cli_lun_n":
-                                diaVisitar = Integer.parseInt(rc.getCli_lun_n());
-                                break;
-                            case "cli_mar_n":
-                                diaVisitar = Integer.parseInt(rc.getCli_mar_n());
-                                break;
-                            case "cli_mie_n":
-                                diaVisitar = Integer.parseInt(rc.getCli_mie_n());
-                                break;
-                            case "cli_jue_n":
-                                diaVisitar = Integer.parseInt(rc.getCli_jue_n());
-                                break;
-                            case "cli_vie_n":
-                                diaVisitar = Integer.parseInt(rc.getCli_vie_n());
-                                break;
-                            case "cli_sab_n":
-                                diaVisitar = Integer.parseInt(rc.getCli_sab_n());
-                                break;
-                            case "cli_dom_n":
-                                diaVisitar = Integer.parseInt(rc.getCli_dom_n());
-                                break;
-                        }
+                        if (idExt.toUpperCase().contains(filtro) ||
+                            negocio.toUpperCase().contains(filtro) ||
+                            razonSoc.toUpperCase().contains(filtro)) {
 
-                        if (diaVisitar <= 0) {
-                            consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "EL CLIENTE NO SE VISITA HOY", "{0}");
-                            obtenerUbicacion(consulta);
-                            Toast.makeText(getApplicationContext(), getString(R.string.tt_noVisita), Toast.LENGTH_LONG).show();
-                            return;
+                            buscarCardViews.add(new BuscarCardView(idExt,negocio,razonSoc,i));
                         }
+                    }
+                    else
+                    {
+                        buscarCardViews.add(new BuscarCardView(idExt,negocio,razonSoc,i));
                     }
                 }
 
-                Intent i = getIntent();
-                i.putExtra("clave", dgCliente.getCli_nombrenegocio_str());
-                setResult(RESULT_OK, i);
-                finish();
+                BuscarAdapterRecyclerView buscarAdapterRecyclerView = new BuscarAdapterRecyclerView(buscarCardViews, R.layout.cardview_buscar, this);
+                buscarRecyclerView.setAdapter(buscarAdapterRecyclerView);
 
-            } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
             }
-
         }catch (Exception e)
         {
-            Log.d( "salida","Error: "+e.getMessage());
-            Utils.msgError(this, getString(R.string.err_busq2),e.getMessage());
+            Utils.msgError(this, getString(R.string.error_mostrarInfo), e.getMessage());
         }
     }
 
@@ -505,29 +346,20 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         }
     }
 
-    private void imprimir()
+    public void imprimir(int indice)
     {
         try
         {
-            if(cli_cve_nSelec!="")
-            {
-                DataTableWS.Clientes rc=null;
+            DataTableWS.Clientes rc= bsClientes.get(indice);
 
-                for(int i=0; i<dgClientes.size(); i++)
-                    if(dgClientes.get(i).getCli_cve_n().equals(cli_cve_nSelec))
-                        rc= dgClientes.get(i);
+            String cliente = rc.getCli_cve_n();
+            String IdExt = rc.getCli_cveext_str();
 
-                String cliente = rc.getCli_cve_n();
-                String IdExt = rc.getCli_cveext_str();
+            if (conf.getPreventa()==1);
+            //Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente), true, "a s e s o r");
+            //else
+            //Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(cliente), true);
 
-                if (conf.getPreventa()==1);
-                //Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente), true, "a s e s o r");
-                //else
-                //Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(cliente), true);
-
-            }
-            else
-                Toast.makeText(getApplicationContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
         }
         catch (Exception e)
         {
@@ -536,40 +368,26 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         }
     }
 
-    private void actualizaCliente()
+    public void actualizaCliente(int indice)
     {
-        try {
+        try
+        {
+            DataTableWS.Clientes dgCliente = bsClientes.get(indice);
 
-            if (!cli_cve_nSelec.isEmpty())
-            {
+            String cliente = dgCliente.getCli_cve_n();
+            String IdExt = dgCliente.getCli_cveext_str();
 
-                DataTableWS.Clientes dgCliente = null;
+            ArrayList<PropertyInfo> propertyInfos  =new ArrayList<>();
 
-                for (int i = 0; i < dgClientes.size(); i++)
-                    if (dgClientes.get(i).getCli_cve_n().equals(cli_cve_nSelec))
-                        dgCliente = dgClientes.get(i);
+            PropertyInfo pi = new PropertyInfo();
+            pi.setName("IdCliente");
+            pi.setValue(cliente);
+            propertyInfos.add(pi);
 
-
-                String cliente = dgCliente.getCli_cve_n();
-                String IdExt = dgCliente.getCli_cveext_str();
-
-
-                ArrayList<PropertyInfo> propertyInfos  =new ArrayList<>();
-
-                PropertyInfo pi = new PropertyInfo();
-                pi.setName("IdCliente");
-                pi.setValue(cliente);
-                propertyInfos.add(pi);
-
-                ConexionWS_JSON cws = new ConexionWS_JSON(BuscarClientesActivity.this,"ActualizarClienteJ");
-                cws.propertyInfos = propertyInfos;
-                cws.delegate = BuscarClientesActivity.this;
-                cws.execute();
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), getString(R.string.tt_seleccionarUno), Toast.LENGTH_SHORT).show();
-            }
+            ConexionWS_JSON cws = new ConexionWS_JSON(BuscarClientesActivity.this,"ActualizarClienteJ");
+            cws.propertyInfos = propertyInfos;
+            cws.delegate = BuscarClientesActivity.this;
+            cws.execute();
 
         }catch (Exception e)
         {
@@ -577,6 +395,97 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
             Utils.msgError(this, getString(R.string.error_actCliente),e.getMessage());
         }
     }
+
+    public void seleccionar(int indice)
+    {
+        try {
+
+            String consulta, json;
+
+            DataTableWS.Clientes dgCliente = bsClientes.get(indice);
+
+            String cliente = dgCliente.getCli_cve_n();
+            String IdExt = dgCliente.getCli_cveext_str();
+
+            boolean cli_especial_n = Utils.getBool(dgCliente.getCli_especial_n());
+
+            ArrayList<DataTableWS.Clientes2> dtca = null;
+            DataTableWS.Clientes2 rc = null;
+
+            consulta = string.formatSql("select c.*,r.rut_invalidafrecuencia_n from clientes c  left join rutas r on c.rut_cve_n=r.rut_cve_n where c.cli_cve_n={1}", cliente);
+            json = BaseLocal.Select(consulta, getApplicationContext());
+
+            Log.d("salida",json);
+
+            dtca = ConvertirRespuesta.getClientes2Json(json);
+
+            if (dtca != null) {
+                rc = dtca.get(0);
+            }
+
+            if (Utils.getBool(rc.getCli_invalidafrecuencia_n()))
+            {
+                consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS", "{0}");
+                obtenerUbicacion(consulta);
+            } else if (Utils.getBool(rc.getRut_invalidafrecuencia_n()))
+            {
+                consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS NIVEL RUTA", "{0}");
+                obtenerUbicacion(consulta);
+            }
+            else
+            {
+                if (conf.isAuditoria())
+                {
+                    consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR AUDITORIA", "{0}");
+                    obtenerUbicacion(consulta);
+                } else {
+
+                    int diaVisitar = 0;
+                    switch (Day) {
+                        case "cli_lun_n":
+                            diaVisitar = Integer.parseInt(rc.getCli_lun_n());
+                            break;
+                        case "cli_mar_n":
+                            diaVisitar = Integer.parseInt(rc.getCli_mar_n());
+                            break;
+                        case "cli_mie_n":
+                            diaVisitar = Integer.parseInt(rc.getCli_mie_n());
+                            break;
+                        case "cli_jue_n":
+                            diaVisitar = Integer.parseInt(rc.getCli_jue_n());
+                            break;
+                        case "cli_vie_n":
+                            diaVisitar = Integer.parseInt(rc.getCli_vie_n());
+                            break;
+                        case "cli_sab_n":
+                            diaVisitar = Integer.parseInt(rc.getCli_sab_n());
+                            break;
+                        case "cli_dom_n":
+                            diaVisitar = Integer.parseInt(rc.getCli_dom_n());
+                            break;
+                    }
+
+                    if (diaVisitar <= 0) {
+                        consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "EL CLIENTE NO SE VISITA HOY", "{0}");
+                        obtenerUbicacion(consulta);
+                        Toast.makeText(getApplicationContext(), getString(R.string.tt_noVisita), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+            }
+
+            Intent i = getIntent();
+            i.putExtra("clave", dgCliente.getCli_nombrenegocio_str());
+            setResult(RESULT_OK, i);
+            finish();
+
+        }catch (Exception e)
+        {
+            Log.d( "salida","Error: "+e.getMessage());
+            Utils.msgError(this, getString(R.string.err_busq2),e.getMessage());
+        }
+    }
+
 
     private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean> {
 

@@ -65,7 +65,7 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
     private TableLayout tableLayout;
     private LayoutInflater layoutInflater;
 
-    private String peticion,mensaje,nombreBase,cve,folio,rectxt,spTitulo;
+    private String peticion,mensaje,nombreBase,cve,folio,rectxt,spTitulo,mensaje2;
 
     private MainActivity mainActivity;
 
@@ -98,11 +98,16 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             conf = Utils.ObtenerConf(getActivity().getApplication());
             nombreBase = getActivity().getString(R.string.nombreBD);
 
-
-            if (recarga)
+            if (recarga) {
                 mensaje = getString(R.string.mHijo_recarga).toLowerCase();
-            else
+                mensaje2="Recargas";
+            }
+            else {
                 mensaje = getString(R.string.mHijo_cargaIni).toLowerCase();
+                mensaje2="Carga Inicial";
+            }
+
+            Log.d("salida","LA RECARGA ES:"+recarga);
 
             spTitulo = getString(R.string.sp_carga) + " " + mensaje;
 
@@ -267,6 +272,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
             String col= recarga ? "inv_recarga_n" : "inv_inicial_n";
 
+            Log.d("salida", "COL: "+col);
+
             String qi = "insert into inventario(rut_cve_n,prod_cve_n," + col + ") values ({0},{1},{2})";
             //String qu = "update inventario set " + col + "=" + col + "+{0} where " + "rut_cve_n={1} and prod_cve_n={2}";
             String qu = "update inventario set " + col + "=" + col + "+{2} where " + "rut_cve_n={0} and prod_cve_n={1}";
@@ -275,9 +282,9 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             if (!recarga)
             {
                 db.execSQL(  string.formatSql("delete from inventario where rut_cve_n={0}", String.valueOf( conf.getRuta()) ) ) ;
+                Log.d("salida","entro !recarga : eliminar inventario");
             }
 
-            Log.d("salida","entro aqui");
 
             for(int i=0; i<al_recargasDet.size();i++)
             {
@@ -286,37 +293,37 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
                 for(int j=0; j<al_inventario.size();j++)
                 {
-                    if(al_recargasDet.get(i).getProd_cve_n().equals( al_inventario.get(i).getProd_cve_n() ))
+                    if(al_recargasDet.get(i).getProd_cve_n().equals( al_inventario.get(j).getProd_cve_n() ))
                     {
-                        k=al_inventario.get(i);
+                        k=al_inventario.get(j);
                         break;
                     }
                 }
 
-
                 if(k!=null && recarga )
                 {
+                    Log.d("salida","ENTRO AQUI, ACT INVENTARIO");
                     db.execSQL( string.formatSql( qu,  in.getProd_cant_n(), String.valueOf( conf.getRuta() )  , in.getProd_cve_n()) );
 
                     String suma = String.valueOf(  Float.parseFloat( k.getInv_recarga_n() )  + Float.parseFloat( in.getProd_cant_n() ) );
-                    db.execSQL( string.formatSql(Querys.Inventario.InsertMovimiento,String.valueOf( conf.getRuta() ), in.getProd_cve_n(), null, conf.getUsuario(), k.getInv_recarga_n(),"0", in.getProd_cant_n(), suma,mensaje ) );
+                    db.execSQL( string.formatSql(Querys.Inventario.InsertMovimiento,String.valueOf( conf.getRuta() ), in.getProd_cve_n(), null, conf.getUsuario(), k.getInv_recarga_n(),"0", in.getProd_cant_n(), suma,mensaje2 ) );
                     Log.d("salida", "Actualizar inventario");
-
                 }
                 else
                 {
+                    Log.d("salida","ENTRO AQUI, INS INVENTARIO");
                     db.execSQL( string.formatSql( qi,  String.valueOf( conf.getRuta() ), in.getProd_cve_n()  , in.getProd_cant_n()  ) );
-                    db.execSQL( string.formatSql(Querys.Inventario.InsertMovimiento,String.valueOf( conf.getRuta() ), in.getProd_cve_n(), null, conf.getUsuario(), "0", "0",in.getProd_cant_n(),in.getProd_cant_n(),mensaje ) );
+                    db.execSQL( string.formatSql(Querys.Inventario.InsertMovimiento,String.valueOf( conf.getRuta() ), in.getProd_cve_n(), null, conf.getUsuario(), "0", "0",in.getProd_cant_n(),in.getProd_cant_n(),mensaje2 ) );
                     Log.d("salida", "Insertar inventario");
                 }
-
-
             }
+
+            Log.d("salida","ENTRO AQUI: SALIR DEL FOR 0");
 
             if (!recarga)
             {
                 db.execSQL(string.formatSql(Querys.Inventario.DesactivaCarga));
-                db.execSQL(string.formatSql(Querys.Inventario.InsertCarga, "1", conf.getUsuario(), "A", mensaje.toUpperCase()));
+                db.execSQL(string.formatSql(Querys.Inventario.InsertCarga, "1", conf.getUsuario(), "A", mensaje2.toUpperCase()));
             }
 
             rectxt = recarga ? "RECARGA" : "CARGA INICIAL";
@@ -324,6 +331,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
             db.execSQL(string.formatSql(Querys.Trabajo.InsertBitacoraHHSesion,conf.getUsuario(), rectxt,string.formatSql("FOLIO: {0}",folio), String.valueOf( conf.getRuta() ) , ubicacion));
 
             db.setTransactionSuccessful();
+
+            Log.d("salida","ENTRO AQUI: TERMINAR FOR INVENTARIO");
 
             peticionProcesarRecarga();
 
@@ -341,7 +350,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     private void peticionProcesarRecarga()
     {
-        try {
+        try
+        {
             peticion = "ProcesarRecarga";
 
             //parametros del metodo
@@ -372,7 +382,8 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
     private void procesarRecarga()
     {
-        try {
+        try
+        {
             String consulta = "Select p.prod_cve_n from productos p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE' and p.prod_cve_n not in (Select p.prod_cve_n from inventario p inner join categorias c on p.cat_cve_n=c.cat_cve_n where c.cat_desc_str='ENVASE')";
             String res = BaseLocal.Select(consulta, getContext());
 
@@ -601,7 +612,6 @@ public class Carga2Fragment extends Fragment implements AsyncResponseJSON {
 
         mainActivity.validarMenu();
         Log.d("salida","ENTRO ACTUALIZAR MENU");
-
     }
 
 }

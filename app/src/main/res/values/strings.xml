@@ -347,6 +347,28 @@
     <string name="tt_ped1">El cliente ya tiene una venta registrada.</string>
     <string name="tt_ped2">El cliente ya registro cobranza.</string>
     <string name="tt_ped3">El cliente ya tiene un motivo de no venta.</string>
+    <string name="err_ped2">Error al calcular efectividad.</string>
+    <string name="err_det1">Error al cargar fragment datos</string>
+    <string name="hint_codigo">Código</string>
+    <string name="hint_rfc">RFC</string>
+    <string name="hint_limCredito">Límite de credito</string>
+    <string name="hint_plazo">Plazo</string>
+    <string name="hint_envases">Envases</string>
+    <string name="tv_estadoCredi">Estado crédito</string>
+    <string name="rb_reqfac">Req. Fac</string>
+    <string name="rb_prospecto">Prospecto</string>
+    <string name="rb_fba">FBA</string>
+    <string name="rb_comoDato">Comodato</string>
+    <string name="tl_datos">Datos</string>
+    <string name="tl_domicilio">Domicilio</string>
+    <string name="tv_direccion">Dirección</string>
+    <string name="hint_numExt">Número exterior</string>
+    <string name="hint_numInt">Número interior</string>
+    <string name="hint_colonia">Colonia</string>
+    <string name="hint_municipio">Municipio</string>
+    <string name="hint_num1">Teléfono 1</string>
+    <string name="hint_num2">Teléfono 2</string>
+    <string name="hint_calle">Calle</string>
 
 
 </resources>

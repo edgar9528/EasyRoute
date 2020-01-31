@@ -6,11 +6,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.DatosdetFragment;
 import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.DomiciliodetFragment;
-import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.MapadetFragment;
-import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.NavegadetFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorrutaFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.UtilidadFragment;
 
 public class PagerDetallesCliAdapter extends FragmentStatePagerAdapter {
 
@@ -30,12 +25,6 @@ public class PagerDetallesCliAdapter extends FragmentStatePagerAdapter {
             case 1:
                 DomiciliodetFragment tab2 = new DomiciliodetFragment();
                 return tab2;
-            case 2:
-                MapadetFragment tab3 = new MapadetFragment();
-                return tab3;
-            case 3:
-                NavegadetFragment tab4 = new NavegadetFragment();
-                return tab4;
             default:
                 return null;
         }

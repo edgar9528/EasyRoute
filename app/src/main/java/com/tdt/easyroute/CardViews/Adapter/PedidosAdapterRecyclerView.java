@@ -70,7 +70,7 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
         pedidosViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pedidosFragment.mensaje();
+
             }
         });
 

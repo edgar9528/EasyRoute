@@ -7,27 +7,27 @@
         android:id="@+id/action_imprimir"
         android:orderInCategory="300"
         android:title="@string/bt_imprimir"
-        android:icon="@drawable/icon_visimp"
+        android:icon="@drawable/ic_print_white"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_buscar"
         android:orderInCategory="300"
         android:title="@string/bt_buscar"
-        android:icon="@drawable/icon_visbuscar"
+        android:icon="@drawable/ic_find"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_salir"
         android:orderInCategory="300"
         android:title="@string/bt_salir"
-        android:icon="@drawable/icon_vissalir"
+        android:icon="@drawable/ic_exit_white"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_actualizar"
         android:orderInCategory="300"
         android:title="@string/bt_actClientes"
-        android:icon="@drawable/icon_visact1"
+        android:icon="@drawable/ic_update_white_24dp"
         app:showAsAction="ifRoom" />
 </menu>

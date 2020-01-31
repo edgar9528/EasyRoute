@@ -2904,7 +2904,7 @@ public class DataTableLC {
         }
     }
 
-    public static class DtCliVenta
+    public static class DtCliVenta implements Serializable
     {
         private String cli_cve_n;
         private String cli_cveext_str;

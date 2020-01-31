@@ -19,4 +19,7 @@
     <color name="grey">#E5E5E5</color>
     <color name="greybg">#EEEEEE</color>
 
+    <color name="graficaOk">#66bb6a</color>
+    <color name="graficaNo">#ff5131</color>
+
 </resources>

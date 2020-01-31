@@ -353,6 +353,19 @@
     <string name="tt_ped2">The customer already registered collection.</string>
     <string name="tt_ped3">The customer already has a reason for not selling.</string>
 
+    <string name="err_ped2">Error calculating effectiveness.</string>
+    <string name="err_det1">Error loading data fragment</string>
+    <string name="hint_codigo">Code</string>
+    <string name="hint_rfc">RFC</string>
+    <string name="hint_limCredito">Credit limit</string>
+    <string name="hint_plazo">Term</string>
+    <string name="hint_envases">Packaging</string>
+    <string name="tv_estadoCredi">Credit status</string>
+    <string name="rb_reqfac">Req.Invo</string>
+    <string name="rb_prospecto">Leaflet</string>
+    <string name="rb_fba">FBA</string>
+    <string name="rb_comoDato">As data</string>
+
 
 
 </resources>

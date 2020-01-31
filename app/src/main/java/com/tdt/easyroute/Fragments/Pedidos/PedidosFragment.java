@@ -96,8 +96,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pedidos, container, false);
 
@@ -121,10 +121,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             conf = Utils.ObtenerConf(getActivity().getApplication());
             vista = view;
 
-            graficoVisitas();
-            graficoEfectividad();
-
-            //crearPedidos(view);
+            graficoVisitas(0, 0);
+            graficoEfectividad(0, 0 );
 
             InicializarAsync inicializar = new InicializarAsync();
             inicializar.execute();
@@ -137,24 +135,76 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         return view;
     }
 
-
-
-    private void graficoVisitas()
+    private void CalcularEfectividad()
     {
-        try {
+        int visitas = 0;
+        int ConVenta = 0;
+        DataTableLC.PedidosLv i;
+
+        if (lvClientes != null)
+            for (int j = 0; j < lvClientes.size(); j++)
+            {
+                i = lvClientes.get(j);
+                if (i.getIconoInt() == 1)
+                {
+                    ConVenta++;
+                    visitas++;
+                }
+                else
+                {
+                    if (i.getIconoInt() == 2 || i.getIconoInt() == 3)
+                        visitas++;
+                }
+            }
+
+        try
+        {
+            if (lvClientes.size() > 0)
+            {
+                graficoVisitas(visitas, lvClientes.size());
+                graficoEfectividad(ConVenta, visitas );
+
+                //et_efectividad.setText((ConVenta / lvClientes.size()) + " %");
+            }
+            else
+            {
+                graficoVisitas(visitas, 0);
+                graficoEfectividad(ConVenta, visitas );
+                //et_efectividad.setText(ConVenta + "/0");
+            }
+
+        } catch (Exception e) {
+            Log.d("salida", "Error: " + e);
+            Utils.msgError(getContext(), getString(R.string.err_ped2),e.getMessage());
+        }
+
+    }
+
+    private void graficoVisitas(int visCumplidas, int visTotal)
+    {
+        try
+        {
             ArrayList<PieEntry> entries = new ArrayList<>();
             PieDataSet pieDataSet;
             PieData pieData;
 
+            int visRestantes = visTotal-visCumplidas;
 
-            entries.add(new PieEntry(3, "Cumplidas"));
-            entries.add(new PieEntry(48, "Faltantes"));
+            float porcentaje;
+
+            if(visTotal!=0)
+                porcentaje= (visCumplidas*100) / visTotal;
+            else
+                porcentaje=0;
+
+            entries.add(new PieEntry(visCumplidas, "Cumplidas"));
+            entries.add(new PieEntry(visRestantes, "Faltantes"));
 
             pieDataSet = new PieDataSet(entries, "");
 
             pieData = new PieData(pieDataSet);
 
-            pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+            pieDataSet.setColors( new int[] { R.color.graficaOk, R.color.graficaNo}, getContext() );
 
             pieChartVisitas.setData(pieData);
 
@@ -163,7 +213,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             description.setTextColor(ColorTemplate.rgb("ffffff"));
             description.setTextSize(18);
 
-            pieChartVisitas.setCenterText(60 + "%");
+            pieChartVisitas.setCenterText(porcentaje + "%");
             pieChartVisitas.setCenterTextSize(18);
             pieChartVisitas.setCenterTextColor(ColorTemplate.rgb("ffffff"));
 
@@ -178,22 +228,30 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    private void graficoEfectividad()
+    private void graficoEfectividad(int conVenta, int total)
     {
-        try {
-
+        try
+        {
             ArrayList<PieEntry> entries = new ArrayList<>();
             PieDataSet pieDataSet;
             PieData pieData;
 
-            entries.add(new PieEntry(60, "Efectividad"));
-            entries.add(new PieEntry(40, "Restante"));
+            int sinVenta= total-conVenta;
+
+            float porcentaje;
+            if(total!=0)
+                 porcentaje= (conVenta*100) / total;
+            else
+                porcentaje=0;
+
+            entries.add(new PieEntry(conVenta, "Con venta"));
+            entries.add(new PieEntry(sinVenta, "Sin venta"));
 
             pieDataSet = new PieDataSet(entries, "");
 
             pieData = new PieData(pieDataSet);
 
-            pieDataSet.setColors(ColorTemplate.PASTEL_COLORS);
+            pieDataSet.setColors( new int[] { R.color.graficaOk, R.color.graficaNo}, getContext() );
 
             pieChartEfectividad.setData(pieData);
 
@@ -202,7 +260,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             description.setTextColor(ColorTemplate.rgb("ffffff"));
             description.setTextSize(18);
 
-            pieChartEfectividad.setCenterText(60 + "%");
+            pieChartEfectividad.setCenterText(porcentaje + "%");
             pieChartEfectividad.setCenterTextSize(18);
             pieChartEfectividad.setCenterTextColor(ColorTemplate.rgb("ffffff"));
 
@@ -243,7 +301,9 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                 return false;
         }
     }
-    private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean> {
+
+    private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean>
+    {
 
         public InicializarAsync() {
         }
@@ -254,7 +314,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
         @Override protected void onPreExecute() {
             progreso = new ProgressDialog(getContext());
-            progreso.setMessage("Cargando...");
+            progreso.setMessage(getString(R.string.msg_cargando));
             progreso.setCancelable(false);
             progreso.show();
         }
@@ -288,7 +348,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             if(result)
             {
                 mostrarClientes();
-                //CalcularEfectividad();
+                CalcularEfectividad();
             }
             else
             {
@@ -392,7 +452,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    private void cargarClientes(ArrayList<DataTableLC.PedidosClientes> dt) {
+    private void cargarClientes(ArrayList<DataTableLC.PedidosClientes> dt)
+    {
         try
         {
             ArrayList<DataTableLC.PedidosVisitas> dtCli;
@@ -487,7 +548,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-
     private void mostrarClientes()
     {
         try {
@@ -567,8 +627,10 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                 }
             }
 
+            DataTableLC.DtCliVenta rc = getDetcli(lvClientes.get(indice).getCli_cve_n());
+
             Intent intent = new Intent(getContext(), MainDetallesActivity.class);
-            intent.putExtra("cliente",lvClientes.get(indice));
+            intent.putExtra("cliente",rc);
             startActivity(intent);
         }
         catch (Exception e)
@@ -576,11 +638,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             Log.d("salida","Error: "+e.getMessage());
             Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
-    }
-
-    public void mensaje()
-    {
-
     }
 
     public void noVisita(DataTableLC.PedidosLv item)
@@ -668,7 +725,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     }
 
     @Override
-    public void recibirPeticion(boolean estado, String respuesta) {
+    public void recibirPeticion(boolean estado, String respuesta)
+    {
 
         try {
 
@@ -735,7 +793,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
 
         if (resultCode == Activity.RESULT_OK) {
             try {
@@ -751,7 +810,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     }
 
-    private void actualizaClientes() {
+    private void actualizaClientes()
+    {
         try {
             metodosWS = null;
             metodosWS = new ArrayList<>();
@@ -775,7 +835,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     }
 
-    private class ConexionWS extends AsyncTask<String,Integer,Boolean> {
+    private class ConexionWS extends AsyncTask<String,Integer,Boolean>
+    {
 
         private Context context;
         private ParametrosWS parametrosWS;
@@ -798,7 +859,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
         @Override protected void onPreExecute() {
             progreso = new ProgressDialog(context);
-            progreso.setMessage("Descargando...");
+            progreso.setMessage(getString(R.string.msg_webservice));
             progreso.setCancelable(false);
             progreso.show();
         }
@@ -884,17 +945,17 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             {
                 if(almacenado)
                 {
-                    Toast.makeText(context, "Clientes actualizados. Vuelva a abrir pedidos", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,  getString(R.string.tt_infoActu), Toast.LENGTH_LONG).show();
                     Utils.RegresarInicio(getActivity());
                 }
                 else
                 {
-                    Toast.makeText(context, "Error al actualizar: "+ resultado, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getString(R.string.error_almacenar)+" "+ resultado, Toast.LENGTH_LONG).show();
                 }
             }
             else
             {
-                Toast.makeText(context, "Error al actualizar: "+ resultado, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, getString(R.string.error_almacenar)+" "+ resultado, Toast.LENGTH_LONG).show();
             }
         }
 
