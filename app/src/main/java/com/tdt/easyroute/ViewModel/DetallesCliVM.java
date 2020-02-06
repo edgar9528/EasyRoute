@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel;
 
 public class DetallesCliVM extends ViewModel {
 
-    private MutableLiveData<Boolean> bt_ubicacion = new MutableLiveData<>();
     private MutableLiveData<Boolean> bt_ruta = new MutableLiveData<>();
     private MutableLiveData<String> ubiCliente = new MutableLiveData<>();
 
@@ -15,15 +14,6 @@ public class DetallesCliVM extends ViewModel {
 
     public void setUbiCliente(String UbiCliente) {
         ubiCliente.setValue( UbiCliente );
-    }
-
-
-    public LiveData<Boolean> getBt_ubicacion() {
-        return bt_ubicacion;
-    }
-
-    public void setBt_ubicacion(Boolean Bt_ubicacion) {
-        bt_ubicacion.setValue( Bt_ubicacion );
     }
 
     public LiveData<Boolean> getBt_ruta() {

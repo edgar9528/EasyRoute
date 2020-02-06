@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">EasyRoute</string>
     <string name="NAMESPACE" translatable="false">http://tempuri.org/</string>
     <string name="nombreBD" translatable="false">baseLocal.db</string>
+    <string name="token_mapa" translatable="false">pk.eyJ1IjoiZWRnYXI5NTI4IiwiYSI6ImNrNjlvMGUxczBodmQza29iaWF2bzV4YXAifQ.dOM73OqbT0xMQYMgMn-rng</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -371,6 +372,8 @@
     <string name="hint_num2">Teléfono 2</string>
     <string name="hint_calle">Calle</string>
     <string name="err_ped3">Error al mostrar dirección</string>
+    <string name="err_ped5">Error al cargar mapa</string>
+
 
 
 </resources>

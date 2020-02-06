@@ -265,23 +265,10 @@
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/button_ubicacion"
-
-        />
-
-    <Button
-        android:id="@+id/button_ubicacion"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/bt_ubicacion"
-        android:theme="@style/ButtonDarkSmall"
-
-        app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
-
-        app:layout_constraintStart_toEndOf="@+id/button_salir"
         app:layout_constraintEnd_toStartOf="@id/button_ruta"
 
         />
+
 
     <Button
         android:id="@+id/button_ruta"
@@ -291,7 +278,7 @@
         android:theme="@style/ButtonDarkSmall"
 
         app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
-        app:layout_constraintStart_toEndOf="@+id/button_ubicacion"
+        app:layout_constraintStart_toEndOf="@+id/button_salir"
         app:layout_constraintEnd_toEndOf="parent"
 
         android:layout_marginEnd="@dimen/paddingGeneral"

@@ -60,10 +60,9 @@ public class DatosdetFragment extends Fragment {
         {
             MainDetallesActivity mainDetallesActivity = (MainDetallesActivity) getActivity();
             rc = mainDetallesActivity.getCliente();
-            Button button_salir, button_ubicacion, button_ruta;
+            Button button_salir, button_ruta;
 
             button_salir = view.findViewById(R.id.button_salir);
-            button_ubicacion = view.findViewById(R.id.button_ubicacion);
             button_ruta = view.findViewById(R.id.button_ruta);
 
             sp_estado = view.findViewById(R.id.spinnerEstadoCred);
@@ -88,13 +87,6 @@ public class DatosdetFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     getActivity().finish();
-                }
-            });
-
-            button_ubicacion.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    detallesCliVM.setBt_ubicacion(true);
                 }
             });
 

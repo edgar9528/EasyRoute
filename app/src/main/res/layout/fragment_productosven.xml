@@ -68,8 +68,8 @@
         android:theme="@style/ButtonDarkSmall"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_imprimir1"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_imprimir1"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginBottom="@dimen/paddingGeneral"
 
@@ -99,6 +99,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="@dimen/paddingGeneral"
         />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

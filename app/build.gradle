@@ -47,9 +47,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.6.2'
 
 }
 
 repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
+    mavenCentral()
+    maven { url 'https://mapbox.bintray.com/mapbox' }
 }

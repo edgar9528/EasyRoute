@@ -378,5 +378,7 @@
     <string name="hint_calle">Street</string>
     <string name="err_ped3">Error displaying address</string>
 
+    <string name="err_ped5">Error loading map</string>
+
 
 </resources>

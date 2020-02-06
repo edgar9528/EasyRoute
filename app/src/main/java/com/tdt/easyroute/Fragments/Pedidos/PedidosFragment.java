@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +47,7 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Fragments.Clientes.BuscarClientesActivity;
 import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.MainDetallesActivity;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
@@ -69,13 +71,14 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     private Configuracion conf;
     private View vista;
     private int tipo = 0;// 1.- no venta 2.- no lectura
-    private boolean MensajeAbierto=false;
+    private boolean mensajeAbierto=false;
     ArrayList<String> metodosWS;
 
     private Toolbar toolbar;
     private String nombreBase;
 
     private PieChart pieChartVisitas,pieChartEfectividad;
+
 
     public PedidosFragment() {
         // Required empty public constructor
@@ -276,17 +279,21 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    private void imprimir()
+    public void imprimir(DataTableLC.PedidosLv item)
     {
-
+        try
+        {
+            Log.d("salida","Entro a la opción imprimir");
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage());
+        }
     }
 
     private boolean clickItemToolbar(MenuItem item)
     {
         switch (item.getItemId()) {
-            case R.id.action_imprimir:
-                imprimir();
-                return true;
             case R.id.action_buscar:
                 Intent intent = new Intent(getContext(), BuscarClientesActivity.class);
                 startActivityForResult(intent, 0);
@@ -550,8 +557,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     private void mostrarClientes()
     {
-        try {
-
+        try
+        {
             Drawable[] iconos = new Drawable[6];
             iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
             iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
@@ -664,7 +671,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
     private void mostrarMsj(DataTableLC.PedidosLv item)
     {
-        if (MensajeAbierto)
+        if (mensajeAbierto)
             return;
 
         DataTableLC.DtCliVenta rc = getDetcli(item.getCli_cve_n());
@@ -697,7 +704,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         builder.setItems(motivos, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int indice) {
-
+                obtenerUbicacion(0);
             }
         });
         builder.setNegativeButton(getString(R.string.bt_cancelar), new DialogInterface.OnClickListener() {
@@ -710,6 +717,79 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         dialog.show();
 
     }
+
+    private void obtenerUbicacion(final int op)
+    {
+        try
+        {
+            final MainActivity mainActivity = (MainActivity) getActivity();
+            final String[] ubi = new String[1];
+            final ProgressDialog progress = new ProgressDialog(getContext());
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
+            progress.show();
+            progress.setCancelable(false);
+
+            mainActivity.enableLocationUpdates();
+
+            ubi[0] = mainActivity.getLatLon();
+            Log.d("salida", "Ubicacion anterior: " + ubi[0]);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress.cancel();
+                    mainActivity.disableLocationUpdates();
+                    ubi[0] = mainActivity.getLatLon();
+                    Log.d("salida", "Ubicacion nueva: " + ubi[0]);
+
+                    switch (op)
+                    {
+                        case 1:
+                            verificaTipo(ubi[0]);
+                            break;
+                    }
+                }
+            }, 3000);
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_ubicacion), e.getMessage() );
+            Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
+    private void verificaTipo(String ubicacion)
+    {
+        if (tipo == 1)
+        {
+            if (validaDistancia())
+            {
+                //MensajeAbierto = true;
+                //MessageBox.Show("Para registrar el motivo de no venta debe de encontrarse en el establecimiento.", "Acción prohibida");
+                //MensajeAbierto = false;
+                return;
+            }
+        }
+        if (tipo == 2)
+        {
+            if (validaDistancia())
+            {
+                //MensajeAbierto = true;
+                //MessageBox.Show("No se encuentra en el establecimiento del cliente. Por favor acerquese al establecimiento.", "Venta prohibida");
+                //MensajeAbierto = false;
+                return;
+            }
+        }
+
+    }
+
+    private boolean validaDistancia()
+    {
+        return true;
+    }
+
 
     private DataTableLC.DtCliVenta getDetcli(String cliente)
     {
@@ -727,7 +807,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     @Override
     public void recibirPeticion(boolean estado, String respuesta)
     {
-
         try {
 
             if (estado) {
@@ -795,7 +874,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-
         if (resultCode == Activity.RESULT_OK) {
             try {
                 //String editar = (String) data.getExtras().getSerializable("CamposEditar");

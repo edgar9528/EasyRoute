@@ -67,6 +67,13 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
             }
         });
 
+        pedidosViewHolder.b_imp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pedidosFragment.imprimir(pedidosCardView.getCliente());
+            }
+        });
+
         pedidosViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +96,7 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
         private ImageButton  b_actualizar;
         private ImageButton  b_detalles;
         private ImageButton  b_noVenta;
+        private ImageButton  b_imp;
         private ConstraintLayout constraintLayout;
 
         public PedidosViewHolder(@NonNull View itemView) {
@@ -99,6 +107,7 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
             b_actualizar = itemView.findViewById(R.id.cv_bActualizar);
             b_detalles = itemView.findViewById(R.id.cv_bDetalles);
             b_noVenta = itemView.findViewById(R.id.cv_bNoVenta);
+            b_imp = itemView.findViewById(R.id.cv_bImp);
             constraintLayout = itemView.findViewById(R.id.constraint);
 
         }

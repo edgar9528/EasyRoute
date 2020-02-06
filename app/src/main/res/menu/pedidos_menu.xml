@@ -4,10 +4,10 @@
     >
 
     <item
-        android:id="@+id/action_imprimir"
+        android:id="@+id/action_salir"
         android:orderInCategory="300"
-        android:title="@string/bt_imprimir"
-        android:icon="@drawable/ic_print_white"
+        android:title="@string/bt_salir"
+        android:icon="@drawable/ic_exit_white"
         app:showAsAction="ifRoom" />
 
     <item
@@ -15,13 +15,6 @@
         android:orderInCategory="300"
         android:title="@string/bt_buscar"
         android:icon="@drawable/ic_find"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_salir"
-        android:orderInCategory="300"
-        android:title="@string/bt_salir"
-        android:icon="@drawable/ic_exit_white"
         app:showAsAction="ifRoom" />
 
     <item

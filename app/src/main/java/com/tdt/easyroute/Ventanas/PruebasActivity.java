@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Model.DataTableWS;
@@ -20,38 +26,30 @@ public class PruebasActivity extends AppCompatActivity {
     Button button;
     TextView tv_lat,tv_lon;
 
+    private MapView mapView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Mapbox.getInstance(this, "pk.eyJ1IjoiZWRnYXI5NTI4IiwiYSI6ImNrNjlqa2tkajA0czYzbHF2MXZoNnZqankifQ.m2r8JcQVtk8G3aLQvv3IBg");
+
         setContentView(R.layout.activity_pruebas);
 
-        button = findViewById(R.id.button_prueba);
-        tv_lat = findViewById(R.id.tv_latitud);
-        tv_lon = findViewById(R.id.tv_longitud);
-
-
-        button.setOnClickListener(new View.OnClickListener() {
+        mapView = findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onClick(View view) {
-
-                ArrayList<DataTableWS.Clientes> clientes ;
-
-                String json = BaseLocal.Select( "select cli_cve_n,cli_cveext_str,cli_prospecto_n,est_cve_str,0 visitado,0 conventa,0 concobranza,0 noventa from clientes",getApplicationContext() );
-
-                clientes = ConvertirRespuesta.getClientesJson(json);
-
-                DataTableWS.Clientes cliente;
-
-                for(int i=0; i<clientes.size(); i++)
-                {
-
-                }
-
-
-
-
+            public void onMapReady(@NonNull MapboxMap mapboxMap) {
+                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        // Map is set up and the style has loaded. Now you can add data or make other map adjustments.
+                    }
+                });
             }
         });
+
 
     }
 }
