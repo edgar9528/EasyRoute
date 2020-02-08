@@ -24,8 +24,4 @@ public class DetallesCliVM extends ViewModel {
         bt_ruta.setValue( Bt_ruta );
     }
 
-
-
-
-
 }

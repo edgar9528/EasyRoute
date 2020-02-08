@@ -2675,7 +2675,7 @@ public class DataTableLC {
 
     public static class PedidosLv implements Serializable
     {
-        private String icono;
+        private int icono;
         private String cli_cve_n;
         private String cli_est;
         private String cli_cveext_n;
@@ -2685,7 +2685,7 @@ public class DataTableLC {
         public PedidosLv() {
         }
 
-        public PedidosLv(String icono, String cli_cve_n, String cli_est, String cli_cveext_n, String cli_nombre, String cli_especial_n) {
+        public PedidosLv(int icono, String cli_cve_n, String cli_est, String cli_cveext_n, String cli_nombre, String cli_especial_n) {
             this.icono = icono;
             this.cli_cve_n = cli_cve_n;
             this.cli_est = cli_est;
@@ -2694,15 +2694,11 @@ public class DataTableLC {
             this.cli_especial_n = cli_especial_n;
         }
 
-        public int getIconoInt() {
-            return Integer.parseInt( icono );
-        }
-
-        public String getIcono() {
+        public int getIcono() {
             return icono;
         }
 
-        public void setIcono(String icono) {
+        public void setIcono(int icono) {
             this.icono = icono;
         }
 

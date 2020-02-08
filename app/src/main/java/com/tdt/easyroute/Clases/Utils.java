@@ -818,4 +818,45 @@ public class Utils {
         dialogo1.show();
     }
 
+
+
+    public static double Distancia(String gps1, String gps2)
+    {
+        try
+        {
+            if (gps1.equals("NO VALIDA") || gps2.equals("NO VALIDA"))
+                return -1;
+
+            if (gps1.isEmpty() || gps2.isEmpty())
+                return -2;
+
+            double Longitud1;
+            double Latitud1;
+            double Longitud2;
+            double Latitud2;
+
+            Latitud1 = Double.parseDouble(gps1.split(",")[0]);
+            Latitud2 = Double.parseDouble(gps2.split(",")[0]);
+
+            Longitud1 = Double.parseDouble(gps1.split(",")[1]);
+            Longitud2 = Double.parseDouble(gps2.split(",")[1]);
+
+            double lats = (double) (Latitud1 - Latitud2);
+            double lngs = (double) (Longitud1 - Longitud2);
+
+            //Paso a metros
+            double latm = lats * 60 * 1852;
+            double lngm = (lngs * Math.cos((double) Latitud1 * Math.PI / 180)) * 60 * 1852;
+            double distInMeters = Math.sqrt(Math.pow(latm, 2) + Math.pow(lngm, 2));
+
+            Log.d("salida","LA DISTANCIA ES: "+distInMeters);
+
+            return distInMeters;
+
+        }catch (Exception e)
+        {
+            return -1;
+        }
+    }
+
 }

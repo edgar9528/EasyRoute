@@ -77,8 +77,15 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     private Toolbar toolbar;
     private String nombreBase;
 
+    private String noven_Cliente_cve, noven_mot, noven_motId;
+
     private PieChart pieChartVisitas,pieChartEfectividad;
 
+    private PedidosAdapterRecyclerView pedidosAdapterRecyclerView;
+    private int indiceSeleccionado;
+
+    private Drawable[] iconos = new Drawable[6];
+    DataTableLC.DtCliVenta clienteSeleccionado;
 
     public PedidosFragment() {
         // Required empty public constructor
@@ -111,6 +118,13 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
             pieChartVisitas = view.findViewById(R.id.pieChart1);
             pieChartEfectividad = view.findViewById(R.id.pieChart2);
+
+            iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
+            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_location);
+            iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
+            iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
 
             nombreBase = getContext().getString(R.string.nombreBD);
 
@@ -148,14 +162,14 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             for (int j = 0; j < lvClientes.size(); j++)
             {
                 i = lvClientes.get(j);
-                if (i.getIconoInt() == 1)
+                if (i.getIcono() == 1)
                 {
                     ConVenta++;
                     visitas++;
                 }
                 else
                 {
-                    if (i.getIconoInt() == 2 || i.getIconoInt() == 3)
+                    if (i.getIcono() == 2 || i.getIcono() == 3)
                         visitas++;
                 }
             }
@@ -193,12 +207,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
             int visRestantes = visTotal-visCumplidas;
 
-            float porcentaje;
-
-            if(visTotal!=0)
-                porcentaje= (visCumplidas*100) / visTotal;
-            else
-                porcentaje=0;
 
             entries.add(new PieEntry(visCumplidas, "Cumplidas"));
             entries.add(new PieEntry(visRestantes, "Faltantes"));
@@ -216,7 +224,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             description.setTextColor(ColorTemplate.rgb("ffffff"));
             description.setTextSize(18);
 
-            pieChartVisitas.setCenterText(porcentaje + "%");
+            pieChartVisitas.setCenterText( String.valueOf(visTotal) );
             pieChartVisitas.setCenterTextSize(18);
             pieChartVisitas.setCenterTextColor(ColorTemplate.rgb("ffffff"));
 
@@ -225,6 +233,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             pieChartVisitas.setDescription(description);
             pieChartVisitas.setHoleColor(ColorTemplate.COLOR_NONE);
             pieChartVisitas.animateY(500);
+
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_graficas), e.getMessage());
@@ -276,36 +285,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_graficas), e.getMessage());
-        }
-    }
-
-    public void imprimir(DataTableLC.PedidosLv item)
-    {
-        try
-        {
-            Log.d("salida","Entro a la opción imprimir");
-        }
-        catch (Exception e)
-        {
-            Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage());
-        }
-    }
-
-    private boolean clickItemToolbar(MenuItem item)
-    {
-        switch (item.getItemId()) {
-            case R.id.action_buscar:
-                Intent intent = new Intent(getContext(), BuscarClientesActivity.class);
-                startActivityForResult(intent, 0);
-                return true;
-            case R.id.action_actualizar:
-                actualizaClientes();
-                return true;
-            case R.id.action_salir:
-                Utils.RegresarInicio(getActivity());
-                return true;
-            default:
-                return false;
         }
     }
 
@@ -433,7 +412,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                             "est_cve_str<>'B' order by {0}", conf.getRutaStr(), conf.getRutaStr());
             }
 
-
             try {
                 BaseLocal.Select("select pag_especie_n from pagos", getContext());
             } catch (Exception ex) {
@@ -453,6 +431,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
             if (dia) {
                 cargarClientes(dt);
             }
+
         } catch (Exception e) {
             Log.d("salida", "Error: " + e.toString());
             Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
@@ -477,7 +456,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                 lvClientes = null;
                 lvClientes = new ArrayList<>();
 
-                String icono, cli_cve_n, cli_est;
+                int icono;
+                String cli_cve_n, cli_est;
                 String cli_cveext_n, cli_nombre, cli_especial_n;
 
                 DataTableLC.PedidosClientes r;
@@ -504,10 +484,10 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
                     //}
 
-                    icono = "0";
+                    icono = 0;
 
                     if (r.getEst_cve_str().equals("I"))
-                        icono = "4";
+                        icono = 4;
 
                     dtCli = null;
                     json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and " +
@@ -523,12 +503,11 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                         }
 
                     if (vp != null && conf.getPreventa() == 2) {
-                        icono = "5";
+                        icono = 5;
                     }
 
                     if (dtCli != null) {
-
-                        icono = "1";
+                        icono = 1;
                     } else {
                         dtCli2 = null;
                         json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and vis_operacion_str<>'CON VENTA' order by vis_fecha_dt desc", r.getCli_cve_n()), getContext());
@@ -537,11 +516,11 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                         if (dtCli2 != null) {
                             String op = dtCli2.get(0).getVis_operacion_str();
                             if (op.equals("NO VENTA"))
-                                icono = "3";
+                                icono = 3;
                             if (op.equals("CON VENTA") || op.equals("CON PREVENTA"))
-                                icono = "1";
+                                icono = 1;
                             if (op.equals("SIN VENTA") || op.equals("CON COBRANZA"))
-                                icono = "2";
+                                icono = 2;
                         }
                     }
 
@@ -559,14 +538,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
     {
         try
         {
-            Drawable[] iconos = new Drawable[6];
-            iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-            iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-            iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-            iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-            iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-
             if (lvClientes != null) {
 
                 RecyclerView pedidosRecyclerView = vista.findViewById(R.id.pedidosRecycler);
@@ -577,22 +548,50 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                 ArrayList<PedidosCardView> pedidosCardViews = new ArrayList<>();
 
                 String clave, nombre;
-                for (int i = 0; i < lvClientes.size(); i++) {
-
+                Drawable icono;
+                for (int i = 0; i < lvClientes.size(); i++)
+                {
                     clave = lvClientes.get(i).getCli_est() + " | " + lvClientes.get(i).getCli_cveext_n();
                     nombre = lvClientes.get(i).getCli_nombre();
+                    icono = iconos[lvClientes.get(i).getIcono()];
+
                     if (nombre.length() > 20)
                         nombre = nombre.substring(0, 20) + "...";
 
-                    pedidosCardViews.add(new PedidosCardView(clave, nombre, lvClientes.get(i)));
+                    pedidosCardViews.add(new PedidosCardView(clave, nombre, lvClientes.get(i), icono ) );
                 }
 
-                PedidosAdapterRecyclerView pedidosAdapterRecyclerView = new PedidosAdapterRecyclerView(pedidosCardViews, R.layout.cardview_pedidos, this);
+                pedidosAdapterRecyclerView = new PedidosAdapterRecyclerView(pedidosCardViews, R.layout.cardview_pedidos, this);
                 pedidosRecyclerView.setAdapter(pedidosAdapterRecyclerView);
             }
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_mostrarInfo), e.getMessage());
+        }
+
+    }
+
+    private void actualizaClientes()
+    {
+        try {
+            metodosWS = null;
+            metodosWS = new ArrayList<>();
+
+            if (conf.getPreventa() == 1) {
+                metodosWS.add("Obtener" + "ClientesPreventa" + "J");
+                metodosWS.add("Obtener" + "CreditosPreventa" + "J");
+                metodosWS.add("Obtener" + "DireccionesPreventa" + "J");
+            } else {
+                metodosWS.add("ObtenerClientesJ");
+                metodosWS.add("ObtenerCreditosJ");
+                metodosWS.add("ObtenerDireccionesJ");
+            }
+
+            ConexionWS conexionWS = new ConexionWS(getContext());
+            conexionWS.execute();
+        } catch (Exception e) {
+            Log.d("salida", "Error al actualizar: " + e.getMessage());
+            Toast.makeText(getContext(), getString(R.string.error_cargarInfo), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -617,6 +616,18 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         {
             Log.d( "salida","Error: "+e.getMessage());
             Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
+        }
+    }
+
+    public void imprimir(DataTableLC.PedidosLv item)
+    {
+        try
+        {
+            Log.d("salida","Entro a la opción imprimir");
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage());
         }
     }
 
@@ -647,16 +658,20 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    public void noVisita(DataTableLC.PedidosLv item)
+    public void noVisita(DataTableLC.PedidosLv item, int indice)
     {
-        try {
-            if (item.getIconoInt() == 1) {
+        try
+        {
+            indiceSeleccionado=indice;
+            clienteSeleccionado = getDetcli(item.getCli_cve_n());
+
+            if (item.getIcono() == 1) {
                 Toast.makeText(getContext(), getString(R.string.tt_ped1), Toast.LENGTH_LONG).show();
                 return;
-            } else if (item.getIconoInt() == 2) {
+            } else if (item.getIcono() == 2) {
                 Toast.makeText(getContext(), getString(R.string.tt_ped2), Toast.LENGTH_LONG).show();
                 return;
-            } else if (item.getIconoInt() == 3) {
+            } else if (item.getIcono() == 3) {
                 Toast.makeText(getContext(), getString(R.string.tt_ped3), Toast.LENGTH_LONG).show();
                 return;
             }
@@ -676,6 +691,8 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
 
         DataTableLC.DtCliVenta rc = getDetcli(item.getCli_cve_n());
 
+        noven_Cliente_cve = rc.getCli_cve_n();
+
         String men="",q="";
         if(tipo==1)
         {
@@ -691,7 +708,7 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
 
         String json = BaseLocal.Select(q,getContext());
-        ArrayList<DataTableLC.Motivos> al_motivos = ConvertirRespuesta.getMotivosJson(json);
+        final ArrayList<DataTableLC.Motivos> al_motivos = ConvertirRespuesta.getMotivosJson(json);
 
         final String[] motivos = new String[al_motivos.size()];
         for(int i=0; i<al_motivos.size();i++)
@@ -700,10 +717,11 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(men);
         builder.setCancelable(false);
-
         builder.setItems(motivos, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int indice) {
+                noven_mot = al_motivos.get(indice).getMov_desc_str();
+                noven_motId = al_motivos.get(indice).getMov_cve_n();
                 obtenerUbicacion(0);
             }
         });
@@ -744,10 +762,13 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                     ubi[0] = mainActivity.getLatLon();
                     Log.d("salida", "Ubicacion nueva: " + ubi[0]);
 
+                    Log.d("salida", "valido distancia");
+
                     switch (op)
                     {
-                        case 1:
-                            verificaTipo(ubi[0]);
+                        case 0:
+                            aplicaNoVenta(ubi[0]);
+                            //verificaTipo(ubi[0]);
                             break;
                     }
                 }
@@ -760,29 +781,73 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
-    private void verificaTipo(String ubicacion)
-    {
-        if (tipo == 1)
-        {
-            if (validaDistancia())
-            {
-                //MensajeAbierto = true;
-                //MessageBox.Show("Para registrar el motivo de no venta debe de encontrarse en el establecimiento.", "Acción prohibida");
-                //MensajeAbierto = false;
-                return;
-            }
-        }
-        if (tipo == 2)
-        {
-            if (validaDistancia())
-            {
-                //MensajeAbierto = true;
-                //MessageBox.Show("No se encuentra en el establecimiento del cliente. Por favor acerquese al establecimiento.", "Venta prohibida");
-                //MensajeAbierto = false;
-                return;
-            }
-        }
 
+    private void aplicaNoVenta(String coordenada)
+    {
+        try
+        {
+
+            MainActivity mainActivity = (MainActivity) getActivity();
+
+            if (tipo == 1)
+            {
+                if (!mainActivity.validaDistancia(clienteSeleccionado,false))
+                {
+                    //MensajeAbierto = true;
+                    //MessageBox.Show("Para registrar el motivo de no venta debe de encontrarse en el establecimiento.", "Acción prohibida");
+
+                    Toast.makeText(getContext(), getString(R.string.tt_ped4), Toast.LENGTH_SHORT).show();
+
+                    //MensajeAbierto = false;
+                    return;
+                }
+            }
+            if (tipo == 2)
+            {
+                if (!mainActivity.validaDistancia(clienteSeleccionado,false))
+                {
+                    //MensajeAbierto = true;
+                    //MessageBox.Show("No se encuentra en el establecimiento del cliente. Por favor acerquese al establecimiento.", "Venta prohibida");
+
+                    Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_SHORT).show();
+                    //MensajeAbierto = false;
+                    return;
+                }
+            }
+
+
+
+            if (tipo == 1)
+            {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr() , noven_Cliente_cve, "NO VENTA", noven_mot, coordenada),getContext());
+
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertVisita,
+                        conf.getUsuario(), noven_Cliente_cve, noven_motId,
+                        "null", "NO VENTA", noven_mot, coordenada),getContext());
+
+                pedidosAdapterRecyclerView.actualiza(indiceSeleccionado, 3,iconos[3] );
+
+                CalcularEfectividad();
+
+                Log.d("salida","NO VENTA APLICADA EXITO: TIPO 1");
+            }
+            if (tipo == 2)
+            {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noven_Cliente_cve, "NO LECTURA", noven_mot, coordenada),getContext());
+
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noven_Cliente_cve, "APERTURA DE CLIENTE", noven_mot, coordenada),getContext());
+                //AbrirPedido(conf.preventa !=1 ? true : false, IdCli, CveCli, FrmBuscar);
+
+                Log.d("salida","NO VENTA APLICADA EXITO: TIPO 2");
+            }
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
+        }
     }
 
     private boolean validaDistancia()
@@ -853,7 +918,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         {
             Utils.msgError(getContext(), getString(R.string.error_peticion), e.getMessage());
         }
-
     }
 
     private String getBool(String cad)
@@ -871,6 +935,24 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
         }
     }
 
+    private boolean clickItemToolbar(MenuItem item)
+    {
+        switch (item.getItemId()) {
+            case R.id.action_buscar:
+                Intent intent = new Intent(getContext(), BuscarClientesActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+            case R.id.action_actualizar:
+                actualizaClientes();
+                return true;
+            case R.id.action_salir:
+                Utils.RegresarInicio(getActivity());
+                return true;
+            default:
+                return false;
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -884,31 +966,6 @@ public class PedidosFragment extends Fragment implements AsyncResponseJSON {
                 Log.d("salida", e.getMessage());
                 Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage());
             }
-        }
-
-    }
-
-    private void actualizaClientes()
-    {
-        try {
-            metodosWS = null;
-            metodosWS = new ArrayList<>();
-
-            if (conf.getPreventa() == 1) {
-                metodosWS.add("Obtener" + "ClientesPreventa" + "J");
-                metodosWS.add("Obtener" + "CreditosPreventa" + "J");
-                metodosWS.add("Obtener" + "DireccionesPreventa" + "J");
-            } else {
-                metodosWS.add("ObtenerClientesJ");
-                metodosWS.add("ObtenerCreditosJ");
-                metodosWS.add("ObtenerDireccionesJ");
-            }
-
-            ConexionWS conexionWS = new ConexionWS(getContext());
-            conexionWS.execute();
-        } catch (Exception e) {
-            Log.d("salida", "Error al actualizar: " + e.getMessage());
-            Toast.makeText(getContext(), getString(R.string.error_cargarInfo), Toast.LENGTH_SHORT).show();
         }
 
     }

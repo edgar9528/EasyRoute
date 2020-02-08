@@ -373,7 +373,8 @@
     <string name="hint_calle">Calle</string>
     <string name="err_ped3">Error al mostrar dirección</string>
     <string name="err_ped5">Error al cargar mapa</string>
-
+    <string name="tt_ped4">Para registrar el motivo de no venta debe de encontrarse en el establecimiento.</string>
+    <string name="tt_ped5">No se encuentra en el establecimiento del cliente. Por favor acerquese al establecimiento.</string>
 
 
 </resources>

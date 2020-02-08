@@ -1,13 +1,18 @@
 package com.tdt.easyroute.CardViews.Adapter;
 
+import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tdt.easyroute.CardViews.Model.PedidosCardView;
@@ -18,13 +23,12 @@ import java.util.ArrayList;
 
 public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdapterRecyclerView.PedidosViewHolder>
 {
-
     private ArrayList<PedidosCardView> pedidosCardViews;
     private int resource;
     private PedidosFragment pedidosFragment;
 
-
-    public PedidosAdapterRecyclerView(ArrayList<PedidosCardView> pedidosCardViews, int resource, PedidosFragment pedidosFragment) {
+    public PedidosAdapterRecyclerView(ArrayList<PedidosCardView> pedidosCardViews, int resource, PedidosFragment pedidosFragment)
+    {
         this.pedidosCardViews = pedidosCardViews;
         this.resource = resource;
         this.pedidosFragment = pedidosFragment;
@@ -42,7 +46,9 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
     @Override
     public void onBindViewHolder(@NonNull PedidosViewHolder pedidosViewHolder, int i) {
         final PedidosCardView pedidosCardView = pedidosCardViews.get(i);
+        final int indice =i;
 
+        pedidosViewHolder.iv_icono.setImageDrawable( pedidosCardView.getIcono() );
         pedidosViewHolder.et_clave.setText( pedidosCardView.getClave() );
         pedidosViewHolder.et_nombre.setText( pedidosCardView.getNombre() );
 
@@ -63,7 +69,7 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
         pedidosViewHolder.b_noVenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pedidosFragment.noVisita(pedidosCardView.getCliente());
+                pedidosFragment.noVisita(pedidosCardView.getCliente(), indice);
             }
         });
 
@@ -91,6 +97,7 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
 
     public class PedidosViewHolder extends RecyclerView.ViewHolder{
 
+        private ImageView iv_icono;
         private TextView  et_clave;
         private TextView  et_nombre;
         private ImageButton  b_actualizar;
@@ -102,6 +109,7 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
         public PedidosViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            iv_icono = itemView.findViewById(R.id.icono_estado);
             et_clave= itemView.findViewById(R.id.cv_pedidos_clave);
             et_nombre= itemView.findViewById(R.id.cv_pedidos_nombre);
             b_actualizar = itemView.findViewById(R.id.cv_bActualizar);
@@ -113,6 +121,12 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
         }
     }
 
+    public void actualiza(int item, int iconoNum, Drawable icono)
+    {
+        pedidosCardViews.get(item).getCliente().setIcono(iconoNum);
+        pedidosCardViews.get(item).setIcono(icono);
+        notifyItemChanged(item);
+    }
 
 
 }

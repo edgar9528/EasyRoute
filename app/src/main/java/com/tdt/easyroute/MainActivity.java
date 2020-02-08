@@ -44,6 +44,7 @@ import com.tdt.easyroute.Adapter.CustomExpandableListAdapter;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Helper.FragmentNavigationManager;
@@ -512,6 +513,88 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public String getLatLon()
     {
         return latLon;
+    }
+
+    public boolean validaDistancia(DataTableLC.DtCliVenta c, boolean cierre)
+    {
+        try
+        {
+            String cini = c.getCli_coordenadaini_str();
+            String clicve = c.getCli_cve_n();
+            Configuracion conf = Utils.ObtenerConf(getApplication());
+
+            short k = 0;
+            String ActPos = "NO VALIDA";
+            double DistLimite = 20;
+            double DistAlerta = 10;
+            String ValidarGPS = "";
+
+            if (!cierre)
+                ValidarGPS = "VALIDAR DISTANCIA GPS";
+            else
+                ValidarGPS = "VALIDAR DISTANCIA GPS AL CIERRE";
+
+            ActPos = getLatLon();
+
+            double distancia = Utils.Distancia(cini, ActPos);
+
+            if (c.getCli_invalidagps_n().equals("1")) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), c.getCli_cve_n(), ValidarGPS, string.formatSql("INVALIDADO POR SISTEMAS: {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (conf.isAuditoria()) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), c.getCli_cve_n(), ValidarGPS, string.formatSql("INVALIDADO POR AUDITORIA: {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (cini == null || cini.isEmpty()) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, "CLIENTE SIN COORDENADA INICIAL", ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (cini.length() <= 5) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, "CLIENTE CON COORDENADA INICIAL NO VALIDA: " + cini, ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (ActPos.equals("NO VALIDA")) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, "NO SE LOGRO OBTENER GPS ACTUAL", ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (distancia >= 0 && distancia <= DistAlerta) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, string.formatSql("DISTANCIA DENTRO DEL PARAMETRO {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (distancia >= 0 && distancia <= DistLimite)
+            {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, string.formatSql("DISTANCIA FUERA DEL PARAMETRO {0} MTS", String.valueOf(distancia) ), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (distancia >= 0 && distancia > DistLimite)
+            {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, string.formatSql("POSICION ACTUAL INVALIDA FUERA DE PARAMETRO {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return false;
+            }
+
+
+            return false;
+        }catch (Exception e)
+        {
+            Log.d("salida","error al validar disstancia: "+e.getMessage());
+            return false;
+        }
     }
 
     public void enableLocationUpdates() {

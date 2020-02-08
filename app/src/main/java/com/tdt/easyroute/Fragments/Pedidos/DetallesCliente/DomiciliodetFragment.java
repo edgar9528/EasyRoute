@@ -178,7 +178,8 @@ public class DomiciliodetFragment extends Fragment {
     private void cargarMapa()
     {
         try {
-            if (!ubiCliente.equals("null")) {
+            if (!ubiCliente.equals("null"))
+            {
                 String[] latLong = ubiCliente.split(",");
                 float lat = 0, lon = 0;
                 if (!latLong[0].equals("null") && !latLong[1].equals("null")) {
@@ -278,7 +279,6 @@ public class DomiciliodetFragment extends Fragment {
             Utils.msgError(getContext(), getString(R.string.err_ped3), e.getMessage() );
         }
     }
-
 
     private void mostrarRuta()
     {

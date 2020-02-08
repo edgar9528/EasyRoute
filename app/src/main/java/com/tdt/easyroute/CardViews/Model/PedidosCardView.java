@@ -1,5 +1,7 @@
 package com.tdt.easyroute.CardViews.Model;
 
+import android.graphics.drawable.Drawable;
+
 import com.tdt.easyroute.Model.DataTableLC;
 
 public class PedidosCardView {
@@ -7,11 +9,21 @@ public class PedidosCardView {
     private String clave;
     private String nombre;
     private DataTableLC.PedidosLv cliente;
+    private Drawable icono;
 
-    public PedidosCardView(String clave, String nombre, DataTableLC.PedidosLv cliente) {
+    public PedidosCardView(String clave, String nombre, DataTableLC.PedidosLv cliente, Drawable icono) {
         this.clave = clave;
         this.nombre = nombre;
         this.cliente = cliente;
+        this.icono = icono;
+    }
+
+    public Drawable getIcono() {
+        return icono;
+    }
+
+    public void setIcono(Drawable icono) {
+        this.icono = icono;
     }
 
     public String getClave() {
