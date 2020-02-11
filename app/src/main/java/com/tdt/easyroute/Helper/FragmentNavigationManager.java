@@ -7,19 +7,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.tdt.easyroute.BuildConfig;
-import com.tdt.easyroute.Fragments.Clientes.BuscarClientesActivity;
-import com.tdt.easyroute.Fragments.Clientes.Cartera.CarteraFragment;
-import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.OrdenacliFragment;
-import com.tdt.easyroute.Fragments.FinDeDia.FindiaFragment;
-import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.MainsugeridoFragment;
-import com.tdt.easyroute.Fragments.Inventario.DevolucionesFragment;
-import com.tdt.easyroute.Fragments.Pedidos.PedidosFragment;
-import com.tdt.easyroute.Fragments.PrincipalFragment;
-import com.tdt.easyroute.Fragments.InicioDia.StartdayFragment;
-import com.tdt.easyroute.Fragments.Inventario.Carga2Fragment;
-import com.tdt.easyroute.Fragments.Inventario.InventarioFragment;
-import com.tdt.easyroute.Fragments.Reportes.ArqueoFragment;
-import com.tdt.easyroute.Fragments.Reportes.Venta.MainVentaFragment;
+import com.tdt.easyroute.Ventanas.Clientes.BuscarClientesActivity;
+import com.tdt.easyroute.Ventanas.Clientes.Cartera.CarteraFragment;
+import com.tdt.easyroute.Ventanas.Clientes.OrdenaCliente.OrdenacliFragment;
+import com.tdt.easyroute.Ventanas.FinDeDia.FindiaFragment;
+import com.tdt.easyroute.Ventanas.FinDeDia.Sugerido.MainsugeridoFragment;
+import com.tdt.easyroute.Ventanas.Inventario.DevolucionesFragment;
+import com.tdt.easyroute.Ventanas.Pedidos.ClientesPedFragment;
+import com.tdt.easyroute.Ventanas.PrincipalFragment;
+import com.tdt.easyroute.Ventanas.InicioDia.StartdayFragment;
+import com.tdt.easyroute.Ventanas.Inventario.Carga2Fragment;
+import com.tdt.easyroute.Ventanas.Inventario.InventarioFragment;
+import com.tdt.easyroute.Ventanas.Reportes.ArqueoFragment;
+import com.tdt.easyroute.Ventanas.Reportes.Venta.MainVentaFragment;
 import com.tdt.easyroute.Interface.NavigationManager;
 import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.Usuario;
@@ -89,7 +89,7 @@ public class FragmentNavigationManager implements NavigationManager {
 
 
             case "2|0":
-                ft= fm.beginTransaction().replace(R.id.container, PedidosFragment.newInstance());
+                ft= fm.beginTransaction().replace(R.id.container, ClientesPedFragment.newInstance());
                 break;
 
             case "4|0":

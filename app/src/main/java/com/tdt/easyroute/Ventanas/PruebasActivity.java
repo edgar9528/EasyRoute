@@ -3,23 +3,15 @@ package com.tdt.easyroute.Ventanas;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.tdt.easyroute.Clases.BaseLocal;
-import com.tdt.easyroute.Clases.ConvertirRespuesta;
-import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
-
-import java.util.ArrayList;
 
 public class PruebasActivity extends AppCompatActivity {
 

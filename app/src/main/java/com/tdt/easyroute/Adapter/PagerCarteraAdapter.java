@@ -4,10 +4,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.tdt.easyroute.Fragments.Clientes.Cartera.ClientesFragment;
-import com.tdt.easyroute.Fragments.Clientes.Cartera.SaldosFragment;
-import com.tdt.easyroute.Fragments.InicioDia.DatosFragment;
-import com.tdt.easyroute.Fragments.InicioDia.GeneralesFragment;
+import com.tdt.easyroute.Ventanas.Clientes.Cartera.ClientesCarFragment;
+import com.tdt.easyroute.Ventanas.Clientes.Cartera.SaldosFragment;
 
 public class PagerCarteraAdapter extends FragmentStatePagerAdapter {
 
@@ -22,7 +20,7 @@ public class PagerCarteraAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                ClientesFragment tab1 = new ClientesFragment();
+                ClientesCarFragment tab1 = new ClientesCarFragment();
                     return tab1;
             case 1:
                 SaldosFragment tab2 = new SaldosFragment();

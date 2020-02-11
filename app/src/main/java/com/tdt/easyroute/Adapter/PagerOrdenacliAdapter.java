@@ -4,11 +4,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.CdiaFragment;
-import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.CfueraFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorrutaFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.UtilidadFragment;
+import com.tdt.easyroute.Ventanas.Clientes.OrdenaCliente.CdiaFragment;
+import com.tdt.easyroute.Ventanas.Clientes.OrdenaCliente.CfueraFragment;
 
 public class PagerOrdenacliAdapter extends FragmentStatePagerAdapter {
 

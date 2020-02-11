@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tdt.easyroute.CardViews.Model.BuscarCardView;
-import com.tdt.easyroute.Fragments.Clientes.BuscarClientesActivity;
+import com.tdt.easyroute.Ventanas.Clientes.BuscarClientesActivity;
 import com.tdt.easyroute.R;
 
 import java.util.ArrayList;

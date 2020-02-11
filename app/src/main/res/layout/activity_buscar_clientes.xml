@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.Clientes.BuscarClientesActivity"
+    tools:context=".Ventanas.Clientes.BuscarClientesActivity"
     android:background="@color/greybg"
     >
 
@@ -64,15 +65,12 @@
     </LinearLayout>
 
 
-
-
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
 
         app:layout_constraintTop_toBottomOf="@id/layout1"
-        app:layout_constraintBottom_toTopOf="@id/layout2"
+        app:layout_constraintBottom_toTopOf="@id/button_salir"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="@dimen/paddingGeneral"
@@ -83,39 +81,22 @@
             android:id="@+id/buscarRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/paddingGeneral"
             >
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <!--
-
-        <HorizontalScrollView
-            android:id="@+id/horizontalView"
-            android:layout_height="wrap_content"
-            android:scrollbars="horizontal|vertical"
-            android:layout_width="match_parent"
-            >
-
-            <TableLayout
-                android:id="@+id/tableLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-            </TableLayout>
-
-        </HorizontalScrollView>
-
-        -->
 
     </ScrollView>
 
 
-    <LinearLayout
-        android:id="@+id/layout2"
+    <Button
+        android:id="@+id/button_salir"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="4"
+        android:layout_weight="4"
+        android:text="@string/bt_salir"
+        android:theme="@style/ButtonDarkSmall"
+        tools:ignore="ButtonStyle,NestedWeights"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -124,22 +105,7 @@
         android:layout_marginEnd="@dimen/paddingGeneral"
         android:layout_marginBottom="@dimen/paddingGeneral"
 
-        >
-
-        <Button
-            android:id="@+id/button_salir"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="@string/bt_salir"
-            android:theme="@style/ButtonDarkSmall"
-            tools:ignore="ButtonStyle,NestedWeights"
-            />
-
-    </LinearLayout>
-
-
-
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

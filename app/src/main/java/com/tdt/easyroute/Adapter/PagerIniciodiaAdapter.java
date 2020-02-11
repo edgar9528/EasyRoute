@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.tdt.easyroute.Fragments.InicioDia.DatosFragment;
-import com.tdt.easyroute.Fragments.InicioDia.GeneralesFragment;
+import com.tdt.easyroute.Ventanas.InicioDia.DatosFragment;
+import com.tdt.easyroute.Ventanas.InicioDia.GeneralesFragment;
 
 public class PagerIniciodiaAdapter extends FragmentStatePagerAdapter {
 

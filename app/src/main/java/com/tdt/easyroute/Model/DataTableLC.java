@@ -3456,5 +3456,181 @@ public class DataTableLC {
         }
     }
 
-    
+    public static class Venta
+    {
+        private String ven_folio_str;
+        private String cli_cve_n;
+        private String rut_cve_n;
+        private String ven_fecha_dt;
+        private String ven_est_str;
+        private String lpre_cve_n;
+        private String dir_cve_n;
+        private String usu_cve_str;
+        private String ven_coordenada_str;
+        private String ven_credito_n;
+        private String prev_folio_str;
+        private String ped_folio_str;
+        private String csgn_cve_str;
+        private String csgn_entrega_n;
+        private String ven_consigna_n;
+        private String ven_pulest_n;
+        private String ven_comentario_str;
+        private String trans_est_n;
+        private String trans_fecha_dt;
+
+        public Venta() {
+        }
+
+        public String getVen_folio_str() {
+            return ven_folio_str;
+        }
+
+        public void setVen_folio_str(String ven_folio_str) {
+            this.ven_folio_str = ven_folio_str;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getVen_fecha_dt() {
+            return ven_fecha_dt;
+        }
+
+        public void setVen_fecha_dt(String ven_fecha_dt) {
+            this.ven_fecha_dt = ven_fecha_dt;
+        }
+
+        public String getVen_est_str() {
+            return ven_est_str;
+        }
+
+        public void setVen_est_str(String ven_est_str) {
+            this.ven_est_str = ven_est_str;
+        }
+
+        public String getLpre_cve_n() {
+            return lpre_cve_n;
+        }
+
+        public void setLpre_cve_n(String lpre_cve_n) {
+            this.lpre_cve_n = lpre_cve_n;
+        }
+
+        public String getDir_cve_n() {
+            return dir_cve_n;
+        }
+
+        public void setDir_cve_n(String dir_cve_n) {
+            this.dir_cve_n = dir_cve_n;
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getVen_coordenada_str() {
+            return ven_coordenada_str;
+        }
+
+        public void setVen_coordenada_str(String ven_coordenada_str) {
+            this.ven_coordenada_str = ven_coordenada_str;
+        }
+
+        public String getVen_credito_n() {
+            return ven_credito_n;
+        }
+
+        public void setVen_credito_n(String ven_credito_n) {
+            this.ven_credito_n = ven_credito_n;
+        }
+
+        public String getPrev_folio_str() {
+            return prev_folio_str;
+        }
+
+        public void setPrev_folio_str(String prev_folio_str) {
+            this.prev_folio_str = prev_folio_str;
+        }
+
+        public String getPed_folio_str() {
+            return ped_folio_str;
+        }
+
+        public void setPed_folio_str(String ped_folio_str) {
+            this.ped_folio_str = ped_folio_str;
+        }
+
+        public String getCsgn_cve_str() {
+            return csgn_cve_str;
+        }
+
+        public void setCsgn_cve_str(String csgn_cve_str) {
+            this.csgn_cve_str = csgn_cve_str;
+        }
+
+        public String getCsgn_entrega_n() {
+            return csgn_entrega_n;
+        }
+
+        public void setCsgn_entrega_n(String csgn_entrega_n) {
+            this.csgn_entrega_n = csgn_entrega_n;
+        }
+
+        public String getVen_consigna_n() {
+            return ven_consigna_n;
+        }
+
+        public void setVen_consigna_n(String ven_consigna_n) {
+            this.ven_consigna_n = ven_consigna_n;
+        }
+
+        public String getVen_pulest_n() {
+            return ven_pulest_n;
+        }
+
+        public void setVen_pulest_n(String ven_pulest_n) {
+            this.ven_pulest_n = ven_pulest_n;
+        }
+
+        public String getVen_comentario_str() {
+            return ven_comentario_str;
+        }
+
+        public void setVen_comentario_str(String ven_comentario_str) {
+            this.ven_comentario_str = ven_comentario_str;
+        }
+
+        public String getTrans_est_n() {
+            return trans_est_n;
+        }
+
+        public void setTrans_est_n(String trans_est_n) {
+            this.trans_est_n = trans_est_n;
+        }
+
+        public String getTrans_fecha_dt() {
+            return trans_fecha_dt;
+        }
+
+        public void setTrans_fecha_dt(String trans_fecha_dt) {
+            this.trans_fecha_dt = trans_fecha_dt;
+        }
+    }
 }

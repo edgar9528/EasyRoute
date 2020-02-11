@@ -26,7 +26,6 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableWS;
-import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
 import org.ksoap2.SoapEnvelope;

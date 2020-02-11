@@ -4,10 +4,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.CdiaFragment;
-import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.CfueraFragment;
-import com.tdt.easyroute.Fragments.Reportes.Venta.ProductosvenFragment;
-import com.tdt.easyroute.Fragments.Reportes.Venta.TotalFragment;
+import com.tdt.easyroute.Ventanas.Reportes.Venta.ProductosvenFragment;
+import com.tdt.easyroute.Ventanas.Reportes.Venta.TotalFragment;
 
 public class PagerReporteventaAdapter extends FragmentStatePagerAdapter {
 

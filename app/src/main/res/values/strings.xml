@@ -375,6 +375,11 @@
     <string name="err_ped5">Error al cargar mapa</string>
     <string name="tt_ped4">Para registrar el motivo de no venta debe de encontrarse en el establecimiento.</string>
     <string name="tt_ped5">No se encuentra en el establecimiento del cliente. Por favor acerquese al establecimiento.</string>
+    <string name="tt_ped6">Para realizar más de una venta por favor lea el código de barras.</string>
+    <string name="tt_ped7">No ha realizado su carga inicial, no se pueden aplicar las recargas</string>
+    <string name="tt_ped8">El cliente no acepta una segunda venta.</string>
+    <string name="title_pedidos">Pedidos</string>
+    <string name="title_preventa">Preventa</string>
 
 
 </resources>

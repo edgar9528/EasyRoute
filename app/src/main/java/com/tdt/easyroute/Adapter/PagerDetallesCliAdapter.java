@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.DatosdetFragment;
-import com.tdt.easyroute.Fragments.Pedidos.DetallesCliente.DomiciliodetFragment;
+import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.DatosdetFragment;
+import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.DomiciliodetFragment;
 
 public class PagerDetallesCliAdapter extends FragmentStatePagerAdapter {
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Fragments.Pedidos.DetallesCliente.MainDetallesActivity">
+    tools:context=".Ventanas.Pedidos.DetallesCliente.MainDetallesActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

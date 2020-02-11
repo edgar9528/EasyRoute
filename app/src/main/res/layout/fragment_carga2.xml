@@ -6,7 +6,7 @@
     android:id="@+id/frameLayout8"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Inventario.Carga2Fragment">
+    tools:context=".Ventanas.Inventario.Carga2Fragment">
 
     <Button
         android:id="@+id/button_buscar"

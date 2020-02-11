@@ -2,7 +2,7 @@ package com.tdt.easyroute.ViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.tdt.easyroute.Fragments.Clientes.OrdenaCliente.ClientesNodia;
+import com.tdt.easyroute.Ventanas.Clientes.OrdenaCliente.ClientesNodia;
 
 public class OrdenaClientesVM extends ViewModel {
 

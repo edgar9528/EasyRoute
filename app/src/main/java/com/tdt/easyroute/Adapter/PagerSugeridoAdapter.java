@@ -4,12 +4,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.FamiliaFragment;
-import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.PresentacionFragment;
-import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.ProductoFragment;
-import com.tdt.easyroute.Fragments.FinDeDia.Sugerido.SugeridoFragment;
-import com.tdt.easyroute.Fragments.Reportes.Venta.ProductosvenFragment;
-import com.tdt.easyroute.Fragments.Reportes.Venta.TotalFragment;
+import com.tdt.easyroute.Ventanas.FinDeDia.Sugerido.FamiliaFragment;
+import com.tdt.easyroute.Ventanas.FinDeDia.Sugerido.PresentacionFragment;
+import com.tdt.easyroute.Ventanas.FinDeDia.Sugerido.ProductoFragment;
+import com.tdt.easyroute.Ventanas.FinDeDia.Sugerido.SugeridoFragment;
 
 public class PagerSugeridoAdapter extends FragmentStatePagerAdapter {
 

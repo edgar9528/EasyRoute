@@ -9,7 +9,6 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.tdt.easyroute.Adapter.PagerConfiguracionAdapter;
 import com.tdt.easyroute.Clases.Configuracion;
