@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout26"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Ventanas.Ventas.Pago.PagoFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ti_credito"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/EditTextBlack"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingTop="@dimen/paddingGeneral"
+        android:paddingStart="@dimen/paddingGeneral"
+        android:paddingEnd="@dimen/paddingGeneral"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_credito"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_credito"
+            android:singleLine="true"
+            android:focusable="false"
+            android:enabled="false"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ti_totalVen"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/EditTextBlack"
+
+        app:layout_constraintTop_toBottomOf="@id/ti_credito"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="@dimen/paddingGeneral"
+        android:paddingEnd="@dimen/paddingGeneral"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_totalVen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_totalVen"
+            android:singleLine="true"
+            android:focusable="false"
+            android:enabled="false"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ti_contado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/EditTextBlack"
+
+        app:layout_constraintTop_toBottomOf="@id/ti_totalVen"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="@dimen/paddingGeneral"
+        android:paddingEnd="@dimen/paddingGeneral"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_contado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_contadoEsp"
+            android:singleLine="true"
+            android:focusable="false"
+            android:enabled="false"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/ti_contado"
+        app:layout_constraintBottom_toTopOf="@+id/ti_kit"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ti_kit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/EditTextBlack"
+
+        app:layout_constraintBottom_toTopOf="@+id/button_agregar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ti_saldo"
+        android:paddingStart="@dimen/paddingGeneral"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_kit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_kit"
+            android:singleLine="true"
+            android:focusable="false"
+            android:enabled="false"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/ti_saldo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:theme="@style/EditTextBlack"
+
+        app:layout_constraintBottom_toTopOf="@+id/button_eliminar"
+        app:layout_constraintStart_toEndOf="@+id/ti_kit"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_saldo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tv_saldo"
+            android:singleLine="true"
+            android:focusable="false"
+            android:enabled="false"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/button_agregar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_agregarPago"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_eliminar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+        />
+
+    <Button
+        android:id="@+id/button_eliminar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_eliminarPago"
+        android:theme="@style/ButtonDarkSmall"
+
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_agregar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_agregar"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

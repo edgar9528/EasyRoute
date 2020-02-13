@@ -377,8 +377,23 @@
     <string name="hint_num2">Telephone number 2</string>
     <string name="hint_calle">Street</string>
     <string name="err_ped3">Error displaying address</string>
-
     <string name="err_ped5">Error loading map</string>
+
+    <string name="tt_ped4">To register the reason for non-sale must be in the establishment.</string>
+    <string name="tt_ped5">It is not in the customers establishment. Please approach the establishment.</string>
+    <string name="tt_ped6">To make more than one sale please read the barcode.</string>
+    <string name="tt_ped7">You have not made your initial charge, refills cannot be applied</string>
+    <string name="tt_ped8">The customer does not accept a second sale.</string>
+    <string name="title_pedidos">Orders</string>
+    <string name="title_preventa">Presale</string>
+
+    <string name="tl_ped1">Credit</string>
+    <string name="tl_ped2">Sale</string>
+    <string name="tl_ped3">Container</string>
+    <string name="tl_ped4">Payment</string>
+    <string name="tl_cred1">Liquid</string>
+    <string name="tl_cred2">Container</string>
+    <string name="tl_cred3">Deposits</string>
 
 
 </resources>

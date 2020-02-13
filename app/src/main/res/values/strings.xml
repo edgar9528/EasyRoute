@@ -30,7 +30,7 @@
     <string name="bt_sincronizar">Sincronizar</string>
     <string name="hint_folio">Folio</string>
     <string name="hint_pagos">Pagos</string>
-    <string name="hint_credito">Credito</string>
+    <string name="hint_credito">Crédito</string>
     <string name="bt_realizar">Realizar</string>
     <string name="bt_reacdia">ReAc.Día</string>
     <string name="hint_preventa">Preven.</string>
@@ -380,6 +380,27 @@
     <string name="tt_ped8">El cliente no acepta una segunda venta.</string>
     <string name="title_pedidos">Pedidos</string>
     <string name="title_preventa">Preventa</string>
+    <string name="tl_ped1">Crédito</string>
+    <string name="tl_ped2">Venta</string>
+    <string name="tl_ped3">Envase</string>
+    <string name="tl_ped4">Pago</string>
+    <string name="tl_cred1">Líquido</string>
+    <string name="tl_cred2">Envase</string>
+    <string name="tl_cred3">Abonos</string>
+    <string name="hint_adeudoNormal">Adeudo normal</string>
+    <string name="hint_limite">Límite</string>
+    <string name="hint_vencido">Vencido</string>
+    <string name="tv_deudaEnv">Deuda envase</string>
+    <string name="hint_adeudo">Adeudo</string>
+    <string name="hint_adeudoEnv">Adeudo envase</string>
+    <string name="bt_agregarAbono">Agregar abono</string>
+    <string name="bt_eliminarAbono">Eliminar abono</string>
+    <string name="bt_descuento">%</string>
+    <string name="hint_totalVen">Total venta</string>
+    <string name="hint_contadoEsp">Contado especial</string>
+    <string name="bt_eliminarPago">Eliminar pago</string>
+    <string name="bt_agregarPago">Agregar pago</string>
+    <string name="hint_kit">Kit</string>
 
 
 </resources>

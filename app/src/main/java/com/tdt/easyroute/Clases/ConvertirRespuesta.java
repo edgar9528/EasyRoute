@@ -1748,6 +1748,22 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.DtCliVentaNivel> getDtCliVentaNivelJson(String respuesta)
+    {
+        ArrayList<DataTableLC.DtCliVentaNivel> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.DtCliVentaNivel> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
     public static ArrayList<DataTableLC.Venta> getVentaJson(String respuesta)
     {
         ArrayList<DataTableLC.Venta> al =null;

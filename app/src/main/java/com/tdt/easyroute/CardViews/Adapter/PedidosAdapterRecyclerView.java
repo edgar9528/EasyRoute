@@ -83,8 +83,6 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
                 clientesPedFragment.seleccionar(pedidosCardView.getCliente());
             }
         });
-
-
     }
 
     @Override
@@ -114,7 +112,6 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
             b_noVenta = itemView.findViewById(R.id.cv_bNoVenta);
             b_imp = itemView.findViewById(R.id.cv_bImp);
             constraintLayout = itemView.findViewById(R.id.constraint);
-
         }
     }
 
@@ -124,6 +121,4 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
         pedidosCardViews.get(item).setIcono(icono);
         notifyItemChanged(item);
     }
-
-
 }

@@ -1081,11 +1081,10 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     case 2:
 
                         boolean PorEscaner = intent.getBooleanExtra("porEscanear",false);
+                        String cliente = intent.getStringExtra("idcli");
 
-                        if(PorEscaner)
-                        {
-                            Log.d("salida","Por escaner = true");
-                        }
+                        Log.d("salida","Por escaner = "+PorEscaner);
+                        Log.d("salida","cliente cve = "+cliente);
 
                         CalcularEfectividad();
 
@@ -1093,7 +1092,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         break;
                 }
 
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 Log.d("salida", e.getMessage());
                 Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage());
             }

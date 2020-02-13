@@ -8,19 +8,24 @@
     tools:context=".Ventanas.Ventas.PedidosActivity">
 
 
-    <Button
-        android:id="@+id/button_salir"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tab_layout"
+        />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/bt_salir"
-        android:theme="@style/RaisedButtonDark"
-
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-
-        android:layout_marginBottom="@dimen/paddingGeneral"
-        android:layout_marginStart="@dimen/paddingGeneral"
-        android:layout_marginEnd="@dimen/paddingGeneral"
-
+        android:background="@color/colorPrimary"
+        app:tabTextColor="@color/blanco"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

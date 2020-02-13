@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:background="#00FFFFFF"
             android:padding="12dp"
-            app:srcCompat="@drawable/ic_more"
+            app:srcCompat="@drawable/ic_person_pin_black"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
