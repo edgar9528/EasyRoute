@@ -159,7 +159,6 @@ public class BaseLocal {
 
     private static String cur2Json(Cursor cursor)
     {
-
         JSONArray resultSet = new JSONArray();
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false) {
@@ -168,15 +167,19 @@ public class BaseLocal {
             for (int i = 0; i < totalColumn; i++) {
 
                 if (cursor.getColumnName(i) != null) {
-                    try {
+                    try
+                    {
+                        String name = cursor.getColumnName(i);
+                        if(name.contains("."))
+                            name=name.substring(name.indexOf(".")+1);
 
                         if(cursor.getString(i)==null)
-                            rowObject.put(cursor.getColumnName(i), "");
+                            rowObject.put(name, "");
                         else
-                            rowObject.put(cursor.getColumnName(i), cursor.getString(i));
+                            rowObject.put(name, cursor.getString(i));
 
                     } catch (Exception e) {
-                        Log.d("salida", e.getMessage());
+                        Log.d("salida","Error cursor2json: "+ e.getMessage());
                     }
                 }
             }
@@ -190,7 +193,6 @@ public class BaseLocal {
 
     private static String cur2JsonFrec(Cursor cursor)
     {
-
         JSONArray resultSet = new JSONArray();
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false) {

@@ -401,6 +401,8 @@
     <string name="bt_eliminarPago">Eliminar pago</string>
     <string name="bt_agregarPago">Agregar pago</string>
     <string name="hint_kit">Kit</string>
+    <string name="err_ped6">Error al obtener productos</string>
+    <string name="err_ped7">Error al obtener promociones</string>
 
 
 </resources>

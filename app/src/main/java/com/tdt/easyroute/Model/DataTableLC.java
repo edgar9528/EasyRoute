@@ -4198,4 +4198,737 @@ public class DataTableLC {
             this.trans_fecha_dt = trans_fecha_dt;
         }
     }
+
+    public static class ProductosPed
+    {
+        private String lpre_cve_n;
+        private String lpre_desc_str;
+        private String prod_cve_n;
+        private String fam_cve_n;
+        private String fam_desc_str;
+        private String pres_cve_n;
+        private String pres_desc_str;
+        private String prod_sku_str;
+        private String prod_desc_str;
+        private String cat_desc_str;
+        private String id_envase_n;
+        private String prod_manejainv_n;
+        private String prod_cantiv_n;
+        private String prod_cant_n;
+        private String lpre_base_n;
+        private String lpre_cliente_n;
+        private String lpre_promo_n;
+        private String lpre_precio_n;
+        private String lpre_precio2_n;
+        private String lpre_desc_n;
+        private String prod_promo_n;
+        private String prom_cve_n;
+        private String prom_contado_n;
+        private String prod_vtaefectivo_n;
+        private String lpre_nota_n;
+        private String lprevolumen_n;
+        private String prod_vtavolumen_n;
+        private String cov_cve_n;
+        private String cov_reStringido_n;
+        private String cov_familias_str;
+        private String prom_kit_n;
+        private String subtotal;
+
+        public ProductosPed() {
+        }
+
+        public String getLpre_cve_n() {
+            return lpre_cve_n;
+        }
+
+        public void setLpre_cve_n(String lpre_cve_n) {
+            this.lpre_cve_n = lpre_cve_n;
+        }
+
+        public String getLpre_desc_str() {
+            return lpre_desc_str;
+        }
+
+        public void setLpre_desc_str(String lpre_desc_str) {
+            this.lpre_desc_str = lpre_desc_str;
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getFam_cve_n() {
+            return fam_cve_n;
+        }
+
+        public void setFam_cve_n(String fam_cve_n) {
+            this.fam_cve_n = fam_cve_n;
+        }
+
+        public String getFam_desc_str() {
+            return fam_desc_str;
+        }
+
+        public void setFam_desc_str(String fam_desc_str) {
+            this.fam_desc_str = fam_desc_str;
+        }
+
+        public String getPres_cve_n() {
+            return pres_cve_n;
+        }
+
+        public void setPres_cve_n(String pres_cve_n) {
+            this.pres_cve_n = pres_cve_n;
+        }
+
+        public String getPres_desc_str() {
+            return pres_desc_str;
+        }
+
+        public void setPres_desc_str(String pres_desc_str) {
+            this.pres_desc_str = pres_desc_str;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_desc_str() {
+            return prod_desc_str;
+        }
+
+        public void setProd_desc_str(String prod_desc_str) {
+            this.prod_desc_str = prod_desc_str;
+        }
+
+        public String getCat_desc_str() {
+            return cat_desc_str;
+        }
+
+        public void setCat_desc_str(String cat_desc_str) {
+            this.cat_desc_str = cat_desc_str;
+        }
+
+        public String getId_envase_n() {
+            return id_envase_n;
+        }
+
+        public void setId_envase_n(String id_envase_n) {
+            this.id_envase_n = id_envase_n;
+        }
+
+        public String getProd_manejainv_n() {
+            return prod_manejainv_n;
+        }
+
+        public void setProd_manejainv_n(String prod_manejainv_n) {
+            this.prod_manejainv_n = prod_manejainv_n;
+        }
+
+        public String getProd_cantiv_n() {
+            return prod_cantiv_n;
+        }
+
+        public void setProd_cantiv_n(String prod_cantiv_n) {
+            this.prod_cantiv_n = prod_cantiv_n;
+        }
+
+        public String getProd_cant_n() {
+            return prod_cant_n;
+        }
+
+        public void setProd_cant_n(String prod_cant_n) {
+            this.prod_cant_n = prod_cant_n;
+        }
+
+        public String getLpre_base_n() {
+            return lpre_base_n;
+        }
+
+        public void setLpre_base_n(String lpre_base_n) {
+            this.lpre_base_n = lpre_base_n;
+        }
+
+        public String getLpre_cliente_n() {
+            return lpre_cliente_n;
+        }
+
+        public void setLpre_cliente_n(String lpre_cliente_n) {
+            this.lpre_cliente_n = lpre_cliente_n;
+        }
+
+        public String getLpre_promo_n() {
+            return lpre_promo_n;
+        }
+
+        public void setLpre_promo_n(String lpre_promo_n) {
+            this.lpre_promo_n = lpre_promo_n;
+        }
+
+        public String getLpre_precio_n() {
+            return lpre_precio_n;
+        }
+
+        public void setLpre_precio_n(String lpre_precio_n) {
+            this.lpre_precio_n = lpre_precio_n;
+        }
+
+        public String getLpre_precio2_n() {
+            return lpre_precio2_n;
+        }
+
+        public void setLpre_precio2_n(String lpre_precio2_n) {
+            this.lpre_precio2_n = lpre_precio2_n;
+        }
+
+        public String getLpre_desc_n() {
+            return lpre_desc_n;
+        }
+
+        public void setLpre_desc_n(String lpre_desc_n) {
+            this.lpre_desc_n = lpre_desc_n;
+        }
+
+        public String getProd_promo_n() {
+            return prod_promo_n;
+        }
+
+        public void setProd_promo_n(String prod_promo_n) {
+            this.prod_promo_n = prod_promo_n;
+        }
+
+        public String getProm_cve_n() {
+            return prom_cve_n;
+        }
+
+        public void setProm_cve_n(String prom_cve_n) {
+            this.prom_cve_n = prom_cve_n;
+        }
+
+        public String getProm_contado_n() {
+            return prom_contado_n;
+        }
+
+        public void setProm_contado_n(String prom_contado_n) {
+            this.prom_contado_n = prom_contado_n;
+        }
+
+        public String getProd_vtaefectivo_n() {
+            return prod_vtaefectivo_n;
+        }
+
+        public void setProd_vtaefectivo_n(String prod_vtaefectivo_n) {
+            this.prod_vtaefectivo_n = prod_vtaefectivo_n;
+        }
+
+        public String getLpre_nota_n() {
+            return lpre_nota_n;
+        }
+
+        public void setLpre_nota_n(String lpre_nota_n) {
+            this.lpre_nota_n = lpre_nota_n;
+        }
+
+        public String getLprevolumen_n() {
+            return lprevolumen_n;
+        }
+
+        public void setLprevolumen_n(String lprevolumen_n) {
+            this.lprevolumen_n = lprevolumen_n;
+        }
+
+        public String getProd_vtavolumen_n() {
+            return prod_vtavolumen_n;
+        }
+
+        public void setProd_vtavolumen_n(String prod_vtavolumen_n) {
+            this.prod_vtavolumen_n = prod_vtavolumen_n;
+        }
+
+        public String getCov_cve_n() {
+            return cov_cve_n;
+        }
+
+        public void setCov_cve_n(String cov_cve_n) {
+            this.cov_cve_n = cov_cve_n;
+        }
+
+        public String getCov_reStringido_n() {
+            return cov_reStringido_n;
+        }
+
+        public void setCov_reStringido_n(String cov_reStringido_n) {
+            this.cov_reStringido_n = cov_reStringido_n;
+        }
+
+        public String getCov_familias_str() {
+            return cov_familias_str;
+        }
+
+        public void setCov_familias_str(String cov_familias_str) {
+            this.cov_familias_str = cov_familias_str;
+        }
+
+        public String getProm_kit_n() {
+            return prom_kit_n;
+        }
+
+        public void setProm_kit_n(String prom_kit_n) {
+            this.prom_kit_n = prom_kit_n;
+        }
+
+        public String getSubtotal() {
+            return subtotal;
+        }
+
+        public void setSubtotal(String subtotal) {
+            this.subtotal = subtotal;
+        }
+    }
+
+    public static class EnvasesPed
+    {
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_desc_str;
+        private String lpre_precio_n;
+        private String prod_cantiv_n;
+        private String Entregado;
+        private String Recibido;
+        private String Regalo;
+        private String Venta;
+        private String lpre_base_n;
+        private String Restante;
+        private String SubAbonoEnv;
+        private String Subtotal;
+
+        public EnvasesPed() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_desc_str() {
+            return prod_desc_str;
+        }
+
+        public void setProd_desc_str(String prod_desc_str) {
+            this.prod_desc_str = prod_desc_str;
+        }
+
+        public String getLpre_precio_n() {
+            return lpre_precio_n;
+        }
+
+        public void setLpre_precio_n(String lpre_precio_n) {
+            this.lpre_precio_n = lpre_precio_n;
+        }
+
+        public String getProd_cantiv_n() {
+            return prod_cantiv_n;
+        }
+
+        public void setProd_cantiv_n(String prod_cantiv_n) {
+            this.prod_cantiv_n = prod_cantiv_n;
+        }
+
+        public String getEntregado() {
+            return Entregado;
+        }
+
+        public void setEntregado(String entregado) {
+            Entregado = entregado;
+        }
+
+        public String getRecibido() {
+            return Recibido;
+        }
+
+        public void setRecibido(String recibido) {
+            Recibido = recibido;
+        }
+
+        public String getRegalo() {
+            return Regalo;
+        }
+
+        public void setRegalo(String regalo) {
+            Regalo = regalo;
+        }
+
+        public String getVenta() {
+            return Venta;
+        }
+
+        public void setVenta(String venta) {
+            Venta = venta;
+        }
+
+        public String getLpre_base_n() {
+            return lpre_base_n;
+        }
+
+        public void setLpre_base_n(String lpre_base_n) {
+            this.lpre_base_n = lpre_base_n;
+        }
+
+        public String getRestante() {
+            return Restante;
+        }
+
+        public void setRestante(String restante) {
+            Restante = restante;
+        }
+
+        public String getSubAbonoEnv() {
+            return SubAbonoEnv;
+        }
+
+        public void setSubAbonoEnv(String subAbonoEnv) {
+            SubAbonoEnv = subAbonoEnv;
+        }
+
+        public String getSubtotal() {
+            return Subtotal;
+        }
+
+        public void setSubtotal(String subtotal) {
+            Subtotal = subtotal;
+        }
+    }
+    
+    public static class Promociones5
+    {
+        private String prom_cve_n;
+        private String prom_folio_str;
+        private String prom_desc_str;
+        private String tprom_cve_n;
+        private String prom_falta_dt;
+        private String prom_fini_dt;
+        private String prom_ffin_dt;
+        private String est_cve_str;
+        private String usu_cve_str;
+        private String usu_modificacion_str;
+        private String prom_fmodificacion_dt;
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prom_nivel_n;
+        private String lpre_cve_n;
+        private String nvc_cve_n;
+        private String nvc_cvehl_n;
+        private String fam_cve_n;
+        private String seg_cve_n;
+        private String giro_cve_n;
+        private String tcli_cve_n;
+        private String lpre_precio_n;
+        private String lpre_precio2_n;
+        private String lpre_desc_n;
+        private String prom_n_n;
+        private String prom_m_n;
+        private String prod_regalo_n;
+        private String prod_skureg_str;
+        private String prom_story_n;
+        private String prom_proveedor_n;
+        private String prom_envase_n;
+        private String prom_kit_n;
+        private String nvc_nivel_n;
+        private String prom_contado_n;
+
+        public Promociones5() {
+        }
+
+        public String getProm_cve_n() {
+            return prom_cve_n;
+        }
+
+        public void setProm_cve_n(String prom_cve_n) {
+            this.prom_cve_n = prom_cve_n;
+        }
+
+        public String getProm_folio_str() {
+            return prom_folio_str;
+        }
+
+        public void setProm_folio_str(String prom_folio_str) {
+            this.prom_folio_str = prom_folio_str;
+        }
+
+        public String getProm_desc_str() {
+            return prom_desc_str;
+        }
+
+        public void setProm_desc_str(String prom_desc_str) {
+            this.prom_desc_str = prom_desc_str;
+        }
+
+        public String getTprom_cve_n() {
+            return tprom_cve_n;
+        }
+
+        public void setTprom_cve_n(String tprom_cve_n) {
+            this.tprom_cve_n = tprom_cve_n;
+        }
+
+        public String getProm_falta_dt() {
+            return prom_falta_dt;
+        }
+
+        public void setProm_falta_dt(String prom_falta_dt) {
+            this.prom_falta_dt = prom_falta_dt;
+        }
+
+        public String getProm_fini_dt() {
+            return prom_fini_dt;
+        }
+
+        public void setProm_fini_dt(String prom_fini_dt) {
+            this.prom_fini_dt = prom_fini_dt;
+        }
+
+        public String getProm_ffin_dt() {
+            return prom_ffin_dt;
+        }
+
+        public void setProm_ffin_dt(String prom_ffin_dt) {
+            this.prom_ffin_dt = prom_ffin_dt;
+        }
+
+        public String getEst_cve_str() {
+            return est_cve_str;
+        }
+
+        public void setEst_cve_str(String est_cve_str) {
+            this.est_cve_str = est_cve_str;
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getUsu_modificacion_str() {
+            return usu_modificacion_str;
+        }
+
+        public void setUsu_modificacion_str(String usu_modificacion_str) {
+            this.usu_modificacion_str = usu_modificacion_str;
+        }
+
+        public String getProm_fmodificacion_dt() {
+            return prom_fmodificacion_dt;
+        }
+
+        public void setProm_fmodificacion_dt(String prom_fmodificacion_dt) {
+            this.prom_fmodificacion_dt = prom_fmodificacion_dt;
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProm_nivel_n() {
+            return prom_nivel_n;
+        }
+
+        public void setProm_nivel_n(String prom_nivel_n) {
+            this.prom_nivel_n = prom_nivel_n;
+        }
+
+        public String getLpre_cve_n() {
+            return lpre_cve_n;
+        }
+
+        public void setLpre_cve_n(String lpre_cve_n) {
+            this.lpre_cve_n = lpre_cve_n;
+        }
+
+        public String getNvc_cve_n() {
+            return nvc_cve_n;
+        }
+
+        public void setNvc_cve_n(String nvc_cve_n) {
+            this.nvc_cve_n = nvc_cve_n;
+        }
+
+        public String getNvc_cvehl_n() {
+            return nvc_cvehl_n;
+        }
+
+        public void setNvc_cvehl_n(String nvc_cvehl_n) {
+            this.nvc_cvehl_n = nvc_cvehl_n;
+        }
+
+        public String getFam_cve_n() {
+            return fam_cve_n;
+        }
+
+        public void setFam_cve_n(String fam_cve_n) {
+            this.fam_cve_n = fam_cve_n;
+        }
+
+        public String getSeg_cve_n() {
+            return seg_cve_n;
+        }
+
+        public void setSeg_cve_n(String seg_cve_n) {
+            this.seg_cve_n = seg_cve_n;
+        }
+
+        public String getGiro_cve_n() {
+            return giro_cve_n;
+        }
+
+        public void setGiro_cve_n(String giro_cve_n) {
+            this.giro_cve_n = giro_cve_n;
+        }
+
+        public String getTcli_cve_n() {
+            return tcli_cve_n;
+        }
+
+        public void setTcli_cve_n(String tcli_cve_n) {
+            this.tcli_cve_n = tcli_cve_n;
+        }
+
+        public String getLpre_precio_n() {
+            return lpre_precio_n;
+        }
+
+        public void setLpre_precio_n(String lpre_precio_n) {
+            this.lpre_precio_n = lpre_precio_n;
+        }
+
+        public String getLpre_precio2_n() {
+            return lpre_precio2_n;
+        }
+
+        public void setLpre_precio2_n(String lpre_precio2_n) {
+            this.lpre_precio2_n = lpre_precio2_n;
+        }
+
+        public String getLpre_desc_n() {
+            return lpre_desc_n;
+        }
+
+        public void setLpre_desc_n(String lpre_desc_n) {
+            this.lpre_desc_n = lpre_desc_n;
+        }
+
+        public String getProm_n_n() {
+            return prom_n_n;
+        }
+
+        public void setProm_n_n(String prom_n_n) {
+            this.prom_n_n = prom_n_n;
+        }
+
+        public String getProm_m_n() {
+            return prom_m_n;
+        }
+
+        public void setProm_m_n(String prom_m_n) {
+            this.prom_m_n = prom_m_n;
+        }
+
+        public String getProd_regalo_n() {
+            return prod_regalo_n;
+        }
+
+        public void setProd_regalo_n(String prod_regalo_n) {
+            this.prod_regalo_n = prod_regalo_n;
+        }
+
+        public String getProd_skureg_str() {
+            return prod_skureg_str;
+        }
+
+        public void setProd_skureg_str(String prod_skureg_str) {
+            this.prod_skureg_str = prod_skureg_str;
+        }
+
+        public String getProm_story_n() {
+            return prom_story_n;
+        }
+
+        public void setProm_story_n(String prom_story_n) {
+            this.prom_story_n = prom_story_n;
+        }
+
+        public String getProm_proveedor_n() {
+            return prom_proveedor_n;
+        }
+
+        public void setProm_proveedor_n(String prom_proveedor_n) {
+            this.prom_proveedor_n = prom_proveedor_n;
+        }
+
+        public String getProm_envase_n() {
+            return prom_envase_n;
+        }
+
+        public void setProm_envase_n(String prom_envase_n) {
+            this.prom_envase_n = prom_envase_n;
+        }
+
+        public String getProm_kit_n() {
+            return prom_kit_n;
+        }
+
+        public void setProm_kit_n(String prom_kit_n) {
+            this.prom_kit_n = prom_kit_n;
+        }
+
+        public String getNvc_nivel_n() {
+            return nvc_nivel_n;
+        }
+
+        public void setNvc_nivel_n(String nvc_nivel_n) {
+            this.nvc_nivel_n = nvc_nivel_n;
+        }
+
+        public String getProm_contado_n() {
+            return prom_contado_n;
+        }
+
+        public void setProm_contado_n(String prom_contado_n) {
+            this.prom_contado_n = prom_contado_n;
+        }
+    }
+
 }
