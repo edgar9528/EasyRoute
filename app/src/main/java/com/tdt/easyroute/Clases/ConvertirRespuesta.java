@@ -1828,6 +1828,105 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.PedPromocionesKit> getPedPromocionesKitJson(String respuesta)
+    {
+        ArrayList<DataTableLC.PedPromocionesKit> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.PedPromocionesKit> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.Pagos> getPagosALJson(String respuesta)
+    {
+        ArrayList<DataTableLC.Pagos> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.Pagos> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.EnvasesAdeudo> getEnvasesAdeudoJson(String respuesta)
+    {
+        ArrayList<DataTableLC.EnvasesAdeudo> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.EnvasesAdeudo> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.EnvasesAdeudo2> getEnvasesAdeudo2Json(String respuesta)
+    {
+        ArrayList<DataTableLC.EnvasesAdeudo2> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.EnvasesAdeudo2> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.EnvasesAdeudo3> getEnvasesAdeudo3Json(String respuesta)
+    {
+        ArrayList<DataTableLC.EnvasesAdeudo3> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.EnvasesAdeudo3> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.AdeudoNormal> getAdeudoNormalJson(String respuesta)
+    {
+        ArrayList<DataTableLC.AdeudoNormal> al =null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken< ArrayList<DataTableLC.AdeudoNormal> >(){}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if(al.size()==0) return null;
+        }catch (Exception e)
+        {
+            Log.d("salida","error gson: "+e.toString());
+            al=null;
+        }
+        return al;
+    }
+
+
+
+
 
 
 

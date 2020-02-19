@@ -403,6 +403,16 @@
     <string name="hint_kit">Kit</string>
     <string name="err_ped6">Error al obtener productos</string>
     <string name="err_ped7">Error al obtener promociones</string>
+    <string name="err_ped8">Error al listar envases</string>
+    <string name="err_ped9">Error al obtener pagos</string>
+    <string name="err_ped10">Error al listar formas de pago</string>
+    <string name="err_ped11">Error al listar adeudo envase</string>
+    <string name="err_ped12">Error al cargar adeudo normal</string>
+    <string name="tt_ped9">Cliente inactivo solo se le podra abonar</string>
+    <string name="err_ped13">Error al validar cliente</string>
+    <string name="tt_ped10">Si desea realizar una segunda venta comuniquese a sistemas.</string>
+    <string name="err_ped14">Error al validar segunda venta</string>
+    <string name="err_ped15">Error al cargar preventa</string>
 
 
 </resources>

@@ -82,6 +82,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
     private String noven_Cliente_cve, noven_mot, noven_motId;
 
+    private String PositionStr;
+
     private PieChart pieChartVisitas,pieChartEfectividad;
 
     private PedidosAdapterRecyclerView pedidosAdapterRecyclerView;
@@ -764,6 +766,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     progress.cancel();
                     mainActivity.disableLocationUpdates();
                     ubi[0] = mainActivity.getLatLon();
+                    PositionStr = ubi[0];
                     Log.d("salida", "Ubicacion nueva: " + ubi[0]);
 
                     switch (op)
@@ -1445,6 +1448,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         intent.putExtra("idext",IdExtCli);
                         intent.putExtra("conventa",conventa);
                         intent.putExtra("porEscanear",PorEscaner);
+                        intent.putExtra("PositionStr",PositionStr);
                         startActivityForResult(intent,2);
                     }
                     else
@@ -1466,6 +1470,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     intent.putExtra("idext",IdExtCli);
                     intent.putExtra("conventa",conventa);
                     intent.putExtra("porEscanear",PorEscaner);
+                    intent.putExtra("PositionStr",PositionStr);
                     startActivityForResult(intent,2);
                 }
                 else

@@ -34,12 +34,14 @@ import com.tdt.easyroute.R;
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 public class Utils {
@@ -236,6 +238,53 @@ public class Utils {
         return s.toString();
     }
 
+    public static String FechaFormato(String fecha) {
+        try
+        {
+            SimpleDateFormat formatter1=new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = formatter1.parse(fecha);
+            CharSequence s = DateFormat.format("yyyy-MM-dd", date.getTime());
+            return s.toString();
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String FechaModificarDias(String fecha, int dias)
+    {
+        try {
+            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = formatter1.parse(fecha);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_YEAR, dias);  // numero de días a añadir, o restar en caso de días<0
+
+            CharSequence s = DateFormat.format("yyyy-MM-dd", calendar.getTime());
+
+            return s.toString();
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    public static Date FechaDT(String fecha)
+    {
+        try
+        {
+            SimpleDateFormat formatter1=new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            return formatter1.parse(fecha);
+
+        }catch (Exception e)
+        {
+            return null;
+        }
+    }
+
     public static String HoraLocal() {
         Date d = new Date();
         CharSequence s = DateFormat.format("HH:mm:ss", d.getTime());
@@ -358,6 +407,17 @@ public class Utils {
         Log.d("salida","dia actual: "+dia);
 
         return diasB.indexOf(dia);
+    }
+
+    public static String DiaActual()
+    {
+        String[] dias = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int numeroDia = cal.get(Calendar.DAY_OF_WEEK) - 1;
+
+        return dias[numeroDia];
     }
 
     public static Modelos.Indicadores ObtenerProductividad(int ruta, Application application) {
