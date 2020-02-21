@@ -878,6 +878,19 @@ public class Utils {
         dialogo1.show();
     }
 
+    public static void msgInfo(Context context,String mensaje)
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(context);
+        dialogo1.setMessage(mensaje);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(context.getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+
+            }
+        });
+        dialogo1.show();
+    }
+
 
 
     public static double Distancia(String gps1, String gps2)

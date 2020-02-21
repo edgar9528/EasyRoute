@@ -22,6 +22,7 @@ import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity;
@@ -76,6 +77,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         setContentView(R.layout.activity_login);
 
         try {
+
+            pruebas();
 
             Button button_sesion;
             nombreBase = getString(R.string.nombreBD);
@@ -622,6 +625,12 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         {
             Utils.msgError(this, getString(R.string.error_peticion),e.getMessage());
         }
+
+    }
+
+    private void pruebas()
+    {
+
 
     }
 

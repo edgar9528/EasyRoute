@@ -413,6 +413,10 @@
     <string name="tt_ped10">Si desea realizar una segunda venta comuniquese a sistemas.</string>
     <string name="err_ped14">Error al validar segunda venta</string>
     <string name="err_ped15">Error al cargar preventa</string>
+    <string name="tt_ped11">El cliente ya tiene una venta asociada a la preventa. \n\n Los datos no se cargaran de nuevo.</string>
+    <string name="tt_ped12">El cliente no tiene datos de preventa</string>
+    <string name="err_ped16">Error al calcular venta</string>
+    <string name="err_ped17">Error al calcular envase</string>
 
 
 </resources>
