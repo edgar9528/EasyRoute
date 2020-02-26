@@ -1,12 +1,17 @@
 package com.tdt.easyroute.Ventanas.Ventas;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +31,7 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -60,8 +66,6 @@ public class PedidosActivity extends AppCompatActivity {
     ArrayList<DataTableWS.FormasPago> formasPago2;
     ArrayList<DataTableLC.AdeudoNormal> dtAN;
     ArrayList<DataTableLC.AdeudoNormal> dtAE;
-    ArrayList<DataTableLC.Familias> dtFam;
-    ArrayList<String> familiasAL;
 
     boolean RutaMayorista = false;
     boolean RutaPromoCe = false;
@@ -79,6 +83,10 @@ public class PedidosActivity extends AppCompatActivity {
     String FolioPedido = "";
     boolean ReqRefencia = false;
 
+    boolean lpreCO = false;
+
+    PedidosVM pedidosVM;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ordenes_menu, menu);
@@ -89,6 +97,8 @@ public class PedidosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pedidos);
+
+        pedidosVM = ViewModelProviders.of( this).get(PedidosVM.class);
 
         setTitle(getString(R.string.title_pedidos));
 
@@ -146,6 +156,19 @@ public class PedidosActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        pedidosVM.getDgPro2().observe(this, new Observer<ArrayList<DataTableLC.ProductosPed>>() {
+            @Override
+            public void onChanged(ArrayList<DataTableLC.ProductosPed> productosPeds) {
+                dgProd2 = productosPeds;
+                Log.d("salida","se han actualizado los productos del carrito");
+            }
+        });
+    }
+
     private void inicializar()
     {
         Log.d("salida", "entro a inicializar");
@@ -166,23 +189,24 @@ public class PedidosActivity extends AppCompatActivity {
         lpBase = ObtenerListaPrecio("BASE");
 
         ObtenerProductos();
-        dgEnvase = ListarEnvase(lpBase);
+
+        ListarEnvase(lpBase);
 
         ObtenerPagos();
-        formasPago = ListarFormaPago();
-        formasPago2 = ListarFormaPago2();
+        ListarFormaPago();
+        ListarFormaPago2();
 
         ListarAdeudoEnvase();
 
         dtAN = ListarAdeudoNormal();
         dtAE = ListarAdeudoEspecial();
 
-        ObtenerFamilias();
 
         ValidaClienteInactivo();
         ValidarSegundaVenta();
 
-        CargarPreventa();
+        if(conf.getPreventa()==2 && rc.getEst_cve_str().equals("A") )
+            CargarPreventa();
 
     }
 
@@ -327,7 +351,9 @@ public class PedidosActivity extends AppCompatActivity {
 
             }
 
-            dgProd2 = dtProductos;
+            pedidosVM.setDtProductos(dtProductos);
+            dgProd2= new ArrayList<>();
+            pedidosVM.setDgPro2(dgProd2);
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped6), e.getMessage());
@@ -347,44 +373,34 @@ public class PedidosActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<DataTableWS.FormasPago> ListarFormaPago()
+    private void ListarFormaPago()
     {
-        try {
-            ArrayList<DataTableWS.FormasPago> formas = null;
-
+        try
+        {
             String con = "select fpag_cve_n,fpag_desc_str,fpag_reqbanco_n,fpag_reqreferencia_n,est_cve_str from formaspago where est_cve_str='A'";
             String json = BaseLocal.Select(con, getApplicationContext());
-            formas = ConvertirRespuesta.getFormasPagoJson(json);
-
-
-            return formas;
-
+            formasPago = ConvertirRespuesta.getFormasPagoJson(json);
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped10), e.getMessage());
-            return null;
         }
     }
 
-    private ArrayList<DataTableWS.FormasPago> ListarFormaPago2()
+    private void ListarFormaPago2()
     {
-        try {
-            ArrayList<DataTableWS.FormasPago> formas = null;
-
+        try
+        {
             String con = "select fpag_cve_n,fpag_desc_str,fpag_reqbanco_n,fpag_reqreferencia_n,est_cve_str from formaspago where fpag_desc_str<>'CREDITO' and est_cve_str='A'";
             String json = BaseLocal.Select(con, getApplicationContext());
-            formas = ConvertirRespuesta.getFormasPagoJson(json);
-
-            return formas;
-
+            formasPago2 = ConvertirRespuesta.getFormasPagoJson(json);
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped10), e.getMessage());
-            return null;
         }
     }
 
-    private ArrayList<DataTableLC.EnvasesPed> ListarEnvase(int lb)
+    private void ListarEnvase(int lb)
     {
-        try {
+        try
+        {
             String qry = "select p.prod_cve_n,p.prod_sku_str,p.prod_desc_str,lp.lpre_precio_n,(coalesce(iv.inv_inicial_n,0) " +
                     "+coalesce(iv.inv_recarga_n,0)-coalesce(iv.inv_devuelto_n,0)-coalesce(iv.inv_vendido_n,0) " +
                     "-coalesce(iv.inv_prestado_n,0)+coalesce(iv.inv_recuperado_n,0)) prod_cantiv_n, " +
@@ -397,9 +413,6 @@ public class PedidosActivity extends AppCompatActivity {
             String con = string.formatSql2(qry, String.valueOf(lpre), String.valueOf(catenv), conf.getRutaStr(), String.valueOf(lb));
 
             String json = BaseLocal.Select(con, getApplicationContext());
-
-            Log.d("salida", "envase con: " + con);
-            Log.d("salida", "envase json: " + json);
 
             ArrayList<DataTableLC.EnvasesPed> envases = ConvertirRespuesta.getEnvasesPedJson(json);
 
@@ -417,18 +430,18 @@ public class PedidosActivity extends AppCompatActivity {
                 envases.get(i).setSubtotal(subTot);
             }
 
-            return envases;
+            dgEnvase= envases;
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped8), e.getMessage());
-            return null;
         }
 
     }
 
     private void ListarAdeudoEnvase()
     {
-        try {
+        try
+        {
             String con = "select p.prod_cve_n,p.prod_sku_str,p.prod_desc_str,lp.lpre_precio_n," +
                     "(coalesce(iv.inv_inicial_n,0)+coalesce(iv.inv_recarga_n,0)" +
                     "+coalesce(iv.inv_devuelto_n,0)-coalesce(iv.inv_vendido_n,0)) prod_cantiv_n," +
@@ -438,7 +451,7 @@ public class PedidosActivity extends AppCompatActivity {
 
             con = string.formatSql2(con, String.valueOf(lpre), String.valueOf(catenv), conf.getRutaStr());
 
-            String json = BaseLocal.Select(con, getApplicationContext());
+            String json = BaseLocal.Select(string.formatSql2(con, String.valueOf( lpre ) , String.valueOf(catenv) , conf.getRutaStr()), getApplicationContext());
 
             ArrayList<DataTableLC.EnvasesAdeudo> dt = ConvertirRespuesta.getEnvasesAdeudoJson(json);
 
@@ -447,7 +460,6 @@ public class PedidosActivity extends AppCompatActivity {
                     "from creditos where cli_cve_n={0} and prod_cve_n={1} and cred_esenvase_n=1 " +
                     "group by cli_cve_n,prod_cve_n";
 
-
             DataTableLC.EnvasesAdeudo r;
             for (int i = 0; i < dt.size(); i++) {
                 r = dt.get(i);
@@ -455,9 +467,10 @@ public class PedidosActivity extends AppCompatActivity {
 
                 ArrayList<DataTableLC.EnvasesAdeudo2> dtAdEnv = ConvertirRespuesta.getEnvasesAdeudo2Json(json);
 
-                if (dtAdEnv != null) {
+                if (dtAdEnv != null)
+                {
                     DataTableLC.EnvasesAdeudo2 rae;
-                    for (int j = 0; j < dtAdEnv.size(); i++) {
+                    for (int j = 0; j < dtAdEnv.size(); j++) {
                         rae = dtAdEnv.get(j);
 
                         dt.get(i).setAdeudo(String.valueOf(Integer.parseInt(rae.getAdeudo()) - Integer.parseInt(rae.getAbono())));
@@ -465,13 +478,15 @@ public class PedidosActivity extends AppCompatActivity {
 
                     ArrayList<DataTableLC.EnvasesAdeudo3> dtAbonoEnv;
                     con = "select cli_cve_n,prod_cve_n,sum(prod_abono_n) abono from pagos where prod_cve_n={0} and cli_cve_n={1} and pag_envase_n=1 and trans_est_n<>3 group by cli_cve_n,prod_cve_n";
-                    json = BaseLocal.Select(con, getApplicationContext());
+
+                    json = BaseLocal.Select(string.formatSql2(con, r.getProd_cve_n(), noCli ), getApplicationContext());
                     dtAbonoEnv = ConvertirRespuesta.getEnvasesAdeudo3Json(json);
 
                     double abonoAct = 0;
 
+                    if(dtAbonoEnv!=null)
                     for (int j = 0; j < dtAbonoEnv.size(); j++) {
-                        abonoAct += Integer.parseInt(dtAbonoEnv.get(i).getAbono());
+                        abonoAct += Integer.parseInt(dtAbonoEnv.get(j).getAbono());
                     }
 
                     dt.get(i).setAdeudo(String.valueOf(Integer.parseInt(dt.get(i).getAdeudo()) - abonoAct));
@@ -593,25 +608,6 @@ public class PedidosActivity extends AppCompatActivity {
         }
     }
 
-    private void ObtenerFamilias()
-    {
-        dtFam = new ArrayList<>();
-        familiasAL = new ArrayList<>();
-
-        DataTableLC.ProductosPed p;
-        for (int i = 0; i < dtProductos.size(); i++) {
-            p = dtProductos.get(i);
-            if (!familiasAL.contains(p.getFam_desc_str())) {
-                familiasAL.add(p.getFam_desc_str());
-                dtFam.add(new DataTableLC.Familias(p.getFam_cve_n(), p.getFam_desc_str()));
-            }
-        }
-
-        Collections.sort(familiasAL);
-        Collections.sort(dtFam);
-
-    }
-
     private void ValidaClienteInactivo()
     {
         try {
@@ -625,6 +621,7 @@ public class PedidosActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), getString(R.string.tt_ped9), Toast.LENGTH_LONG).show();
             }
+
         } catch (Exception ex) {
             Utils.msgError(this, getString(R.string.err_ped13), ex.getMessage());
         }
@@ -696,8 +693,9 @@ public class PedidosActivity extends AppCompatActivity {
 
                 ArrayList<DataTableLC.PreventaPedidos> dtPrev = ConvertirRespuesta.getPreventaPedidosJson(json);
 
-                if (dtPrev != null) {
-                    FolioPreventa = "123"; // dtPrev.get(0).getPrev_folio_str();
+                if (dtPrev != null)
+                {
+                    FolioPreventa = dtPrev.get(0).getPrev_folio_str();
 
                     con = string.formatSql("Select ven_folio_str from ventas where prev_folio_str='{0}'", FolioPreventa);
 
@@ -907,9 +905,11 @@ public class PedidosActivity extends AppCompatActivity {
                             }
                         }
 
-                        //CalcularTotales();
-                        //ValidaCredito();
+                        CalcularTotales();
+                        ValidaCredito();
                     }
+
+                    pedidosVM.setDgPro2( dgProd2);
                 }
             } else
                 Toast.makeText(this, getString(R.string.tt_ped12), Toast.LENGTH_SHORT).show();
@@ -1008,24 +1008,244 @@ public class PedidosActivity extends AppCompatActivity {
                     if(hayPromoEnv)
                     {
                         for(DataTableLC.EnvasesPed r : dgEnvase)
-                            if( r.getProd_sku_str().equals("264") || r.getProd_sku_str().equals("432") )
+                        {
+                            if (r.getProd_sku_str().equals("264") || r.getProd_sku_str().equals("432"))
                             {
-                                ArrayList<DataTableLC.ProductosPed> dtAux = new ArrayList<>(dgProd2);
-                                dtAux.clear();
-                                for(DataTableLC.ProductosPed gb : dgProd2)
+                                ArrayList<DataTableLC.ProductosPed> gb = new ArrayList<>();
+                                ArrayList<String> clavesGroupby = new ArrayList<>();
+
+                                for (DataTableLC.ProductosPed p : dgProd2)
                                 {
-                                    if(gb.getId_envase_n()!=null && !gb.getId_envase_n().isEmpty())
-                                        dtAux.add( gb );
+                                    //filtro de id_envase = null
+                                    if (p.getId_envase_n() != null && !p.getId_envase_n().isEmpty())
+                                    {
+                                        //filtro de groupby
+                                        String cve = p.getFam_cve_n() + "_" + p.getId_envase_n();
+                                        if (!clavesGroupby.contains(cve))
+                                        {
+                                            gb.add(p);
+                                            clavesGroupby.add(cve);
+                                        }
+                                    }
+                                }
+
+                                int kp = 0;
+
+                                for(DataTableLC.ProductosPed x : gb)
+                                {
+                                    if(x.getId_envase_n().equals( r.getProd_cve_n() ))
+                                    {
+
+                                        ArrayList<DataTableLC.PromocionesEnv> rp = new ArrayList<>();
+
+                                        for(DataTableLC.PromocionesEnv pe : PromoEnv)
+                                        {
+                                            if( pe.getFam_cve_n().equals( x.getFam_cve_n() ) &&
+                                                pe.getTprom_cve_n().equals("6") &&
+                                                pe.getProd_regalo_n().equals( x.getId_envase_n() ))
+                                                rp.add(pe);
+                                        }
+
+                                        for(DataTableLC.PromocionesEnv p : rp)
+                                        {
+                                            int m = Integer.parseInt(p.getProm_m_n());
+                                            int n = Integer.parseInt( p.getProm_n_n() );
+                                            int k = Integer.parseInt(x.getProd_cant_n());
+                                            kp += (k / m) * n;
+                                        }
+                                        r.setRegalo(String.valueOf(kp));
+                                    }
                                 }
                             }
+                        }
                     }
+                    else
+                    {
+                        hayPromoEnv=false;
+                        for(DataTableLC.PromocionesEnv p : PromoEnv)
+                        {
+                            if(p.getTprom_cve_n().equals("5"))
+                            {
+                                hayPromoEnv=true;
+                                break;
+                            }
+                        }
 
+                        if(hayPromoEnv)
+                        {
+                            for(DataTableLC.EnvasesPed r : dgEnvase )
+                            {
+                                if (r.getProd_sku_str().equals("264") || r.getProd_sku_str().equals("432"))
+                                {
+                                    int kp = 0;
+
+                                    ArrayList<DataTableLC.ProductosPed> rv = new ArrayList<>();
+                                    for (DataTableLC.ProductosPed p : dgProd2)
+                                    {
+                                        if (p.getId_envase_n().equals( r.getProd_cve_n() ) )
+                                            rv.add(p);
+                                    }
+
+                                    for(DataTableLC.ProductosPed rea : rv)
+                                    {
+                                        ArrayList<DataTableLC.PromocionesEnv> rp = new ArrayList<>();
+                                        for(DataTableLC.PromocionesEnv p : PromoEnv)
+                                        {
+                                            if( p.getTprom_cve_n().equals("5") &&
+                                                p.getProd_regalo_n().equals(r.getProd_cve_n()) &&
+                                                p.getProd_cve_n().equals( rea.getProd_cve_n()))
+                                            {
+                                                rp.add(p);
+                                            }
+                                        }
+
+                                        for(DataTableLC.PromocionesEnv p : rp)
+                                        {
+                                            int m = Integer.parseInt(p.getProm_m_n() );
+                                            int n = Integer.parseInt(p.getProm_n_n());
+                                            int k = Integer.parseInt(rea.getProd_cant_n());
+                                            kp += (k/m)*n;
+                                        }
+                                    }
+                                    r.setRegalo( String.valueOf(kp) );
+                                }
+                            }
+                        }
+                    }
                 }
+            }
 
+            if (HayNegativos)
+            {
+                Toast.makeText(this, getString(R.string.tt_ped13), Toast.LENGTH_SHORT).show();
             }
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped17), e.getMessage());
+        }
+    }
+
+    private void CalcularTotales()
+    {
+        try
+        {
+            // DescKit = decimal.Parse(txtKit.Text.Replace("$", ""));
+
+            /*txtVenta.Text = (decimal.Parse(this.txtSubtotal2.Text.Replace("$", "")) +
+                    decimal.Parse(txtSubEnv.Text.Replace("$", "")) +
+                    decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""))).ToString("c");*/
+
+            if ( dgPagos.size() >0)
+            {
+                double suma=0;
+
+                for(DataTableLC.DgPagos p : dgPagos)
+                {
+                    suma += Double.parseDouble( p.getFpag_cant_n() );
+                }
+
+                //txtSaldo.Text = (decimal.Parse(txtVenta.Text.Replace("$", "")) - DescKit - SUMA
+
+            }
+            //else
+                //txtSaldo.Text = string.Format("{0:c}",decimal.Parse(txtVenta.Text.Replace("$",""))-DescKit);
+
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.err_ped18), e.getMessage());
+        }
+    }
+
+    private void ValidaCredito()
+    {
+        try
+        {
+            if ((!Utils.getBool(rc.getCli_eshuix_n()) && ActivarCredito()) || Utils.getBool(rc.getCli_eshuix_n()) && lpreCO) {
+                int indice = 0;
+                for (DataTableWS.FormasPago fp : formasPago) {
+                    if (fp.getFpag_desc_str().equals("CREDITO")) {
+                        formasPago.remove(indice);
+                        break;
+                    }
+                    indice++;
+                }
+            }
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.err_ped20), e.getMessage());
+        }
+    }
+
+    double totDeuda = 0, totAbono = 0, montoCredito = 0, disponible = 0;
+    double totUtilizado = 0;
+    double saldoVencido = 0;
+    private boolean ActivarCredito()
+    {
+        try
+        {
+            ListarFormaPago();
+
+            boolean SinCredito = false;
+            totDeuda = 0; //decimal.Parse(txtAdeudoN.Text.Replace("$", ""));
+            totAbono = 0; //decimal.Parse(txtTotAbono.Text.Replace("$", ""));
+            montoCredito = Double.parseDouble(rc.getCli_montocredito_n());
+
+            disponible = montoCredito - (totDeuda - totAbono);
+
+            totUtilizado=0;
+            for(DataTableLC.DgPagos dg : dgPagos)
+            {
+                if(dg.getFpag_desc_str().equals("CREDITO"))
+                    totUtilizado += Double.parseDouble( dg.getFpag_cant_n()  );
+            }
+
+            disponible -= totUtilizado;
+
+            int diascred =  Integer.parseInt( rc.getCli_plazocredito_n() );
+
+            saldoVencido=0;
+            for(DataTableLC.AdeudoNormal an: dtAN )
+            {
+                Date f1 = Utils.FechaDT( an.getCred_fecha_dt() );
+                Date f2 = Utils.FechaDT( Utils.FechaModificarDias( Utils.FechaLocal(),-diascred ) );
+
+                if(f1.compareTo(f2)<=0)
+                    saldoVencido+= Double.parseDouble( an.getSaldo() );
+            }
+
+            if (  !Utils.getBool( rc.getCli_credito_n()))
+            {
+                SinCredito = true;
+                //lblEstCredito.Text = "Sin Crédito";
+                return SinCredito;
+            }
+            if ( !rc.getCli_estcredito_str().equals("A"))
+            {
+                SinCredito = true;
+                //lblEstCredito.Text = "Cancelado";
+                return SinCredito;
+            }
+
+            if (disponible <= 0)
+            {
+                SinCredito = true;
+                //lblEstCredito.Text = "Sin disponible";
+                return SinCredito;
+            }
+            if (saldoVencido - totAbono > 0)
+            {
+                SinCredito = true;
+                //lblEstCredito.Text = "Vencido";
+                return SinCredito;
+            }
+
+            return SinCredito;
+
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.err_ped19), e.getMessage());
+            return false;
         }
     }
 
@@ -1121,7 +1341,7 @@ public class PedidosActivity extends AppCompatActivity {
                     "case when {0}>=coalesce(nvc.nvc_nivel_n,0) then 0 else 1 end prom_contado_n from promociones p " +
                     "left join nivelcliente nvc on p.nvc_cve_n=nvc.nvc_cve_n " +
                     "left join nivelcliente ncl on p.nvc_cvehl_n=ncl.nvc_cve_n " +
-                    "where getdate() between p.prom_fini_dt and p.prom_ffin_dt " +
+                    "where datetime('now','localtime') between p.prom_fini_dt and p.prom_ffin_dt " +
                     "and (lpre_cve_n={1} or lpre_cve_n=0) " +
                     "and (seg_cve_n={2} or seg_cve_n=0) " +
                     "and (giro_cve_n={3} or giro_cve_n=0) " +

@@ -417,6 +417,13 @@
     <string name="tt_ped12">El cliente no tiene datos de preventa</string>
     <string name="err_ped16">Error al calcular venta</string>
     <string name="err_ped17">Error al calcular envase</string>
+    <string name="tt_ped13">Por favor revise los envases recibidos o vendidos</string>
+    <string name="err_ped18">Error al calcular totales</string>
+    <string name="err_ped19">Error al activar credito</string>
+    <string name="err_ped20">Error al validar credito</string>
+    <string name="err_ped21">Error al cargar familias</string>
+    <string name="err_ped22">Error al obtener presentaciones</string>
+    <string name="err_ped23">Error al obtener productos</string>
 
 
 </resources>

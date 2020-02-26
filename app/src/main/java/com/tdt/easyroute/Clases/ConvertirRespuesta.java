@@ -851,14 +851,12 @@ public class ConvertirRespuesta {
             Gson gson = new Gson();
             Type listType = new TypeToken< ArrayList<DataTableWS.Direcciones> >(){}.getType();
             al = gson.fromJson(respuesta, listType);
-
+            return al;
         }catch (Exception e)
         {
             Log.d("salida","error gson: "+e.toString());
-            al=null;
+            return null;
         }
-
-        return al;
     }
 
     public static ArrayList<DataTableWS.ClientesVentaMes> getClientesVentaJson(String respuesta)

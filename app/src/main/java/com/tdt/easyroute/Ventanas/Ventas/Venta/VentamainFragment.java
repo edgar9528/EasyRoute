@@ -85,5 +85,20 @@ public class VentamainFragment extends Fragment {
         return view;
     }
 
+    public void goPresentacion()
+    {
+        viewPager.setCurrentItem(1);
+    }
+
+    public void goProductos()
+    {
+        viewPager.setCurrentItem(2);
+    }
+
+    public void goVenta()
+    {
+        viewPager.setCurrentItem(3);
+    }
+
 
 }

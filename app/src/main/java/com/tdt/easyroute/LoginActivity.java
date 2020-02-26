@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
@@ -56,10 +57,11 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
 
+                /*
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                startActivity(intent);*/
 
             }
         });
@@ -98,6 +100,14 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                 @Override
                 public void onClick(View v) {
                     clickBotonIniciar();
+                }
+            });
+
+            button_sesion.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    finish();
+                    return false;
                 }
             });
 
@@ -630,7 +640,39 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
     private void pruebas()
     {
+        ArrayList<DataTableLC.Prueba> alOriginal= new ArrayList<>();
 
+        alOriginal.add( new DataTableLC.Prueba("edgar","1"));
+        alOriginal.add( new DataTableLC.Prueba("juan",null));
+        alOriginal.add( new DataTableLC.Prueba("pedro","1"));
+        alOriginal.add( new DataTableLC.Prueba("jasmin","1"));
+        alOriginal.add( new DataTableLC.Prueba(null,"5"));
+        alOriginal.add( new DataTableLC.Prueba("pedro","2"));
+        alOriginal.add( new DataTableLC.Prueba("pedro","1"));
+        alOriginal.add( new DataTableLC.Prueba("edgar","1"));
+        alOriginal.add( new DataTableLC.Prueba("may",null));
+        alOriginal.add( new DataTableLC.Prueba("edgar","1"));
+        alOriginal.add( new DataTableLC.Prueba("giovanny","1"));
+
+        ArrayList<DataTableLC.Prueba> alCopia= new ArrayList<>();
+        ArrayList<String> clavesGroupby = new ArrayList<>();
+
+        for(DataTableLC.Prueba p : alOriginal)
+        {
+            if( p.getEdad()!=null && !p.getEdad().isEmpty())
+            {
+                String cve = p.getNombre() + "_" + p.getEdad();
+                if (!clavesGroupby.contains(cve))
+                {
+                    alCopia.add(p);
+                    clavesGroupby.add(cve);
+                }
+            }
+        }
+
+
+        Log.d("salida","original: "+alOriginal);
+        Log.d("salida","original: "+alCopia);
 
     }
 
