@@ -52,7 +52,7 @@
     <string name="bt_regresar">Regresar</string>
     <string name="bt_enviar">Enviar</string>
     <string name="bt_aplicar">Aplicar</string>
-    <string name="hint_sugerido">Ingresa un nuevo valor</string>
+    <string name="hint_sugerido">Ingresa una cantidad</string>
     <string name="msg_actualizaSuge">Actualiza sugerido</string>
     <string name="msg_actualizaSuge2">Valor anterior</string>
     <string name="bt_aceptar">Aceptar</string>
@@ -424,6 +424,8 @@
     <string name="err_ped21">Error al cargar familias</string>
     <string name="err_ped22">Error al obtener presentaciones</string>
     <string name="err_ped23">Error al obtener productos</string>
-
+    <string name="msg_ventaCan">Inventario:</string>
+    <string name="tv_precio">Precio</string>
+    <string name="tv_subtotal">Subtotal</string>
 
 </resources>

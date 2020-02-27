@@ -5,6 +5,7 @@
     <dimen name="paddingControles">8dp</dimen>
     <dimen name="paddingLogin">32dp</dimen>
     <dimen name="paddingCardView">5dp</dimen>
+    <dimen name="paddingCardViewSmall">1dp</dimen>
     <dimen name="paddingHeader">10dp</dimen>
 
 </resources>

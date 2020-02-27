@@ -14,6 +14,8 @@ import com.tdt.easyroute.R;
 
 import java.util.ArrayList;
 
+import javax.security.auth.callback.Callback;
+
 public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterRecyclerView.VentaViewHolder> {
 
     private ArrayList<VentaCardView> ventaCardViews;
@@ -37,11 +39,12 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
     public void onBindViewHolder(@NonNull VentaAdapterRecyclerView.VentaViewHolder ventaViewHolder, int position) {
         final VentaCardView ventaCardView = ventaCardViews.get(position);
 
-        ventaViewHolder.tv_sku.setText( ventaCardView.getSku() );
+        String producto = ventaCardView.getSku()+" - "+ ventaCardView.getProducto();
+        ventaViewHolder.tv_producto.setText( producto );
         ventaViewHolder.tv_precio.setText( ventaCardView.getPrecio() );
-        ventaViewHolder.tv_producto.setText( ventaCardView.getProducto() );
         ventaViewHolder.tv_cantidad.setText( ventaCardView.getCantidad() );
         ventaViewHolder.tv_subtotal.setText( ventaCardView.getSubtotal() );
+        ventaViewHolder.tv_inventario.setText( ventaCardView.getInventario() );
 
     }
 
@@ -52,21 +55,21 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
 
     public class VentaViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tv_sku;
-        private TextView tv_precio;
         private TextView tv_producto;
+        private TextView tv_inventario;
+        private TextView tv_precio;
         private TextView tv_cantidad;
         private TextView tv_subtotal;
 
         public VentaViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            tv_sku = itemView.findViewById(R.id.tv_sku);
-            tv_precio = itemView.findViewById(R.id.tv_precio);
             tv_producto = itemView.findViewById(R.id.tv_producto);
+            tv_inventario = itemView.findViewById(R.id.tv_inventario);
+            tv_precio = itemView.findViewById(R.id.tv_precio);
             tv_cantidad = itemView.findViewById(R.id.tv_cantidad);
             tv_subtotal = itemView.findViewById(R.id.tv_subtotal);
-
         }
     }
+
+
 }

@@ -6,12 +6,11 @@
     style="@style/CardView.Light"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/paddingCardView"
-    android:layout_marginBottom="@dimen/paddingCardView"
+    android:layout_marginTop="@dimen/paddingCardViewSmall"
+    android:layout_marginBottom="@dimen/paddingCardViewSmall"
     tools:ignore="ContentDescription"
 
     card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp"
 
     >
 
@@ -20,83 +19,167 @@
             android:id="@+id/constraint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/bgDefault"
             android:padding="@dimen/paddingCardView"
-
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-
             >
 
-            <TextView
-                android:id="@+id/tv_sku"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/tv_ejemplo"
-                android:textSize="16sp"
-                android:textColor="@color/blanco"
-
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_precio"
-
-                />
-
-            <TextView
-                android:id="@+id/tv_precio"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/tv_ejemplo"
-                android:textSize="16sp"
-                android:textColor="@color/blanco"
-
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_sku"
-                app:layout_constraintStart_toEndOf="@id/tv_sku"
-                app:layout_constraintEnd_toEndOf="parent"
-
-                />
 
             <TextView
                 android:id="@+id/tv_producto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/tv_ejemplo"
-                android:textSize="16sp"
-                android:textColor="@color/blanco"
-
-                app:layout_constraintTop_toBottomOf="@id/tv_sku"
-
-                />
-
-
-            <TextView
-                android:id="@+id/tv_cantidad"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_ejemplo"
-                android:textSize="16sp"
-                android:textColor="@color/blanco"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
 
-                app:layout_constraintTop_toBottomOf="@id/tv_producto"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_precio"
-
-                />
-
-            <TextView
-                android:id="@+id/tv_subtotal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/tv_ejemplo"
-                android:textSize="16sp"
-                android:textColor="@color/blanco"
-
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_cantidad"
-                app:layout_constraintStart_toEndOf="@id/tv_cantidad"
                 app:layout_constraintEnd_toEndOf="parent"
 
                 />
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+
+                app:layout_constraintTop_toBottomOf="@id/tv_producto"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/linearLayout2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mHijo_inventario"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_inventario"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+
+                app:layout_constraintTop_toBottomOf="@id/tv_producto"
+                app:layout_constraintStart_toEndOf="@id/linearLayout1"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_precio"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_precio"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAlignment="textEnd"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+
+                app:layout_constraintTop_toBottomOf="@id/linearLayout1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/linearLayout4"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/table_cantidad"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_cantidad"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintTop_toBottomOf="@id/linearLayout1"
+                app:layout_constraintStart_toEndOf="@id/linearLayout3"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_subtotal"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_subtotal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAlignment="textEnd"
+                    />
+
+            </LinearLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

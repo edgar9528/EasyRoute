@@ -630,6 +630,20 @@ public class Utils {
         return df.format(numero);
     }
 
+    public static String numFormatStr(String numero)
+    {
+        try
+        {
+            double num = Double.parseDouble(numero);
+            DecimalFormat df = new DecimalFormat("#.00");
+            return df.format(num);
+
+        }catch (Exception e)
+        {
+            return "0.00";
+        }
+    }
+
     public static String strToNum(String numeroStr) {
         try {
             double numero = Double.parseDouble(numeroStr);

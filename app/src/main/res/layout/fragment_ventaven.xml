@@ -34,49 +34,13 @@
                 android:id="@+id/et_sku"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_sku"
+                android:hint="@string/bt_buscar"
                 android:singleLine="true"
                 android:imeOptions="actionNext"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:theme="@style/EditTextBlack">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_cant"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_cantidad"
-                android:singleLine="true"
-                android:inputType="number"
-                android:digits="0123456789"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/button_buscar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/bt_correcto"
-            android:textAlignment="center"
-            android:theme="@style/ButtonDarkSmall"
-            android:layout_gravity="center"
-            />
-
-        <Button
-            android:id="@+id/button_borrar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/bt_incorrecto"
-            android:textAlignment="center"
-            android:theme="@style/ButtonRed"
-            android:layout_gravity="center"
-            />
 
     </LinearLayout>
 
@@ -97,7 +61,6 @@
         app:layout_constraintBottom_toTopOf="@id/linearLayout2"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
-        android:layout_marginBottom="@dimen/paddingGeneral"
         >
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -130,26 +93,11 @@
             android:layout_gravity="center"
             />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:theme="@style/EditTextBlack">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_inventario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/mPadre_inventario"
-                android:singleLine="true"
-                android:focusable="false"
-                android:enabled="false"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="6"
             android:theme="@style/EditTextBlack">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_total"

@@ -48,7 +48,7 @@
     <string name="bt_regresar">Return</string>
     <string name="bt_enviar">Send</string>
     <string name="bt_aplicar">Apply</string>
-    <string name="hint_sugerido">Enter a new value</string>
+    <string name="hint_sugerido">Enter an amount</string>
     <string name="msg_actualizaSuge">Update suggested</string>
     <string name="msg_actualizaSuge2">Previous value</string>
     <string name="bt_aceptar">Accept</string>

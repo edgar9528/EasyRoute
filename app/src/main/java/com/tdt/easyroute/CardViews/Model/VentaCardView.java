@@ -8,14 +8,24 @@ public class VentaCardView
     private String precio;
     private String cantidad;
     private String subtotal;
+    private String inventario;
 
-    public VentaCardView(String cve_producto, String sku, String producto, String precio, String cantidad, String subtotal) {
+    public VentaCardView(String cve_producto, String sku, String producto, String precio, String cantidad, String subtotal, String inventario) {
         this.cve_producto = cve_producto;
         this.sku = sku;
         this.producto = producto;
         this.precio = precio;
         this.cantidad = cantidad;
         this.subtotal = subtotal;
+        this.inventario = inventario;
+    }
+
+    public String getInventario() {
+        return inventario;
+    }
+
+    public void setInventario(String inventario) {
+        this.inventario = inventario;
     }
 
     public String getSku() {
