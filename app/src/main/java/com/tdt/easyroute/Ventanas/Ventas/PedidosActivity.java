@@ -164,7 +164,7 @@ public class PedidosActivity extends AppCompatActivity {
             @Override
             public void onChanged(ArrayList<DataTableLC.ProductosPed> productosPeds) {
                 dgProd2 = productosPeds;
-                Log.d("salida","se han actualizado los productos del carrito");
+                Log.d("salida","CANTIDAD DE ITEMS ACT: "+dgProd2.size());
             }
         });
     }

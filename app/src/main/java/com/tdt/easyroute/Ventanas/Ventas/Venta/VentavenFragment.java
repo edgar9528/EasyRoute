@@ -1,8 +1,6 @@
 package com.tdt.easyroute.Ventanas.Ventas.Venta;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,9 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
 
 import com.tdt.easyroute.CardViews.Adapter.VentaAdapterRecyclerView;
 import com.tdt.easyroute.CardViews.Model.VentaCardView;
@@ -35,13 +31,13 @@ import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class VentavenFragment extends Fragment {
 
     private PedidosVM pedidosVM;
 
-    private View vista;
     private VentamainFragment ventamainFragment;
 
     private ArrayList<DataTableLC.ProductosPed> dtProductos;
@@ -75,8 +71,33 @@ public class VentavenFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ventaven, container, false);
         ventamainFragment = (VentamainFragment) getParentFragment();
-        vista=view;
         et_total = view.findViewById(R.id.et_total);
+
+
+        RecyclerView ventasRecyclerView = view.findViewById(R.id.ventasRecycler);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        ventasRecyclerView.setLayoutManager(linearLayoutManager);
+
+        ArrayList<DataTableLC.ProductosPed> ventasCardViews = new ArrayList<>();
+
+        ventaAdapterRecyclerView = new VentaAdapterRecyclerView(ventasCardViews, R.layout.cardview_venta,this);
+        ventasRecyclerView.setAdapter(ventaAdapterRecyclerView);
+
+        SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onRightClicked(int position) {
+                ventaAdapterRecyclerView.eliminarItem(position);
+            }
+            @Override
+            public void onLeftClicked(int position)
+            {
+                ingresarCantidad(position,dgProd2.get(position));
+            }
+        },getActivity());
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(ventasRecyclerView);
 
 
         return view;
@@ -111,32 +132,33 @@ public class VentavenFragment extends Fragment {
 
     private void AgregarProducto(String cve_producto)
     {
-        DataTableLC.ProductosPed re = null;
+        ArrayList<DataTableLC.ProductosPed> re;
 
         re = BuscarProducto(cve_producto, dgProd2);
-        if(re!=null)
+        if(re.size()>0)
         {
-            int indice = dgProd2.indexOf(re);
-            ingresarCantidad(indice,re);
+            int indice = dgProd2.indexOf(re.get(0));
+            ingresarCantidad(indice,re.get(0));
         }
         else
         {
             re= BuscarProducto(cve_producto, dtProductos);
-            if(re!=null)
+            if(re.size()>0)
             {
-                ingresarCantidad(-1,re);
+                ingresarCantidad(-1,re.get(0));
             }
         }
     }
 
-    private DataTableLC.ProductosPed BuscarProducto(String cve, ArrayList<DataTableLC.ProductosPed> arrayList)
+    private ArrayList<DataTableLC.ProductosPed> BuscarProducto(String cve, ArrayList<DataTableLC.ProductosPed> arrayList)
     {
-        DataTableLC.ProductosPed producto = null;
+        ArrayList<DataTableLC.ProductosPed> producto= new ArrayList<>();
+
         for(int i=0; i<arrayList.size();i++)
         {
             if(cve.equals( arrayList.get(i).getProd_cve_n() ))
             {
-                producto= arrayList.get(i);
+                producto.add( arrayList.get(i) ) ;
                 i=arrayList.size();
             }
         }
@@ -164,7 +186,13 @@ public class VentavenFragment extends Fragment {
                             actualizarProductos(indice,lectura,prod);
                         }
                     })
-                    .setNegativeButton(R.string.bt_cancelar, null)
+                    .setNegativeButton(R.string.bt_cancelar, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(indice!=-1)
+                                ventaAdapterRecyclerView.actualizarItem(indice,null);
+                        }
+                    })
                     .create();
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             dialog.show();
@@ -196,60 +224,39 @@ public class VentavenFragment extends Fragment {
 
         if (indice != -1)
         {
-            dgProd2.get(indice).setProd_cant_n(lectura);
+            ventaAdapterRecyclerView.actualizarItem(indice,lectura);
         }
         else
         {
+            String precio = prod.getLpre_precio_n().replace("$","");
+
+            double subtotal = Double.parseDouble(precio)* Double.parseDouble(lectura);
+
             prod.setProd_cant_n(lectura);
-            dgProd2.add(prod);
-            pedidosVM.setDgPro2(dgProd2);
-        }
-        mostrarProductos();
+            prod.setSubtotal( "$"+Utils.numFormat(subtotal) );
+            prod.setLpre_precio_n( "$"+ Utils.numFormatStr(precio));
 
+            ventaAdapterRecyclerView.agregarItem(prod);
+        }
     }
 
-    private void mostrarProductos()
+    public void actualizarLista(ArrayList<DataTableLC.ProductosPed> productos)
     {
-        if (dgProd2 != null)
+       dgProd2 =  productos;
+       pedidosVM.setDgPro2(dgProd2);
+
+
+        double subtotal,total =0;
+        for (DataTableLC.ProductosPed p: dgProd2)
         {
-
-
-            final RecyclerView ventasRecyclerView = vista.findViewById(R.id.ventasRecycler);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-            ventasRecyclerView.setLayoutManager(linearLayoutManager);
-            ArrayList<VentaCardView> ventasCardViews = new ArrayList<>();
-
-
-            SwipeController swipeController = new SwipeController();
-            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-            itemTouchhelper.attachToRecyclerView(ventasRecyclerView);
-
-            double total =0;
-
-            for (DataTableLC.ProductosPed p: dgProd2)
-            {
-                double subtotal = Double.parseDouble(p.getLpre_precio_n())* Double.parseDouble(p.getProd_cant_n());
-                ventasCardViews.add(new VentaCardView(
-                        p.getProd_cve_n(),
-                        p.getProd_sku_str(),
-                        p.getProd_desc_str(),
-                        "$"+Utils.numFormatStr( p.getLpre_precio_n() ) ,
-                        p.getProd_cant_n(),
-                        "$"+Utils.numFormat(subtotal),
-                        p.getProd_cantiv_n()));
-
-                total+= subtotal;
-            }
-
-            ventaAdapterRecyclerView = new VentaAdapterRecyclerView(ventasCardViews, R.layout.cardview_venta);
-            ventasRecyclerView.setAdapter(ventaAdapterRecyclerView);
-            et_total.setText("$"+ Utils.numFormat(total));
-
+            subtotal = Double.parseDouble(p.getLpre_precio_n().replace("$",""))* Double.parseDouble(p.getProd_cant_n());
+            total+= subtotal;
         }
+        et_total.setText("$"+ Utils.numFormat(total));
+
+        Log.d("salida","Tamaño de dgprod: "+dgProd2.size());
+        Log.d("salida","Tamaño de dtproduc: "+dtProductos.size());
+
     }
-
-
 
 }

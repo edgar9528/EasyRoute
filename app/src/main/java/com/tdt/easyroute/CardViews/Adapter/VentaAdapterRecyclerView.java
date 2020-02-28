@@ -1,5 +1,6 @@
 package com.tdt.easyroute.CardViews.Adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,22 +9,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tdt.easyroute.CardViews.Model.CarteraCardView;
 import com.tdt.easyroute.CardViews.Model.VentaCardView;
+import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.Ventanas.Ventas.Venta.VentavenFragment;
 
 import java.util.ArrayList;
 
-import javax.security.auth.callback.Callback;
-
 public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterRecyclerView.VentaViewHolder> {
 
-    private ArrayList<VentaCardView> ventaCardViews;
+    private ArrayList<DataTableLC.ProductosPed> ventaCardViews;
     private int resource;
+    private VentavenFragment ventavenFragment;
 
-    public VentaAdapterRecyclerView(ArrayList<VentaCardView> ventaCardViews, int resource) {
+    public VentaAdapterRecyclerView(ArrayList<DataTableLC.ProductosPed> ventaCardViews, int resource, VentavenFragment ventavenFragment) {
         this.ventaCardViews = ventaCardViews;
         this.resource = resource;
+        this.ventavenFragment = ventavenFragment;
     }
 
     @NonNull
@@ -37,15 +40,14 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
 
     @Override
     public void onBindViewHolder(@NonNull VentaAdapterRecyclerView.VentaViewHolder ventaViewHolder, int position) {
-        final VentaCardView ventaCardView = ventaCardViews.get(position);
+        final DataTableLC.ProductosPed ventaCardView = ventaCardViews.get(position);
 
-        String producto = ventaCardView.getSku()+" - "+ ventaCardView.getProducto();
+        String producto = ventaCardView.getProd_sku_str()+" - "+ ventaCardView.getProd_desc_str();
         ventaViewHolder.tv_producto.setText( producto );
-        ventaViewHolder.tv_precio.setText( ventaCardView.getPrecio() );
-        ventaViewHolder.tv_cantidad.setText( ventaCardView.getCantidad() );
+        ventaViewHolder.tv_inventario.setText( ventaCardView.getProd_cantiv_n() );
+        ventaViewHolder.tv_precio.setText( ventaCardView.getLpre_precio_n() );
+        ventaViewHolder.tv_cantidad.setText( ventaCardView.getProd_cant_n() );
         ventaViewHolder.tv_subtotal.setText( ventaCardView.getSubtotal() );
-        ventaViewHolder.tv_inventario.setText( ventaCardView.getInventario() );
-
     }
 
     @Override
@@ -69,6 +71,35 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
             tv_cantidad = itemView.findViewById(R.id.tv_cantidad);
             tv_subtotal = itemView.findViewById(R.id.tv_subtotal);
         }
+    }
+
+    public void agregarItem(DataTableLC.ProductosPed producto)
+    {
+        ventaCardViews.add(getItemCount(),producto);
+        notifyItemInserted(getItemCount());
+
+        ventavenFragment.actualizarLista(ventaCardViews);
+    }
+
+    public void eliminarItem(int indice)
+    {
+        ventaCardViews.remove(indice);
+        notifyItemRemoved(indice);
+
+        ventavenFragment.actualizarLista(ventaCardViews);
+    }
+
+    public void actualizarItem(int indice, String lectura)
+    {
+        if(lectura!=null && !lectura.isEmpty())
+        {
+            ventaCardViews.get(indice).setProd_cant_n(lectura);
+            double subtotal = Double.parseDouble(ventaCardViews.get(indice).getLpre_precio_n().replace("$","")) * Double.parseDouble(lectura);
+            ventaCardViews.get(indice).setSubtotal("$"+ Utils.numFormat(subtotal));
+        }
+        notifyItemChanged(indice);
+
+        ventavenFragment.actualizarLista(ventaCardViews);
     }
 
 
