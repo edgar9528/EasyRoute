@@ -44,8 +44,6 @@ public class VentamainFragment extends Fragment {
         //CONFIGURACION DE LAS TABS
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_sug1) ));
-        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_sug2) ));
         tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_sug3) ));
         tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_ped2) ));
 
@@ -55,7 +53,7 @@ public class VentamainFragment extends Fragment {
 
         final PagerVentaAdapter adapter = new PagerVentaAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(2);
 
         viewPager.setAdapter(adapter);
 
@@ -85,19 +83,9 @@ public class VentamainFragment extends Fragment {
         return view;
     }
 
-    public void goPresentacion()
-    {
-        viewPager.setCurrentItem(1);
-    }
-
-    public void goProductos()
-    {
-        viewPager.setCurrentItem(2);
-    }
-
     public void goVenta()
     {
-        viewPager.setCurrentItem(3);
+        viewPager.setCurrentItem(1);
     }
 
 

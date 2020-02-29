@@ -8,46 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".Ventanas.Ventas.Venta.VentavenFragment">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:layout_marginStart="@dimen/paddingGeneral"
-        android:layout_marginEnd="@dimen/paddingGeneral"
-        android:layout_marginTop="@dimen/paddingGeneral"
-
-
-        >
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:theme="@style/EditTextBlack">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_sku"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/bt_buscar"
-                android:singleLine="true"
-                android:imeOptions="actionNext"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
-    </LinearLayout>
-
-
-
-
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ventasRecycler"
@@ -55,10 +15,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
 
-        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/linearLayout2"
+        android:layout_marginTop="@dimen/paddingGeneral"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
         >
@@ -89,7 +50,7 @@
             android:layout_weight="1"
             android:text="@string/bt_descuento"
             android:textAlignment="center"
-            android:theme="@style/ButtonDarkSmall"
+            android:theme="@style/ButtonDark"
             android:layout_gravity="center"
             />
 

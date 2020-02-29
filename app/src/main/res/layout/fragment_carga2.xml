@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_buscar"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -211,7 +211,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_salir"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_aplicar"
@@ -225,7 +225,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_aplicar"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
         app:layout_constraintBottom_toBottomOf="parent"

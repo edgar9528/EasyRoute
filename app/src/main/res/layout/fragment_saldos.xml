@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:tag="deselec"
         android:text="@string/bt_salir"
-        android:theme="@style/RaisedButtonDark"
+        android:theme="@style/ButtonDark"
 
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginBottom="@dimen/paddingGeneral"
@@ -91,7 +91,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_regresar"
-        android:theme="@style/RaisedButtonDark"
+        android:theme="@style/ButtonDark"
 
         android:layout_marginEnd="@dimen/paddingGeneral"
 

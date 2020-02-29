@@ -110,7 +110,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_agregarAbono"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_eliminar"
@@ -124,7 +124,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_eliminarAbono"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBaseline_toBaselineOf="@+id/button_agregar"
         app:layout_constraintBottom_toBottomOf="parent"

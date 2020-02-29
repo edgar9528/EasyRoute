@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/paddingGeneral"
+    android:orientation="vertical"
+    android:background="@color/item2"
+    >
+
+    <TextView
+        android:id="@+id/rowSecondText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+
+        android:paddingStart="28dp"
+        android:paddingEnd="@dimen/paddingGeneral"
+        />
+
+</LinearLayout>

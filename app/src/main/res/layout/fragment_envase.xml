@@ -64,7 +64,7 @@
             android:layout_weight="1"
             android:text="@string/bt_correcto"
             android:textAlignment="center"
-            android:theme="@style/ButtonDarkSmall"
+            android:theme="@style/ButtonDark"
             android:layout_gravity="center"
             />
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -311,15 +312,14 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
 
                 //SE CREA SPINNER Y SU METODO ONCLICK
                 spinnerDialog = new SpinnerDialog(getActivity(), rutas, getResources().getString(R.string.sp_selecRuta), getResources().getString(R.string.bt_cancelar));
-                //spinnerDialog=new SpinnerDialog(getActivity(),rutas,"Selecciona una ruta",R.style.DialogAnimations_SmileWindow,"Cerrar");
-
                 spinnerDialog.setCancellable(true); // for cancellable
-                spinnerDialog.setShowKeyboard(false);// for open keyboard by default
+                spinnerDialog.setShowKeyboard(true);// for open keyboard by default
 
                 spinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
                     @Override
                     public void onClick(String item, int position) {
                         et_ruta.setText(item);
+
                         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         mgr.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 

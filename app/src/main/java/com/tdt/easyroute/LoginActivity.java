@@ -120,7 +120,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                     startActivity(intent);
 
                     /*Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
-                    startActivity(intent);*/
+                    startActivity(intent);
+                     */
 
                 }
             });

@@ -427,5 +427,7 @@
     <string name="msg_ventaCan">Inventario:</string>
     <string name="tv_precio">Precio</string>
     <string name="tv_subtotal">Subtotal</string>
+    <string name="err_ped24">Error al actualizar lista</string>
+    <string name="err_ped25">Error al cargar fragment venta</string>
 
 </resources>

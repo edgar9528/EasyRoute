@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="@string/bt_buscar"
-            android:theme="@style/ButtonDarkSmall"
+            android:theme="@style/ButtonDark"
             android:layout_gravity="center"
             />
 
@@ -121,7 +121,7 @@
             android:layout_weight="2"
             android:drawableTop="@drawable/user_del"
             android:text="@string/bt_quitar"
-            android:theme="@style/ButtonDarkSmall" />
+            android:theme="@style/ButtonDark" />
 
         <Button
             android:id="@+id/b_editar"
@@ -131,7 +131,7 @@
             android:layout_weight="2"
             android:drawableTop="@drawable/user_edit"
             android:text="@string/bt_editar"
-            android:theme="@style/ButtonDarkSmall" />
+            android:theme="@style/ButtonDark" />
 
         <Button
             android:id="@+id/b_subir"
@@ -141,7 +141,7 @@
             android:layout_weight="2"
             android:drawableTop="@drawable/up"
             android:text="@string/bt_subir"
-            android:theme="@style/ButtonDarkSmall" />
+            android:theme="@style/ButtonDark" />
 
         <Button
             android:id="@+id/b_bajar"
@@ -151,7 +151,7 @@
             android:layout_weight="2"
             android:drawableTop="@drawable/down"
             android:text="@string/bt_bajar"
-            android:theme="@style/ButtonDarkSmall" />
+            android:theme="@style/ButtonDark" />
     </LinearLayout>
 
 
@@ -160,7 +160,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_salir"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/b_enviar"
@@ -175,7 +175,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_enviar"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBaseline_toBaselineOf="@+id/b_salir"
         app:layout_constraintBottom_toBottomOf="parent"

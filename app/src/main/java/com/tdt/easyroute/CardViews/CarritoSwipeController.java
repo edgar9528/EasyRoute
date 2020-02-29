@@ -21,12 +21,12 @@ import static androidx.recyclerview.widget.ItemTouchHelper.*;
 
 
 
-public class SwipeController extends Callback {
+public class CarritoSwipeController extends Callback {
 
     Activity activity;
     private SwipeControllerActions buttonsActions = null;
 
-    public SwipeController(SwipeControllerActions buttonsActions,Activity activity) {
+    public CarritoSwipeController(SwipeControllerActions buttonsActions, Activity activity) {
         this.buttonsActions = buttonsActions;
         this.activity = activity;
     }

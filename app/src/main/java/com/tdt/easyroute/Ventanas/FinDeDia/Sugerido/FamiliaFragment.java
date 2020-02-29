@@ -174,7 +174,6 @@ public class FamiliaFragment extends Fragment {
             Log.d("salida","Error: "+e.getMessage());
             Toast.makeText(getContext(), getString(R.string.error_cargarProduc), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void obtenerFamilias()

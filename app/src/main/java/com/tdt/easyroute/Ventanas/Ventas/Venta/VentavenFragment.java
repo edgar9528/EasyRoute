@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +21,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.tdt.easyroute.CardViews.Adapter.VentaAdapterRecyclerView;
-import com.tdt.easyroute.CardViews.Model.VentaCardView;
-import com.tdt.easyroute.CardViews.SwipeController;
+import com.tdt.easyroute.CardViews.CarritoSwipeController;
 import com.tdt.easyroute.CardViews.SwipeControllerActions;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Model.DataTableLC;
@@ -31,7 +29,6 @@ import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class VentavenFragment extends Fragment {
@@ -67,38 +64,47 @@ public class VentavenFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ventaven, container, false);
-        ventamainFragment = (VentamainFragment) getParentFragment();
-        et_total = view.findViewById(R.id.et_total);
 
 
-        RecyclerView ventasRecyclerView = view.findViewById(R.id.ventasRecycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        ventasRecyclerView.setLayoutManager(linearLayoutManager);
+        try {
 
-        ArrayList<DataTableLC.ProductosPed> ventasCardViews = new ArrayList<>();
+            ventamainFragment = (VentamainFragment) getParentFragment();
+            et_total = view.findViewById(R.id.et_total);
 
-        ventaAdapterRecyclerView = new VentaAdapterRecyclerView(ventasCardViews, R.layout.cardview_venta,this);
-        ventasRecyclerView.setAdapter(ventaAdapterRecyclerView);
 
-        SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
-            @Override
-            public void onRightClicked(int position) {
-                ventaAdapterRecyclerView.eliminarItem(position);
-            }
-            @Override
-            public void onLeftClicked(int position)
-            {
-                ingresarCantidad(position,dgProd2.get(position));
-            }
-        },getActivity());
+            RecyclerView ventasRecyclerView = view.findViewById(R.id.ventasRecycler);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            ventasRecyclerView.setLayoutManager(linearLayoutManager);
 
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        itemTouchhelper.attachToRecyclerView(ventasRecyclerView);
+            ArrayList<DataTableLC.ProductosPed> ventasCardViews = new ArrayList<>();
 
+            ventaAdapterRecyclerView = new VentaAdapterRecyclerView(ventasCardViews, R.layout.cardview_venta, this);
+            ventasRecyclerView.setAdapter(ventaAdapterRecyclerView);
+
+            CarritoSwipeController carritoSwipeController = new CarritoSwipeController(new SwipeControllerActions() {
+                @Override
+                public void onRightClicked(int position) {
+                    ventaAdapterRecyclerView.eliminarItem(position);
+                }
+
+                @Override
+                public void onLeftClicked(int position) {
+                    ingresarCantidad(position, dgProd2.get(position));
+                }
+            }, getActivity());
+
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(carritoSwipeController);
+            itemTouchhelper.attachToRecyclerView(ventasRecyclerView);
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped25), e.getMessage());
+        }
 
         return view;
     }
@@ -132,35 +138,38 @@ public class VentavenFragment extends Fragment {
 
     private void AgregarProducto(String cve_producto)
     {
-        ArrayList<DataTableLC.ProductosPed> re;
+        try {
+            ArrayList<DataTableLC.ProductosPed> re;
 
-        re = BuscarProducto(cve_producto, dgProd2);
-        if(re.size()>0)
-        {
-            int indice = dgProd2.indexOf(re.get(0));
-            ingresarCantidad(indice,re.get(0));
-        }
-        else
-        {
-            re= BuscarProducto(cve_producto, dtProductos);
-            if(re.size()>0)
-            {
-                ingresarCantidad(-1,re.get(0));
+            re = BuscarProducto(cve_producto, dgProd2);
+            if (re.size() > 0) {
+                int indice = dgProd2.indexOf(re.get(0));
+                ingresarCantidad(indice, re.get(0));
+            } else {
+                re = BuscarProducto(cve_producto, dtProductos);
+                if (re.size() > 0) {
+                    ingresarCantidad(-1, re.get(0));
+                }
             }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
         }
     }
 
     private ArrayList<DataTableLC.ProductosPed> BuscarProducto(String cve, ArrayList<DataTableLC.ProductosPed> arrayList)
     {
-        ArrayList<DataTableLC.ProductosPed> producto= new ArrayList<>();
-
-        for(int i=0; i<arrayList.size();i++)
-        {
-            if(cve.equals( arrayList.get(i).getProd_cve_n() ))
-            {
-                producto.add( arrayList.get(i) ) ;
-                i=arrayList.size();
+        ArrayList<DataTableLC.ProductosPed> producto = new ArrayList<>();
+        try {
+            for (int i = 0; i < arrayList.size(); i++) {
+                if (cve.equals(arrayList.get(i).getProd_cve_n())) {
+                    producto.add(arrayList.get(i));
+                    i = arrayList.size();
+                }
             }
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
         }
         return producto;
     }
@@ -219,44 +228,45 @@ public class VentavenFragment extends Fragment {
 
     private void actualizarProductos(int indice,String lectura, final DataTableLC.ProductosPed prod)
     {
-        if(lectura==null || lectura.isEmpty())
-            lectura="0";
+        try {
+            if (lectura == null || lectura.isEmpty())
+                lectura = "0";
 
-        if (indice != -1)
+            if (indice != -1) {
+                ventaAdapterRecyclerView.actualizarItem(indice, lectura);
+            } else {
+                String precio = prod.getLpre_precio_n().replace("$", "");
+
+                double subtotal = Double.parseDouble(precio) * Double.parseDouble(lectura);
+
+                prod.setProd_cant_n(lectura);
+                prod.setSubtotal("$" + Utils.numFormat(subtotal));
+                prod.setLpre_precio_n("$" + Utils.numFormatStr(precio));
+
+                ventaAdapterRecyclerView.agregarItem(prod);
+            }
+        }catch (Exception e)
         {
-            ventaAdapterRecyclerView.actualizarItem(indice,lectura);
-        }
-        else
-        {
-            String precio = prod.getLpre_precio_n().replace("$","");
-
-            double subtotal = Double.parseDouble(precio)* Double.parseDouble(lectura);
-
-            prod.setProd_cant_n(lectura);
-            prod.setSubtotal( "$"+Utils.numFormat(subtotal) );
-            prod.setLpre_precio_n( "$"+ Utils.numFormatStr(precio));
-
-            ventaAdapterRecyclerView.agregarItem(prod);
+            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
         }
     }
 
     public void actualizarLista(ArrayList<DataTableLC.ProductosPed> productos)
     {
-       dgProd2 =  productos;
-       pedidosVM.setDgPro2(dgProd2);
+        try {
+            dgProd2 = productos;
+            pedidosVM.setDgPro2(dgProd2);
 
-
-        double subtotal,total =0;
-        for (DataTableLC.ProductosPed p: dgProd2)
+            double subtotal, total = 0;
+            for (DataTableLC.ProductosPed p : dgProd2) {
+                subtotal = Double.parseDouble(p.getLpre_precio_n().replace("$", "")) * Double.parseDouble(p.getProd_cant_n());
+                total += subtotal;
+            }
+            et_total.setText("$" + Utils.numFormat(total));
+        }catch (Exception e)
         {
-            subtotal = Double.parseDouble(p.getLpre_precio_n().replace("$",""))* Double.parseDouble(p.getProd_cant_n());
-            total+= subtotal;
+            Utils.msgError(getContext(), getString(R.string.err_ped24), e.getMessage());
         }
-        et_total.setText("$"+ Utils.numFormat(total));
-
-        Log.d("salida","Tamaño de dgprod: "+dgProd2.size());
-        Log.d("salida","Tamaño de dtproduc: "+dtProductos.size());
-
     }
 
 }

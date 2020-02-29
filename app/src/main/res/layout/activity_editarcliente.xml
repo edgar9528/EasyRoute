@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/bt_salir"
-                android:theme="@style/ButtonDarkSmall"
+                android:theme="@style/ButtonDark"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/salir"
                 />
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/bt_ubicacion"
-                android:theme="@style/ButtonDarkSmall"
+                android:theme="@style/ButtonDark"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/ubicacion"
                 />
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="@string/bt_guardar"
-                android:theme="@style/ButtonDarkSmall"
+                android:theme="@style/ButtonDark"
                 android:layout_gravity="center"
                 android:drawableTop="@drawable/guardar"
                 />

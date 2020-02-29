@@ -35,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_salir"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_imprimir1"
@@ -50,7 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_impPre"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
 
         app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -63,7 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_impSku"
-        android:theme="@style/ButtonDarkSmall"
+        android:theme="@style/ButtonDark"
         app:layout_constraintBaseline_toBaselineOf="@+id/button_salir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_imprimir1"
