@@ -113,13 +113,13 @@ public class ClientesCarFragment extends Fragment {
                 {
                     rs+= dgCartera.get(i).getSaldo();
                 }
-                saldoStr = getResources().getString(R.string.tv_saldoRuta) +Utils.numFormat(rs);
+                saldoStr = getResources().getString(R.string.tv_saldoRuta) +" "+  string.FormatoPesos(rs);
                 tv_ruta.setText(saldoStr);
                 mostrarCartera();
             }
             else
             {
-                saldoStr = getResources().getString(R.string.tv_saldoRuta) +"0.00";
+                saldoStr = getResources().getString(R.string.tv_saldoRuta) +" "+ string.FormatoPesos(rs);
                 tv_ruta.setText(saldoStr);
             }
 
@@ -166,7 +166,7 @@ public class ClientesCarFragment extends Fragment {
 
                 ((TextView) tr.findViewById(R.id.t_cliente)).setText(d.getCli_cveext_str());
                 ((TextView) tr.findViewById(R.id.t_negocio)).setText(d.getCli_nombrenegocio_str());
-                ((TextView) tr.findViewById(R.id.t_saldo)).setText("$" + Utils.numFormat(d.getSaldo()));
+                ((TextView) tr.findViewById(R.id.t_saldo)).setText( string.FormatoPesos(d.getSaldo()) );
                 ((TextView) tr.findViewById(R.id.t_razon)).setText(d.getCli_razonsocial_str());
                 tr.setTag(d.getCli_cve_n()); //se le asigna el cve a la final
 
@@ -241,12 +241,11 @@ public class ClientesCarFragment extends Fragment {
                 if(negocio.length()>13)
                     negocio=negocio.substring(0,13);
 
-                menImp+= string.formatSql("{0} {1} {2}",r.getCli_cveext_str(),negocio, Utils.numFormat(r.getSaldo()) )+"\n";
+                menImp+= string.formatSql("{0} {1} {2}",r.getCli_cveext_str(),negocio, string.FormatoPesos(r.getSaldo()) )+"\n";
                 TotCartera+=r.getSaldo();
             }
 
-            menImp+= "\nSaldo Total Ruta: $"+ Utils.numFormat(TotCartera);
-
+            menImp+= "\nSaldo Total Ruta: "+ string.FormatoPesos(TotCartera);
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle(getString(R.string.msg_impInv));

@@ -11,7 +11,6 @@
     tools:ignore="ContentDescription"
 
     card_view:cardCornerRadius="4dp"
-
     >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +21,6 @@
             android:background="@color/bgDefault"
             android:padding="@dimen/paddingCardView"
             >
-
 
             <TextView
                 android:id="@+id/tv_producto"
@@ -36,7 +34,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 />
 
 
@@ -46,11 +43,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-
                 app:layout_constraintTop_toBottomOf="@id/tv_producto"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/linearLayout2">
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -70,7 +65,6 @@
                     android:textSize="16sp"
                     android:textColor="@color/colorPrimaryDark"
                     />
-
             </LinearLayout>
 
 
@@ -81,7 +75,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-
                 app:layout_constraintTop_toBottomOf="@id/tv_producto"
                 app:layout_constraintStart_toEndOf="@id/linearLayout1"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +89,6 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     />
-
                 <TextView
                     android:id="@+id/tv_precio"
                     android:layout_width="0dp"
@@ -107,9 +99,7 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textAlignment="textEnd"
                     />
-
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
@@ -117,12 +107,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-
                 app:layout_constraintTop_toBottomOf="@id/linearLayout1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/linearLayout4"
                 >
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -142,7 +130,6 @@
                     android:textSize="16sp"
                     android:textColor="@color/colorPrimaryDark"
                     />
-
             </LinearLayout>
 
 

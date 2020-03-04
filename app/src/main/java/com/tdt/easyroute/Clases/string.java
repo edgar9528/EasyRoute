@@ -2,6 +2,9 @@ package com.tdt.easyroute.Clases;
 
 import android.util.Log;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class string {
 
     public static String formatSql(String consulta, String... parametros)
@@ -94,5 +97,34 @@ public class string {
 
         return llenos;
 
+    }
+
+    public static String FormatoPesos(double cantidad)
+    {
+        try
+        {
+            Locale locale = new Locale("es", "MX");
+            NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+            return nf.format(cantidad);
+        }
+        catch (Exception e)
+        {
+            return "$0.00";
+        }
+    }
+
+    public static String FormatoPesos(String cantidadStr)
+    {
+        try
+        {
+            double cantidad = Double.parseDouble(cantidadStr);
+            Locale locale = new Locale("es", "MX");
+            NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+            return nf.format(cantidad);
+        }
+        catch (Exception e)
+        {
+            return "$0.00";
+        }
     }
 }

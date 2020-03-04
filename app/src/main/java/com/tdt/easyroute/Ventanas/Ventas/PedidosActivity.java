@@ -27,6 +27,7 @@ import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Clases.ViewPagerNonSwipable;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
@@ -49,6 +50,8 @@ public class PedidosActivity extends AppCompatActivity {
     private boolean PorEscanear;
     private String PositionStr;
     private boolean removerVenta = false;
+
+    private String _estadoCredito;
 
     Configuracion conf;
     DataTableLC.DtCliVentaNivel rc;
@@ -122,12 +125,12 @@ public class PedidosActivity extends AppCompatActivity {
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = findViewById(R.id.pager);
+        final ViewPagerNonSwipable viewPager = findViewById(R.id.pager);
         final PagerPedidosAdapter adapter = new PagerPedidosAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setOffscreenPageLimit(4);
-
         viewPager.setAdapter(adapter);
+        viewPager.setPagingEnabled(false);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -1184,6 +1187,8 @@ public class PedidosActivity extends AppCompatActivity {
     {
         try
         {
+
+            Log.d("salida", "Entro activar credito");
             ListarFormaPago();
 
             boolean SinCredito = false;
@@ -1217,26 +1222,26 @@ public class PedidosActivity extends AppCompatActivity {
             if (  !Utils.getBool( rc.getCli_credito_n()))
             {
                 SinCredito = true;
-                //lblEstCredito.Text = "Sin Crédito";
+                _estadoCredito = "Sin Crédito";
                 return SinCredito;
             }
             if ( !rc.getCli_estcredito_str().equals("A"))
             {
                 SinCredito = true;
-                //lblEstCredito.Text = "Cancelado";
+                _estadoCredito = "Cancelado";
                 return SinCredito;
             }
 
             if (disponible <= 0)
             {
                 SinCredito = true;
-                //lblEstCredito.Text = "Sin disponible";
+                _estadoCredito = "Sin disponible";
                 return SinCredito;
             }
             if (saldoVencido - totAbono > 0)
             {
                 SinCredito = true;
-                //lblEstCredito.Text = "Vencido";
+                _estadoCredito = "Vencido";
                 return SinCredito;
             }
 
@@ -1380,5 +1385,19 @@ public class PedidosActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    //region variables compartidas
+
+    public boolean getEsVenta()
+    {
+        return esventa;
+    }
+    public String getEstadoCredito()
+    {
+        return _estadoCredito;
+    }
+
+    //endregion
 
 }

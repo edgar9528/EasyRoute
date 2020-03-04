@@ -10,12 +10,8 @@ import java.util.ArrayList;
 
 public class PedidosVM extends ViewModel
 {
-
     private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dtProductos = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dgPro2 = new MutableLiveData<>();
-
-    private final MutableLiveData<String> familia = new MutableLiveData<>();
-    private final MutableLiveData<String> presentacion = new MutableLiveData<>();
     private final MutableLiveData<String> producto = new MutableLiveData<>();
 
     public LiveData<ArrayList<DataTableLC.ProductosPed>> getDtProductos(){
@@ -32,24 +28,13 @@ public class PedidosVM extends ViewModel
         dgPro2.setValue(DgPro2);
     }
 
-    public LiveData<String> getFamilia(){
-        return familia;
-    }
-    public void setFamilia(String Familia){
-        familia.setValue(Familia);
-    }
-
-    public LiveData<String> getPresentacion(){
-        return presentacion;
-    }
-    public void setPresentacion(String Presentacion){
-        presentacion.setValue(Presentacion);
-    }
-
     public LiveData<String> getProducto(){
         return producto;
     }
     public void setProducto(String Producto){
         producto.setValue(Producto);
     }
+
+
+
 }

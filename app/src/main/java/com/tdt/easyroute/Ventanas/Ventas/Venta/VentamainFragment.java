@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 import com.tdt.easyroute.Adapter.PagerVentaAdapter;
+import com.tdt.easyroute.Clases.ViewPagerNonSwipable;
 import com.tdt.easyroute.R;
 
 
 public class VentamainFragment extends Fragment {
 
-    private ViewPager viewPager;
+    private ViewPagerNonSwipable viewPager;
 
     public VentamainFragment() {
         // Required empty public constructor
@@ -46,7 +47,6 @@ public class VentamainFragment extends Fragment {
 
         tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_sug3) ));
         tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_ped2) ));
-
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager =  view.findViewById(R.id.pager);
@@ -54,12 +54,12 @@ public class VentamainFragment extends Fragment {
         final PagerVentaAdapter adapter = new PagerVentaAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setOffscreenPageLimit(2);
-
         viewPager.setAdapter(adapter);
+        viewPager.setPagingEnabled(false);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -67,18 +67,14 @@ public class VentamainFragment extends Fragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 
         //TERMINA CONFIGURACION DE LAS TABS
-
-
 
         return view;
     }

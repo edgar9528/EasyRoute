@@ -11,7 +11,11 @@ import androidx.lifecycle.ViewModelProviders;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.tdt.easyroute.CardViews.Adapter.ProductosThreeListAdapter;
 import com.tdt.easyroute.Clases.Utils;
@@ -32,23 +36,16 @@ public class FamiliavenFragment extends Fragment {
     private VentamainFragment ventamainFragment;
 
     ExpandableListView expandableListView;
+    AutoCompleteTextView tv_buscar;
 
     private ArrayList<DataTableLC.ProductosPed> dtProductos;
-
     private ArrayList<String> familiasAL=null;
     private ArrayList<String> presentacionesAL=null;
     private ArrayList<String> productosAL=null;
+    private ArrayList<String> productosTotalAL;
 
     public FamiliavenFragment() {
         // Required empty public constructor
-    }
-
-    public static FamiliavenFragment newInstance(String param1, String param2) {
-        FamiliavenFragment fragment = new FamiliavenFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -63,9 +60,19 @@ public class FamiliavenFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_familiaven, container, false);
 
+        tv_buscar = view.findViewById(R.id.tv_buscar);
+        tv_buscar.setThreshold(1);
+        tv_buscar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                tv_buscar.setText("");
+                String item = parent.getItemAtPosition(position).toString();
+                ProductoSeleccionado(item);
+            }
+        });
+
         vista=view;
         ventamainFragment = (VentamainFragment) getParentFragment();
-
 
         return view;
     }
@@ -78,7 +85,6 @@ public class FamiliavenFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<DataTableLC.ProductosPed> productosPeds) {
                 dtProductos = productosPeds;
-
                 crearRecycler();
             }
         });
@@ -87,6 +93,7 @@ public class FamiliavenFragment extends Fragment {
 
     private void crearRecycler()
     {
+        productosTotalAL= new ArrayList<>();
         List<String[]> secondLevel = new ArrayList<>();
         LinkedHashMap<String, String[]> thirdLevel;
         List<LinkedHashMap<String, String[]>> data = new ArrayList<>();
@@ -109,6 +116,9 @@ public class FamiliavenFragment extends Fragment {
             }
             data.add(thirdLevel);
         }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, productosTotalAL);
+        tv_buscar.setAdapter(adapter);
 
         // expandable listview
         expandableListView = (ExpandableListView) vista.findViewById(R.id.expandible_listview);
@@ -181,7 +191,10 @@ public class FamiliavenFragment extends Fragment {
 
             for (DataTableLC.ProductosPed p : dtProductos) {
                 if (p.getFam_desc_str().equals(fam) && p.getPres_desc_str().equals(pres))
+                {
                     productosAL.add(p.getProd_sku_str() + "\n" + p.getProd_desc_str());
+                    productosTotalAL.add( p.getProd_sku_str() + "\n" + p.getProd_desc_str() );
+                }
             }
         }catch (Exception e)
         {

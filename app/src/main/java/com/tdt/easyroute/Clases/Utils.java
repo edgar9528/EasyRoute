@@ -88,7 +88,6 @@ public class Utils {
 
                 break;
         }
-
         return valor;
     }
 
@@ -625,35 +624,6 @@ public class Utils {
         return clientes;
     }
 
-    public static String numFormat(double numero) {
-        DecimalFormat df = new DecimalFormat("#.00");
-        return df.format(numero);
-    }
-
-    public static String numFormatStr(String numero)
-    {
-        try
-        {
-            double num = Double.parseDouble(numero);
-            DecimalFormat df = new DecimalFormat("#.00");
-            return df.format(num);
-
-        }catch (Exception e)
-        {
-            return "0.00";
-        }
-    }
-
-    public static String strToNum(String numeroStr) {
-        try {
-            double numero = Double.parseDouble(numeroStr);
-            DecimalFormat df = new DecimalFormat("00.00");
-            return df.format(numero);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     public static VisitaPrev ObtenerVisitaPrevBebidas(long cliente,Context context)
     {
         VisitaPrev vis = new VisitaPrev();
@@ -904,8 +874,6 @@ public class Utils {
         });
         dialogo1.show();
     }
-
-
 
     public static double Distancia(String gps1, String gps2)
     {

@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.Clientes.Cartera;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -92,6 +93,7 @@ public class SaldosFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -163,9 +165,9 @@ public class SaldosFragment extends Fragment {
                 rsc += saldo;
 
                 credito = s.getCred_referencia_str();
-                monto = "$" + Utils.strToNum(s.getCred_monto_n());
-                abono = "$" + Utils.strToNum(s.getAbono());
-                saldoStr = "$" + Utils.numFormat(saldo);
+                monto = string.FormatoPesos( s.getCred_monto_n() );
+                abono = string.FormatoPesos(s.getAbono());
+                saldoStr = string.FormatoPesos(saldo);
 
                 carteraCardViews.add(new CarteraCardView(credito, monto, abono, saldoStr));
             }
@@ -176,7 +178,7 @@ public class SaldosFragment extends Fragment {
             tv_cve.setText(dgSaldos.get(0).getCli_cveext_str());
             tv_negocio.setText(negocio);
             tv_razon.setText(razonSocial);
-            String saldoC = getResources().getString(R.string.tv_saldoCliente) + Utils.numFormat(rsc);
+            String saldoC = getResources().getString(R.string.tv_saldoCliente) + string.FormatoPesos(rsc);
             tv_cliente.setText(saldoC);
         }
         catch (Exception e)

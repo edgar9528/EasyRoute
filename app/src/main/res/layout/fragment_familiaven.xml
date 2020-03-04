@@ -22,14 +22,15 @@
         android:layout_marginTop="@dimen/paddingGeneral"
         >
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_buscar"
+
+        <AutoCompleteTextView
+            android:id="@+id/tv_buscar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bt_buscar"
-            android:singleLine="true"
-            android:imeOptions="actionNext"
             />
+
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <ExpandableListView

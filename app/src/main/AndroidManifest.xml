@@ -18,13 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-
-        <activity android:name=".Ventanas.Preventa.PreventaActivity"></activity>
-
-        <activity android:name=".Ventanas.Ventas.PedidosActivity"
-            android:windowSoftInputMode="adjustPan"
-            />
-
+        <activity android:name=".Ventanas.Preventa.PreventaActivity" />
+        <activity
+            android:name=".Ventanas.Ventas.PedidosActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Ventanas.Inventario.Carga2Activity" />
         <activity
             android:name=".LoginActivity"

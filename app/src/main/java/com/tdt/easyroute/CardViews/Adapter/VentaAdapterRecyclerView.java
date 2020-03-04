@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tdt.easyroute.CardViews.Model.VentaCardView;
 import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.Ventanas.Ventas.Venta.VentavenFragment;
@@ -95,7 +96,7 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
         {
             ventaCardViews.get(indice).setProd_cant_n(lectura);
             double subtotal = Double.parseDouble(ventaCardViews.get(indice).getLpre_precio_n().replace("$","")) * Double.parseDouble(lectura);
-            ventaCardViews.get(indice).setSubtotal("$"+ Utils.numFormat(subtotal));
+            ventaCardViews.get(indice).setSubtotal(string.FormatoPesos(subtotal));
         }
         notifyItemChanged(indice);
 

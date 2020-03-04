@@ -83,7 +83,7 @@
     <string name="bt_subir">Up</string>
     <string name="bt_bajar">Down</string>
     <string name="bt_agregar">Add</string>
-    <string name="tv_saldoRuta">Balance route: $</string>
+    <string name="tv_saldoRuta">Balance route: </string>
     <string name="hint_sku">SKU</string>
     <string name="hint_cantidad">Quantity</string>
     <string name="bt_correcto">✓</string>
@@ -134,7 +134,7 @@
     <string name="tl_orde1">Customers of the day</string>
     <string name="tl_orde2">Customers out</string>
     <string name="title_buscli">Search clients</string>
-    <string name="tv_saldoCliente">Customer Balance: $</string>
+    <string name="tv_saldoCliente">Customer Balance: </string>
     <string name="diasSemana">Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday</string>
     <string name="msg_cargando">Loading</string>
     <string name="msg_importante">Important</string>

@@ -1,6 +1,7 @@
 package com.tdt.easyroute.Ventanas.Ventas.Venta;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,19 +14,24 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.tdt.easyroute.CardViews.Adapter.VentaAdapterRecyclerView;
 import com.tdt.easyroute.CardViews.CarritoSwipeController;
 import com.tdt.easyroute.CardViews.SwipeControllerActions;
 import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.LoginActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.Ventanas.Ventas.PedidosActivity;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
@@ -35,26 +41,13 @@ public class VentavenFragment extends Fragment {
 
     private PedidosVM pedidosVM;
 
-    private VentamainFragment ventamainFragment;
-
     private ArrayList<DataTableLC.ProductosPed> dtProductos;
     private ArrayList<DataTableLC.ProductosPed> dgProd2;
-
     private VentaAdapterRecyclerView ventaAdapterRecyclerView;
-
     private EditText et_total;
+    private boolean esVenta;
 
-    public VentavenFragment() {
-        // Required empty public constructor
-    }
-
-    public static VentavenFragment newInstance(String param1, String param2) {
-        VentavenFragment fragment = new VentavenFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public VentavenFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,11 +63,12 @@ public class VentavenFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_ventaven, container, false);
 
 
-        try {
+        try
+        {
+            PedidosActivity pedidosActivity = (PedidosActivity) getActivity();
+            esVenta=pedidosActivity.getEsVenta();
 
-            ventamainFragment = (VentamainFragment) getParentFragment();
             et_total = view.findViewById(R.id.et_total);
-
 
             RecyclerView ventasRecyclerView = view.findViewById(R.id.ventasRecycler);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -89,9 +83,8 @@ public class VentavenFragment extends Fragment {
             CarritoSwipeController carritoSwipeController = new CarritoSwipeController(new SwipeControllerActions() {
                 @Override
                 public void onRightClicked(int position) {
-                    ventaAdapterRecyclerView.eliminarItem(position);
+                    EliminarProducto(position);
                 }
-
                 @Override
                 public void onLeftClicked(int position) {
                     ingresarCantidad(position, dgProd2.get(position));
@@ -155,6 +148,29 @@ public class VentavenFragment extends Fragment {
         {
             Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
         }
+    }
+
+    private void EliminarProducto(final int indice)
+    {
+        String men = getString(R.string.msg_ped) + " \n"+ dgProd2.get(indice).getProd_sku_str()+"\n"+ dgProd2.get(indice).getProd_desc_str();
+
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+        dialogo1.setTitle(getResources().getString(R.string.msg_importante));
+        dialogo1.setMessage( men );
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getResources().getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                ventaAdapterRecyclerView.eliminarItem(indice);
+            }
+        });
+        dialogo1.setNegativeButton(getResources().getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ventaAdapterRecyclerView.actualizarItem(indice,null);
+            }
+        });
+        dialogo1.show();
+
     }
 
     private ArrayList<DataTableLC.ProductosPed> BuscarProducto(String cve, ArrayList<DataTableLC.ProductosPed> arrayList)
@@ -232,6 +248,12 @@ public class VentavenFragment extends Fragment {
             if (lectura == null || lectura.isEmpty())
                 lectura = "0";
 
+            if (Integer.parseInt(prod.getProd_cantiv_n()) < Integer.parseInt(lectura) && esVenta)
+            {
+                lectura="0";
+                Toast.makeText(getContext(), getString(R.string.tt_ped14), Toast.LENGTH_SHORT).show();
+            }
+
             if (indice != -1) {
                 ventaAdapterRecyclerView.actualizarItem(indice, lectura);
             } else {
@@ -240,11 +262,12 @@ public class VentavenFragment extends Fragment {
                 double subtotal = Double.parseDouble(precio) * Double.parseDouble(lectura);
 
                 prod.setProd_cant_n(lectura);
-                prod.setSubtotal("$" + Utils.numFormat(subtotal));
-                prod.setLpre_precio_n("$" + Utils.numFormatStr(precio));
+                prod.setSubtotal(string.FormatoPesos(subtotal));
+                prod.setLpre_precio_n( string.FormatoPesos( precio ) );
 
                 ventaAdapterRecyclerView.agregarItem(prod);
             }
+
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
@@ -262,7 +285,7 @@ public class VentavenFragment extends Fragment {
                 subtotal = Double.parseDouble(p.getLpre_precio_n().replace("$", "")) * Double.parseDouble(p.getProd_cant_n());
                 total += subtotal;
             }
-            et_total.setText("$" + Utils.numFormat(total));
+            et_total.setText( string.FormatoPesos(total));
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_ped24), e.getMessage());

@@ -87,7 +87,7 @@
     <string name="bt_subir">Subir</string>
     <string name="bt_bajar">Bajar</string>
     <string name="bt_agregar">Agregar</string>
-    <string name="tv_saldoRuta">Saldo ruta: $</string>
+    <string name="tv_saldoRuta">Saldo ruta: </string>
     <string name="hint_sku">SKU</string>
     <string name="hint_cantidad">Cantidad</string>
     <string name="bt_correcto">✓</string>
@@ -138,7 +138,7 @@
     <string name="tl_orde1">Clientes del día</string>
     <string name="tl_orde2">Clientes fuera</string>
     <string name="title_buscli">Buscar clientes</string>
-    <string name="tv_saldoCliente">Saldo cliente: $</string>
+    <string name="tv_saldoCliente">Saldo cliente: </string>
     <string name="diasSemana">Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo  </string>
     <string name="msg_cargando">Cargando</string>
     <string name="msg_importante">Importante</string>
@@ -429,5 +429,21 @@
     <string name="tv_subtotal">Subtotal</string>
     <string name="err_ped24">Error al actualizar lista</string>
     <string name="err_ped25">Error al cargar fragment venta</string>
+    <string name="title_activity_fab">fabActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="tv_idPago">ID Pago</string>
+    <string name="tv_banco">Banco</string>
+    <string name="tv_referencia">Referencia</string>
+    <string name="tt_ped14">Inventario insuficiente</string>
+    <string name="msg_ped1">Desea eliminar el producro</string>
+    <string name="msg_ped">Desea eliminar el producto:</string>
 
 </resources>

@@ -31,8 +31,10 @@ import com.tdt.easyroute.Ventanas.PruebasActivity;
 
 import org.ksoap2.serialization.PropertyInfo;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class LoginActivity extends AppCompatActivity implements AsyncResponseJSON {
 
@@ -670,11 +672,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                 }
             }
         }
-
-
-        Log.d("salida","original: "+alOriginal);
-        Log.d("salida","original: "+alCopia);
-
     }
 
 }
