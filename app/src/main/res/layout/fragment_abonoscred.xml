@@ -8,56 +8,66 @@
     tools:context=".Ventanas.Ventas.Credito.AbonoscredFragment">
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_adeudo"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_saldoCredito1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:theme="@style/EditTextBlack"
+        android:text="@string/hint_credito"
+        style="@style/tv_titulos"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:paddingStart="@dimen/paddingGeneral"
-        android:paddingEnd="@dimen/paddingGeneral"
-        android:paddingBottom="@dimen/paddingGeneral"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_saldoCredito"
+        android:layout_marginTop="@dimen/paddingGeneral"
+        android:layout_marginStart="@dimen/paddingGeneral"
         >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_adeudo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_adeudo"
-            android:singleLine="true"
-            android:focusable="false"
-            android:enabled="false"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+    </TextView>
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_envase"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_saldoCredito"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:theme="@style/EditTextBlack"
+        android:text="@string/tv_ejemplo"
+        android:textAlignment="textEnd"
+        style="@style/tv_titulos.tv_mensajes"
 
-        app:layout_constraintTop_toBottomOf="@id/ti_adeudo"
-        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_saldoCredito1"
+        app:layout_constraintStart_toEndOf="@id/tv_saldoCredito1"
         app:layout_constraintEnd_toEndOf="parent"
-
-        android:paddingStart="@dimen/paddingGeneral"
-        android:paddingEnd="@dimen/paddingGeneral"
-        android:paddingBottom="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
         >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_envase"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_adeudoEnv"
-            android:singleLine="true"
-            android:focusable="false"
-            android:enabled="false"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+    </TextView>
+
+
+
+    <TextView
+        android:id="@+id/tv_saldoEnvase1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_totalVen"
+        style="@style/tv_titulos"
+
+        app:layout_constraintTop_toBottomOf="@id/tv_saldoCredito1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_saldoEnvase"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        >
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_saldoEnvase"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_ejemplo"
+        android:textAlignment="textEnd"
+        style="@style/tv_titulos.tv_mensajes"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_saldoEnvase1"
+        app:layout_constraintStart_toEndOf="@id/tv_saldoEnvase1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        >
+    </TextView>
 
 
     <ScrollView
@@ -68,10 +78,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
-
-        app:layout_constraintTop_toBottomOf="@id/ti_envase"
-        app:layout_constraintBottom_toTopOf="@+id/ti_total"
-
+        app:layout_constraintTop_toBottomOf="@id/tv_saldoEnvase1"
+        app:layout_constraintBottom_toTopOf="@+id/tv_totAbono1"
         >
 
 
@@ -79,60 +87,34 @@
 
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_total"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/EditTextBlack"
-
-        app:layout_constraintBottom_toTopOf="@+id/button_agregar"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:paddingStart="@dimen/paddingGeneral"
-        android:paddingEnd="@dimen/paddingGeneral"
-        android:paddingBottom="@dimen/paddingGeneral"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_total"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_adeudoEnv"
-            android:singleLine="true"
-            android:focusable="false"
-            android:enabled="false"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <Button
-        android:id="@+id/button_agregar"
+    <TextView
+        android:id="@+id/tv_totAbono1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/bt_agregarAbono"
-        android:theme="@style/ButtonDark"
+        android:text="@string/hint_totalAbono"
+        style="@style/tv_titulos"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_eliminar"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_totAbono"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginBottom="@dimen/paddingGeneral"
-        />
+        >
+    </TextView>
 
-    <Button
-        android:id="@+id/button_eliminar"
+    <TextView
+        android:id="@+id/tv_totAbono"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/bt_eliminarAbono"
-        android:theme="@style/ButtonDark"
+        android:text="@string/tv_ejemplo"
+        android:textAlignment="textEnd"
+        style="@style/tv_titulos.tv_mensajes"
 
-        app:layout_constraintBaseline_toBaselineOf="@+id/button_agregar"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_totAbono1"
+        app:layout_constraintStart_toEndOf="@id/tv_totAbono1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_agregar"
         android:layout_marginEnd="@dimen/paddingGeneral"
-        />
-
-
+        >
+    </TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

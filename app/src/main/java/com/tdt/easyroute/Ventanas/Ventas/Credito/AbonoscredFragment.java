@@ -5,33 +5,31 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.ViewModel.PedidosVM;
 
 
 public class AbonoscredFragment extends Fragment {
+
+    PedidosVM pedidosVM;
+    TextView tv_totAbono,tv_saldoCredito,tv_saldoEnvase;
 
     public AbonoscredFragment() {
         // Required empty public constructor
     }
 
-
-    public static AbonoscredFragment newInstance(String param1, String param2) {
-        AbonoscredFragment fragment = new AbonoscredFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        pedidosVM = ViewModelProviders.of(  getActivity()).get(PedidosVM.class);
     }
 
     @Override
@@ -39,6 +37,17 @@ public class AbonoscredFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_abonoscred, container, false);
+
+        tv_totAbono= view.findViewById(R.id.tv_totAbono);
+        tv_saldoCredito = view.findViewById(R.id.tv_saldoCredito);
+        tv_saldoEnvase = view.findViewById(R.id.tv_saldoEnvase);
+
+        tv_saldoCredito.setText(string.FormatoPesos(0) );
+        tv_saldoEnvase.setText(string.FormatoPesos(0) );
+
+        tv_totAbono.setText(string.FormatoPesos(0) );
+        pedidosVM.setTotAbono( tv_totAbono.getText().toString() );
+
 
 
 

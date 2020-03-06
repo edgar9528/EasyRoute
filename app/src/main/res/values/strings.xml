@@ -445,5 +445,15 @@
     <string name="tt_ped14">Inventario insuficiente</string>
     <string name="msg_ped1">Desea eliminar el producro</string>
     <string name="msg_ped">Desea eliminar el producto:</string>
+    <string name="hint_totalAbono">Total abonos</string>
+    <string name="err_ped26">Error al ingresar pago</string>
+    <string name="err_ped27">Error al agregar pago</string>
+    <string name="tt_ped15">Seleccione una forma de pago</string>
+    <string name="tt_ped16">El metodo de pago requiere una referencia.</string>
+    <string name="tt_ped17">El metodo de pago requiere un banco.</string>
+    <string name="tt_ped18">La cantidad del pago debe de ser mayor que cero.</string>
+    <string name="msg_agregarPago">"Cantidad por liquidar: "</string>
+    <string name="err_ped28">Error al validar la cantidad</string>
+    <string name="tt_ped19">Ingresa una cantidad</string>
 
 </resources>

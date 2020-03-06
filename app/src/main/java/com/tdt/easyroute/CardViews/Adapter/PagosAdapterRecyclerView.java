@@ -9,21 +9,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import com.tdt.easyroute.CardViews.Model.PagoCardView;
+
+import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.Ventanas.Ventas.Pago.PagoFragment;
 
 import java.util.ArrayList;
 
 public class PagosAdapterRecyclerView extends RecyclerView.Adapter<PagosAdapterRecyclerView.PagosViewHolder> {
 
-    private ArrayList<PagoCardView> pagoCardViews;
+    private ArrayList<DataTableLC.DgPagos> pagoCardViews;
     private int resource;
+    private PagoFragment pagoFragment;
 
-    public PagosAdapterRecyclerView( ArrayList<PagoCardView> pagoCardViews, int resource) {
+    public PagosAdapterRecyclerView(ArrayList<DataTableLC.DgPagos> pagoCardViews, int resource, PagoFragment pagoFragment) {
         this.pagoCardViews = pagoCardViews;
         this.resource = resource;
+        this.pagoFragment = pagoFragment;
     }
 
     @NonNull
@@ -39,14 +43,14 @@ public class PagosAdapterRecyclerView extends RecyclerView.Adapter<PagosAdapterR
 
     @Override
     public void onBindViewHolder(@NonNull final PagosAdapterRecyclerView.PagosViewHolder ventaViewHolder, int position) {
-        final PagoCardView pagoCardView = pagoCardViews.get(position);
+        final DataTableLC.DgPagos pagoCardView = pagoCardViews.get(position);
 
-        ventaViewHolder.tv_numero.setText( pagoCardView.getNumero() );
-        ventaViewHolder.tv_idPago.setText( pagoCardView.getIdPago() );
-        ventaViewHolder.tv_forma.setText(pagoCardView.getForma());
-        ventaViewHolder.tv_cantidad.setText(pagoCardView.getCantidad());
-        ventaViewHolder.tv_banco.setText(pagoCardView.getBanco());
-        ventaViewHolder.tv_referencia.setText(pagoCardView.getReferencia());
+        ventaViewHolder.tv_numero.setText( pagoCardView.getNoPago());
+        ventaViewHolder.tv_idPago.setText( pagoCardView.getFpag_cve_n() );
+        ventaViewHolder.tv_forma.setText(pagoCardView.getFpag_desc_str());
+        ventaViewHolder.tv_cantidad.setText(pagoCardView.getFpag_cant_n());
+        ventaViewHolder.tv_banco.setText(pagoCardView.getBancoP());
+        ventaViewHolder.tv_referencia.setText(pagoCardView.getReferenciaP());
 
         ventaViewHolder.linearLayout.setVisibility( View.GONE );
 
@@ -121,12 +125,21 @@ public class PagosAdapterRecyclerView extends RecyclerView.Adapter<PagosAdapterR
     {
         pagoCardViews.remove(indice);
         notifyItemRemoved(indice);
+        pagoFragment.ActualizarDgPagos(pagoCardViews);
     }
 
-    public void agregarItem(PagoCardView pagoCardView)
+    public void actualizarItem(int item, String cantidad)
+    {
+        pagoCardViews.get(item).setFpag_cant_n(string.FormatoPesos(cantidad) );
+        notifyItemChanged(item);
+        pagoFragment.ActualizarDgPagos(pagoCardViews);
+    }
+
+    public void agregarItem(DataTableLC.DgPagos pagoCardView)
     {
         pagoCardViews.add(getItemCount(),pagoCardView);
         notifyItemInserted(getItemCount());
+        pagoFragment.ActualizarDgPagos(pagoCardViews);
     }
 
 

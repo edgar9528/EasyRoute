@@ -8,37 +8,42 @@
     android:layout_height="match_parent"
     tools:context=".Ventanas.Ventas.Credito.LiquidocreFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_adeudo"
+    <TextView
+        android:id="@+id/tv_adeudoN1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:theme="@style/EditTextBlack"
+        android:text="@string/hint_adeudoNormal"
+        style="@style/tv_titulos"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:paddingTop="@dimen/paddingGeneral"
-        android:paddingStart="@dimen/paddingGeneral"
-        android:paddingEnd="@dimen/paddingGeneral"
+        app:layout_constraintEnd_toStartOf="@id/tv_adeudoN"
+        android:layout_marginTop="@dimen/paddingGeneral"
+        android:layout_marginStart="@dimen/paddingGeneral"
         >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_adeudo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_adeudoNormal"
-            android:singleLine="true"
-            android:focusable="false"
-            android:enabled="false"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_adeudoN"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_credito"
+        android:textAlignment="textEnd"
+        style="@style/tv_titulos.tv_mensajes"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_adeudoN1"
+        app:layout_constraintStart_toEndOf="@id/tv_adeudoN1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        >
+    </TextView>
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/ti_adeudo"
-        app:layout_constraintBottom_toTopOf="@+id/ti_limite"
+        app:layout_constraintTop_toBottomOf="@+id/tv_adeudoN1"
+        app:layout_constraintBottom_toTopOf="@+id/tv_vencido1"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
         >
@@ -55,56 +60,67 @@
     </ScrollView>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_limite"
+
+    <TextView
+        android:id="@+id/tv_vencido1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:theme="@style/EditTextBlack"
+        android:text="@string/hint_limCredito"
+        style="@style/tv_titulos"
+
+        app:layout_constraintBottom_toTopOf="@+id/tv_limCredito1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_limCredito"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        >
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_vencido"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_credito"
+        android:textAlignment="textEnd"
+        style="@style/tv_titulos.tv_mensajes"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_vencido1"
+        app:layout_constraintStart_toEndOf="@id/tv_limCredito1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        >
+    </TextView>
+
+
+
+
+    <TextView
+        android:id="@+id/tv_limCredito1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_vencido"
+        style="@style/tv_titulos"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ti_vencido"
-
-        android:paddingStart="@dimen/paddingGeneral"
-        android:paddingEnd="@dimen/paddingGeneral"
-        android:paddingBottom="@dimen/paddingGeneral"
+        app:layout_constraintEnd_toStartOf="@id/tv_limCredito"
+        android:layout_marginBottom="@dimen/paddingGeneral"
+        android:layout_marginStart="@dimen/paddingGeneral"
         >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_limite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_limite"
-            android:singleLine="true"
-            android:focusable="false"
-            android:enabled="false"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+    </TextView>
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_vencido"
+    <TextView
+        android:id="@+id/tv_limCredito"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:theme="@style/EditTextBlack"
+        android:text="@string/hint_credito"
+        android:textAlignment="textEnd"
+        style="@style/tv_titulos.tv_mensajes"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ti_limite"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_limCredito1"
+        app:layout_constraintStart_toEndOf="@id/tv_limCredito1"
         app:layout_constraintEnd_toEndOf="parent"
-
-        android:paddingStart="@dimen/paddingGeneral"
-        android:paddingEnd="@dimen/paddingGeneral"
-        android:paddingBottom="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
         >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_vencido"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_vencido"
-            android:singleLine="true"
-            android:focusable="false"
-            android:enabled="false"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
+    </TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

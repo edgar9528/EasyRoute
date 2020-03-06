@@ -55,21 +55,30 @@
             />
 
 
-        <com.google.android.material.textfield.TextInputLayout
+
+        <TextView
+            android:id="@+id/tv_subTotal21"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:theme="@style/EditTextBlack">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_total"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/table_total"
-                android:singleLine="true"
-                android:focusable="false"
-                android:enabled="false"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:text="@string/hint_totalAbono"
+            android:layout_weight="3"
+            style="@style/tv_titulos"
+
+            android:layout_gravity="center"
+            >
+        </TextView>
+
+        <TextView
+            android:id="@+id/tv_subTotal2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_ejemplo"
+            android:textAlignment="textEnd"
+            android:layout_weight="3"
+            style="@style/tv_titulos.tv_mensajes"
+            android:layout_gravity="center"
+            tools:ignore="RtlCompat">
+        </TextView>
 
 
     </LinearLayout>

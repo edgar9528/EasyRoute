@@ -50,8 +50,8 @@ public class PedidosActivity extends AppCompatActivity {
     private boolean PorEscanear;
     private String PositionStr;
     private boolean removerVenta = false;
-
-    private String _estadoCredito;
+    private String _tv_adeudoN;
+    private String _tv_totAbono;
 
     Configuracion conf;
     DataTableLC.DtCliVentaNivel rc;
@@ -137,7 +137,9 @@ public class PedidosActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                ValidaCredito();
                 viewPager.setCurrentItem(tab.getPosition());
+
             }
 
             @Override
@@ -151,10 +153,7 @@ public class PedidosActivity extends AppCompatActivity {
             }
         });
 
-
         //TERMINA CONFIGURACION DE LAS TABS
-
-
         ObtenerPromoEnvase("1","1","1","1","1","1");
 
     }
@@ -167,9 +166,23 @@ public class PedidosActivity extends AppCompatActivity {
             @Override
             public void onChanged(ArrayList<DataTableLC.ProductosPed> productosPeds) {
                 dgProd2 = productosPeds;
-                Log.d("salida","CANTIDAD DE ITEMS ACT: "+dgProd2.size());
             }
         });
+
+        pedidosVM.getAdeudoN().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                _tv_adeudoN = s;
+            }
+        });
+
+        pedidosVM.getTotAbono().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                _tv_totAbono = s;
+            }
+        });
+
     }
 
     private void inicializar()
@@ -177,8 +190,6 @@ public class PedidosActivity extends AppCompatActivity {
         Log.d("salida", "entro a inicializar");
 
         ListaPrev = new ArrayList<>();
-        dgAbonos = new ArrayList<>();
-        dgPagos = new ArrayList<>();
 
         conf = Utils.ObtenerConf(getApplication());
         rc = ObtenerCliente();
@@ -194,6 +205,12 @@ public class PedidosActivity extends AppCompatActivity {
         ObtenerProductos();
 
         ListarEnvase(lpBase);
+
+        _tv_adeudoN="$0.00";
+        _tv_totAbono="$0.00";
+
+        dgPagos = new ArrayList<>();
+        dgAbonos = new ArrayList<>();
 
         ObtenerPagos();
         ListarFormaPago();
@@ -365,12 +382,12 @@ public class PedidosActivity extends AppCompatActivity {
 
     private void ObtenerPagos()
     {
-        try {
+        try
+        {
             String con = string.formatSql2("select * from pagos where cli_cve_n={0} and pag_cobranza_n=1", noCli);
             String json = BaseLocal.Select(con, getApplicationContext());
 
             dtPagos = ConvertirRespuesta.getPagosALJson(json);
-
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped9), e.getMessage());
         }
@@ -383,6 +400,7 @@ public class PedidosActivity extends AppCompatActivity {
             String con = "select fpag_cve_n,fpag_desc_str,fpag_reqbanco_n,fpag_reqreferencia_n,est_cve_str from formaspago where est_cve_str='A'";
             String json = BaseLocal.Select(con, getApplicationContext());
             formasPago = ConvertirRespuesta.getFormasPagoJson(json);
+            pedidosVM.setFormasPago(formasPago);
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped10), e.getMessage());
         }
@@ -565,6 +583,9 @@ public class PedidosActivity extends AppCompatActivity {
                 }
             }
 
+            if(dtANormal==null)
+                dtANormal = new ArrayList<>();
+
             return dtANormal;
 
         } catch (Exception e) {
@@ -583,7 +604,8 @@ public class PedidosActivity extends AppCompatActivity {
 
             ArrayList<DataTableLC.AdeudoNormal> dtAE = ConvertirRespuesta.getAdeudoNormalJson(json);
 
-            if (dtAE != null) {
+            if (dtAE != null)
+            {
                 DataTableLC.AdeudoNormal r;
                 for (int i = 0; i < dtAE.size(); i++) {
                     r = dtAE.get(i);
@@ -604,6 +626,8 @@ public class PedidosActivity extends AppCompatActivity {
                     }
                 }
             }
+            else
+                dtAE = new ArrayList<>();
 
             return dtAE;
         } catch (Exception e) {
@@ -1137,7 +1161,6 @@ public class PedidosActivity extends AppCompatActivity {
             /*txtVenta.Text = (decimal.Parse(this.txtSubtotal2.Text.Replace("$", "")) +
                     decimal.Parse(txtSubEnv.Text.Replace("$", "")) +
                     decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""))).ToString("c");*/
-
             if ( dgPagos.size() >0)
             {
                 double suma=0;
@@ -1160,19 +1183,23 @@ public class PedidosActivity extends AppCompatActivity {
         }
     }
 
-    private void ValidaCredito()
+    public void ValidaCredito()
     {
         try
         {
-            if ((!Utils.getBool(rc.getCli_eshuix_n()) && ActivarCredito()) || Utils.getBool(rc.getCli_eshuix_n()) && lpreCO) {
+            if ((!Utils.getBool(rc.getCli_eshuix_n()) && ActivarCredito()) || Utils.getBool(rc.getCli_eshuix_n()) && lpreCO)
+            {
                 int indice = 0;
-                for (DataTableWS.FormasPago fp : formasPago) {
-                    if (fp.getFpag_desc_str().equals("CREDITO")) {
+                for (DataTableWS.FormasPago fp : formasPago)
+                {
+                    if (fp.getFpag_desc_str().equals("CREDITO"))
+                    {
                         formasPago.remove(indice);
                         break;
                     }
                     indice++;
                 }
+                pedidosVM.setFormasPago(formasPago);
             }
         }catch (Exception e)
         {
@@ -1187,13 +1214,11 @@ public class PedidosActivity extends AppCompatActivity {
     {
         try
         {
-
-            Log.d("salida", "Entro activar credito");
             ListarFormaPago();
 
             boolean SinCredito = false;
-            totDeuda = 0; //decimal.Parse(txtAdeudoN.Text.Replace("$", ""));
-            totAbono = 0; //decimal.Parse(txtTotAbono.Text.Replace("$", ""));
+            totDeuda = Double.parseDouble( string.DelCaracteres( _tv_adeudoN )  ) ; //decimal.Parse(txtAdeudoN.Text.Replace("$", ""));
+            totAbono = Double.parseDouble( string.DelCaracteres( _tv_totAbono)  ); //decimal.Parse(txtTotAbono.Text.Replace("$", ""));
             montoCredito = Double.parseDouble(rc.getCli_montocredito_n());
 
             disponible = montoCredito - (totDeuda - totAbono);
@@ -1222,26 +1247,28 @@ public class PedidosActivity extends AppCompatActivity {
             if (  !Utils.getBool( rc.getCli_credito_n()))
             {
                 SinCredito = true;
-                _estadoCredito = "Sin Crédito";
+                pedidosVM.setEstadoCredito("Sin Crédito");
                 return SinCredito;
             }
+
             if ( !rc.getCli_estcredito_str().equals("A"))
             {
                 SinCredito = true;
-                _estadoCredito = "Cancelado";
+                pedidosVM.setEstadoCredito("Cancelado");
                 return SinCredito;
             }
 
             if (disponible <= 0)
             {
                 SinCredito = true;
-                _estadoCredito = "Sin disponible";
+                pedidosVM.setEstadoCredito("Sin disponible");
                 return SinCredito;
             }
+
             if (saldoVencido - totAbono > 0)
             {
                 SinCredito = true;
-                _estadoCredito = "Vencido";
+                pedidosVM.setEstadoCredito("vencido");
                 return SinCredito;
             }
 
@@ -1393,10 +1420,14 @@ public class PedidosActivity extends AppCompatActivity {
     {
         return esventa;
     }
-    public String getEstadoCredito()
+    public DataTableLC.DtCliVentaNivel getRC()
     {
-        return _estadoCredito;
-    }
+        return rc;
+    };
+    public double getDisponible()
+    {
+        return disponible;
+    };
 
     //endregion
 

@@ -9,24 +9,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.R;
 
 
 public class EnvasecredFragment extends Fragment {
 
+    TextView tv_saldoDeudaEnv;
 
-    public EnvasecredFragment() {
-        // Required empty public constructor
-    }
-
-    public static EnvasecredFragment newInstance(String param1, String param2) {
-        EnvasecredFragment fragment = new EnvasecredFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public EnvasecredFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +32,11 @@ public class EnvasecredFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_envasecred, container, false);
+
+        tv_saldoDeudaEnv = view.findViewById(R.id.tv_saldoDeudaEnv);
+        tv_saldoDeudaEnv.setText(string.FormatoPesos(0));
+
+
 
         return view;
     }

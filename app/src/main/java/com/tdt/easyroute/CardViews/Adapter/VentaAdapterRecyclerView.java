@@ -95,7 +95,7 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
         if(lectura!=null && !lectura.isEmpty())
         {
             ventaCardViews.get(indice).setProd_cant_n(lectura);
-            double subtotal = Double.parseDouble(ventaCardViews.get(indice).getLpre_precio_n().replace("$","")) * Double.parseDouble(lectura);
+            double subtotal = Double.parseDouble( string.DelCaracteres( ventaCardViews.get(indice).getLpre_precio_n() ) ) * Double.parseDouble(lectura);
             ventaCardViews.get(indice).setSubtotal(string.FormatoPesos(subtotal));
         }
         notifyItemChanged(indice);

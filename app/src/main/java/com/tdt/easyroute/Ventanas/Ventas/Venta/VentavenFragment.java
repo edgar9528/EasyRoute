@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tdt.easyroute.CardViews.Adapter.VentaAdapterRecyclerView;
@@ -44,7 +45,7 @@ public class VentavenFragment extends Fragment {
     private ArrayList<DataTableLC.ProductosPed> dtProductos;
     private ArrayList<DataTableLC.ProductosPed> dgProd2;
     private VentaAdapterRecyclerView ventaAdapterRecyclerView;
-    private EditText et_total;
+    private TextView tv_subTotal2;
     private boolean esVenta;
 
     public VentavenFragment() { }
@@ -62,13 +63,12 @@ public class VentavenFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ventaven, container, false);
 
-
         try
         {
             PedidosActivity pedidosActivity = (PedidosActivity) getActivity();
             esVenta=pedidosActivity.getEsVenta();
 
-            et_total = view.findViewById(R.id.et_total);
+            tv_subTotal2 = view.findViewById(R.id.tv_subTotal2);
 
             RecyclerView ventasRecyclerView = view.findViewById(R.id.ventasRecycler);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -127,7 +127,6 @@ public class VentavenFragment extends Fragment {
             }
         });
     }
-
 
     private void AgregarProducto(String cve_producto)
     {
@@ -285,7 +284,7 @@ public class VentavenFragment extends Fragment {
                 subtotal = Double.parseDouble(p.getLpre_precio_n().replace("$", "")) * Double.parseDouble(p.getProd_cant_n());
                 total += subtotal;
             }
-            et_total.setText( string.FormatoPesos(total));
+            tv_subTotal2.setText( string.FormatoPesos(total));
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_ped24), e.getMessage());

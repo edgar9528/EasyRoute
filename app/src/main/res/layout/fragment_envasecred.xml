@@ -14,9 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/tv_deudaEnv"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="18sp"
         app:layout_constraintTop_toTopOf="parent"
+        style="@style/tv_titulos.tv_mensajes"
 
         android:layout_marginTop="@dimen/paddingGeneral"
         android:layout_marginStart="@dimen/paddingGeneral"
@@ -24,13 +23,12 @@
 
         />
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
 
         app:layout_constraintTop_toBottomOf="@id/tv_deuda"
-        app:layout_constraintBottom_toTopOf="@id/ti_envase"
+        app:layout_constraintBottom_toTopOf="@id/tv_saldoDeudaEnv1"
 
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
@@ -43,30 +41,35 @@
 
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ti_envase"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_saldoDeudaEnv1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:theme="@style/EditTextBlack"
+        android:text="@string/hint_envases"
+        style="@style/tv_titulos"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:paddingStart="@dimen/paddingGeneral"
-        android:paddingEnd="@dimen/paddingGeneral"
-        android:paddingBottom="@dimen/paddingGeneral"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_saldoDeudaEnv"
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingGeneral"
         >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_envase"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/tl_cred2"
-            android:singleLine="true"
-            android:focusable="false"
-            android:enabled="false"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_saldoDeudaEnv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_ejemplo"
+        android:textAlignment="textEnd"
+        style="@style/tv_titulos.tv_mensajes"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_saldoDeudaEnv1"
+        app:layout_constraintStart_toEndOf="@id/tv_saldoDeudaEnv1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        >
+    </TextView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

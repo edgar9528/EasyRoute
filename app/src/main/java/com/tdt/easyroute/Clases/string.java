@@ -127,4 +127,23 @@ public class string {
             return "$0.00";
         }
     }
+
+    public static String DelCaracteres(String cantidad)
+    {
+        cantidad = cantidad.replace("$","");
+        cantidad = cantidad.replace(",","");
+        return cantidad;
+    }
+
+    public static boolean EsNulo(String cadena)
+    {
+        if(cadena==null)
+            return true;
+        if(cadena.isEmpty())
+            return true;
+        return false;
+    }
+
+
+
 }
