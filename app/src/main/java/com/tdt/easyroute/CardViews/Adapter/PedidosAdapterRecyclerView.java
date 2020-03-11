@@ -1,6 +1,7 @@
 package com.tdt.easyroute.CardViews.Adapter;
 
 import android.graphics.drawable.Drawable;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tdt.easyroute.CardViews.Model.PedidosCardView;
@@ -17,6 +19,7 @@ import com.tdt.easyroute.Ventanas.Pedidos.ClientesPedFragment;
 import com.tdt.easyroute.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdapterRecyclerView.PedidosViewHolder>
 {
@@ -121,4 +124,5 @@ public class PedidosAdapterRecyclerView extends RecyclerView.Adapter<PedidosAdap
         pedidosCardViews.get(item).setIcono(icono);
         notifyItemChanged(item);
     }
+
 }

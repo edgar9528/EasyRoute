@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.MainDetallesActivity;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
@@ -1411,10 +1413,10 @@ public class PedidosActivity extends AppCompatActivity {
     {
         switch (item.getItemId()) {
             case R.id.action_guardar:
-                Log.d("salida","Presiono boton guardar");
+                clickGuardar();
                 return true;
             case R.id.action_detalles:
-                Log.d("salida","Presiono boton detalles");
+                clickDetalles();
                 return true;
             case R.id.action_buscar:
                 Log.d("salida","Presiono boton buscar");
@@ -1422,6 +1424,36 @@ public class PedidosActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void clickGuardar()
+    {
+        Intent i = getIntent();
+        i.putExtra("estado", "true");
+        i.putExtra("cve", rc.getCli_cve_n());
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    private void clickDetalles()
+    {
+        DataTableLC.DtCliVenta cli = getDetcli( rc.getCli_cve_n());
+        Intent intent = new Intent(this, MainDetallesActivity.class);
+        intent.putExtra("cliente",cli);
+        startActivity(intent);
+    }
+
+    private DataTableLC.DtCliVenta getDetcli(String cliente)
+    {
+        String json;
+        json=BaseLocal.Select( string.formatSql(Querys.ClientesVentaMes.SelClienteConVtaMes,cliente), getApplicationContext() );
+        ArrayList<DataTableLC.DtCliVenta> cliVenta = ConvertirRespuesta.getDtCliVentaJson(json);
+        DataTableLC.DtCliVenta cli=null;
+
+        if(cliVenta!=null)
+            cli = cliVenta.get(0);
+
+        return cli;
     }
 
     //region variables compartidas

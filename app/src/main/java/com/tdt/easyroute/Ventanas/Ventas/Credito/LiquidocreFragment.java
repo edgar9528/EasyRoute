@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class LiquidocreFragment extends Fragment {
 
     private PedidosVM pedidosVM;
-    private TextView tv_adeudoN,tv_adeudoE;
+    private TextView tv_adeudoN,tv_adeudoE,tv_adeudoE2;
     private TextView tv_limCred;
     private TextView tv_vencido;
     private ArrayList<DataTableLC.AdeudoNormal> dgANormal;
@@ -61,6 +61,7 @@ public class LiquidocreFragment extends Fragment {
 
             tv_adeudoN = view.findViewById(R.id.tv_adeudoN);
             tv_adeudoE = view.findViewById(R.id.tv_adeudoE);
+            tv_adeudoE2 = view.findViewById(R.id.tv_adeudoE1);
             tv_limCred = view.findViewById(R.id.tv_limCredito);
             tv_vencido = view.findViewById(R.id.tv_vencido);
 
@@ -71,6 +72,9 @@ public class LiquidocreFragment extends Fragment {
 
             pedidosVM.setAdeudoN(tv_adeudoN.getText().toString());
             pedidosVM.setAdeudoE(tv_adeudoE.getText().toString());
+
+            tv_adeudoE.setVisibility(View.GONE);
+            tv_adeudoE2.setVisibility(View.GONE);
 
             dgANormal = new ArrayList<>();
             dgAEspecial = new ArrayList<>();
@@ -93,6 +97,7 @@ public class LiquidocreFragment extends Fragment {
         {
             Utils.msgError(getContext(), getString(R.string.err_ped35), e.getMessage());
         }
+
 
         return view;
     }

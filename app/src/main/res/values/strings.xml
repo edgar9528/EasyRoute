@@ -468,5 +468,6 @@
     <string name="err_ped33">Error al actualizar pagos</string>
     <string name="err_ped34">Error al actualizar totales</string>
     <string name="err_ped35">Error al cargar liquido fragment</string>
+    <string name="tt_ped21">Venta realizada</string>
 
 </resources>

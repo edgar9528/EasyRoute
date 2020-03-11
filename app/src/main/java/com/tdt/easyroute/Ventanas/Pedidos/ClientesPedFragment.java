@@ -92,6 +92,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
     private PieChart pieChartVisitas,pieChartEfectividad;
 
+    private RecyclerView pedidosRecyclerView;
+    private LinearLayoutManager linearLayoutManager;
     private PedidosAdapterRecyclerView pedidosAdapterRecyclerView;
     private int indiceSeleccionado;
 
@@ -159,8 +161,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             });
 
             iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
-            iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
-            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_location);
+            iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visselec);
+            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera );
             iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
             iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
             iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
@@ -606,8 +608,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         {
             if (lvClientes != null) {
 
-                RecyclerView pedidosRecyclerView = vista.findViewById(R.id.pedidosRecycler);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                pedidosRecyclerView = vista.findViewById(R.id.pedidosRecycler);
+                linearLayoutManager = new LinearLayoutManager(getContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
                 pedidosRecyclerView.setLayoutManager(linearLayoutManager);
@@ -1184,6 +1186,24 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
                         Log.d("salida","se cerro ventana de pedidos o preventa");
                         break;
+
+                    case 3:
+
+                        String estado = intent.getStringExtra("estado");
+                        String cve = intent.getStringExtra("cve");
+
+                        int indice=-1;
+                        for(int i=0; i<lvClientes.size();i++)
+                            if( cve.equals( lvClientes.get(i).getCli_cve_n() ) )
+                                indice=i;
+
+                        pedidosAdapterRecyclerView.actualiza(indice, 1,iconos[1] );
+
+                        CalcularEfectividad();
+
+                        Toast.makeText(getContext(), getString(R.string.tt_ped21), Toast.LENGTH_LONG).show();
+
+                        break;
                 }
 
             } catch (Exception e)
@@ -1540,7 +1560,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         intent.putExtra("conventa",conventa);
                         intent.putExtra("porEscanear",PorEscaner);
                         intent.putExtra("PositionStr",PositionStr);
-                        startActivityForResult(intent,2);
+                        startActivityForResult(intent,3);
                     }
                     else
                     {
