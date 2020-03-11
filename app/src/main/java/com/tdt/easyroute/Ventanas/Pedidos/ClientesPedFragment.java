@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.speech.tts.UtteranceProgressListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -70,6 +74,8 @@ import java.util.Date;
 
 public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
+    //region variables
+
     private ArrayList<DataTableLC.PedidosLv> lvClientes = null;
     private Configuracion conf;
     private View vista;
@@ -92,6 +98,13 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
     private Drawable[] iconos = new Drawable[6];
     private DataTableLC.DtCliVenta clienteSeleccionado;
     private DataTableLC.PedidosLv clienteClick;
+
+    ArrayList<String> clientesCve;
+    ArrayList<String> clientesCveExt;
+
+    private EditText et_codigo;
+
+    //endregion
 
     public ClientesPedFragment() {
         // Required empty public constructor
@@ -125,6 +138,26 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             pieChartVisitas = view.findViewById(R.id.pieChart1);
             pieChartEfectividad = view.findViewById(R.id.pieChart2);
 
+            et_codigo = view.findViewById(R.id.et_codigo);
+
+            et_codigo.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if(s!=null)
+                        if(s.toString().length()==10)
+                            codigoLeido(s.toString());
+                }
+            });
+
             iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
             iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
             iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_location);
@@ -156,6 +189,28 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         }
 
         return view;
+    }
+
+    private void codigoLeido(String cod)
+    {
+        try {
+            et_codigo.setText("");
+
+            String cliente = getCveCliente(cod);
+
+            if (cliente != null) {
+                clienteSeleccionado = getDetcli(cliente);
+
+                if (clienteSeleccionado != null)
+                    obtenerUbicacion(1);
+                else
+                    Toast.makeText(getContext(), getString(R.string.tt_ped20), Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(getContext(), getString(R.string.tt_ped20), Toast.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped29), e.getMessage());
+        }
     }
 
     private void CalcularEfectividad()
@@ -451,6 +506,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             ArrayList<DataTableLC.PedidosVisitas> dtCli;
             ArrayList<DataTableLC.PedidosVisitas> dtCli2;
             ArrayList<DataTableLC.PedidosVisPre> dtVisPre;
+            clientesCveExt = new ArrayList<>();
+            clientesCve = new ArrayList<>();
 
             int l = 0;
             String cveext = "";
@@ -475,6 +532,9 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     //{
                     cli_cve_n = r.getCli_cve_n();
                     cli_especial_n = r.getCli_especial_n();
+
+                    clientesCveExt.add(r.getCli_cveext_str());
+                    clientesCve.add( r.getCli_cve_n() );
 
                     if (r.getCli_prospecto_n() == null || r.getCli_prospecto_n().isEmpty())
                         cli_est = "P";
@@ -774,6 +834,9 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         case 0:
                             aplicaNoVenta(ubi[0]);
                             break;
+                        case 1:
+                            aplicaVenta(ubi[0]);
+                            break;
                     }
                 }
             }, 3000);
@@ -796,15 +859,15 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
                     Toast.makeText(getContext(), getString(R.string.tt_ped4), Toast.LENGTH_LONG).show();
-                    return;
+                    //return;
                 }
             }
             if (tipo == 2)
             {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
-                     Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
-                    return;
+                    Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
+                    //return;
                 }
             }
 
@@ -841,6 +904,19 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         {
             Utils.msgError(getContext(), getString(R.string.error_almacenar), e.getMessage());
         }
+    }
+
+    private void aplicaVenta(String coordenada)
+    {
+        MainActivity mainActivity = (MainActivity) getActivity();
+
+        if (!mainActivity.validaDistancia(clienteSeleccionado,false))
+        {
+            Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        abrirPedido(conf.getPreventa() !=1, clienteSeleccionado.getCli_cve_n(), clienteSeleccionado.getCli_cveext_str(), FrmBuscar);
     }
 
     public void seleccionar(DataTableLC.PedidosLv item)
@@ -1030,6 +1106,21 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         {
             Utils.msgError(getContext(), getString(R.string.error_peticion), e.getMessage());
         }
+    }
+
+    private String getCveCliente(String cve)
+    {
+        String cliente = null;
+        int i=0;
+        for(String plv : clientesCveExt)
+        {
+            if(plv.equals( cve ))
+            {
+                cliente = clientesCve.get(i);
+            }
+            i++;
+        }
+        return cliente;
     }
 
     private String getBool(String cad)
@@ -1481,14 +1572,9 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     startActivityForResult(intent,2);
                 }
             }
-
-
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
-
     }
-
-
 }

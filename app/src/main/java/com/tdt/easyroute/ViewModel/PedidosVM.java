@@ -17,7 +17,17 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<String> producto = new MutableLiveData<>();
     private final MutableLiveData<String> estadoCredito = new MutableLiveData<>();
     private final MutableLiveData<String> adeudoN = new MutableLiveData<>();
+    private final MutableLiveData<String> adeudoE = new MutableLiveData<>();
     private final MutableLiveData<String> totAbono = new MutableLiveData<>();
+    private final MutableLiveData<String> txtSubtotal2 = new MutableLiveData<>();
+    private final MutableLiveData<String> txtSaldoDeudaEnv = new MutableLiveData<>();
+    private final MutableLiveData<String> txtContado = new MutableLiveData<>();
+    private final MutableLiveData<String> txtLimCred = new MutableLiveData<>();
+    private final MutableLiveData<String> txtVencido = new MutableLiveData<>();
+    private final MutableLiveData<String> txtSaldoCredito = new MutableLiveData<>();
+
+    private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgANormal = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgAEspecial = new MutableLiveData<>();
 
     public LiveData<ArrayList<DataTableLC.ProductosPed>> getDtProductos(){
         return dtProductos;
@@ -54,7 +64,6 @@ public class PedidosVM extends ViewModel
         this.estadoCredito.setValue(estadoCredito);
     }
 
-
     public LiveData<String> getAdeudoN(){
         return adeudoN;
     }
@@ -69,6 +78,67 @@ public class PedidosVM extends ViewModel
         this.totAbono.setValue(totAbono);
     }
 
+    public LiveData<String> getTxtSubtotal2(){
+        return txtSubtotal2;
+    }
+    public void setTxtSubtotal2(String txtSubtotal2){
+        this.txtSubtotal2.setValue(txtSubtotal2);
+    }
 
+    public LiveData<String> getTxtSaldoDeudaEnv(){
+        return txtSaldoDeudaEnv;
+    }
+    public void setTxtSaldoDeudaEnv(String txtSaldoDeudaEnv){
+        this.txtSaldoDeudaEnv.setValue(txtSaldoDeudaEnv);
+    }
+
+    public LiveData<String> getTxtContado(){
+        return txtContado;
+    }
+    public void setTxtContado(String txtContado){
+        this.txtContado.setValue(txtContado);
+    }
+
+    public LiveData<String> getTxtLimCred(){
+        return txtLimCred;
+    }
+    public void setTxtLimCred(String txtLimCred){
+        this.txtLimCred.setValue(txtLimCred);
+    }
+
+    public LiveData<String> getTxtVencido(){
+        return txtVencido;
+    }
+    public void setTxtVencido(String txtVencido){
+        this.txtVencido.setValue(txtVencido);
+    }
+
+    public LiveData<ArrayList<DataTableLC.AdeudoNormal>> getDgAEspecial(){
+        return dgAEspecial;
+    }
+    public void setDgAEspecial(ArrayList<DataTableLC.AdeudoNormal> dgAEspecial){
+        this.dgAEspecial.setValue(dgAEspecial);
+    }
+
+    public LiveData<ArrayList<DataTableLC.AdeudoNormal>> getDgANormal(){
+        return dgANormal;
+    }
+    public void setDgANormal(ArrayList<DataTableLC.AdeudoNormal> dgANormal){
+        this.dgANormal.setValue(dgANormal);
+    }
+
+    public LiveData<String> getAdeudoE(){
+        return adeudoE;
+    }
+    public void setAdeudoE(String adeudoE){
+        this.adeudoE.setValue(adeudoE);
+    }
+
+    public LiveData<String> getTxtSaldoCredito(){
+        return txtSaldoCredito;
+    }
+    public void setTxtSaldoCredito(String txtSaldoCredito){
+        this.txtSaldoCredito.setValue(txtSaldoCredito);
+    }
 
 }

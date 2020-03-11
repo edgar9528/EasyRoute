@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.speech.tts.UtteranceProgressListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,51 +94,55 @@ public class FamiliavenFragment extends Fragment {
 
     private void crearRecycler()
     {
-        productosTotalAL= new ArrayList<>();
-        List<String[]> secondLevel = new ArrayList<>();
-        LinkedHashMap<String, String[]> thirdLevel;
-        List<LinkedHashMap<String, String[]>> data = new ArrayList<>();
+        try {
+            productosTotalAL = new ArrayList<>();
+            List<String[]> secondLevel = new ArrayList<>();
+            LinkedHashMap<String, String[]> thirdLevel;
+            List<LinkedHashMap<String, String[]>> data = new ArrayList<>();
 
-        ObtenerFamilias();
-        String[] parent = familiasAL.toArray(new String[familiasAL.size()]);
+            ObtenerFamilias();
+            String[] parent = familiasAL.toArray(new String[familiasAL.size()]);
 
-        for(String f : familiasAL)
+            for (String f : familiasAL) {
+                ObtenerPresentaciones(f);
+                String[] second = presentacionesAL.toArray(new String[presentacionesAL.size()]);
+                secondLevel.add(second);
+
+                thirdLevel = new LinkedHashMap<>();
+                for (String p : presentacionesAL) {
+                    ObtenerProductos(f, p);
+                    String[] third = productosAL.toArray(new String[productosAL.size()]);
+                    thirdLevel.put(p, third);
+                }
+                data.add(thirdLevel);
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, productosTotalAL);
+            tv_buscar.setAdapter(adapter);
+
+            // expandable listview
+            expandableListView = (ExpandableListView) vista.findViewById(R.id.expandible_listview);
+
+            // parent adapter
+            ProductosThreeListAdapter productosThreeListAdapterAdapter = new ProductosThreeListAdapter(getContext(), parent, secondLevel, data, this);
+
+            // set adapter
+            expandableListView.setAdapter(productosThreeListAdapterAdapter);
+
+            expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                int previousGroup = -1;
+
+                @Override
+                public void onGroupExpand(int groupPosition) {
+                    if (groupPosition != previousGroup)
+                        expandableListView.collapseGroup(previousGroup);
+                    previousGroup = groupPosition;
+                }
+            });
+        }catch (Exception e)
         {
-            ObtenerPresentaciones(f);
-            String[] second = presentacionesAL.toArray(new String[presentacionesAL.size()]);
-            secondLevel.add(second);
-
-            thirdLevel = new LinkedHashMap<>();
-            for(String p: presentacionesAL)
-            {
-                ObtenerProductos(f,p);
-                String[] third = productosAL.toArray(new String[productosAL.size()]);
-                thirdLevel.put(p,third);
-            }
-            data.add(thirdLevel);
+            Utils.msgError(getContext(), getString(R.string.err_recycler),e.getMessage());
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, productosTotalAL);
-        tv_buscar.setAdapter(adapter);
-
-        // expandable listview
-        expandableListView = (ExpandableListView) vista.findViewById(R.id.expandible_listview);
-
-        // parent adapter
-        ProductosThreeListAdapter productosThreeListAdapterAdapter = new ProductosThreeListAdapter(getContext(), parent, secondLevel, data,this);
-
-        // set adapter
-        expandableListView.setAdapter(productosThreeListAdapterAdapter);
-
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            int previousGroup = -1;
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                if (groupPosition != previousGroup)
-                    expandableListView.collapseGroup(previousGroup);
-                previousGroup = groupPosition;
-            }
-        });
     }
 
     private void ObtenerFamilias()
@@ -211,18 +216,22 @@ public class FamiliavenFragment extends Fragment {
 
     private String getCveProducto(String producto)
     {
-        String cve ="";
-        String[] datos = producto.split("\n");
+        try {
+            String cve = "";
+            String[] datos = producto.split("\n");
 
-        for(DataTableLC.ProductosPed p: dtProductos)
-        {
-            if( datos[0].equals(p.getProd_sku_str()) )
-            {
-                cve = p.getProd_cve_n();
-                break;
+            for (DataTableLC.ProductosPed p : dtProductos) {
+                if (datos[0].equals(p.getProd_sku_str())) {
+                    cve = p.getProd_cve_n();
+                    break;
+                }
             }
+            return cve;
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped23) ,e.getMessage());
+            return null;
         }
-        return cve;
     }
 
 }

@@ -387,6 +387,8 @@
     <string name="tl_cred1">Líquido</string>
     <string name="tl_cred2">Envase</string>
     <string name="tl_cred3">Abonos</string>
+
+
     <string name="hint_adeudoNormal">Adeudo normal</string>
     <string name="hint_limite">Límite</string>
     <string name="hint_vencido">Vencido</string>
@@ -443,7 +445,7 @@
     <string name="tv_banco">Banco</string>
     <string name="tv_referencia">Referencia</string>
     <string name="tt_ped14">Inventario insuficiente</string>
-    <string name="msg_ped1">Desea eliminar el producro</string>
+    <string name="msg_ped1">Desea eliminar el producto</string>
     <string name="msg_ped">Desea eliminar el producto:</string>
     <string name="hint_totalAbono">Total abonos</string>
     <string name="err_ped26">Error al ingresar pago</string>
@@ -455,5 +457,16 @@
     <string name="msg_agregarPago">"Cantidad por liquidar: "</string>
     <string name="err_ped28">Error al validar la cantidad</string>
     <string name="tt_ped19">Ingresa una cantidad</string>
+    <string name="hint_adeudoEsp">Adeudo especial</string>
+    <string name="tt_ped20">No se encontro el cliente</string>
+    <string name="err_ped29">Error en la lectura del codigo</string>
+    <string name="err_ped30">Error al eliminar producto</string>
+    <string name="err_recycler">Error al cargar recyclerView</string>
+    <string name="err_ped31">Error al cargar RecyclerView</string>
+    <string name="err_ped32">Error al cargar pagos</string>
+    <string name="error_actInfo">Error al actualizar información</string>
+    <string name="err_ped33">Error al actualizar pagos</string>
+    <string name="err_ped34">Error al actualizar totales</string>
+    <string name="err_ped35">Error al cargar liquido fragment</string>
 
 </resources>

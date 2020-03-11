@@ -77,42 +77,48 @@ public class PagoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_pago, container, false);
 
-        fab = view.findViewById(R.id.fab);
-        pedidosActivity = (PedidosActivity) getActivity();
+        try {
 
-        rc=pedidosActivity.getRC();
-        tv_credito = view.findViewById(R.id.et_credito);
-        tv_totalVenta = view.findViewById(R.id.et_totalVenta);
-        tv_contadoEsp = view.findViewById(R.id.et_contado);
-        tv_kit = view.findViewById(R.id.tv_kit);
-        tv_saldo = view.findViewById(R.id.tv_saldo);
-        dgPagos = new ArrayList<>();
+            fab = view.findViewById(R.id.fab);
+            pedidosActivity = (PedidosActivity) getActivity();
 
-        RecyclerView pagosRecyclerView = view.findViewById(R.id.pagosRecycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            rc = pedidosActivity.getRC();
+            tv_credito = view.findViewById(R.id.et_credito);
+            tv_totalVenta = view.findViewById(R.id.et_totalVenta);
+            tv_contadoEsp = view.findViewById(R.id.et_contado);
+            tv_kit = view.findViewById(R.id.tv_kit);
+            tv_saldo = view.findViewById(R.id.tv_saldo);
+            dgPagos = new ArrayList<>();
 
-        pagosRecyclerView.setLayoutManager(linearLayoutManager);
+            RecyclerView pagosRecyclerView = view.findViewById(R.id.pagosRecycler);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        pagosAdapterRecyclerView = new PagosAdapterRecyclerView(dgPagos, R.layout.cardview_pagos,this);
-        pagosRecyclerView.setAdapter(pagosAdapterRecyclerView);
+            pagosRecyclerView.setLayoutManager(linearLayoutManager);
 
-        PagosSwipeController carritoSwipeController = new PagosSwipeController(new SwipeControllerActions() {
-            @Override
-            public void onRightClicked(int position) {
-                pagosAdapterRecyclerView.eliminarItem(position);
-            }
-        }, getActivity());
+            pagosAdapterRecyclerView = new PagosAdapterRecyclerView(dgPagos, R.layout.cardview_pagos, this);
+            pagosRecyclerView.setAdapter(pagosAdapterRecyclerView);
 
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(carritoSwipeController);
-        itemTouchhelper.attachToRecyclerView(pagosRecyclerView);
+            PagosSwipeController carritoSwipeController = new PagosSwipeController(new SwipeControllerActions() {
+                @Override
+                public void onRightClicked(int position) {
+                    pagosAdapterRecyclerView.eliminarItem(position);
+                }
+            }, getActivity());
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ingresarPago();
-            }
-        });
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(carritoSwipeController);
+            itemTouchhelper.attachToRecyclerView(pagosRecyclerView);
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ingresarPago();
+                }
+            });
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped32) ,e.getMessage());
+        }
 
         return view;
     }
@@ -144,36 +150,45 @@ public class PagoFragment extends Fragment {
             }
         });
 
+        pedidosVM.getTxtContado().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String contado) {
+                tv_contadoEsp.setText(string.FormatoPesos(contado));
+            }
+        });
+
     }
 
     private void actualizarCampos()
     {
-        //cuando se actualizan los articulos de la venta
-        if(dgProd2!=null && dgProd2.size()>0)
-        {
-            double subtotal, total = 0;
-            for (DataTableLC.ProductosPed p : dgProd2)
-            {
-                subtotal = Double.parseDouble( string.DelCaracteres( p.getLpre_precio_n() ) ) * Double.parseDouble(p.getProd_cant_n());
-                total += subtotal;
+        try {
+            //cuando se actualizan los articulos de la venta
+            if (dgProd2 != null && dgProd2.size() > 0) {
+                double subtotal, total = 0;
+                for (DataTableLC.ProductosPed p : dgProd2) {
+                    subtotal = Double.parseDouble(string.DelCaracteres(p.getLpre_precio_n())) * Double.parseDouble(p.getProd_cant_n());
+                    total += subtotal;
+                }
+                tv_totalVenta.setText(string.FormatoPesos(total));
+
+                double totPagos = 0;
+                for (DataTableLC.DgPagos p : dgPagos)
+                    totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
+
+                tv_saldo.setText(string.FormatoPesos(total - totPagos));
+            } else {
+                tv_totalVenta.setText(string.FormatoPesos(0));
+                tv_saldo.setText(string.FormatoPesos(0));
+                tv_contadoEsp.setText(string.FormatoPesos(0));
+                tv_kit.setText(string.FormatoPesos(0));
+                pedidosActivity.setTextKit(tv_kit.getText().toString());
             }
-            tv_totalVenta.setText(string.FormatoPesos(total));
 
-            double totPagos =0;
-            for(DataTableLC.DgPagos p : dgPagos)
-                totPagos += Double.parseDouble( string.DelCaracteres( p.getFpag_cant_n() ) );
-
-            tv_saldo.setText(string.FormatoPesos(total-totPagos));
-        }
-        else
+            //cuando se agregan pagos
+        }catch (Exception e)
         {
-            tv_totalVenta.setText(string.FormatoPesos(0));
-            tv_saldo.setText(string.FormatoPesos(0));
-            tv_contadoEsp.setText(string.FormatoPesos(0));
-            tv_kit.setText(string.FormatoPesos(0));
+            Utils.msgError(getContext(), getString(R.string.error_actInfo) ,e.getMessage());
         }
-
-        //cuando se agregan pagos
 
     }
 
@@ -393,17 +408,22 @@ public class PagoFragment extends Fragment {
 
     public void ActualizarDgPagos(ArrayList<DataTableLC.DgPagos> dgRecycler)
     {
-        dgPagos = dgRecycler;
+        try {
+            dgPagos = dgRecycler;
 
-        double DescKit = Double.parseDouble( string.DelCaracteres(tv_kit.getText().toString()) );
+            double DescKit = Double.parseDouble(string.DelCaracteres(tv_kit.getText().toString()));
 
-        double totPagos =0;
-        for(DataTableLC.DgPagos p : dgPagos)
-            totPagos += Double.parseDouble( string.DelCaracteres( p.getFpag_cant_n() ) );
+            double totPagos = 0;
+            for (DataTableLC.DgPagos p : dgPagos)
+                totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
 
-        double txtVenta = Double.parseDouble(    string.DelCaracteres( tv_totalVenta.getText().toString() ) );
-        double tot = txtVenta - DescKit - totPagos;
-        tv_saldo.setText( string.FormatoPesos(tot) );
+            double txtVenta = Double.parseDouble(string.DelCaracteres(tv_totalVenta.getText().toString()));
+            double tot = txtVenta - DescKit - totPagos;
+            tv_saldo.setText(string.FormatoPesos(tot));
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped33) ,e.getMessage());
+        }
 
     }
 

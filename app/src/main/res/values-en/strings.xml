@@ -396,4 +396,88 @@
     <string name="tl_cred3">Deposits</string>
 
 
+
+
+
+
+    <string name="hint_adeudoNormal">Normal debit</string>
+    <string name="hint_limite">Limit</string>
+    <string name="hint_vencido">Vencido</string>
+    <string name="tv_deudaEnv">Defeated</string>
+    <string name="hint_adeudo">Debit</string>
+    <string name="hint_adeudoEnv">Debt container</string>
+    <string name="bt_agregarAbono">Add subscription</string>
+    <string name="bt_eliminarAbono">Delete subscription</string>
+    <string name="bt_descuento">%</string>
+    <string name="hint_totalVen">Total sale</string>
+    <string name="hint_contadoEsp">Special account</string>
+    <string name="bt_eliminarPago">Delete payment</string>
+    <string name="bt_agregarPago">Add payment</string>
+    <string name="hint_kit">Kit</string>
+    <string name="err_ped6">Failed to get products</string>
+    <string name="err_ped7">Error getting promotions</string>
+    <string name="err_ped8">Error listing containers</string>
+    <string name="err_ped9">Error getting payments</string>
+    <string name="err_ped10">Error listing payment methods</string>
+    <string name="err_ped11">Error listing container debit</string>
+    <string name="err_ped12">Error loading normal debit</string>
+    <string name="tt_ped9">Inactive customer can only be credited</string>
+    <string name="err_ped13">Error validating client</string>
+    <string name="tt_ped10">If you want to make a second sale, contact systems.</string>
+    <string name="err_ped14">Error validating second sale</string>
+    <string name="err_ped15">Error loading presale</string>
+    <string name="tt_ped11">The customer already has a sale associated with the presale. \n\n The data will not be loaded again.</string>
+    <string name="tt_ped12">The client does not have presale data</string>
+    <string name="err_ped16">Error calculating sale</string>
+    <string name="err_ped17">Error calculating packaging</string>
+    <string name="tt_ped13">Please check the packaging received or sold</string>
+    <string name="err_ped18">Error when calculating totals</string>
+    <string name="err_ped19">Error activating credit</string>
+    <string name="err_ped20">Error validating credit</string>
+    <string name="err_ped21">Error loading families</string>
+    <string name="err_ped22">Failed to get presentations</string>
+    <string name="err_ped23">Failed to get products</string>
+    <string name="msg_ventaCan">Inventory:</string>
+    <string name="tv_precio">Price</string>
+    <string name="tv_subtotal">Subtotal</string>
+    <string name="err_ped24">Error updating list</string>
+    <string name="err_ped25">Error loading fragment sale</string>
+    <string name="title_activity_fab">fabActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="tv_idPago">Payment ID</string>
+    <string name="tv_banco">Bank</string>
+    <string name="tv_referencia">Reference</string>
+    <string name="tt_ped14">Insufficient inventory</string>
+    <string name="msg_ped1">You want to remove the product</string>
+    <string name="msg_ped">You want to remove the product:</string>
+    <string name="hint_totalAbono">Total subscriptions</string>
+    <string name="err_ped26">Error entering payment</string>
+    <string name="err_ped27">Error adding payment</string>
+    <string name="tt_ped15">Select a payment method</string>
+    <string name="tt_ped16">The payment method requires a reference.</string>
+    <string name="tt_ped17">The payment method requires a bank.</string>
+    <string name="tt_ped18">The amount of the payment must be greater than zero.</string>
+    <string name="msg_agregarPago">"Amount to be settled: "</string>
+    <string name="err_ped28">Error validating the quantity</string>
+    <string name="tt_ped19">Enter an amount</string>
+    <string name="hint_adeudoEsp">Special debt</string>
+    <string name="tt_ped20">Client not found</string>
+    <string name="err_ped29">Error reading the code</string>
+    <string name="err_ped30">Error deleting product</string>
+    <string name="err_recycler">Error loading recyclerView</string>
+    <string name="err_ped31">Error loading recyclerView</string>
+    <string name="err_ped32">Error loading payments</string>
+    <string name="error_actInfo">Error updating information</string>
+    <string name="err_ped33">Error updating payments</string>
+    <string name="err_ped34">Failed to update totals</string>
+    <string name="err_ped35">Error loading fragment liquid</string>
+
 </resources>

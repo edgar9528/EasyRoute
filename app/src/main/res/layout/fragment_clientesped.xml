@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
+    android:background="@color/bgDefault"
     android:fitsSystemWindows="true"
     >
 
@@ -69,17 +69,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:background="@color/greybg"
+        android:background="@color/bgDefault"
         >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/pedidosRecycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="@dimen/paddingGeneral"
                 >
-
             </androidx.recyclerview.widget.RecyclerView>
+
+            <EditText
+                android:id="@+id/et_codigo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/tv_ejemplo"
+                android:autofillHints="@string/tv_ejemplo"
+                android:clickable="false"
+                android:theme="@style/EditTextWhite"
+                >
+            </EditText>
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

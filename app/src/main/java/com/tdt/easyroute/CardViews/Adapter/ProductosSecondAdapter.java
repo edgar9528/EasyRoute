@@ -52,7 +52,6 @@ public class ProductosSecondAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
-
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.row_second, null);
             TextView text = (TextView) convertView.findViewById(R.id.rowSecondText);
@@ -68,7 +67,6 @@ public class ProductosSecondAdapter extends BaseExpandableListAdapter {
         String[] childData;
 
         childData = data.get(groupPosition);
-
 
         return childData[childPosition];
     }

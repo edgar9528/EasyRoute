@@ -1,26 +1,17 @@
 package com.tdt.easyroute.Ventanas.Ventas;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.ViewPager;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.speech.tts.UtteranceProgressListener;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
-import com.tdt.easyroute.Adapter.PagerConfiguracionAdapter;
 import com.tdt.easyroute.Adapter.PagerPedidosAdapter;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
@@ -34,11 +25,7 @@ import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
-import java.time.DayOfWeek;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 public class PedidosActivity extends AppCompatActivity {
@@ -52,6 +39,8 @@ public class PedidosActivity extends AppCompatActivity {
     private boolean removerVenta = false;
     private String _tv_adeudoN;
     private String _tv_totAbono;
+    private String _txtKit;
+    private String _txtSaldoDeudaEnv;
 
     Configuracion conf;
     DataTableLC.DtCliVentaNivel rc;
@@ -67,8 +56,8 @@ public class PedidosActivity extends AppCompatActivity {
     ArrayList<DataTableLC.Pagos> dtPagos;
     ArrayList<DataTableWS.FormasPago> formasPago;
     ArrayList<DataTableWS.FormasPago> formasPago2;
-    ArrayList<DataTableLC.AdeudoNormal> dtAN;
-    ArrayList<DataTableLC.AdeudoNormal> dtAE;
+    ArrayList<DataTableLC.AdeudoNormal> dgANormal;
+    ArrayList<DataTableLC.AdeudoNormal> dgAEspecial;
 
     boolean RutaMayorista = false;
     boolean RutaPromoCe = false;
@@ -114,7 +103,6 @@ public class PedidosActivity extends AppCompatActivity {
 
         inicializar();
 
-
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_ped1));
@@ -139,7 +127,6 @@ public class PedidosActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 ValidaCredito();
                 viewPager.setCurrentItem(tab.getPosition());
-
             }
 
             @Override
@@ -183,12 +170,17 @@ public class PedidosActivity extends AppCompatActivity {
             }
         });
 
+        pedidosVM.getTxtSaldoDeudaEnv().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                _txtSaldoDeudaEnv=s;
+            }
+        });
+
     }
 
     private void inicializar()
     {
-        Log.d("salida", "entro a inicializar");
-
         ListaPrev = new ArrayList<>();
 
         conf = Utils.ObtenerConf(getApplication());
@@ -218,9 +210,11 @@ public class PedidosActivity extends AppCompatActivity {
 
         ListarAdeudoEnvase();
 
-        dtAN = ListarAdeudoNormal();
-        dtAE = ListarAdeudoEspecial();
+        dgANormal = ListarAdeudoNormal();
+        dgAEspecial = ListarAdeudoEspecial();
 
+        pedidosVM.setDgANormal(dgANormal);
+        pedidosVM.setDgAEspecial(dgAEspecial);
 
         ValidaClienteInactivo();
         ValidarSegundaVenta();
@@ -386,7 +380,6 @@ public class PedidosActivity extends AppCompatActivity {
         {
             String con = string.formatSql2("select * from pagos where cli_cve_n={0} and pag_cobranza_n=1", noCli);
             String json = BaseLocal.Select(con, getApplicationContext());
-
             dtPagos = ConvertirRespuesta.getPagosALJson(json);
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped9), e.getMessage());
@@ -476,6 +469,18 @@ public class PedidosActivity extends AppCompatActivity {
 
             ArrayList<DataTableLC.EnvasesAdeudo> dt = ConvertirRespuesta.getEnvasesAdeudoJson(json);
 
+            double adeudo,abono,venta,lprePrecio;
+            for(int i=0; i<dt.size(); i++)
+            {
+                adeudo = Double.parseDouble(dt.get(i).getAdeudo());
+                abono = Double.parseDouble(dt.get(i).getAbono());
+                venta = Double.parseDouble(dt.get(i).getVenta());
+                lprePrecio = Double.parseDouble(dt.get(i).getLpre_precio_n());
+
+                dt.get(i).setSaldo( String.valueOf( adeudo-abono-venta  ) );
+                dt.get(i).setSubPagoEnv( String.valueOf( abono+venta ) );
+                dt.get(i).setSubTotal( String.valueOf( lprePrecio*venta ) );
+            }
 
             con = "select cli_cve_n,prod_cve_n,sum(prod_cant_n) adeudo,sum(prod_cantabono_n) abono " +
                     "from creditos where cli_cve_n={0} and prod_cve_n={1} and cred_esenvase_n=1 " +
@@ -525,6 +530,7 @@ public class PedidosActivity extends AppCompatActivity {
     {
         try {
             double limCred = Double.parseDouble(rc.getCli_montocredito_n());
+            pedidosVM.setTxtLimCred( String.valueOf( limCred ) ); //txtLimCred.Text = limCred.ToString("c");
 
             String con = "select cred_cve_n,cred_referencia_str,cred_fecha_dt,cred_monto_n,cred_abono_n," +
                     "0.0 abono from creditos where cli_cve_n={0} and cred_esenvase_n=0 and cred_especial_n=0";
@@ -562,7 +568,8 @@ public class PedidosActivity extends AppCompatActivity {
             }
 
 
-            if (dtANormal != null) {
+            if (dtANormal != null)
+            {
                 int diascred = Integer.parseInt(rc.getCli_plazocredito_n());
                 double res = 0;
                 for (int i = 0; i < dtANormal.size(); i++) {
@@ -574,13 +581,17 @@ public class PedidosActivity extends AppCompatActivity {
                     }
                 }
 
-                if (res <= 0) {
+                pedidosVM.setTxtVencido(String.valueOf(res));
+
+                /*if (res <= 0)
+                {
                     //txtVencido.BackColor = Color.LightSalmon;
                     //txtVencido.Text = string.Format("{0:C}", res);
-                } else {
+                } else
+                    {
                     //txtVencido.BackColor = Color.White;
                     //txtVencido.Text = (0).ToString("C");
-                }
+                }*/
             }
 
             if(dtANormal==null)
@@ -951,12 +962,12 @@ public class PedidosActivity extends AppCompatActivity {
         try {
             double calculo = 0;
             double DescKit = 0;
-            DescKit = 0;//decimal.Parse(txtKit.Text.Replace("$", ""));
+            DescKit = Double.parseDouble( string.DelCaracteres(_txtKit) ) ; //decimal.Parse(txtKit.Text.Replace("$", ""));
 
             for (DataTableLC.ProductosPed p : dgProd2)
                 calculo += Double.parseDouble(p.getSubtotal());
 
-            //txtSubtotal2.Text = string.Format("{0:C}", decimal.Parse(calculo.ToString()));
+            pedidosVM.setTxtSubtotal2( String.valueOf(calculo) ); //txtSubtotal2.Text = string.Format("{0:C}", decimal.Parse(calculo.ToString()));
 
             calculo = 0;
             for (DataTableLC.ProductosPed p : dgProd2)
@@ -964,15 +975,15 @@ public class PedidosActivity extends AppCompatActivity {
                     calculo += Double.parseDouble(p.getSubtotal());
 
 
-            double ventaEA = 0; //decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""));
-            double ContEsp = 0; //decimal.Parse(calculo.ToString())+ventaEA;
+            double ventaEA = Double.parseDouble( string.FormatoPesos(_txtSaldoDeudaEnv) ) ; //decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""));
+            double ContEsp = calculo+ventaEA; //decimal.Parse(calculo.ToString())+ventaEA;
 
             if (ContEsp >= DescKit)
                 ContEsp -= DescKit;
             else
                 ContEsp = 0;
 
-            //txtContado.Text = string.Format("{0:C}", ContEsp);
+            pedidosVM.setTxtContado( String.valueOf(ContEsp) ); //txtContado.Text = string.Format("{0:C}", ContEsp);
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped16), e.getMessage());
@@ -1235,7 +1246,7 @@ public class PedidosActivity extends AppCompatActivity {
             int diascred =  Integer.parseInt( rc.getCli_plazocredito_n() );
 
             saldoVencido=0;
-            for(DataTableLC.AdeudoNormal an: dtAN )
+            for(DataTableLC.AdeudoNormal an: dgANormal)
             {
                 Date f1 = Utils.FechaDT( an.getCred_fecha_dt() );
                 Date f2 = Utils.FechaDT( Utils.FechaModificarDias( Utils.FechaLocal(),-diascred ) );
@@ -1268,7 +1279,7 @@ public class PedidosActivity extends AppCompatActivity {
             if (saldoVencido - totAbono > 0)
             {
                 SinCredito = true;
-                pedidosVM.setEstadoCredito("vencido");
+                pedidosVM.setEstadoCredito("Vencido");
                 return SinCredito;
             }
 
@@ -1413,7 +1424,6 @@ public class PedidosActivity extends AppCompatActivity {
         }
     }
 
-
     //region variables compartidas
 
     public boolean getEsVenta()
@@ -1428,6 +1438,11 @@ public class PedidosActivity extends AppCompatActivity {
     {
         return disponible;
     };
+
+    public void setTextKit(String kit)
+    {
+        _txtKit = kit;
+    }
 
     //endregion
 

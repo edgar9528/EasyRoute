@@ -69,6 +69,7 @@ public class VentavenFragment extends Fragment {
             esVenta=pedidosActivity.getEsVenta();
 
             tv_subTotal2 = view.findViewById(R.id.tv_subTotal2);
+            tv_subTotal2.setText( string.FormatoPesos(0) );
 
             RecyclerView ventasRecyclerView = view.findViewById(R.id.ventasRecycler);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -126,6 +127,14 @@ public class VentavenFragment extends Fragment {
                 AgregarProducto(cve_prod);
             }
         });
+
+        pedidosVM.getTxtSubtotal2().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String subTotal2) {
+                tv_subTotal2.setText( string.FormatoPesos(subTotal2) );
+            }
+        });
+
     }
 
     private void AgregarProducto(String cve_producto)
@@ -151,24 +160,29 @@ public class VentavenFragment extends Fragment {
 
     private void EliminarProducto(final int indice)
     {
-        String men = getString(R.string.msg_ped) + " \n"+ dgProd2.get(indice).getProd_sku_str()+"\n"+ dgProd2.get(indice).getProd_desc_str();
+        try {
+            String men = getString(R.string.msg_ped) + " \n" + dgProd2.get(indice).getProd_sku_str() + "\n" + dgProd2.get(indice).getProd_desc_str();
 
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-        dialogo1.setTitle(getResources().getString(R.string.msg_importante));
-        dialogo1.setMessage( men );
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton(getResources().getString(R.string.msg_si), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-                ventaAdapterRecyclerView.eliminarItem(indice);
-            }
-        });
-        dialogo1.setNegativeButton(getResources().getString(R.string.msg_no), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ventaAdapterRecyclerView.actualizarItem(indice,null);
-            }
-        });
-        dialogo1.show();
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
+            dialogo1.setTitle(getResources().getString(R.string.msg_importante));
+            dialogo1.setMessage(men);
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton(getResources().getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+                    ventaAdapterRecyclerView.eliminarItem(indice);
+                }
+            });
+            dialogo1.setNegativeButton(getResources().getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ventaAdapterRecyclerView.actualizarItem(indice, null);
+                }
+            });
+            dialogo1.show();
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_ped30) , e.getMessage());
+        }
 
     }
 
@@ -187,6 +201,11 @@ public class VentavenFragment extends Fragment {
             Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
         }
         return producto;
+    }
+
+    public void ingresarCantidad2(int position)
+    {
+        ingresarCantidad(position, dgProd2.get(position));
     }
 
     private void ingresarCantidad(final int indice, final DataTableLC.ProductosPed prod)

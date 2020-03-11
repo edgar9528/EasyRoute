@@ -8,57 +8,109 @@
     android:layout_height="match_parent"
     tools:context=".Ventanas.Ventas.Credito.LiquidocreFragment">
 
-    <TextView
-        android:id="@+id/tv_adeudoN1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/hint_adeudoNormal"
-        style="@style/tv_titulos"
-
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_adeudoN"
-        android:layout_marginTop="@dimen/paddingGeneral"
-        android:layout_marginStart="@dimen/paddingGeneral"
-        >
-    </TextView>
-
-    <TextView
-        android:id="@+id/tv_adeudoN"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/hint_credito"
-        android:textAlignment="textEnd"
-        style="@style/tv_titulos.tv_mensajes"
-
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_adeudoN1"
-        app:layout_constraintStart_toEndOf="@id/tv_adeudoN1"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/paddingGeneral"
-        >
-    </TextView>
-
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_adeudoN1"
-        app:layout_constraintBottom_toTopOf="@+id/tv_vencido1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_limCredito"
+        android:weightSum="2"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/paddingGeneral"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical"
             >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_adeudoNormal"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_adeudoN"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_credito"
+                    android:textAlignment="textEnd"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/normalRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 
 
-    </ScrollView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_adeudoEsp"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_adeudoE"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_adeudoEsp"
+                    android:textAlignment="textEnd"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/especialRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <TextView
@@ -76,7 +128,7 @@
     </TextView>
 
     <TextView
-        android:id="@+id/tv_vencido"
+        android:id="@+id/tv_limCredito"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/hint_credito"
@@ -109,7 +161,7 @@
     </TextView>
 
     <TextView
-        android:id="@+id/tv_limCredito"
+        android:id="@+id/tv_vencido"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/hint_credito"

@@ -21,7 +21,7 @@
         <activity android:name=".Ventanas.Preventa.PreventaActivity" />
         <activity
             android:name=".Ventanas.Ventas.PedidosActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".Ventanas.Inventario.Carga2Activity" />
         <activity
             android:name=".LoginActivity"

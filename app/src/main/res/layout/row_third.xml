@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/paddingGeneral"
-    android:background="@color/item3"
+    android:background="@color/colorPrimaryDark"
     android:foreground="?android:attr/selectableItemBackground"
     >
 
@@ -14,7 +14,7 @@
         android:id="@+id/rowThirdText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/blanco"
         android:textStyle="bold"
         android:paddingStart="45dp"
         android:paddingEnd="@dimen/paddingGeneral"

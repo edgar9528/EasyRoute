@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.tdt.easyroute.CardViews.Model.VentaCardView;
-import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
@@ -40,7 +38,7 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VentaAdapterRecyclerView.VentaViewHolder ventaViewHolder, int position) {
+    public void onBindViewHolder(@NonNull VentaAdapterRecyclerView.VentaViewHolder ventaViewHolder, final int position) {
         final DataTableLC.ProductosPed ventaCardView = ventaCardViews.get(position);
 
         String producto = ventaCardView.getProd_sku_str()+" - "+ ventaCardView.getProd_desc_str();
@@ -49,6 +47,14 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
         ventaViewHolder.tv_precio.setText( ventaCardView.getLpre_precio_n() );
         ventaViewHolder.tv_cantidad.setText( ventaCardView.getProd_cant_n() );
         ventaViewHolder.tv_subtotal.setText( ventaCardView.getSubtotal() );
+
+        ventaViewHolder.cardViewVenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ventavenFragment.ingresarCantidad2(position);
+            }
+        });
+
     }
 
     @Override
@@ -63,6 +69,7 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
         private TextView tv_precio;
         private TextView tv_cantidad;
         private TextView tv_subtotal;
+        private CardView cardViewVenta;
 
         public VentaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +78,7 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
             tv_precio = itemView.findViewById(R.id.tv_precio);
             tv_cantidad = itemView.findViewById(R.id.tv_cantidad);
             tv_subtotal = itemView.findViewById(R.id.tv_subtotal);
+            cardViewVenta = itemView.findViewById(R.id.cardViewVenta);
         }
     }
 
