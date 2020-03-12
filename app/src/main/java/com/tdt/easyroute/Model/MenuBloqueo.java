@@ -17,6 +17,8 @@ public class MenuBloqueo {
         for(int i=0; i< grupos.length;i++)
             grupos[i]=true;
 
+        grupos[3]=false;
+
         boolean[] hijos0 = {true,true};
         boolean[] hijos1 = {true,true,true,true,true};
         boolean[] hijos2 = {true};

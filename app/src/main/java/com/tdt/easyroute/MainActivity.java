@@ -401,8 +401,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 rutaMostrar = getResources().getString( R.string.hint_noRuta);
                 tv_ruta.setText(rutaMostrar);
             }
-
-
         }
         catch (Exception e)
         {

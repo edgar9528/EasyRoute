@@ -417,7 +417,7 @@ public class ArqueoFragment extends Fragment {
             imp+= "TOTAL ENTREGAR A CAJA: $" + (TotVC + TotCob) +"\n\n";
 
             imp+= string.formatSql("YO {0} RESPONSABLE DE LA RUTA {1} DEBO Y PAGARE " +
-                    "A LA EMPRESA STORYBIRD, S.A. DE C.V. LA CANTIDAD DE ${2}",asesor,rutac, String.valueOf (TotVC+TotCob));
+                    "A LA EMPRESA _, S.A. DE C.V. LA CANTIDAD DE ${2}",asesor,rutac, String.valueOf (TotVC+TotCob));
 
 
 

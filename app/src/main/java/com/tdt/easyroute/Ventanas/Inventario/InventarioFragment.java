@@ -164,7 +164,8 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             }
 
             if (dtVta.size() > 0) {
-                Toast.makeText(getContext(), string.formatSql(getString(R.string.tt_inv2), String.valueOf(CantVta)), Toast.LENGTH_LONG).show();
+                Utils.msgInfo(getContext(), string.formatSql(getString(R.string.tt_inv2), String.valueOf(CantVta)) );
+                //Toast.makeText(getContext(), string.formatSql(getString(R.string.tt_inv2), String.valueOf(CantVta)), Toast.LENGTH_LONG).show();
 
                 //Obtener la ruta actual
                 DataTableWS.Ruta dtRut = null;
@@ -280,11 +281,13 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
             if (ip.getPorcentajeRealizado() < ip.getPorcentajeRequerido()) {
                 mensaje = string.formatSql(getString(R.string.tt_inv3), String.valueOf(ip.getVisitasRequeridas() - ip.getVisitasClientes()));
-                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                Utils.msgInfo(getContext(), mensaje );
+                //Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
                 entrarDescarga = false;
             } else if (ip.getPorcentajeRealizadoVentas() < ip.getPorcentajeRequeridoVentas()) {
                 mensaje = string.formatSql(getString(R.string.tt_inv4), String.valueOf(ip.getVentasRequeridas() - ip.getConVenta()));
-                Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
+                Utils.msgInfo(getContext(), mensaje );
+                //Toast.makeText(getContext(), mensaje, Toast.LENGTH_LONG).show();
                 entrarDescarga = false;
             }
 
@@ -454,7 +457,6 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                     DataTableLC.Inv in = null;
                     for(int j=0; j<al_inv.size();j++) //obtener todos los que coinciden (el select)
                     {
-
                         if(al_inv.get(j).getProd_cve_n().equals(r.getProd_cve_n()))
                         {
                             in= al_inv.get(j);
