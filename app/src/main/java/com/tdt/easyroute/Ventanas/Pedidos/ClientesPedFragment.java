@@ -861,7 +861,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
                     Toast.makeText(getContext(), getString(R.string.tt_ped4), Toast.LENGTH_LONG).show();
-                    //return;
+                    return;
                 }
             }
             if (tipo == 2)
@@ -869,7 +869,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
                     Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
-                    //return;
+                    return;
                 }
             }
 

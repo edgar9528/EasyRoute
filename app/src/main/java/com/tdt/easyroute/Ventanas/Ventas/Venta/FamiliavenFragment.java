@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +116,9 @@ public class FamiliavenFragment extends Fragment {
                     thirdLevel.put(p, third);
                 }
                 data.add(thirdLevel);
+
+                Log.d("salida","Fam: "+familiasAL.size() + "   pres: "+presentacionesAL.size()+"   prod: "+productosAL.size());
+
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, productosTotalAL);
@@ -161,7 +165,6 @@ public class FamiliavenFragment extends Fragment {
                 }
             }
             Collections.sort(familiasAL);
-
         }
         catch (Exception e)
         {
@@ -199,6 +202,7 @@ public class FamiliavenFragment extends Fragment {
                 {
                     productosAL.add(p.getProd_sku_str() + "\n" + p.getProd_desc_str());
                     productosTotalAL.add( p.getProd_sku_str() + "\n" + p.getProd_desc_str() );
+                    //Log.d("salida","Fam: "+fam + "   pres: "+pres+"   prod: "+p.getProd_sku_str());
                 }
             }
         }catch (Exception e)

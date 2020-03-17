@@ -431,8 +431,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         SQLiteDatabase bd = databaseHelper.getWritableDatabase();
 
         try {
-
-
             if(bd!=null)
             {
                 String consulta = string.formatSql("select * from usuarios where usu_cve_str='{0}'", u.getUsuario());
@@ -523,7 +521,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
             Log.d(TAG,"Error actUser"+e.toString());
         }
-
     }
 
     public void validaUsuarioLocal()
@@ -628,7 +625,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                         bd.close();
 
                     Log.d(TAG, "usuario o contraseña incorrectos");
-                    Toast.makeText(this,  getString(R.string.tt_login1), Toast.LENGTH_LONG).show();
+                    Utils.msgInfo(this, getString(R.string.tt_login1));
+                    //Toast.makeText(this,  getString(R.string.tt_login1), Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(this, respuesta, Toast.LENGTH_LONG).show();
