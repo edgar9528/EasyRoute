@@ -117,13 +117,12 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             iv_logo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
+                    /*Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
                     intent.putExtra("admin", true);
-                    startActivity(intent);
+                    startActivity(intent);*/
 
-                    /*Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
                     startActivity(intent);
-                     */
 
                 }
             });

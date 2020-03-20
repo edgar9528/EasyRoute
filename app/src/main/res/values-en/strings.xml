@@ -480,5 +480,6 @@
     <string name="err_ped34">Failed to update totals</string>
     <string name="err_ped35">Error loading fragment liquid</string>
     <string name="tt_ped21">Sale made</string>
+    <string name="tt_detPed1">Customer location not available</string>
 
 </resources>

@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.Utils;
@@ -27,7 +29,9 @@ public class DatosdetFragment extends Fragment {
     private ArrayList<DataTableLC.Estatus> dtEst=null;
     private Spinner sp_estado;
 
-    private EditText et_codigo, et_razon, et_negocio,et_rfc, et_limCredito, et_plazo, et_envases, et_coord;
+    private TextView tv_codigo, tv_razon,tv_negocio, tv_rfc,tv_limCred;
+    private TextView tv_plazo, tv_envases,tv_coord;
+
     private RadioButton rb_reqfact, rb_prospectp, rb_fba,rb_comodato;
 
     private DetallesCliVM detallesCliVM;
@@ -68,14 +72,15 @@ public class DatosdetFragment extends Fragment {
             sp_estado = view.findViewById(R.id.spinnerEstadoCred);
             sp_estado.setEnabled(false);
 
-            et_codigo = view.findViewById(R.id.et_codigo);
-            et_razon = view.findViewById(R.id.et_razon);
-            et_negocio = view.findViewById(R.id.et_negocio);
-            et_rfc = view.findViewById(R.id.et_rfc);
-            et_limCredito = view.findViewById(R.id.et_limite);
-            et_plazo = view.findViewById(R.id.et_plazo);
-            et_envases = view.findViewById(R.id.et_envases);
-            et_coord = view.findViewById(R.id.et_coordenada);
+            tv_codigo = view.findViewById(R.id.tv_codigo);
+            tv_razon = view.findViewById(R.id.tv_razon);
+            tv_negocio = view.findViewById(R.id.tv_negocio);
+            tv_rfc = view.findViewById(R.id.tv_rfc);
+            tv_limCred = view.findViewById(R.id.tv_limCred);
+            tv_plazo = view.findViewById(R.id.tv_plazo);
+            tv_envases = view.findViewById(R.id.tv_envases);
+            tv_coord = view.findViewById(R.id.tv_coordenada);
+
 
             rb_reqfact = view.findViewById(R.id.rb_reqfact);
             rb_prospectp = view.findViewById(R.id.rb_prospectp);
@@ -111,14 +116,16 @@ public class DatosdetFragment extends Fragment {
     {
         try
         {
-            et_codigo.setText(rc.getCli_cveext_str().equals("null")?"":rc.getCli_cveext_str());
-            et_razon.setText(rc.getCli_razonsocial_str().equals("null")?"":rc.getCli_razonsocial_str());
-            et_negocio.setText(rc.getCli_nombrenegocio_str().equals("null")?"":rc.getCli_nombrenegocio_str() );
-            et_rfc.setText(rc.getCli_rfc_str().equals("null")?"":rc.getCli_rfc_str() );
-            et_limCredito.setText( rc.getCli_montocredito_n().equals("null")?"":rc.getCli_montocredito_n() );
-            et_plazo.setText( rc.getCli_plazocredito_n().equals("null")?"":rc.getCli_plazocredito_n() );
-            et_envases.setText( rc.getCli_credenvases_n().equals("null")?"":rc.getCli_credenvases_n() );
-            et_coord.setText( rc.getCli_coordenadaini_str().equals("null")?"":rc.getCli_coordenadaini_str() );
+            tv_codigo.setText(rc.getCli_cveext_str().equals("null")?"":rc.getCli_cveext_str());
+            tv_razon.setText(rc.getCli_razonsocial_str().equals("null")?"":rc.getCli_razonsocial_str());
+            tv_negocio.setText(rc.getCli_nombrenegocio_str().equals("null")?"":rc.getCli_nombrenegocio_str() );
+
+
+            tv_rfc.setText(rc.getCli_rfc_str().equals("null")?"":rc.getCli_rfc_str() );
+            tv_limCred.setText( rc.getCli_montocredito_n().equals("null")?"":rc.getCli_montocredito_n() );
+            tv_plazo.setText( rc.getCli_plazocredito_n().equals("null")?"":rc.getCli_plazocredito_n() );
+            tv_envases.setText( rc.getCli_credenvases_n().equals("null")?"":rc.getCli_credenvases_n() );
+            tv_coord.setText( rc.getCli_coordenadaini_str().equals("null")?"":rc.getCli_coordenadaini_str() );
 
             detallesCliVM.setUbiCliente( rc.getCli_coordenadaini_str() );
 

@@ -9,27 +9,33 @@
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     >
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
+    <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="0dp"
         android:layout_height="200dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
-    />
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        >
+        <fragment
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
 
-        app:layout_constraintTop_toBottomOf="@id/mapView"
+        app:layout_constraintTop_toBottomOf="@id/ll"
         app:layout_constraintBottom_toTopOf="@id/button_salir"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
-        android:layout_marginTop="@dimen/paddingGeneral"
         >
 
         <LinearLayout
@@ -43,8 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_direccion"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimaryDark"
+                style="@style/tv_titulos"
                 >
             </TextView>
 
@@ -54,125 +59,246 @@
                 android:layout_height="wrap_content"
                 />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_calle"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_calle"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/hint_calle"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:id="@+id/tv_calle"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_noExt"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_numExt"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/hint_numExt"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:id="@+id/tv_noExt"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_noInt"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_numInt"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/hint_numInt"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:id="@+id/tv_noInt"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_colonia"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_colonia"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/hint_colonia"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tv_colonia"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
 
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_municipio"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_municipio"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/hint_municipio"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:id="@+id/tv_municipio"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_telefono1"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_num1"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/hint_num1"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:id="@+id/tv_telefono1"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_telefono2"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_num2"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/hint_num2"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:id="@+id/tv_telefono2"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_coordenada"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/tv_coordenada"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/tv_coordenada"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
 
+                <TextView
+                    android:id="@+id/tv_coordenada"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -1,7 +1,6 @@
 package com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -20,20 +19,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Point;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.Utils;
@@ -42,28 +37,18 @@ import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.DetallesCliVM;
-
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
-
 
 public class DomiciliodetFragment extends Fragment {
 
     private DataTableLC.DtCliVenta rc;
     private Spinner sp_direcciones;
     private ArrayList<DataTableWS.Direcciones> al_direcciones;
-    private EditText et_calle, et_numExt, et_numInt, et_colonia, et_municipio, et_tel1, et_tel2,et_coordenada;
+    private TextView tv_calle, tv_numExt, tv_numInt, tv_colonia, tv_municipio, tv_tel1, tv_tel2,tv_coordenada;
     private String ubiCliente;
     private DetallesCliVM detallesCliVM;
 
-    private MapView mapView;
-    private static final String SOURCE_ID = "SOURCE_ID";
-    private static final String ICON_ID = "ICON_ID";
-    private static final String LAYER_ID = "LAYER_ID";
+    private GoogleMap map;
 
     public static DomiciliodetFragment newInstance() {
         DomiciliodetFragment fragment = new DomiciliodetFragment();
@@ -77,7 +62,6 @@ public class DomiciliodetFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         detallesCliVM = ViewModelProviders.of ( getActivity() ).get(DetallesCliVM.class);
-        Mapbox.getInstance(getContext(), getString(R.string.token_mapa));
     }
 
 
@@ -94,17 +78,14 @@ public class DomiciliodetFragment extends Fragment {
 
             Button button_salir, button_ruta;
 
-            mapView = view.findViewById(R.id.mapView);
-            mapView.onCreate(savedInstanceState);
-
-            et_calle = view.findViewById(R.id.et_calle);
-            et_numExt = view.findViewById(R.id.et_noExt);
-            et_numInt = view.findViewById(R.id.et_noInt);
-            et_colonia = view.findViewById(R.id.et_colonia);
-            et_municipio = view.findViewById(R.id.et_municipio);
-            et_tel1 = view.findViewById(R.id.et_telefono1);
-            et_tel2 = view.findViewById(R.id.et_telefono2);
-            et_coordenada = view.findViewById(R.id.et_coordenada);
+            tv_calle = view.findViewById(R.id.tv_calle);
+            tv_numExt = view.findViewById(R.id.tv_noExt);
+            tv_numInt = view.findViewById(R.id.tv_noInt);
+            tv_colonia = view.findViewById(R.id.tv_colonia);
+            tv_municipio = view.findViewById(R.id.tv_municipio);
+            tv_tel1 = view.findViewById(R.id.tv_telefono1);
+            tv_tel2 = view.findViewById(R.id.tv_telefono2);
+            tv_coordenada = view.findViewById(R.id.tv_coordenada);
 
             button_salir = view.findViewById(R.id.button_salir);
             button_ruta = view.findViewById(R.id.button_ruta);
@@ -170,60 +151,48 @@ public class DomiciliodetFragment extends Fragment {
     private void cargarMapa()
     {
         try {
-            if (!ubiCliente.equals("null"))
-            {
+            float lat = 0, lon = 0;
+            if (!string.EsNulo(ubiCliente)) {
                 String[] latLong = ubiCliente.split(",");
-                float lat = 0, lon = 0;
+
                 if (!latLong[0].equals("null") && !latLong[1].equals("null")) {
                     lat = Float.parseFloat(latLong[0]);
                     lon = Float.parseFloat(latLong[1]);
                 }
-
-                final float fLat = lat, fLong = lon;
-
-                mapView.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                        List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
-                        symbolLayerIconFeatureList.add(Feature.fromGeometry(
-                                Point.fromLngLat(fLong, fLat)));
-
-                        CameraPosition position = new CameraPosition.Builder()
-                                .target(new LatLng(fLat, fLong)) // Sets the new camera position
-                                .zoom(14) // Sets the zoom
-                                .tilt(30) // Set the camera tilt
-                                .build(); // Creates a CameraPosition from the builder
-                        mapboxMap.setCameraPosition(position);
-
-                        mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
-
-                                // Add the SymbolLayer icon image to the map style
-                                .withImage(ICON_ID, BitmapFactory.decodeResource(
-                                        getActivity().getResources(), R.drawable.pin))
-
-                                // Adding a GeoJson source for the SymbolLayer icons.
-                                .withSource(new GeoJsonSource(SOURCE_ID,
-                                        FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
-
-                                .withLayer(new SymbolLayer(LAYER_ID, SOURCE_ID)
-                                        .withProperties(PropertyFactory.iconImage(ICON_ID),
-                                                iconAllowOverlap(true),
-                                                iconIgnorePlacement(true),
-                                                iconOffset(new Float[]{0f, -9f}))
-                                ), new Style.OnStyleLoaded() {
-                            @Override
-                            public void onStyleLoaded(@NonNull Style style) {
-
-                            }
-                        });
-                    }
-                });
             }
+
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
+            final float finalLon = lon;
+            final float finalLat = lat;
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap mMap) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+                    mMap.clear(); //clear old markers
+
+                    int zoom = 10;
+                    if (finalLat == 0 && finalLon == 0)
+                        zoom = 0;
+
+                    CameraPosition googlePlex = CameraPosition.builder()
+                            .target(new LatLng(finalLat, finalLon))
+                            .zoom(zoom)
+                            .tilt(10)
+                            .build();
+
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 5000, null);
+
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(finalLat, finalLon)));
+                }
+            });
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_ped5), e.getMessage());
         }
     }
+
 
     private void cargarDirecciones()
     {
@@ -258,14 +227,14 @@ public class DomiciliodetFragment extends Fragment {
         {
             DataTableWS.Direcciones d = al_direcciones.get(posicion);
 
-            et_calle.setText( d.getDir_calle_str().equals("null")?"":d.getDir_calle_str() );
-            et_numExt.setText( d.getDir_noext_str().equals("null")?"":d.getDir_noext_str() );
-            et_numInt.setText( d.getDir_noint_str().equals("null")?"":d.getDir_noint_str() );
-            et_colonia.setText( d.getDir_colonia_str().equals("null")?"":d.getDir_colonia_str() );
-            et_municipio.setText( d.getDir_municipio_str().equals("null")?"":d.getDir_municipio_str() );
-            et_tel1.setText( d.getDir_tel1_str().equals("null")?"":d.getDir_tel1_str() );
-            et_tel2.setText( d.getDir_tel2_str().equals("null")?"":d.getDir_tel2_str() );
-            et_coordenada.setText( d.getDir_coordenada_str().equals("null")?"":d.getDir_coordenada_str() );
+            tv_calle.setText( d.getDir_calle_str().equals("null")?"":d.getDir_calle_str() );
+            tv_numExt.setText( d.getDir_noext_str().equals("null")?"":d.getDir_noext_str() );
+            tv_numInt.setText( d.getDir_noint_str().equals("null")?"":d.getDir_noint_str() );
+            tv_colonia.setText( d.getDir_colonia_str().equals("null")?"":d.getDir_colonia_str() );
+            tv_municipio.setText( d.getDir_municipio_str().equals("null")?"":d.getDir_municipio_str() );
+            tv_tel1.setText( d.getDir_tel1_str().equals("null")?"":d.getDir_tel1_str() );
+            tv_tel2.setText( d.getDir_tel2_str().equals("null")?"":d.getDir_tel2_str() );
+            tv_coordenada.setText( d.getDir_coordenada_str().equals("null")?"":d.getDir_coordenada_str() );
 
         }catch (Exception e)
         {
@@ -277,15 +246,33 @@ public class DomiciliodetFragment extends Fragment {
     {
         try
         {
-            String cadena = "http://maps.google.com/maps?q=loc:{0}";
+            /*String cadena = "http://maps.google.com/maps?q=loc:{0}";
             String strUri = string.formatSql(cadena, ubiCliente);
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
             intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-            startActivity(intent);
+            startActivity(intent);*/
+
+            String cadena = "http://maps.google.com/maps?daddr={0}";
+
+            Log.d("salida",ubiCliente);
+
+            if( string.EsNulo(ubiCliente) )
+            {
+                Toast.makeText(getContext(), getString(R.string.tt_detPed1), Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                String strUri = string.formatSql(cadena, ubiCliente);
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(intent);
+            }
+
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_ubicacion),e.getMessage());
         }
     }
+
 
 }

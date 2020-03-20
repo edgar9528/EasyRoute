@@ -9,7 +9,7 @@ public class string {
 
     public static String formatSql(String consulta, String... parametros)
     {
-        String ant="",des="",palabra,c="'",p1,p2;
+        String ant="",des="",c="'";
         int con=0;
 
         do {
@@ -17,7 +17,6 @@ public class string {
                 if (consulta.charAt(i) == '{') {
                     ant = consulta.substring(0, i);
                 }
-
 
                 if (consulta.charAt(i) == '}') {
                     des = consulta.substring(i + 1);
@@ -137,11 +136,26 @@ public class string {
 
     public static boolean EsNulo(String cadena)
     {
-        if(cadena==null)
-            return true;
-        if(cadena.isEmpty())
-            return true;
-        return false;
+        try
+        {
+            if(cadena==null)
+                return true;
+
+            if(cadena.isEmpty())
+                return true;
+
+            if(cadena.equals("null"))
+                return true;
+
+            if(cadena.equals("NULL"))
+                return true;
+
+            return false;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 
 

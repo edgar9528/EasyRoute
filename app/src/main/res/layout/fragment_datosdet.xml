@@ -28,130 +28,263 @@
             android:padding="@dimen/paddingGeneral"
             >
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_codigo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_codigo"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
 
-            <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_codigo"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_codigo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:textAlignment="textEnd"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_razon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/table_razon"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_negocio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/table_negocio"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_rfc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_rfc"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_limite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_limCredito"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="4"
-                android:paddingTop="@dimen/paddingControles"
+                android:weightSum="2"
                 >
 
-                <com.google.android.material.textfield.TextInputLayout
+                <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:theme="@style/EditTextBlack">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_plazo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_plazo"
-                        android:singleLine="true"
-                        android:enabled="false"
-                        android:focusable="false"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/table_razon"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
 
-                <com.google.android.material.textfield.TextInputLayout
+                <TextView
+                    android:id="@+id/tv_razon"
                     android:layout_width="0dp"
-                    android:layout_weight="2"
                     android:layout_height="wrap_content"
-                    android:theme="@style/EditTextBlack">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_envases"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_envases"
-                        android:singleLine="true"
-                        android:enabled="false"
-                        android:focusable="false"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
+                    android:text="@string/tv_ejemplo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:textAlignment="textEnd"
+                    android:layout_weight="1"
+                    >
+                </TextView>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/table_negocio"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_negocio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:textAlignment="textEnd"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_rfc"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_rfc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:textAlignment="textEnd"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_limCredito"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_limCred"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_plazo"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tv_plazo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tv_ejemplo"
+                    android:textAlignment="textEnd"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_envases"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_envases"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_estadoCredi"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimaryDark"
-                android:paddingTop="@dimen/paddingControles"
+                style="@style/tv_titulos"
                 >
             </TextView>
 
@@ -163,21 +296,48 @@
                 android:clickable="false"
                 />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_coordenada"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/tv_coordenada"
-                    android:singleLine="true"
-                    android:enabled="false"
-                    android:focusable="false"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_coordenada"
+                    style="@style/tv_titulos"
+                    android:layout_weight="1"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tv_coordenada"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_ejemplo"
+                    style="@style/tv_titulos.tv_mensajes"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dividerColor"
+                android:layout_marginTop="@dimen/paddingControles"
+                android:layout_marginBottom="@dimen/paddingControles" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -193,8 +353,7 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:text="@string/rb_reqfac"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    style="@style/tv_titulos"
                     android:clickable="false"
                     >
                 </RadioButton>
@@ -205,8 +364,7 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:text="@string/rb_prospecto"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    style="@style/tv_titulos"
                     android:clickable="false"
                     >
                 </RadioButton>
@@ -227,8 +385,7 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:text="@string/rb_fba"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    style="@style/tv_titulos"
                     android:clickable="false"
                     >
                 </RadioButton>
@@ -239,8 +396,7 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:text="@string/rb_comoDato"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorPrimaryDark"
+                    style="@style/tv_titulos"
                     android:clickable="false"
                     >
                 </RadioButton>

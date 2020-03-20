@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">EasyRoute</string>
     <string name="NAMESPACE" translatable="false">http://tempuri.org/</string>
     <string name="nombreBD" translatable="false">baseLocal.db</string>
-    <string name="token_mapa" translatable="false">pk.eyJ1IjoiZWRnYXI5NTI4IiwiYSI6ImNrNjlvMGUxczBodmQza29iaWF2bzV4YXAifQ.dOM73OqbT0xMQYMgMn-rng</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -469,5 +468,6 @@
     <string name="err_ped34">Error al actualizar totales</string>
     <string name="err_ped35">Error al cargar liquido fragment</string>
     <string name="tt_ped21">Venta realizada</string>
+    <string name="tt_detPed1">Ubicación del cliente no disponible</string>
 
 </resources>

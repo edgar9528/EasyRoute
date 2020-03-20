@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="paddingGeneral">12dp</dimen>
+    <dimen name="paddingGeneral">8dp</dimen>
     <dimen name="paddingControles">8dp</dimen>
     <dimen name="paddingLogin">32dp</dimen>
     <dimen name="paddingCardView">5dp</dimen>
