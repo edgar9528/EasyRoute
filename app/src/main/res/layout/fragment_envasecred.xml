@@ -31,11 +31,14 @@
         app:layout_constraintBottom_toTopOf="@id/tv_saldoDeudaEnv1"
 
         android:layout_marginStart="@dimen/paddingGeneral"
-        android:layout_marginEnd="@dimen/paddingGeneral"
-
-        >
+        android:layout_marginEnd="@dimen/paddingGeneral">
 
 
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TableLayout>
 
     </ScrollView>
 

@@ -14,6 +14,7 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dtProductos = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dgPro2 = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableWS.FormasPago> > formasPago = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<DataTableLC.EnvasesAdeudo>> dgDeudaEnv = new MutableLiveData<>();
     private final MutableLiveData<String> producto = new MutableLiveData<>();
     private final MutableLiveData<String> estadoCredito = new MutableLiveData<>();
     private final MutableLiveData<String> adeudoN = new MutableLiveData<>();
@@ -140,5 +141,13 @@ public class PedidosVM extends ViewModel
     public void setTxtSaldoCredito(String txtSaldoCredito){
         this.txtSaldoCredito.setValue(txtSaldoCredito);
     }
+
+    public LiveData<ArrayList<DataTableLC.EnvasesAdeudo>> getDgDeudaEnv(){
+        return dgDeudaEnv;
+    }
+    public void setDgDeudaEnv(ArrayList<DataTableLC.EnvasesAdeudo> dgDeudaEnv){
+        this.dgDeudaEnv.setValue(dgDeudaEnv);
+    }
+
 
 }

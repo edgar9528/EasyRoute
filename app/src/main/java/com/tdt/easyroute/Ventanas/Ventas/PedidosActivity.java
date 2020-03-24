@@ -136,6 +136,7 @@ public class PedidosActivity extends AppCompatActivity {
 
             }
 
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
@@ -522,6 +523,7 @@ public class PedidosActivity extends AppCompatActivity {
             }
 
             dgDeudaEnv = dt;
+            pedidosVM.setDgDeudaEnv(dgDeudaEnv);
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped11), e.getMessage());
