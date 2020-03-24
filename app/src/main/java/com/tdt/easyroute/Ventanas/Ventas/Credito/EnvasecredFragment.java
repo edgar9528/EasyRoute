@@ -1,19 +1,24 @@
 package com.tdt.easyroute.Ventanas.Ventas.Credito;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -139,7 +144,7 @@ public class EnvasecredFragment extends Fragment {
 
             if(tv_anterior.getId() == tv_actual.getId() && tv_anterior.getTag() == tv_actual.getTag())
             {
-                Toast.makeText(getContext(), "Click venta fila: "+fila+" columna: "+tipo, Toast.LENGTH_SHORT).show();
+                cambiarValor(fila,tipo,tv_actual.getText().toString());
             }
             else
             {
@@ -149,6 +154,57 @@ public class EnvasecredFragment extends Fragment {
             }
         }
     };
+
+    private void cambiarValor(int fila,int tipo, String aux)
+    {
+        try
+        {
+            String msg = getResources().getString(R.string.msg_envCred1) + " " + aux;
+
+            LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
+            View view = layoutInflater.inflate(R.layout.dialog_sugerido, null);
+            final EditText editText = (EditText) view.findViewById(R.id.ti_sugerido);
+
+            final AlertDialog dialog = new AlertDialog.Builder(getContext())
+                    .setTitle("")
+                    .setMessage(msg)
+                    .setView(view)
+                    .setPositiveButton(R.string.bt_aceptar, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String lectura = String.valueOf(editText.getText());
+                            //actualizarProductos(indice,lectura,prod);
+                        }
+                    })
+                    .setNegativeButton(R.string.bt_cancelar, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .create();
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            dialog.show();
+
+            editText.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        String lectura = String.valueOf(editText.getText());
+                        //actualizarProductos(indice,lectura,prod);
+                        if (dialog.isShowing())
+                            dialog.dismiss();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_sug11), e.getMessage());
+        }
+
+    }
 
 
 }

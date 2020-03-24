@@ -469,5 +469,6 @@
     <string name="err_ped35">Error al cargar liquido fragment</string>
     <string name="tt_ped21">Venta realizada</string>
     <string name="tt_detPed1">Ubicación del cliente no disponible</string>
+    <string name="msg_envCred1">Cantidad actual:</string>
 
 </resources>
