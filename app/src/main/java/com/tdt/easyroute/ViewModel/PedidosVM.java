@@ -15,6 +15,8 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dgPro2 = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableWS.FormasPago> > formasPago = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.EnvasesAdeudo>> dgDeudaEnv = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.EnvasesPed>> dgEnvase = new MutableLiveData<>();
+
     private final MutableLiveData<String> producto = new MutableLiveData<>();
     private final MutableLiveData<String> estadoCredito = new MutableLiveData<>();
     private final MutableLiveData<String> adeudoN = new MutableLiveData<>();
@@ -26,6 +28,8 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<String> txtLimCred = new MutableLiveData<>();
     private final MutableLiveData<String> txtVencido = new MutableLiveData<>();
     private final MutableLiveData<String> txtSaldoCredito = new MutableLiveData<>();
+    private final MutableLiveData<Double> txtSubEnv = new MutableLiveData<>();
+    private final MutableLiveData<String> txtVenta = new MutableLiveData<>();
 
     private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgANormal = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgAEspecial = new MutableLiveData<>();
@@ -56,6 +60,13 @@ public class PedidosVM extends ViewModel
     }
     public void setFormasPago(ArrayList<DataTableWS.FormasPago> formasPago){
         this.formasPago.setValue(formasPago);
+    }
+
+    public LiveData<ArrayList<DataTableLC.EnvasesPed>> getDgEnvase(){
+        return dgEnvase;
+    }
+    public void setDgEnvase(ArrayList<DataTableLC.EnvasesPed> DgEnvase){
+        dgEnvase.setValue(DgEnvase);
     }
 
     public LiveData<String> getEstadoCredito(){
@@ -147,6 +158,14 @@ public class PedidosVM extends ViewModel
     }
     public void setDgDeudaEnv(ArrayList<DataTableLC.EnvasesAdeudo> dgDeudaEnv){
         this.dgDeudaEnv.setValue(dgDeudaEnv);
+    }
+
+
+    public LiveData<String> getTxtVenta(){
+        return txtVenta;
+    }
+    public void setTxtVenta(String txtVenta){
+        this.txtVenta.setValue(txtVenta);
     }
 
 

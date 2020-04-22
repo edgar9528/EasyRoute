@@ -162,7 +162,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
             iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
             iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visselec);
-            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera );
+            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visvenvacia );
             iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
             iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
             iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
@@ -1096,12 +1096,23 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                             Utils.msgError(getContext(),getString(R.string.error_peticion), e.getMessage());
                         }
                     }
-                } else
-                    {
-                    Toast.makeText(getContext(), getString(R.string.tt_noInformacion), Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getContext(), respuesta, Toast.LENGTH_LONG).show();
+                else
+                {
+                    if(peticion.equals("Recargas"))
+                    {
+                        mostrarMsj(clienteClick);
+                    }
+                    Utils.msgError(getContext(), getString(R.string.error_peticion), getString(R.string.tt_noInformacion));
+                }
+            }
+            else
+            {
+                if(peticion.equals("Recargas"))
+                {
+                    mostrarMsj(clienteClick);
+                }
+                Utils.msgError(getContext(), getString(R.string.error_peticion), respuesta);
             }
 
         }catch (Exception e)
@@ -1197,13 +1208,17 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                             if( cve.equals( lvClientes.get(i).getCli_cve_n() ) )
                                 indice=i;
 
-                        pedidosAdapterRecyclerView.actualiza(indice, 1,iconos[1] );
+                        if(estado.equals("true"))
+                            pedidosAdapterRecyclerView.actualiza(indice, 1,iconos[1] );
+                        else
+                            pedidosAdapterRecyclerView.actualiza(indice, 2,iconos[2] );
 
                         CalcularEfectividad();
 
                         Toast.makeText(getContext(), getString(R.string.tt_ped21), Toast.LENGTH_LONG).show();
 
                         break;
+
                 }
 
             } catch (Exception e)

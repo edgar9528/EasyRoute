@@ -32,6 +32,7 @@ import com.tdt.easyroute.Ventanas.Ventas.PedidosActivity;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class EnvasecredFragment extends Fragment {
@@ -100,6 +101,7 @@ public class EnvasecredFragment extends Fragment {
         try {
             if(dgDeudaEnv!=null)
             {
+                tableLayout.removeAllViews();
                 TableRow tr;
 
                 for(int i=0; i<dgDeudaEnv.size();i++)
@@ -109,11 +111,11 @@ public class EnvasecredFragment extends Fragment {
                     TextView abono = (TextView) tr.findViewById(R.id.dat2);
                     TextView venta = (TextView) tr.findViewById(R.id.dat3);
 
-                    ((TextView) tr.findViewById(R.id.t_sku)).setText(e.getProd_sku_str());
-                    ((TextView) tr.findViewById(R.id.dat1)).setText(e.getAbono());
-                    abono.setText(e.getAdeudo());
-                    venta.setText(e.getProd_cantiv_n());
-                    ((TextView) tr.findViewById(R.id.dat4)).setText(e.getSubTotal());
+                    ((TextView) tr.findViewById(R.id.t_sku)).setText( string.FormatoEntero(e.getProd_sku_str()) );
+                    ((TextView) tr.findViewById(R.id.dat1)).setText( string.FormatoEntero( e.getSaldo() ) );
+                    abono.setText( string.FormatoEntero( e.getAbono() ) );
+                    venta.setText( string.FormatoEntero( e.getVenta() ) );
+                    ((TextView) tr.findViewById(R.id.dat4)).setText( string.FormatoEntero( e.getSaldo() ) );
 
                     abono.setTag("1");
                     venta.setTag("2");
@@ -155,7 +157,7 @@ public class EnvasecredFragment extends Fragment {
         }
     };
 
-    private void cambiarValor(int fila,int tipo, String aux)
+    private void cambiarValor(final int fila,final int tipo,final String aux)
     {
         try
         {
@@ -173,7 +175,7 @@ public class EnvasecredFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String lectura = String.valueOf(editText.getText());
-                            //actualizarProductos(indice,lectura,prod);
+                            actualizarProductos(fila,tipo,lectura);
                         }
                     })
                     .setNegativeButton(R.string.bt_cancelar, new DialogInterface.OnClickListener() {
@@ -204,6 +206,72 @@ public class EnvasecredFragment extends Fragment {
             Utils.msgError(getContext(), getString(R.string.err_sug11), e.getMessage());
         }
 
+    }
+
+    private void actualizarProductos(int fila, int tipo,  String lectura)
+    {
+        try {
+
+            if(tipo ==1) {
+
+                double resta = Double.parseDouble(dgDeudaEnv.get(fila).getAdeudo()) - Double.parseDouble(dgDeudaEnv.get(fila).getVenta());
+
+                if (resta < Integer.parseInt(lectura))
+                {
+                    Utils.msgInfo(getContext(), getString(R.string.msg_envCred2));
+                    return;
+                }
+                else
+                    dgDeudaEnv.get(fila).setAbono(lectura);
+            }
+            else
+            {
+                double resta= Double.parseDouble( dgDeudaEnv.get(fila).getAdeudo() ) - Double.parseDouble( dgDeudaEnv.get(fila).getAbono() );
+
+                if(resta<Double.parseDouble(lectura))
+                {
+                    Utils.msgInfo(getContext(), getString(R.string.msg_envCred2));
+                    return;
+                }
+                else
+                    dgDeudaEnv.get(fila).setVenta(lectura);
+            }
+
+            dgDeudaEnv = actualizarAdeudoEnvase(dgDeudaEnv);
+
+            double total =0;
+            for(DataTableLC.EnvasesAdeudo e : dgDeudaEnv)
+                total +=  Double.parseDouble( e.getSubTotal());
+
+            tv_saldoDeudaEnv.setText( string.FormatoPesos( total) );
+            pedidosVM.setTxtSaldoDeudaEnv( String.valueOf(total)  );
+            pedidosVM.setDgDeudaEnv(dgDeudaEnv);
+
+            pedidosActivity.CalcularEnvase();
+            pedidosActivity.CalcularTotales();
+
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_actInfo), e.getMessage());
+        }
+    }
+
+    private ArrayList<DataTableLC.EnvasesAdeudo> actualizarAdeudoEnvase(ArrayList<DataTableLC.EnvasesAdeudo> al)
+    {
+        double adeudo,abono,venta,lprePrecio;
+        for(int i=0; i<al.size(); i++)
+        {
+            adeudo = Double.parseDouble(al.get(i).getAdeudo());
+            abono = Double.parseDouble(al.get(i).getAbono());
+            venta = Double.parseDouble(al.get(i).getVenta());
+            lprePrecio = Double.parseDouble(al.get(i).getLpre_precio_n());
+
+            al.get(i).setSaldo( String.valueOf( adeudo-abono-venta  ) );
+            al.get(i).setSubPagoEnv( String.valueOf( abono+venta ) );
+            al.get(i).setSubTotal( String.valueOf( lprePrecio*venta ) );
+        }
+        return al;
     }
 
 

@@ -134,6 +134,18 @@ public class string {
         return cantidad;
     }
 
+    public static String FormatoEntero(String num)
+    {
+        try
+        {
+            int numero = (int) Double.parseDouble(num);
+            return String.valueOf(numero);
+        }catch (Exception e)
+        {
+            return "-1";
+        }
+    };
+
     public static boolean EsNulo(String cadena)
     {
         try

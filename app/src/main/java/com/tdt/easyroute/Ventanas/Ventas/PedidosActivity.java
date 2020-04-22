@@ -1,17 +1,41 @@
 package com.tdt.easyroute.Ventanas.Ventas;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.material.tabs.TabLayout;
 import com.tdt.easyroute.Adapter.PagerPedidosAdapter;
 import com.tdt.easyroute.Clases.BaseLocal;
@@ -24,13 +48,16 @@ import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
+import com.tdt.easyroute.Ventanas.Clientes.BuscarClientesActivity;
 import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.MainDetallesActivity;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class PedidosActivity extends AppCompatActivity {
+public class PedidosActivity extends AppCompatActivity implements         GoogleApiClient.OnConnectionFailedListener,
+                    GoogleApiClient.ConnectionCallbacks,
+                    LocationListener {
 
     private boolean esventa;
     private String noCli;
@@ -43,6 +70,7 @@ public class PedidosActivity extends AppCompatActivity {
     private String _tv_totAbono;
     private String _txtKit;
     private String _txtSaldoDeudaEnv;
+    private String _txtVenta;
 
     Configuracion conf;
     DataTableLC.DtCliVentaNivel rc;
@@ -143,6 +171,15 @@ public class PedidosActivity extends AppCompatActivity {
             }
         });
 
+
+        //CONFIGURACION DE UBICACION
+        //Construcción cliente API Google
+        apiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
+
         //TERMINA CONFIGURACION DE LAS TABS
         ObtenerPromoEnvase("1","1","1","1","1","1");
 
@@ -177,6 +214,13 @@ public class PedidosActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 _txtSaldoDeudaEnv=s;
+            }
+        });
+
+        pedidosVM.getTxtVenta().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                _txtVenta=s;
             }
         });
 
@@ -448,6 +492,7 @@ public class PedidosActivity extends AppCompatActivity {
             }
 
             dgEnvase= envases;
+            pedidosVM.setDgEnvase(dgEnvase);
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped8), e.getMessage());
@@ -466,31 +511,19 @@ public class PedidosActivity extends AppCompatActivity {
                     "on lp.prod_cve_n=p.prod_cve_n left join inventario iv on p.prod_cve_n=iv.prod_cve_n " +
                     "and iv.rut_cve_n={2} where lp.lpre_cve_n={0} and p.cat_cve_n={1}";
 
-            con = string.formatSql2(con, String.valueOf(lpre), String.valueOf(catenv), conf.getRutaStr());
-
             String json = BaseLocal.Select(string.formatSql2(con, String.valueOf( lpre ) , String.valueOf(catenv) , conf.getRutaStr()), getApplicationContext());
 
             ArrayList<DataTableLC.EnvasesAdeudo> dt = ConvertirRespuesta.getEnvasesAdeudoJson(json);
 
-            double adeudo,abono,venta,lprePrecio;
-            for(int i=0; i<dt.size(); i++)
-            {
-                adeudo = Double.parseDouble(dt.get(i).getAdeudo());
-                abono = Double.parseDouble(dt.get(i).getAbono());
-                venta = Double.parseDouble(dt.get(i).getVenta());
-                lprePrecio = Double.parseDouble(dt.get(i).getLpre_precio_n());
-
-                dt.get(i).setSaldo( String.valueOf( adeudo-abono-venta  ) );
-                dt.get(i).setSubPagoEnv( String.valueOf( abono+venta ) );
-                dt.get(i).setSubTotal( String.valueOf( lprePrecio*venta ) );
-            }
+            dt = actualizarAdeudoEnvase(dt);
 
             con = "select cli_cve_n,prod_cve_n,sum(prod_cant_n) adeudo,sum(prod_cantabono_n) abono " +
                     "from creditos where cli_cve_n={0} and prod_cve_n={1} and cred_esenvase_n=1 " +
                     "group by cli_cve_n,prod_cve_n";
 
             DataTableLC.EnvasesAdeudo r;
-            for (int i = 0; i < dt.size(); i++) {
+            for (int i = 0; i < dt.size(); i++)
+            {
                 r = dt.get(i);
                 json = BaseLocal.Select(string.formatSql2(con, noCli, r.getProd_cve_n()), getApplicationContext());
 
@@ -499,7 +532,8 @@ public class PedidosActivity extends AppCompatActivity {
                 if (dtAdEnv != null)
                 {
                     DataTableLC.EnvasesAdeudo2 rae;
-                    for (int j = 0; j < dtAdEnv.size(); j++) {
+                    for (int j = 0; j < dtAdEnv.size(); j++)
+                    {
                         rae = dtAdEnv.get(j);
 
                         dt.get(i).setAdeudo(String.valueOf(Integer.parseInt(rae.getAdeudo()) - Integer.parseInt(rae.getAbono())));
@@ -522,12 +556,31 @@ public class PedidosActivity extends AppCompatActivity {
                 }
             }
 
+            dt = actualizarAdeudoEnvase(dt);
+
             dgDeudaEnv = dt;
             pedidosVM.setDgDeudaEnv(dgDeudaEnv);
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped11), e.getMessage());
         }
+    }
+
+    private ArrayList<DataTableLC.EnvasesAdeudo> actualizarAdeudoEnvase(ArrayList<DataTableLC.EnvasesAdeudo> al)
+    {
+        double adeudo,abono,venta,lprePrecio;
+        for(int i=0; i<al.size(); i++)
+        {
+            adeudo = Double.parseDouble(al.get(i).getAdeudo());
+            abono = Double.parseDouble(al.get(i).getAbono());
+            venta = Double.parseDouble(al.get(i).getVenta());
+            lprePrecio = Double.parseDouble(al.get(i).getLpre_precio_n());
+
+            al.get(i).setSaldo( String.valueOf( adeudo-abono-venta  ) );
+            al.get(i).setSubPagoEnv( String.valueOf( abono+venta ) );
+            al.get(i).setSubTotal( String.valueOf( lprePrecio*venta ) );
+        }
+        return al;
     }
 
     private ArrayList<DataTableLC.AdeudoNormal> ListarAdeudoNormal()
@@ -994,7 +1047,7 @@ public class PedidosActivity extends AppCompatActivity {
         }
     }
 
-    private void CalcularEnvase()
+    public void CalcularEnvase()
     {
         try {
             boolean HayNegativos = false;
@@ -1167,7 +1220,7 @@ public class PedidosActivity extends AppCompatActivity {
         }
     }
 
-    private void CalcularTotales()
+    public void CalcularTotales()
     {
         try
         {
@@ -1176,6 +1229,7 @@ public class PedidosActivity extends AppCompatActivity {
             /*txtVenta.Text = (decimal.Parse(this.txtSubtotal2.Text.Replace("$", "")) +
                     decimal.Parse(txtSubEnv.Text.Replace("$", "")) +
                     decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""))).ToString("c");*/
+
             if ( dgPagos.size() >0)
             {
                 double suma=0;
@@ -1415,17 +1469,357 @@ public class PedidosActivity extends AppCompatActivity {
     {
         switch (item.getItemId()) {
             case R.id.action_guardar:
-                clickGuardar();
+                obtenerUbicacion(1);
                 return true;
             case R.id.action_detalles:
                 clickDetalles();
                 return true;
             case R.id.action_buscar:
-                Log.d("salida","Presiono boton buscar");
+                 //clickBuscar();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void obtenerUbicacion(final int clave)
+    {
+        try {
+            final String[] ubi = new String[1];
+            final ProgressDialog progress = new ProgressDialog(this);
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
+            progress.show();
+            progress.setCancelable(false);
+
+            enableLocationUpdates();
+
+            Log.d("salida", "Ubicacion anterior: Pedidos: " + ubi[0]);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress.cancel();
+                    disableLocationUpdates();
+                    Log.d("salida", "Ubicacion nueva: Pedidos: " + getLatLon());
+                    if(clave==1)
+                        clickBTguardar();
+
+                }
+            }, 3000);
+
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.error_ubicacion),e.getMessage());
+            Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
+    private void clickBTguardar()
+    {
+        DataTableLC.DtCliVenta cli = getDetcli( rc.getCli_cve_n());
+        if(!validaDistancia(cli,true))
+        {
+            Utils.msgInfo(this, getString(R.string.msg_ped4) );
+            return;
+        }
+
+        ArrayList<DataTableLC.ProductosPed> dtAuxN = dgProd2;
+
+        ArrayList<DataTableLC.ProductosPed> ntr = new ArrayList<>();
+
+        for(DataTableLC.ProductosPed p : dtAuxN)
+        {
+            if( Double.parseDouble( p.getProd_cant_n() ) > 0 && Double.parseDouble( p.getLpre_nota_n() )>0   )
+                ntr.add(p);
+        }
+
+        if(ntr.size()>0)
+        {
+            double NotaP = 0;
+            int CantN = 0;
+
+            for(DataTableLC.ProductosPed rt : ntr)
+            {
+                NotaP += Double.parseDouble( rt.getLpre_precio_n() ) - Double.parseDouble( rt.getLpre_nota_n() ) * Integer.parseInt(rt.getProd_cant_n()) ;
+
+                if (Long.parseLong( rt.getProm_kit_n() ) >0)
+                {
+                    ArrayList<DataTableLC.PedPromocionesKit> rk = new ArrayList<>();
+                    for(DataTableLC.PedPromocionesKit pk : dtKits  )
+                        if(pk.getProd_cve_n().equals( rt.getProd_cve_n() ))
+                            rk.add(pk);
+
+                    if(rk.size()>0)
+                    {
+                        if( Double.parseDouble(rt.getLpre_precio_n()) > Double.parseDouble( rk.get(0).getLpre_precio_n() ) &&
+                            Double.parseDouble( rt.getLpre_nota_n() ) < Double.parseDouble(rk.get(0).getLpre_precio_n()) )
+                        {
+                            NotaP -= Double.parseDouble( rt.getLpre_precio_n() ) - Double.parseDouble( rk.get(0).getLpre_precio_n() ) * Integer.parseInt(rk.get(0).getProm_veces_n()) ;
+                        }
+                        // Precio de Cliente mayor que precio de kit
+                        // && Precio nota mayor que precio de kit elimina pesos
+
+                        if( Double.parseDouble( rt.getLpre_precio_n()) > Double.parseDouble( rk.get(0).getLpre_precio_n() ) &&
+                            Double.parseDouble( rt.getLpre_nota_n() ) > Double.parseDouble( rk.get(0).getLpre_precio_n())    )
+                        {
+                            NotaP -= Double.parseDouble(rt.getLpre_precio_n()) - Double.parseDouble( rt.getLpre_nota_n() ) * Integer.parseInt(rk.get(0).getProm_veces_n());
+                        }
+                    }
+                }
+
+                CantN += Integer.parseInt( rt.getProd_cant_n() );
+            }
+
+            int sobrante = Integer.parseInt( rc.getCvm_vtaacum_n() ) + CantN - Integer.parseInt( rc.getCli_limitemes_n() );
+
+            if(sobrante > 0 && Integer.parseInt( rc.getCli_limitemes_n() ) > 0 )
+            {
+                String msg = getString(R.string.msg_ped5) +"\n"+
+                             getString(R.string.msg_ped51) +" "+rc.getCli_limitemes_n() + "\n"+
+                             getString(R.string.msg_ped52) +" "+sobrante;
+
+                Utils.msgInfo(this, msg);
+                return;
+            }
+
+            if (NotaP > 0)
+            {
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+                dialogo1.setTitle(getString(R.string.msg_importante));
+                dialogo1.setMessage( string.formatSql( getString(R.string.msg_ped6), String.valueOf( NotaP )  ) );
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        guardar();
+                    }
+                });
+                dialogo1.setNegativeButton(getString(R.string.msg_no),  null);
+                dialogo1.show();
+            }
+            else
+            {
+                guardar();
+            }
+        }
+        else
+        {
+            guardar();
+        }
+
+    }
+
+    private void guardar()
+    {
+        if (!ValidarCondicionesVenta())
+            return;
+
+        double VentaE=0;
+        double VentaED=0;
+
+        for(DataTableLC.EnvasesAdeudo dg: dgDeudaEnv)
+            VentaE += Double.parseDouble( dg.getVenta() );
+
+        for(DataTableLC.EnvasesPed ep : dgEnvase)
+            VentaED += Double.parseDouble( ep.getVenta() );
+
+        if (!ValidarEnvase())
+            return;
+
+        if(  Double.parseDouble( string.DelCaracteres(_txtVenta ) ) <=0   )
+        {
+            final Context context= this;
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+            dialogo1.setTitle(getString(R.string.msg_importante));
+            dialogo1.setMessage(getString(R.string.msg_ped12));
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
+
+                    AlertDialog.Builder dialogo2 = new AlertDialog.Builder(context);
+                    dialogo2.setTitle(getString(R.string.msg_importante));
+                    dialogo2.setMessage(getString(R.string.msg_ped3));
+                    dialogo2.setCancelable(false);
+                    dialogo2.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogo1, int id) {
+                            GuardarVisitaSinVenta2();
+                        }
+                    });
+                    dialogo2.setNegativeButton(getString(R.string.msg_no), null);
+                    dialogo2.show();
+
+                }
+            });
+            dialogo1.setNegativeButton(getString(R.string.msg_no), null);
+            dialogo1.show();
+        }
+        else
+        {
+
+        }
+
+
+        return;
+    }
+
+    private void GuardarVisitaSinVenta2()
+    {
+        try {
+            boolean cobranza = false;
+            String coordenada = "NO VALIDA";
+            //if (Utils.position.PositionValid)
+            //  coordenada = Utils.position.PositionStr;
+
+            // -----------  Organizar movimientos de envase -------------------
+            ArrayList<DataTableLC.MovimientosEnv> vme = new ArrayList<>();
+            for (DataTableLC.EnvasesPed ed : dgEnvase) {
+                for (DataTableLC.EnvasesAdeudo ea : dgDeudaEnv) {
+                    if (ed.getProd_sku_str().equals(ea.getProd_sku_str())) {
+                        DataTableLC.MovimientosEnv o = new DataTableLC.MovimientosEnv();
+
+                        o.setProd_cve_n(ed.getProd_cve_n());
+                        o.setProd_sku_str(ed.getProd_sku_str());
+                        o.setProd_recibidodia_n(ed.getRecibido());
+                        o.setProd_recibido_n(String.valueOf(Integer.parseInt(ed.getRecibido()) + Integer.parseInt(ea.getAbono())));
+                        o.setProd_abono_n(ea.getAbono());
+                        o.setProd_venta_n(String.valueOf(Integer.parseInt(ed.getVenta()) + Integer.parseInt(ea.getVenta())));
+                        o.setProd_ventaant_n(ea.getVenta());
+                        o.setProd_ventadia_n(ed.getVenta());
+                        o.setProd_regalo_n(ed.getRegalo());
+                        o.setProd_prestado_n(ed.getRestante());
+                        o.setProd_cantiv_n(ed.getProd_cantiv_n());
+                        o.setProd_pago_n(String.valueOf(Integer.parseInt(ea.getAbono()) + Integer.parseInt(ea.getVenta())));
+                        o.setLpre_base_n(ed.getLpre_base_n());
+                        o.setLpre_precio_n(ed.getLpre_precio_n());
+
+                        vme.add(o);
+                    }
+                }
+            }
+
+
+
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.err_ped36), e.getMessage());
+        }
+    }
+
+
+
+    private boolean ValidarCondicionesVenta()
+    {
+        try
+        {
+            ArrayList<DataTableLC.ProductosPed> vta = dgProd2;
+            ArrayList<DataTableLC.ProdCondiciones> ProdsCond = new ArrayList<>();
+
+            for(DataTableLC.ProductosPed p : dgProd2)
+            {
+                if( Utils.getBool( p.getCov_reStringido_n() ) )
+                {
+                    DataTableLC.ProdCondiciones np = new DataTableLC.ProdCondiciones();
+                    np.setProd_cve_n( p.getProd_cve_n() );
+                    np.setProd_sku_str( p.getProd_sku_str() );
+                    np.setProd_desc_str( p.getProd_desc_str() );
+                    np.setFams( p.getCov_familias_str() );
+                    ProdsCond.add(np);
+                }
+            }
+
+            if(ProdsCond.size()>0)
+            {
+                if(Utils.getBool( rc.getCli_especial_n() ) && !RutaPromoCe )
+                {
+                    Utils.msgInfo(this, getString(R.string.msg_ped7) );
+                    return false;
+                }
+
+                for(DataTableLC.ProdCondiciones pc : ProdsCond)
+                {
+                    ArrayList<String> FamCumple = new ArrayList<>();
+
+                    for(DataTableLC.ProductosPed fc : vta)
+                    {
+                        if( pc.getFams().equals( fc.getFam_cve_n() ) &&
+                            Integer.parseInt( fc.getProd_cant_n() ) >0)
+                        {
+                            FamCumple.add(  fc.getProd_sku_str() );
+                        }
+                    }
+
+                    if (FamCumple.size()>0)
+                    {
+                        String msg= string.formatSql( getString(R.string.msg_ped8), pc.getProd_sku_str(), pc.getProd_desc_str() );
+                        Utils.msgInfo(this, msg);
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    private boolean ValidarEnvase()
+    {
+        double cant = 0;
+        double total = 0;
+        double EnvAct = 0;
+
+        for(DataTableLC.EnvasesPed er : dgEnvase)
+        {
+            if(Integer.parseInt( er.getRestante() ) < 0)
+            {
+                Utils.msgInfo(this, getString(R.string.msg_ped9));
+                return false;
+            }
+        }
+
+        for(DataTableLC.EnvasesAdeudo ea : dgDeudaEnv)
+        {
+            if(ea.getProd_sku_str().equals("264") || ea.getProd_sku_str().equals("432") )
+                cant+= Double.parseDouble( ea.getSaldo() );
+        }
+        total = cant;
+
+        cant=0;
+        for(DataTableLC.EnvasesPed er : dgEnvase)
+        {
+            if(  er.getProd_sku_str().equals("264") || er.getProd_sku_str().equals("432") )
+                cant+= Double.parseDouble( er.getRestante() );
+        }
+
+        EnvAct = cant;
+        total += cant;
+
+        double EnvPermitido = 0;
+
+        if ( Utils.getBool( rc.getCli_especial_n() ) )
+            return true;
+
+        EnvPermitido = Double.parseDouble( rc.getCli_credenvases_n() );
+
+        if (EnvPermitido < 10)
+            EnvPermitido = 10;
+        if (EnvPermitido >= total)
+            return true;
+        else
+        {
+            if (EnvAct == 0 && total > 0)
+            {
+                String men = string.formatSql( getString(R.string.msg_ped10), String.valueOf( EnvPermitido  ) , String.valueOf(total)  );
+                Utils.msgInfo(this, men );
+                return true;
+            }
+            String men = string.formatSql( getString(R.string.msg_ped11), String.valueOf(EnvPermitido), String.valueOf( total-EnvPermitido ) );
+            Utils.msgInfo(this, men );
+            return false;
+        }
+
     }
 
     private void clickGuardar()
@@ -1445,6 +1839,49 @@ public class PedidosActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void clickBuscar()
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+        dialogo1.setTitle(getString(R.string.msg_importante));
+        dialogo1.setMessage(getString(R.string.msg_ped2));
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                alerta2();
+            }
+        });
+        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                //cancelar();
+            }
+        });
+        dialogo1.show();
+
+    }
+
+    private void alerta2()
+    {
+        AlertDialog.Builder dialogo2 = new AlertDialog.Builder(this);
+        dialogo2.setTitle(getString(R.string.msg_importante));
+        dialogo2.setMessage(getString(R.string.msg_ped3));
+        dialogo2.setCancelable(false);
+        dialogo2.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                Intent i = getIntent();
+                i.putExtra("estado", "false");
+                i.putExtra("cve", rc.getCli_cve_n());
+                setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+        dialogo2.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                //cancelar();
+            }
+        });
+        dialogo2.show();
+    }
+
     private DataTableLC.DtCliVenta getDetcli(String cliente)
     {
         String json;
@@ -1457,6 +1894,88 @@ public class PedidosActivity extends AppCompatActivity {
 
         return cli;
     }
+
+    public boolean validaDistancia(DataTableLC.DtCliVenta c, boolean cierre)
+    {
+        try
+        {
+            String cini = c.getCli_coordenadaini_str();
+            String clicve = c.getCli_cve_n();
+            Configuracion conf = Utils.ObtenerConf(getApplication());
+
+            short k = 0;
+            String ActPos = "NO VALIDA";
+            double DistLimite = 20;
+            double DistAlerta = 10;
+            String ValidarGPS = "";
+
+            if (!cierre)
+                ValidarGPS = "VALIDAR DISTANCIA GPS";
+            else
+                ValidarGPS = "VALIDAR DISTANCIA GPS AL CIERRE";
+
+            ActPos = getLatLon();
+
+            double distancia = Utils.Distancia(cini, ActPos);
+
+            if (c.getCli_invalidagps_n().equals("1")) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), c.getCli_cve_n(), ValidarGPS, string.formatSql("INVALIDADO POR SISTEMAS: {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (conf.isAuditoria()) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), c.getCli_cve_n(), ValidarGPS, string.formatSql("INVALIDADO POR AUDITORIA: {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (cini == null || cini.isEmpty()) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, "CLIENTE SIN COORDENADA INICIAL", ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (cini.length() <= 5) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, "CLIENTE CON COORDENADA INICIAL NO VALIDA: " + cini, ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (ActPos.equals("NO VALIDA")) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, "NO SE LOGRO OBTENER GPS ACTUAL", ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (distancia >= 0 && distancia <= DistAlerta) {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, string.formatSql("DISTANCIA DENTRO DEL PARAMETRO {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (distancia >= 0 && distancia <= DistLimite)
+            {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, string.formatSql("DISTANCIA FUERA DEL PARAMETRO {0} MTS", String.valueOf(distancia) ), ActPos), getApplicationContext());
+                return true;
+            }
+
+            if (distancia >= 0 && distancia > DistLimite)
+            {
+                BaseLocal.Insert(string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), clicve, ValidarGPS, string.formatSql("POSICION ACTUAL INVALIDA FUERA DE PARAMETRO {0} MTS", String.valueOf(distancia)), ActPos), getApplicationContext());
+                return false;
+            }
+
+            return false;
+        }catch (Exception e)
+        {
+            Log.d("salida","error al validar disstancia: "+e.getMessage());
+            return false;
+        }
+    }
+
 
     //region variables compartidas
 
@@ -1472,12 +1991,196 @@ public class PedidosActivity extends AppCompatActivity {
     {
         return disponible;
     };
-
     public void setTextKit(String kit)
     {
         _txtKit = kit;
     }
 
     //endregion
+
+    //region VARIABLES PARA UBICACION
+    private static final String LOGTAG = "android-localizacion";
+    private static final int PETICION_PERMISO_LOCALIZACION = 101;
+    private static final int PETICION_CONFIG_UBICACION = 201;
+    private GoogleApiClient apiClient;
+    private LocationRequest locRequest;
+    String latLon=null;
+    //endregion
+    //region Obtener ubicación actual
+
+    public String getLatLon()
+    {
+        return latLon;
+    }
+
+    public void enableLocationUpdates() {
+
+        locRequest = new LocationRequest();
+        locRequest.setInterval(2000);
+        locRequest.setFastestInterval(1000);
+        locRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest locSettingsRequest =
+                new LocationSettingsRequest.Builder()
+                        .addLocationRequest(locRequest)
+                        .build();
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(
+                        apiClient, locSettingsRequest);
+
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult locationSettingsResult) {
+                final Status status = locationSettingsResult.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+
+                        Log.i(LOGTAG, "Configuración correcta");
+                        startLocationUpdates();
+
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        try {
+                            Log.i(LOGTAG, "Se requiere actuación del usuario");
+                            status.startResolutionForResult(PedidosActivity.this, PETICION_CONFIG_UBICACION);
+                        } catch (IntentSender.SendIntentException e) {
+                            //BLOQUEAR OPCIONES POR UBICACION
+                            Log.i(LOGTAG, "Error al intentar solucionar configuración de ubicación");
+                        }
+
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(LOGTAG, "No se puede cumplir la configuración de ubicación necesaria");
+                        //BLOQUEAR OPCIONES POR UBICACION
+                        break;
+                }
+            }
+        });
+
+        Log.d("salida","Se ha activado la ubicacion");
+    }
+
+    public void disableLocationUpdates() {
+
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                apiClient, this);
+
+        Log.d("salida","Se ha desactivado la ubicacion");
+
+    }
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(PedidosActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            //Ojo: estamos suponiendo que ya tenemos concedido el permiso.
+            //Sería recomendable implementar la posible petición en caso de no tenerlo.
+
+            Log.i(LOGTAG, "Inicio de recepción de ubicaciones");
+
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    apiClient, locRequest, PedidosActivity.this);
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        //Se ha producido un error que no se puede resolver automáticamente
+        //y la conexión con los Google Play Services no se ha establecido.
+
+        Log.e(LOGTAG, "Error grave al conectar con Google Play Services");
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        //Conectado correctamente a Google Play Services
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PETICION_PERMISO_LOCALIZACION);
+        } else {
+
+            Location lastLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+
+            updateUI(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //Se ha interrumpido la conexión con Google Play Services
+
+        Log.e(LOGTAG, "Se ha interrumpido la conexión con Google Play Services");
+    }
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            latLon = loc.getLatitude()+","+loc.getLongitude();
+        } else {
+            latLon = null;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PETICION_PERMISO_LOCALIZACION) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                //Permiso concedido
+
+                @SuppressWarnings("MissingPermission")
+                Location lastLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+
+                updateUI(lastLocation);
+
+            } else {
+                //Permiso denegado:
+                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
+
+                Log.e(LOGTAG, "Permiso denegado");
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode)
+        {
+            case PETICION_CONFIG_UBICACION:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        startLocationUpdates();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Log.i(LOGTAG, "El usuario no ha realizado los cambios de configuración necesarios");
+                        //BLOQUEAR OPCIONES POR UBICACION
+                        break;
+                }
+                break;
+
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        Log.i(LOGTAG, "Recibida nueva ubicación!");
+        //Mostramos la nueva ubicación recibida
+        updateUI(location);
+    }
+
+
+    //endregion
+
 
 }

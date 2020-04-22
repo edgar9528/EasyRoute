@@ -69,7 +69,8 @@
     </TextView>
 
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/abonosRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
 
@@ -80,9 +81,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_saldoEnvase1"
         app:layout_constraintBottom_toTopOf="@+id/tv_totAbono1"
         >
-
-
-    </ScrollView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 
@@ -115,5 +114,19 @@
         android:layout_marginEnd="@dimen/paddingGeneral"
         >
     </TextView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        android:layout_marginBottom="@dimen/paddingControles"
+        app:layout_constraintBottom_toTopOf="@id/tv_totAbono"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/ic_add"
+        android:clickable="true"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

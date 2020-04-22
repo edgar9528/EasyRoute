@@ -80,13 +80,11 @@
         android:layout_marginEnd="@dimen/paddingGeneral"
         >
 
-        <LinearLayout
+        <TableLayout
+            android:id="@+id/tableLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-        </LinearLayout>
+            android:layout_height="wrap_content">
+        </TableLayout>
 
 
     </ScrollView>

@@ -178,13 +178,11 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
 
     private void mostrarFechaHora()
     {
-        et_fecha.setText(Utils.FechaLocal());
-
         handler = new Handler();
-
         myRunnable = new Runnable() {
             @Override
             public void run() {
+                et_fecha.setText(Utils.FechaLocal());
                 et_hora.setText(Utils.HoraLocal());
                 handler.postDelayed(this, 1000);
             }

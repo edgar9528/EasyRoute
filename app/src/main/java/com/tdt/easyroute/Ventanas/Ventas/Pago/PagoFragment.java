@@ -47,7 +47,7 @@ public class PagoFragment extends Fragment {
 
     private ArrayList<DataTableLC.ProductosPed> dgProd2;
     private ArrayList<DataTableWS.FormasPago> formasPago;
-    ArrayList<DataTableLC.DgPagos> dgPagos;
+    private ArrayList<DataTableLC.DgPagos> dgPagos;
     private DataTableLC.DtCliVentaNivel rc;
     private PedidosActivity pedidosActivity;
 
@@ -60,6 +60,8 @@ public class PagoFragment extends Fragment {
     private TextView tv_saldo;
     private double disponible;
     private double AdeudoAct = 0;
+    private double _txtSaldoDeudaEnv=0;
+    private double _txtSubEnv=0;
 
     public PagoFragment() {
         // Required empty public constructor
@@ -88,7 +90,17 @@ public class PagoFragment extends Fragment {
             tv_contadoEsp = view.findViewById(R.id.et_contado);
             tv_kit = view.findViewById(R.id.tv_kit);
             tv_saldo = view.findViewById(R.id.tv_saldo);
+
+            tv_totalVenta.setText(string.FormatoPesos(0));
+            tv_saldo.setText(string.FormatoPesos(0));
+            tv_contadoEsp.setText(string.FormatoPesos(0));
+            tv_kit.setText(string.FormatoPesos(0));
+            pedidosActivity.setTextKit(tv_kit.getText().toString());
+
+            pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
+
             dgPagos = new ArrayList<>();
+            dgProd2 = new ArrayList<>();
 
             RecyclerView pagosRecyclerView = view.findViewById(R.id.pagosRecycler);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -131,7 +143,7 @@ public class PagoFragment extends Fragment {
             @Override
             public void onChanged(ArrayList<DataTableLC.ProductosPed> DgProd2) {
                 dgProd2 = DgProd2;
-                actualizarCampos();
+                actualizarTotales();
             }
         });
 
@@ -157,34 +169,42 @@ public class PagoFragment extends Fragment {
             }
         });
 
+        pedidosVM.getTxtSaldoDeudaEnv().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String saldoDeudaEnv) {
+                _txtSaldoDeudaEnv = Double.parseDouble( string.DelCaracteres( saldoDeudaEnv ));
+                actualizarTotales();
+            }
+        });
+
     }
 
-    private void actualizarCampos()
+    private void actualizarTotales()
     {
         try {
-            //cuando se actualizan los articulos de la venta
-            if (dgProd2 != null && dgProd2.size() > 0) {
+
                 double subtotal, total = 0;
                 for (DataTableLC.ProductosPed p : dgProd2) {
                     subtotal = Double.parseDouble(string.DelCaracteres(p.getLpre_precio_n())) * Double.parseDouble(p.getProd_cant_n());
                     total += subtotal;
                 }
+
+                double DescKit = Double.parseDouble( string.DelCaracteres(tv_kit.getText().toString()) );
+
+                total = total + _txtSubEnv+ _txtSaldoDeudaEnv;
+
                 tv_totalVenta.setText(string.FormatoPesos(total));
+                pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
 
                 double totPagos = 0;
                 for (DataTableLC.DgPagos p : dgPagos)
                     totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
 
-                tv_saldo.setText(string.FormatoPesos(total - totPagos));
-            } else {
-                tv_totalVenta.setText(string.FormatoPesos(0));
-                tv_saldo.setText(string.FormatoPesos(0));
-                tv_contadoEsp.setText(string.FormatoPesos(0));
-                tv_kit.setText(string.FormatoPesos(0));
-                pedidosActivity.setTextKit(tv_kit.getText().toString());
-            }
+                total = total - DescKit - totPagos;
 
-            //cuando se agregan pagos
+                tv_saldo.setText(string.FormatoPesos(total));
+
+
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_actInfo) ,e.getMessage());
@@ -318,7 +338,7 @@ public class PagoFragment extends Fragment {
                 return false;
             }
 
-            int k = dgPagos.size();
+            int k = dgPagos.size()+1;
 
             double ab = 0;
             DataTableWS.FormasPago r = formasPago.get(indice);
@@ -424,7 +444,6 @@ public class PagoFragment extends Fragment {
         {
             Utils.msgError(getContext(), getString(R.string.err_ped33) ,e.getMessage());
         }
-
     }
 
 }

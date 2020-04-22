@@ -154,13 +154,12 @@ public class LiquidocreFragment extends Fragment {
             tv_vencido.setText(string.FormatoPesos(vencido));
             double res = Double.parseDouble(vencido);
             if (res > 0) {
-                tv_vencido.setBackgroundColor(getResources().getColor(R.color.graficaNo));
-                tv_vencido.setTextColor(Color.WHITE);
+                //tv_vencido.setBackgroundColor(getResources().getColor(R.color.graficaNo));
+                tv_vencido.setTextColor(getResources().getColor(R.color.graficaNo));
             } else {
-                tv_vencido.setBackgroundColor(Color.WHITE);
+                //tv_vencido.setBackgroundColor(Color.WHITE);
                 tv_vencido.setTextColor(getResources().getColor(R.color.titulos_grey));
             }
-
 
             float sum = 0;
             for (DataTableLC.AdeudoNormal an : dgANormal)
@@ -183,8 +182,5 @@ public class LiquidocreFragment extends Fragment {
         {
             Utils.msgError(getContext(), getString(R.string.err_ped34), e.getMessage());
         }
-
     }
-
-
 }

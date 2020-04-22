@@ -6167,6 +6167,178 @@ public class DataTableLC {
             this.edad = edad;
         }
     }
-    
+
+    public static class ProdCondiciones
+    {
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_desc_str;
+        private String fams;
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_desc_str() {
+            return prod_desc_str;
+        }
+
+        public void setProd_desc_str(String prod_desc_str) {
+            this.prod_desc_str = prod_desc_str;
+        }
+
+        public String getFams() {
+            return fams;
+        }
+
+        public void setFams(String fams) {
+            this.fams = fams;
+        }
+    }
+
+    public static class MovimientosEnv
+    {
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_recibidodia_n;
+        private String prod_recibido_n;
+        private String prod_abono_n;
+        private String prod_venta_n;
+        private String prod_ventaant_n;
+        private String prod_ventadia_n;
+        private String prod_regalo_n;
+        private String prod_prestado_n;
+        private String prod_cantiv_n;
+        private String prod_pago_n;
+        private String lpre_base_n;
+        private String lpre_precio_n;
+
+        public MovimientosEnv() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_recibidodia_n() {
+            return prod_recibidodia_n;
+        }
+
+        public void setProd_recibidodia_n(String prod_recibidodia_n) {
+            this.prod_recibidodia_n = prod_recibidodia_n;
+        }
+
+        public String getProd_recibido_n() {
+            return prod_recibido_n;
+        }
+
+        public void setProd_recibido_n(String prod_recibido_n) {
+            this.prod_recibido_n = prod_recibido_n;
+        }
+
+        public String getProd_abono_n() {
+            return prod_abono_n;
+        }
+
+        public void setProd_abono_n(String prod_abono_n) {
+            this.prod_abono_n = prod_abono_n;
+        }
+
+        public String getProd_venta_n() {
+            return prod_venta_n;
+        }
+
+        public void setProd_venta_n(String prod_venta_n) {
+            this.prod_venta_n = prod_venta_n;
+        }
+
+        public String getProd_ventaant_n() {
+            return prod_ventaant_n;
+        }
+
+        public void setProd_ventaant_n(String prod_ventaant_n) {
+            this.prod_ventaant_n = prod_ventaant_n;
+        }
+
+        public String getProd_ventadia_n() {
+            return prod_ventadia_n;
+        }
+
+        public void setProd_ventadia_n(String prod_ventadia_n) {
+            this.prod_ventadia_n = prod_ventadia_n;
+        }
+
+        public String getProd_regalo_n() {
+            return prod_regalo_n;
+        }
+
+        public void setProd_regalo_n(String prod_regalo_n) {
+            this.prod_regalo_n = prod_regalo_n;
+        }
+
+        public String getProd_prestado_n() {
+            return prod_prestado_n;
+        }
+
+        public void setProd_prestado_n(String prod_prestado_n) {
+            this.prod_prestado_n = prod_prestado_n;
+        }
+
+        public String getProd_cantiv_n() {
+            return prod_cantiv_n;
+        }
+
+        public void setProd_cantiv_n(String prod_cantiv_n) {
+            this.prod_cantiv_n = prod_cantiv_n;
+        }
+
+        public String getProd_pago_n() {
+            return prod_pago_n;
+        }
+
+        public void setProd_pago_n(String prod_pago_n) {
+            this.prod_pago_n = prod_pago_n;
+        }
+
+        public String getLpre_base_n() {
+            return lpre_base_n;
+        }
+
+        public void setLpre_base_n(String lpre_base_n) {
+            this.lpre_base_n = lpre_base_n;
+        }
+
+        public String getLpre_precio_n() {
+            return lpre_precio_n;
+        }
+
+        public void setLpre_precio_n(String lpre_precio_n) {
+            this.lpre_precio_n = lpre_precio_n;
+        }
+    }
 
 }

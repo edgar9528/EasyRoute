@@ -20,7 +20,6 @@
         android:layout_marginTop="@dimen/paddingGeneral"
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
-
         />
 
     <ScrollView
@@ -29,10 +28,8 @@
 
         app:layout_constraintTop_toBottomOf="@id/tv_deuda"
         app:layout_constraintBottom_toTopOf="@id/tv_saldoDeudaEnv1"
-
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral">
-
 
             <TableLayout
                 android:id="@+id/tableLayout"
@@ -41,8 +38,6 @@
             </TableLayout>
 
     </ScrollView>
-
-
 
     <TextView
         android:id="@+id/tv_saldoDeudaEnv1"
