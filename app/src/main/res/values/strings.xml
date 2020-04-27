@@ -488,5 +488,8 @@
     <string name="msg_ped11">El cliente solo puede tener prestado hasta {0} envases. Está intentando prestar {1} envase(s) más de lo permitido. La venta no puede continuar.</string>
     <string name="msg_ped12">No se puede hacer la venta. ¿Desea continuar?</string>
     <string name="err_ped36">Error al guardar visita sin venta</string>
+    <string name="msg_ped13">El saldo de esta venta no ha sido liquidado, favor de verificar.</string>
+    <string name="msg_ped14">Pago incorrecto por favor revise la venta y sus pagos.</string>
+    <string name="error_ped1">Error al guardar la venta.</string>
 
 </resources>

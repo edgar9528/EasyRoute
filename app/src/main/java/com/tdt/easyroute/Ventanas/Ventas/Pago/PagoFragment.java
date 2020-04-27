@@ -98,6 +98,7 @@ public class PagoFragment extends Fragment {
             pedidosActivity.setTextKit(tv_kit.getText().toString());
 
             pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
+            pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
 
             dgPagos = new ArrayList<>();
             dgProd2 = new ArrayList<>();
@@ -181,29 +182,30 @@ public class PagoFragment extends Fragment {
 
     private void actualizarTotales()
     {
-        try {
+        try
+        {
 
-                double subtotal, total = 0;
-                for (DataTableLC.ProductosPed p : dgProd2) {
-                    subtotal = Double.parseDouble(string.DelCaracteres(p.getLpre_precio_n())) * Double.parseDouble(p.getProd_cant_n());
-                    total += subtotal;
-                }
+            double subtotal, total = 0;
+            for (DataTableLC.ProductosPed p : dgProd2) {
+                subtotal = Double.parseDouble(string.DelCaracteres(p.getLpre_precio_n())) * Double.parseDouble(p.getProd_cant_n());
+                total += subtotal;
+            }
 
-                double DescKit = Double.parseDouble( string.DelCaracteres(tv_kit.getText().toString()) );
+            double DescKit = Double.parseDouble( string.DelCaracteres(tv_kit.getText().toString()) );
 
-                total = total + _txtSubEnv+ _txtSaldoDeudaEnv;
+            total = total + _txtSubEnv+ _txtSaldoDeudaEnv;
 
-                tv_totalVenta.setText(string.FormatoPesos(total));
-                pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
+            tv_totalVenta.setText(string.FormatoPesos(total));
+            pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
 
-                double totPagos = 0;
-                for (DataTableLC.DgPagos p : dgPagos)
-                    totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
+            double totPagos = 0;
+            for (DataTableLC.DgPagos p : dgPagos)
+                totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
 
-                total = total - DescKit - totPagos;
+            total = total - DescKit - totPagos;
 
-                tv_saldo.setText(string.FormatoPesos(total));
-
+            tv_saldo.setText(string.FormatoPesos(total));
+            pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
 
         }catch (Exception e)
         {
@@ -439,7 +441,10 @@ public class PagoFragment extends Fragment {
 
             double txtVenta = Double.parseDouble(string.DelCaracteres(tv_totalVenta.getText().toString()));
             double tot = txtVenta - DescKit - totPagos;
+
             tv_saldo.setText(string.FormatoPesos(tot));
+            pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
+
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_ped33) ,e.getMessage());

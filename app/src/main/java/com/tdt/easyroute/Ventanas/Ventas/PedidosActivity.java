@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -41,6 +43,7 @@ import com.tdt.easyroute.Adapter.PagerPedidosAdapter;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.ViewPagerNonSwipable;
@@ -71,6 +74,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
     private String _txtKit;
     private String _txtSaldoDeudaEnv;
     private String _txtVenta;
+    private String _txtSaldo;
 
     Configuracion conf;
     DataTableLC.DtCliVentaNivel rc;
@@ -221,6 +225,13 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             @Override
             public void onChanged(String s) {
                 _txtVenta=s;
+            }
+        });
+
+        pedidosVM.getTxtSaldo().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                _txtSaldo=s;
             }
         });
 
@@ -1656,22 +1667,53 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         }
         else
         {
+            if(Double.parseDouble( string.DelCaracteres( _txtVenta) ) >0 &&
+               Double.parseDouble( string.DelCaracteres(_txtSaldo ) ) >0 )
+            {
+                Utils.msgInfo(this, getString(R.string.msg_ped13) );
+                return;
+            }
 
+            if(Double.parseDouble( string.DelCaracteres(_txtVenta) ) >0 &&
+               Double.parseDouble( string.DelCaracteres(_txtSaldo) ) <0 )
+            {
+                Utils.msgInfo(this, getString(R.string.msg_ped14) );
+                return;
+            }
+
+            GuardarVenta2();
         }
 
 
-        return;
     }
 
-    private void GuardarVisitaSinVenta2()
+    private void GuardarVenta2()
     {
-        try {
-            boolean cobranza = false;
-            String coordenada = "NO VALIDA";
-            //if (Utils.position.PositionValid)
-            //  coordenada = Utils.position.PositionStr;
+        boolean consigna = false;
+        boolean credito = false;
+        String folio=null;
+        String coordenada = "NO VALIDA";
+        //if (Utils.position.PositionValid)
+            //coordenada = Utils.position.PositionStr;
+        try
+        {
+            //---------  Obtener adeudos y cobranza de envase ---------------
 
-            // -----------  Organizar movimientos de envase -------------------
+            String con= (string.formatSql ("select cr.*,coalesce(pag.prod_abono_n,0) prod_abono_n," +
+                    "cr.prod_cant_n-(cr.prod_cantabono_n+coalesce(pag.prod_abono_n,0)) prod_saldo_n from " +
+                    "(select * from creditos where cli_cve_n={0} and cred_esenvase_n=1 " +
+                    "and prod_cant_n>prod_cantabono_n) cr left join " +
+                    "(select pag_referencia_str,sum(prod_abono_n) prod_abono_n from pagos " +
+                    "where cli_cve_n={1} and pag_envase_n=1 and pag_cobranza_n=1 " +
+                    "group by pag_referencia_str) pag on cr.cred_referencia_str =pag.pag_referencia_str " +
+                    "order by cr.cred_fecha_dt", noCli,noCli));
+            String res= BaseLocal.Select(con, this);
+            ArrayList<DataTableLC.EnvAjustados> dtCredEnvAjustados = ConvertirRespuesta.getEnvAjustadosJson(res);
+            //---------  Obtener adeudos y cobranza de envase ---------------//
+
+
+
+            // -----------  Organizar movimientos de envase ------------------//
             ArrayList<DataTableLC.MovimientosEnv> vme = new ArrayList<>();
             for (DataTableLC.EnvasesPed ed : dgEnvase) {
                 for (DataTableLC.EnvasesAdeudo ea : dgDeudaEnv) {
@@ -1697,16 +1739,653 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     }
                 }
             }
+            // -----------  Organizar movimientos de envase ------------------//
+
+            String ven = BaseLocal.SelectDato("select max(ven_folio_str) from ventas", this);
+            if(ven!=null)
+            {
+                String fecha=Utils.FechaLocal().replace("-","");
+
+                String ruta = conf.getRutaStr();
+                String rutaN = "";
+                int ceros = 3-ruta.length();
+                for(int i=0; i<ceros;i++) rutaN+="0";
+                ruta = rutaN+ruta;
+
+                String fol = ven.substring(11);
+                int num = Integer.parseInt(fol);
+                String numFol ="";
+                String folNum = String.valueOf(num);
+                int cerosN = 3-folNum.length();
+                for(int i=0; i<cerosN;i++) numFol+="0";
+                folNum = numFol + folNum;
+
+                folio = fecha + ruta + folNum;
+            }
+            else
+            {
+                String fecha=Utils.FechaLocal().replace("-","");
+
+                String ruta = conf.getRutaStr();
+                String rutaN = "";
+                int ceros = 3-ruta.length();
+                for(int i=0; i<ceros;i++) rutaN+="0";
+                ruta = rutaN+ruta;
+
+                folio = fecha + ruta +"001";
+
+            }
+
+            int k = 1;
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(this, getString(R.string.nombreBD), null, 1);
+            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+            try
+            {
+                db.beginTransaction();
+
+                //-------   Se registra la diferencia con preventa ------
+
+                if(folio!=null)
+                {
+                    for(DataTableLC.CompPrevDet ia : ListaPrev)
+                    {
+                        DataTableLC.ProductosPed pi =null;
+                        for(DataTableLC.ProductosPed pp : dgProd2)
+                        {
+                            if(pp.getProd_cve_n().equals( ia.getProd_cve_n() ))
+                            {
+                                pi = pp;
+                                break;
+                            }
+                        }
+
+                        if (pi != null)
+                            ia.setVta_cant_n( pi.getProd_cant_n() );
+                        else
+                            ia.setVta_cant_n("0");
+
+                        if (!Utils.getBool( ia.getSin_inv() ))
+                        {
+                            String sql = string.formatSql2(Querys.Inventario.ActualizaCancelado, conf.getRutaStr(), ia.getProd_cve_n(),
+                                            String.valueOf(  Integer.parseInt(ia.getDisp_cant_n()) - Integer.parseInt(ia.getVta_cant_n())   ) );
+                            db.execSQL(sql);
+                        }
+                    }
+
+                    ArrayList< DataTableLC.EnvFal > envfal = new ArrayList<>();
+                    ArrayList< String > ids = new ArrayList<>();
+
+                    for (DataTableLC.CompPrevDet ei: ListaPrev)
+                    {
+                        if( Integer.parseInt( ei.getId_envase_n() ) !=0 &&
+                            !Utils.getBool(ei.getSin_inv()) )
+                        {
+                            if(ids.contains( ei.getId_envase_n() ))
+                            {
+                                int indice = ids.indexOf( ei.getId_envase_n() );
+                                int canN =Integer.parseInt( ei.getDisp_cant_n() ) - Integer.parseInt(ei.getVta_cant_n());
+                                int canA = Integer.parseInt( envfal.get(indice).getCant() );
+                                envfal.get(indice).setCant( String.valueOf( canN+canA ) );
+
+                            }
+                            else
+                            {
+                                DataTableLC.EnvFal ef = new DataTableLC.EnvFal();
+                                ef.setId_env( ei.getId_envase_n() );
+                                ef.setCant(  String.valueOf(  Integer.parseInt( ei.getDisp_cant_n() ) - Integer.parseInt(ei.getVta_cant_n())  )     );
+                                envfal.add(ef);
+                                ids.add(ei.getId_envase_n());
+                            }
+                        }
+                    }
 
 
+                    for(DataTableLC.EnvFal it : envfal)
+                    {
+                        String sql= string.formatSql2(Querys.Inventario.ActualizaCancelado, conf.getRutaStr(), it.getId_env(), it.getCant() );
+                        db.execSQL(sql);
+                    }
+                }
+
+                //--------   Registro de diferencia con preventa -------- //
+
+
+                //---------------   Registro de la venta de productos -----------------------
+
+
+                for(DataTableLC.ProductosPed r : dgProd2)
+                {
+                    if ( Integer.parseInt( r.getProd_cant_n() ) > 0)
+                    {
+                        double CantKit = 0;
+                        double PreKit = 0;
+                        boolean kit = false;
+
+                        if ( Double.parseDouble( r.getProm_kit_n() )  > 0)
+                        {
+                            DataTableLC.PedPromocionesKit rki = null;
+                            for(DataTableLC.PedPromocionesKit dt : dtKits)
+                            {
+                                if( dt.getProm_cve_n().equals( r.getProm_kit_n() )  &&
+                                    dt.getProd_cve_n().equals( r.getProd_cve_n() ) )
+                                {
+                                    rki = dt;
+                                }
+                            }
+
+                            if (rki!=null)
+                            {
+                                //Verifica si el precio de promocion es menor que el del cliente
+                                if( Double.parseDouble( rki.getLpre_precio_n() ) < Double.parseDouble( r.getLpre_precio_n() ) )
+                                {
+                                    kit = true;
+                                    CantKit = Double.parseDouble( rki.getProd_cant_n() ) * Double.parseDouble( rki.getProm_veces_n() );
+                                    PreKit = Double.parseDouble ( rki.getLpre_precio_n() );
+                                }
+                            }
+                        }
+
+                        if( Double.parseDouble( r.getProd_cant_n() ) > CantKit )
+                        {
+                            String sql = string.formatSql2(  Querys.Ventas.InsVentaDet, folio, String.valueOf(k), r.getProd_cve_n(),
+                                    r.getProd_sku_str(), "0",
+                                    String.valueOf( Double.parseDouble( r.getProd_cant_n() )-CantKit ) ,
+                                    "0", r.getLpre_base_n(), r.getLpre_cliente_n(),  r.getLpre_promo_n(),  r.getLpre_precio_n(),
+                                    String.valueOf (( Double.parseDouble(r.getProd_cant_n())-CantKit ) * Double.parseDouble( r.getLpre_precio_n() )),
+                                    Utils.getBool(r.getProd_promo_n())?"1":"0", r.getProm_cve_n(),"0","0","0");
+
+                            db.execSQL(sql);
+                        }
+
+                        if (kit)
+                        {
+                            if ( Double.parseDouble( r.getProd_cant_n() )  > CantKit)
+                                k++;
+
+                            String sql = string.formatSql2(Querys.Ventas.InsVentaDet, folio, String.valueOf(k),  r.getProd_cve_n(),
+                                    r.getProd_sku_str(), "0", String.valueOf( CantKit ) , "0", r.getLpre_base_n() , r.getLpre_cliente_n() ,
+                                     r.getLpre_promo_n(), String.valueOf( PreKit ) , String.valueOf( CantKit*PreKit ) , Utils.getBool(r.getProd_promo_n())?"1":"0",
+                                     r.getProm_kit_n(), "0", "0","1");
+
+                            db.execSQL(sql);
+                        }
+
+                        if( Utils.getBool(r.getProd_manejainv_n())  && esventa)
+                        {
+                            String sql =string.formatSql2(Querys.Inventario.ActualizaInvVen, conf.getRutaStr(),
+                                    r.getProd_cve_n() , "+", r.getProd_cant_n());
+                            db.execSQL(sql);
+
+                            sql= string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(),
+                                    r.getProd_cve_n(), noCli, conf.getUsuario(), r.getProd_cantiv_n(), r.getProd_cant_n() , "0",
+                                    String.valueOf(  Double.parseDouble( r.getProd_cantiv_n() ) - Double.parseDouble( r.getProd_cant_n() )  ) ,
+                                    "Vendido ticket: " + folio);
+
+                            db.execSQL(sql);
+                        }
+                        k++;
+                    }
+                }
+
+
+                //------------- Registro del movimiento de envase de la venta -----------
+                for(DataTableLC.EnvasesPed r : dgEnvase)
+                {
+                    if( Double.parseDouble( r.getEntregado() ) >0  )
+                    {
+                        String sql = string.formatSql2(Querys.Ventas.InsVentaEnv, noCli, rc.getCli_cveext_str(),
+                                folio,  r.getProd_cve_n(), r.getProd_sku_str(),  r.getEntregado() , r.getRecibido(), r.getRegalo(),
+                                r.getVenta(), "0",  r.getRestante(), r.getLpre_base_n() , r.getLpre_precio_n() );
+
+                        db.execSQL(sql);
+                    }
+                }
+                //------------- Registro del movimiento de envase de la venta -----------//
+
+                //--------------- Trabajo con envase  --------------------------- //
+                for(DataTableLC.MovimientosEnv i : vme)
+                {
+                    //-----  venta de envase -------
+                    if ( Double.parseDouble( i.getProd_venta_n() )  > 0)
+                    {
+                        if (esventa)
+                        {
+                            if (Double.parseDouble(i.getProd_ventadia_n()) > 0)
+                            {
+                                String sql = string.formatSql2(Querys.Ventas.InsVentaDet, folio, String.valueOf(k) , i.getProd_cve_n(),
+                                        i.getProd_sku_str(), "0", i.getProd_ventadia_n(), "0", i.getLpre_base_n(), i.getLpre_precio_n(),
+                                        "0", i.getLpre_precio_n(),
+                                        String.valueOf( Double.parseDouble(i.getProd_ventadia_n())  *  Double.parseDouble(i.getLpre_precio_n() ) )
+                                        , "0", "0", "0", "0","0");
+                                db.execSQL(sql);
+
+                                k++;
+
+                                sql = string.formatSql2(Querys.Inventario.ActualizaInvVen, conf.getRutaStr(),
+                                        i.getProd_cve_n(), "+", i.getProd_ventadia_n());
+                                db.execSQL(sql);
+
+                                sql= string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(),
+                                        i.getProd_cve_n(), noCli, conf.getUsuario(), i.getProd_cantiv_n(), i.getProd_ventadia_n(), "0",
+                                        String.valueOf( Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble( i.getProd_ventadia_n() ) ),
+                                        "Envase vendido ticket: " + folio);
+                                db.execSQL(sql);
+
+                            }
+                        }
+
+                        if (Double.parseDouble( i.getProd_ventaant_n() ) >0  )
+                        {
+                            String sql= string.formatSql2(Querys.Ventas.InsVentaDetEnv, folio, String.valueOf(k), i.getProd_cve_n(),
+                                    i.getProd_sku_str(), "0", i.getProd_ventaant_n(), "0", i.getLpre_base_n(), i.getLpre_precio_n(),
+                                    "0", i.getLpre_precio_n(),
+                                    String.valueOf( Double.parseDouble( i.getProd_ventaant_n() )  * Double.parseDouble( i.getLpre_precio_n() ) )  ,
+                                    "0", "0", "0", "1", "0");
+
+                            db.execSQL(sql);
+                        }
+                        k++;
+                    }
+                    //-----  venta de envase -------//
+
+                    //-----  Regalo de envase -------
+                    if (Double.parseDouble(i.getProd_regalo_n()) > 0)
+                    {
+                        //----- Se vende el envase regalado ---------------
+                        String sql= string.formatSql2(Querys.Ventas.InsVentaDet, folio, String.valueOf(k), i.getProd_cve_n(),
+                                i.getProd_sku_str(), "0", i.getProd_regalo_n(), "0", i.getLpre_base_n(), i.getLpre_precio_n() ,
+                                "0", "0", "0", "1", "0", "1", "0","0");
+                        db.execSQL(sql);
+
+                        //----- Se actualiza el inventario
+                        sql= string.formatSql2(Querys.Inventario.ActualizaInvVen, conf.getRutaStr(),
+                                i.getProd_cve_n(), "+", i.getProd_regalo_n());
+                        db.execSQL(sql);
+
+                        sql=string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(),
+                                i.getProd_cve_n(), noCli, conf.getUsuario(),
+                                String.valueOf(  Double.parseDouble( i.getProd_cantiv_n() ) - Double.parseDouble( i.getProd_ventadia_n() ) ) ,
+                                i.getProd_regalo_n(), "0",
+                                String.valueOf(  Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n())  ) ,
+                                "Regalado ticket: " + folio);
+                        db.execSQL(sql);
+
+                        k++;
+                    }
+                    //-----  Regalo de envase -------//
+
+
+                    //------ Pago de envase anterior ------
+                    if (Double.parseDouble(i.getProd_pago_n()) > 0)
+                    {
+                        int acum = 0;
+                        int AcumAbo = 0;
+                        int AcumVta = 0;
+                        int Saldo = 0;
+                        int SaldoAbo = 0;
+                        int SaldoVta = 0;
+
+                        for (DataTableLC.EnvAjustados rep : dtCredEnvAjustados) {
+                            if (Double.parseDouble(rep.getProd_saldo_n()) > 0 && rep.getProd_cve_n().equals(i.getProd_cve_n())) {
+                                if (acum >= Double.parseDouble(i.getProd_pago_n()))
+                                    break;
+
+                                Saldo = Integer.parseInt(rep.getProd_saldo_n());
+
+                                if ((Double.parseDouble(i.getProd_pago_n()) - acum) < Saldo)
+                                    Saldo = (Integer.parseInt(i.getProd_pago_n()) - acum);
+
+                                if ((Double.parseDouble(i.getProd_abono_n()) - AcumAbo) >= Saldo) {
+                                    SaldoAbo = Saldo;
+                                    SaldoVta = 0;
+                                } else {
+                                    SaldoAbo = (Integer.parseInt(i.getProd_abono_n()) - AcumAbo);
+                                    SaldoVta = Saldo - SaldoAbo;
+                                }
+
+                                if (SaldoAbo > 0) {
+
+                                    String sql = string.formatSql2(Querys.Pagos.InsPagoEnv, String.valueOf(conf.getId()), rep.getCred_referencia_str(),
+                                            "0", "0", "1", i.getProd_cve_n(), String.valueOf(SaldoAbo), "null", "",
+                                            "", noCli, conf.getRutaStr(), conf.getUsuario(), "0", i.getProd_sku_str(), "1", coordenada, "1");
+                                    db.execSQL(sql);
+
+                                    AcumAbo += SaldoAbo;
+                                }
+
+                                if (SaldoVta > 0) {
+                                    String sql = string.formatSql2(Querys.Pagos.InsPagoEnv, String.valueOf(conf.getId()), rep.getCred_referencia_str(),
+                                            "0", "0", "1", i.getProd_cve_n(), String.valueOf(SaldoVta), "null", "",
+                                            "", noCli, conf.getRutaStr(), conf.getUsuario(), "0", i.getProd_sku_str(), "1", coordenada, "0");
+
+                                    db.execSQL(sql);
+
+                                    AcumVta += SaldoVta;
+                                }
+
+                                acum += Saldo;
+                            }
+                        }
+
+                        if (Double.parseDouble(i.getProd_abono_n()) > 0)
+                        {
+                            String sql = string.formatSql2(Querys.Inventario.ActualizaRecuperado, conf.getRutaStr(), i.getProd_cve_n(), i.getProd_abono_n());
+                            db.execSQL(sql);
+
+                            sql= string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
+                                    noCli, conf.getUsuario(),
+                                    String.valueOf(  Double.parseDouble(i.getProd_cantiv_n()) -  Double.parseDouble(i.getProd_ventadia_n()) -  Double.parseDouble(i.getProd_regalo_n())  ) ,
+                                    "0", i.getProd_abono_n(),
+                                    String.valueOf(  ( Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) + Double.parseDouble( i.getProd_abono_n())   ),
+                                    string.formatSql("Devolución de {0} envases {1} del Cliente: {2}",  i.getProd_abono_n(), i.getProd_sku_str(), Cliente));
+                            db.execSQL(sql);
+
+                        }
+
+                        if (Double.parseDouble(i.getProd_ventaant_n()) >0 )
+                        {
+                            String sql =
+                            string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
+                            noCli, conf.getUsuario(),
+                            String.valueOf( Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) ,
+                            i.getProd_ventaant_n(), "0",
+                                    String.valueOf( Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) ,
+                            string.formatSql("Venta de {0} envases {1} del Cliente: {2}", i.getProd_ventaant_n(), i.getProd_sku_str(), Cliente));
+                        }
+
+
+
+                    }
+
+                }
+                //--------------- Trabajo con envase  ---------------------//
+
+                db.setTransactionSuccessful();
+
+            }catch (Exception e)
+            {
+                Utils.msgError(this, getString(R.string.error_almacenar), e.getMessage());
+            }
+            finally
+            {
+                if(db.isOpen())
+                {
+                    db.endTransaction();
+                    db.close();
+                }
+            }
+
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.error_ped1), e.getMessage());
+        }
+
+    }
+
+    private void GuardarVisitaSinVenta2()
+    {
+        try
+        {
+            boolean cobranza = false;
+            String coordenada = "NO VALIDA";
+            //if (Utils.position.PositionValid)
+            //  coordenada = Utils.position.PositionStr;
+
+            // -----------  Organizar movimientos de envase ------------------//
+            ArrayList<DataTableLC.MovimientosEnv> vme = new ArrayList<>();
+            for (DataTableLC.EnvasesPed ed : dgEnvase) {
+                for (DataTableLC.EnvasesAdeudo ea : dgDeudaEnv) {
+                    if (ed.getProd_sku_str().equals(ea.getProd_sku_str())) {
+                        DataTableLC.MovimientosEnv o = new DataTableLC.MovimientosEnv();
+
+                        o.setProd_cve_n(ed.getProd_cve_n());
+                        o.setProd_sku_str(ed.getProd_sku_str());
+                        o.setProd_recibidodia_n(ed.getRecibido());
+                        o.setProd_recibido_n(String.valueOf(Integer.parseInt(ed.getRecibido()) + Integer.parseInt(ea.getAbono())));
+                        o.setProd_abono_n(ea.getAbono());
+                        o.setProd_venta_n(String.valueOf(Integer.parseInt(ed.getVenta()) + Integer.parseInt(ea.getVenta())));
+                        o.setProd_ventaant_n(ea.getVenta());
+                        o.setProd_ventadia_n(ed.getVenta());
+                        o.setProd_regalo_n(ed.getRegalo());
+                        o.setProd_prestado_n(ed.getRestante());
+                        o.setProd_cantiv_n(ed.getProd_cantiv_n());
+                        o.setProd_pago_n(String.valueOf(Integer.parseInt(ea.getAbono()) + Integer.parseInt(ea.getVenta())));
+                        o.setLpre_base_n(ed.getLpre_base_n());
+                        o.setLpre_precio_n(ed.getLpre_precio_n());
+
+                        vme.add(o);
+                    }
+                }
+            }
+            // -----------  Organizar movimientos de envase ------------------//
+
+
+            //---------  Obtener adeudos y cobranza de envase ---------------
+
+            String con= (string.formatSql ("select cr.*,coalesce(pag.prod_abono_n,0) prod_abono_n," +
+                    "cr.prod_cant_n-(cr.prod_cantabono_n+coalesce(pag.prod_abono_n,0)) prod_saldo_n from " +
+                    "(select * from creditos where cli_cve_n={0} and cred_esenvase_n=1 " +
+                    "and prod_cant_n>prod_cantabono_n) cr left join " +
+                    "(select pag_referencia_str,sum(prod_abono_n) prod_abono_n from pagos " +
+                    "where cli_cve_n={1} and pag_envase_n=1 and pag_cobranza_n=1 " +
+                    "group by pag_referencia_str) pag on cr.cred_referencia_str =pag.pag_referencia_str " +
+                    "order by cr.cred_fecha_dt", noCli,noCli));
+            String res= BaseLocal.Select(con, this);
+            ArrayList<DataTableLC.EnvAjustados> dtCredEnvAjustados = ConvertirRespuesta.getEnvAjustadosJson(res);
+
+            //---------  Obtener adeudos y cobranza de envase ---------------//
+
+            DatabaseHelper databaseHelper = new DatabaseHelper(this, getString(R.string.nombreBD), null, 1);
+            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+            try
+            {
+                db.beginTransaction();
+
+                // ------------- Cobranza -------------------------
+
+                if ( dgAbonos.size() > 0)
+                {
+                    cobranza = true;
+                    double abonado = 0;
+                    double acumulado = 0;
+                    double saldo = 0;
+
+                    for(DataTableLC.DgAbonos rp: dgAbonos )
+                    {
+                        abonado = Double.parseDouble (rp.getFpag_cant_n());
+                        acumulado = 0;
+                        for(DataTableLC.AdeudoNormal r: dgANormal)
+                        {
+                            if( Double.parseDouble( r.getSaldo() ) >0  )
+                            {
+                                if (abonado - acumulado > 0)
+                                {
+                                    saldo = Double.parseDouble(r.getSaldo());
+                                    if (saldo <= (abonado - acumulado))
+                                    {
+
+                                        con = string.formatSql2(
+                                                Querys.Pagos.InsPago, String.valueOf(conf.getId() ),r.getCred_referencia_str(),
+                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n(), rp.getReferenciaA(),
+                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
+                                        db.execSQL(con);
+
+                                        acumulado += saldo;
+                                    }
+                                    else
+                                    {
+                                        saldo = (abonado - acumulado);
+
+                                        con=string.formatSql2(Querys.Pagos.InsPago, String.valueOf(conf.getId() ), r.getCred_referencia_str(),
+                                                String.valueOf(saldo ), "0","0", "null", "null", rp.getFpag_cve_n() , rp.getReferenciaA(),
+                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1",coordenada);
+                                        db.execSQL(con);
+
+                                        acumulado += saldo;
+                                    }
+                                    r.setAbono( String.valueOf( Double.parseDouble(r.getAbono()) + saldo ) );
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                //----------- Cobranza -----------------//
+
+                //--------------- Trabajo con envase  ---------------------------//
+                for(DataTableLC.MovimientosEnv i : vme)
+                {
+                    //------ Pago de envase anterior ------
+                    if ( Double.parseDouble( i.getProd_pago_n() )  > 0)
+                    {
+                        cobranza = true;
+                        int acum = 0;
+                        int AcumAbo = 0;
+                        int AcumVta = 0;
+                        int Saldo = 0;
+                        int SaldoAbo = 0;
+                        int SaldoVta = 0;
+
+                        for(DataTableLC.EnvAjustados rep : dtCredEnvAjustados)
+                        {
+                            if( Double.parseDouble( rep.getProd_saldo_n()) >0 && rep.getProd_cve_n().equals( i.getProd_cve_n() )  )
+                            {
+
+                                if (acum >= Double.parseDouble( i.getProd_pago_n() ) )
+                                    break;
+
+                                Saldo = Integer.parseInt( rep.getProd_saldo_n() );
+                                if (( Double.parseDouble(i.getProd_pago_n())  - acum) < Saldo)
+                                    Saldo = ( Integer.parseInt(i.getProd_pago_n()) - acum);
+
+
+                                if (( Double.parseDouble(i.getProd_abono_n())  - AcumAbo) >= Saldo)
+                                {
+                                    SaldoAbo = Saldo;
+                                    SaldoVta = 0;
+                                }
+                                else
+                                {
+                                    SaldoAbo = ( Integer.parseInt(i.getProd_abono_n())  - AcumAbo);
+                                    SaldoVta = Saldo - SaldoAbo;
+                                }
+
+                                if (SaldoAbo > 0)
+                                {
+                                    con = string.formatSql2(Querys.Pagos.InsPagoEnv, String.valueOf(conf.getId()), rep.getCred_referencia_str(),
+                                            "0", "0", "1", i.getProd_cve_n() , String.valueOf( SaldoAbo ) , "null", "",
+                                            "", String.valueOf( noCli) , conf.getRutaStr(), conf.getUsuario(), "0", i.getProd_sku_str(), "1", coordenada, "1");
+                                    db.execSQL(con);
+                                    AcumAbo += SaldoAbo;
+                                }
+
+                                if (SaldoVta > 0)
+                                {
+                                    con= string.formatSql2(Querys.Pagos.InsPagoEnv, String.valueOf(conf.getId()), rep.getCred_referencia_str(),
+                                            "0", "0", "1", i.getProd_cve_n() , String.valueOf( SaldoVta ) , "null", "",
+                                            "", String.valueOf(noCli ), conf.getRutaStr(), conf.getUsuario(), "0", i.getProd_sku_str(), "1", coordenada, "0");
+                                    db.execSQL(con);
+                                    AcumVta += SaldoVta;
+                                }
+                                acum += Saldo;
+                            }
+                        }
+
+                        //----for pagos envase envase anterior ---///
+                        if ( Integer.parseInt( i.getProd_abono_n()) >0 )
+                        {
+                            con= string.formatSql2(Querys.Inventario.ActualizaRecuperado, conf.getRutaStr(), i.getProd_cve_n(), i.getProd_abono_n());
+
+                            db.execSQL(con);
+
+                            con= string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
+                                    String.valueOf(noCli ), conf.getUsuario(),
+                                    String.valueOf( Double.parseDouble( i.getProd_cantiv_n() )  - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) ,
+                                    "0", i.getProd_abono_n(),
+                                    String.valueOf ( ( Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n())  - Double.parseDouble(i.getProd_regalo_n()) ) + Double.parseDouble(i.getProd_abono_n()) ),
+                                    string.formatSql("Devolución de {0} envases {1} del Cliente: {2}",  i.getProd_abono_n(), i.getProd_sku_str(), Cliente) );
+                            db.execSQL(con);
+                        }
+
+                        if (Integer.parseInt( i.getProd_ventaant_n()) >0)
+                        {
+                            con= string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
+                                    noCli, conf.getUsuario(),
+                                    String.valueOf(  Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n())  )   ,
+                                    i.getProd_ventaant_n(), "0",
+                                    String.valueOf(   Double.parseDouble(i.getProd_cantiv_n())  - Double.parseDouble(i.getProd_ventadia_n())  - Double.parseDouble( i.getProd_regalo_n() )   )   ,
+                                    string.formatSql("Venta de {0} envases {1} del Cliente: {2}", i.getProd_ventaant_n(), i.getProd_sku_str(), Cliente));
+                            db.execSQL(con);
+                        }
+                    }
+                    //------ Pago de envase anterior ------//
+
+                }
+                //--------------- Trabajo con envase  ---------------------//
+
+
+
+                con= string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noCli, "CON COBRANZA", "VISITA CON COBRANZA", coordenada);
+                db.execSQL(con);
+
+                con= string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noCli, "CIERRE CLIENTE", "CIERRE SIN VENTA", coordenada);
+                db.execSQL(con);
+
+                con= string.formatSql2(Querys.Trabajo.InsertVisita,
+                        conf.getUsuario(), noCli, "null","null", "CON COBRANZA", "VISITA CON VENTA", coordenada);
+                db.execSQL(con);
+
+                con= string.formatSql2(Querys.Preventa.UpdateVisitaReparto, FolioVisita);
+                db.execSQL(con);
+
+                db.setTransactionSuccessful();
+
+            }catch (Exception e)
+            {
+                Utils.msgError(this, getString(R.string.error_almacenar), e.getMessage());
+            }
+            finally
+            {
+                if(db.isOpen())
+                {
+                    db.endTransaction();
+                    db.close();
+                }
+            }
+
+            if(cobranza)
+            {
+                Utils.msgInfo(this,"IMPRIMIR TICKET");
+            }
+
+            if (ConVenta)
+            {
+                Intent i = getIntent();
+                i.putExtra("estado", "true");
+                i.putExtra("cve", rc.getCli_cve_n());
+                setResult(RESULT_OK, i);
+                finish();
+            }
+            else
+            {
+                Intent i = getIntent();
+                i.putExtra("estado", "false");
+                i.putExtra("cve", rc.getCli_cve_n());
+                setResult(RESULT_OK, i);
+                finish();
+            }
 
         }catch (Exception e)
         {
             Utils.msgError(this, getString(R.string.err_ped36), e.getMessage());
         }
     }
-
-
 
     private boolean ValidarCondicionesVenta()
     {
@@ -1820,15 +2499,6 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             return false;
         }
 
-    }
-
-    private void clickGuardar()
-    {
-        Intent i = getIntent();
-        i.putExtra("estado", "true");
-        i.putExtra("cve", rc.getCli_cve_n());
-        setResult(RESULT_OK, i);
-        finish();
     }
 
     private void clickDetalles()

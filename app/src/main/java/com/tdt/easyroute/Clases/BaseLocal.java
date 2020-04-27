@@ -56,8 +56,6 @@ public class BaseLocal {
 
             DatabaseHelper databaseHelper = new DatabaseHelper(context, nombreBase, null, 1);
             SQLiteDatabase bd = databaseHelper.getWritableDatabase();
-
-
             bd.execSQL(consulta);
 
             bd.close();

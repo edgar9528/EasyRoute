@@ -1938,7 +1938,8 @@ public class ConvertirRespuesta {
         return al;
     }
 
-    public static ArrayList<DataTableLC.PromocionesEnv> getPromocionesEnvJson(String respuesta) {
+    public static ArrayList<DataTableLC.PromocionesEnv> getPromocionesEnvJson(String respuesta)
+    {
         ArrayList<DataTableLC.PromocionesEnv> al = null;
         try {
             Gson gson = new Gson();
@@ -1952,6 +1953,24 @@ public class ConvertirRespuesta {
         }
         return al;
     }
+
+    public static ArrayList<DataTableLC.EnvAjustados> getEnvAjustadosJson(String respuesta)
+    {
+        ArrayList<DataTableLC.EnvAjustados> al = null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<DataTableLC.EnvAjustados>>() {
+            }.getType();
+            al = gson.fromJson(respuesta, listType);
+            if (al.size() == 0) return null;
+        } catch (Exception e) {
+            Log.d("salida", "error gson: " + e.toString());
+            al = null;
+        }
+        return al;
+    }
+
+
 
 
 }

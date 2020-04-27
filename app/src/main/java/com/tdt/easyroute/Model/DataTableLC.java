@@ -6340,5 +6340,229 @@ public class DataTableLC {
             this.lpre_precio_n = lpre_precio_n;
         }
     }
+    
+    public static class EnvAjustados
+    {
+        private String cred_cve_n;
+        private String cred_referencia_str;
+        private String cli_cve_n;
+        private String rut_cve_n;
+        private String usu_cve_str;
+        private String cred_fecha_dt;
+        private String cred_descripcion_str;
+        private String cred_vencimiento_dt;
+        private String cred_monto_n;
+        private String cred_abono_n;
+        private String cred_engestoria_n;
+        private String cred_esenvase_n;
+        private String cred_especial_n;
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_precio_n;
+        private String prod_cant_n;
+        private String prod_cantabono_n;
+        private String trans_est_n;
+        private String trans_fecha_dt;
+        private String prod_abono_n;
+        private String prod_saldo_n;
+
+        public String getCred_cve_n() {
+            return cred_cve_n;
+        }
+
+        public void setCred_cve_n(String cred_cve_n) {
+            this.cred_cve_n = cred_cve_n;
+        }
+
+        public String getCred_referencia_str() {
+            return cred_referencia_str;
+        }
+
+        public void setCred_referencia_str(String cred_referencia_str) {
+            this.cred_referencia_str = cred_referencia_str;
+        }
+
+        public String getCli_cve_n() {
+            return cli_cve_n;
+        }
+
+        public void setCli_cve_n(String cli_cve_n) {
+            this.cli_cve_n = cli_cve_n;
+        }
+
+        public String getRut_cve_n() {
+            return rut_cve_n;
+        }
+
+        public void setRut_cve_n(String rut_cve_n) {
+            this.rut_cve_n = rut_cve_n;
+        }
+
+        public String getUsu_cve_str() {
+            return usu_cve_str;
+        }
+
+        public void setUsu_cve_str(String usu_cve_str) {
+            this.usu_cve_str = usu_cve_str;
+        }
+
+        public String getCred_fecha_dt() {
+            return cred_fecha_dt;
+        }
+
+        public void setCred_fecha_dt(String cred_fecha_dt) {
+            this.cred_fecha_dt = cred_fecha_dt;
+        }
+
+        public String getCred_descripcion_str() {
+            return cred_descripcion_str;
+        }
+
+        public void setCred_descripcion_str(String cred_descripcion_str) {
+            this.cred_descripcion_str = cred_descripcion_str;
+        }
+
+        public String getCred_vencimiento_dt() {
+            return cred_vencimiento_dt;
+        }
+
+        public void setCred_vencimiento_dt(String cred_vencimiento_dt) {
+            this.cred_vencimiento_dt = cred_vencimiento_dt;
+        }
+
+        public String getCred_monto_n() {
+            return cred_monto_n;
+        }
+
+        public void setCred_monto_n(String cred_monto_n) {
+            this.cred_monto_n = cred_monto_n;
+        }
+
+        public String getCred_abono_n() {
+            return cred_abono_n;
+        }
+
+        public void setCred_abono_n(String cred_abono_n) {
+            this.cred_abono_n = cred_abono_n;
+        }
+
+        public String getCred_engestoria_n() {
+            return cred_engestoria_n;
+        }
+
+        public void setCred_engestoria_n(String cred_engestoria_n) {
+            this.cred_engestoria_n = cred_engestoria_n;
+        }
+
+        public String getCred_esenvase_n() {
+            return cred_esenvase_n;
+        }
+
+        public void setCred_esenvase_n(String cred_esenvase_n) {
+            this.cred_esenvase_n = cred_esenvase_n;
+        }
+
+        public String getCred_especial_n() {
+            return cred_especial_n;
+        }
+
+        public void setCred_especial_n(String cred_especial_n) {
+            this.cred_especial_n = cred_especial_n;
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_precio_n() {
+            return prod_precio_n;
+        }
+
+        public void setProd_precio_n(String prod_precio_n) {
+            this.prod_precio_n = prod_precio_n;
+        }
+
+        public String getProd_cant_n() {
+            return prod_cant_n;
+        }
+
+        public void setProd_cant_n(String prod_cant_n) {
+            this.prod_cant_n = prod_cant_n;
+        }
+
+        public String getProd_cantabono_n() {
+            return prod_cantabono_n;
+        }
+
+        public void setProd_cantabono_n(String prod_cantabono_n) {
+            this.prod_cantabono_n = prod_cantabono_n;
+        }
+
+        public String getTrans_est_n() {
+            return trans_est_n;
+        }
+
+        public void setTrans_est_n(String trans_est_n) {
+            this.trans_est_n = trans_est_n;
+        }
+
+        public String getTrans_fecha_dt() {
+            return trans_fecha_dt;
+        }
+
+        public void setTrans_fecha_dt(String trans_fecha_dt) {
+            this.trans_fecha_dt = trans_fecha_dt;
+        }
+
+        public String getProd_abono_n() {
+            return prod_abono_n;
+        }
+
+        public void setProd_abono_n(String prod_abono_n) {
+            this.prod_abono_n = prod_abono_n;
+        }
+
+        public String getProd_saldo_n() {
+            return prod_saldo_n;
+        }
+
+        public void setProd_saldo_n(String prod_saldo_n) {
+            this.prod_saldo_n = prod_saldo_n;
+        }
+    }
+
+    public static class EnvFal
+    {
+        private String id_env;
+        private String cant;
+
+        public String getId_env() {
+            return id_env;
+        }
+
+        public void setId_env(String id_env) {
+            this.id_env = id_env;
+        }
+
+        public String getCant() {
+            return cant;
+        }
+
+        public void setCant(String cant) {
+            this.cant = cant;
+        }
+    }
 
 }
