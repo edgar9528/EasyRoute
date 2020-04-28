@@ -68,6 +68,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
     private boolean ConVenta;
     private boolean PorEscanear;
     private String PositionStr;
+    private String comentario = "";
     private boolean removerVenta = false;
     private String _tv_adeudoN;
     private String _tv_totAbono;
@@ -2085,23 +2086,192 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
                         if (Double.parseDouble(i.getProd_ventaant_n()) >0 )
                         {
-                            String sql =
-                            string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
+                            String sql = string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
                             noCli, conf.getUsuario(),
                             String.valueOf( Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) ,
                             i.getProd_ventaant_n(), "0",
                                     String.valueOf( Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) ,
                             string.formatSql("Venta de {0} envases {1} del Cliente: {2}", i.getProd_ventaant_n(), i.getProd_sku_str(), Cliente));
+
+                            db.execSQL(sql);
+                        }
+                    }
+                    //------ Pago de envase anterior ------//
+
+                    //------ Pago del envase del dia -------
+                    if (Double.parseDouble( i.getProd_recibidodia_n() ) > 0)
+                    {
+                        //------ dentro de las pruebas el envase devuelto no juega en el inventario ya que duplica el vacio
+                        //cx.ActualizarDatos(string.Format(Querys.Inventario.ActualizaRecuperado, conf.ruta, i.prod_cve_n, i.prod_recibidodia_n), t);
+                        String sql = string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
+                                noCli, conf.getUsuario(),
+                                String.valueOf( (Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) + Double.parseDouble(i.getProd_abono_n())  ),
+                                "0", i.getProd_recibidodia_n(),
+                                String.valueOf( (Double.parseDouble(i.getProd_cantiv_n()) - Double.parseDouble(i.getProd_ventadia_n()) - Double.parseDouble(i.getProd_regalo_n()) ) + Double.parseDouble(i.getProd_abono_n())  ),
+                                string.formatSql("Devolución de {0} envases {1} mismo día del Cliente: {2}", i.getProd_recibidodia_n(), i.getProd_sku_str(), Cliente));
+                        db.execSQL(sql);
+                    }
+                    //------ Pago del envase del dia -------//
+
+                    if (Double.parseDouble(i.getProd_prestado_n()) > 0)
+                    {
+                        //------------- Se vende a precio 0 el envase prestado
+                        String sql = string.formatSql2(Querys.Ventas.InsVentaDet, folio, String.valueOf(k) , i.getProd_cve_n(),
+                                i.getProd_sku_str(), "1",  i.getProd_prestado_n(), "0", i.getLpre_base_n(), i.getLpre_precio_n(),
+                                "0", "0", "0", "0", "0", "0", "0","0");
+                        db.execSQL(sql);
+
+                        k++;
+
+                        //-------------- Generacion del credito para envase prestado
+                        if (consigna)
+                        {
+                            sql = string.formatSql2(Querys.Trabajo.InsConsignaPago,
+                           string.formatSql("{0}-{1}", folio, i.getProd_sku_str()), noCli, conf.getUsuario(), "ENVASE EN CONSIGNA",
+                                    String.valueOf( Double.parseDouble(i.getProd_prestado_n()) * Double.parseDouble(i.getLpre_precio_n()) ) ,
+                                    "1", i.getProd_cve_n(), i.getLpre_precio_n() , i.getProd_prestado_n(), "30",  i.getProd_sku_str());
+                            db.execSQL(sql);
+                        }
+                        else
+                        {
+                            sql= string.formatSql2(Querys.Trabajo.InsCreditosPago3,
+                                        string.formatSql ("{0}-{1}", folio, i.getProd_sku_str()), noCli, conf.getUsuario(), "ENVASE A CREDITO",
+                                        String.valueOf( Double.parseDouble(i.getLpre_precio_n())* Double.parseDouble( i.getProd_prestado_n() ) ) ,
+                                        "1", i.getProd_cve_n(), i.getLpre_precio_n(), i.getProd_prestado_n(), i.getProd_sku_str(), rc.getCli_plazocredito_n());
+                            db.execSQL(sql);
                         }
 
+                        //Baja de inventario prestados
+                        sql= string.formatSql2(Querys.Inventario.ActualizaPrestado, conf.getRutaStr(),
+                                i.getProd_cve_n(), i.getProd_prestado_n());
+                        db.execSQL(sql);
 
+                        sql = string.formatSql2(Querys.Inventario.InsertMovimiento, conf.getRutaStr(), i.getProd_cve_n(),
+                                noCli, conf.getUsuario(),
+                                String.valueOf (( Double.parseDouble( i.getProd_cantiv_n() ) - Double.parseDouble( i.getProd_ventadia_n() ) - Double.parseDouble( i.getProd_regalo_n() ) ) + Double.parseDouble(i.getProd_abono_n()) ),
+                                i.getProd_prestado_n(), "0",
+                                String.valueOf( ( Double.parseDouble( i.getProd_cantiv_n() ) - Double.parseDouble( i.getProd_ventadia_n() ) - Double.parseDouble( i.getProd_regalo_n() ) ) + Double.parseDouble(i.getProd_abono_n())- Double.parseDouble(i.getProd_prestado_n())  ),
+                                string.formatSql("Prestamo de {0} envases {1} mismo día del Cliente: {2}", i.getProd_prestado_n(), i.getProd_sku_str(), Cliente));
+                        db.execSQL(sql);
 
                     }
-
                 }
                 //--------------- Trabajo con envase  ---------------------//
 
+
+                String sql = string.formatSql2(Querys.Ventas.InsVentas2, folio, noCli,
+                        conf.getRutaStr(), String.valueOf(lpre) , "1", conf.getUsuario().toUpperCase(), coordenada,
+                        FolioPreventa,  rc.getCli_dispersion_n(),comentario);
+                db.execSQL(sql);
+
+                sql = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noCli, "CON VENTA", "VISITA CON VENTA", coordenada);
+                db.execSQL(sql);
+
+                sql= string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noCli, "CIERRE CLIENTE", "CIERRE CON VENTA", coordenada);
+                db.execSQL(sql);
+
+                sql=string.formatSql2(Querys.Trabajo.InsertVisita, conf.getUsuario(),
+                        noCli, "null", "null", "CON VENTA", "VISITA CON VENTA", coordenada);
+                db.execSQL(sql);
+
+                sql= string.formatSql2(Querys.Preventa.UpdateVisitaReparto, FolioVisita);
+                db.execSQL(sql);
+
+
+                // ------ Pago venta actual -----------------
+                for(DataTableLC.DgPagos r : dgPagos)
+                {
+                    if ( r.getFpag_desc_str().equals("CREDITO") )
+                    {
+                        sql = string.formatSql2(Querys.Trabajo.InsCreditosPago2,
+                                folio, noCli, conf.getUsuario(), "VENTA A CREDITO", rc.getCli_plazocredito_n() ,  r.getFpag_cant_n(), "0",
+                                "null", "", "null", "null");
+                        db.execSQL(sql);
+                        credito = true;
+                    }
+                    else
+                    {
+                        if (r.getFpag_desc_str().equals("CONSIGNA") )
+                        {
+                            sql= string.formatSql2(Querys.Trabajo.InsConsignaPago,
+                                    folio, noCli, conf.getUsuario(), "CONSIGNA", r.getFpag_cant_n(), "0", "null", "null", "null", "30", "");
+                            db.execSQL(sql);
+
+                            consigna = true;
+                        }
+                        else
+                        {
+                            sql=string.formatSql2(Querys.Pagos.InsPago, String.valueOf( conf.getId() ) , folio,
+                                    r.getFpag_cant_n(), "0", "0", "null", "null", r.getFpag_cve_n(), r.getReferenciaP(),
+                                    r.getBancoP(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "0", coordenada);
+                            db.execSQL(sql);
+                        }
+                    }
+                }
+                // --------  Pago venta actual --------------//
+
+                // ------------- Cobranza -------------------------
+                if (  dgAbonos.size() >0   )
+                {
+                    double abonado = 0;
+                    double acumulado = 0;
+                    double saldo = 0;
+
+                    for(DataTableLC.DgAbonos rp : dgAbonos)
+                    {
+                        abonado = Double.parseDouble(rp.getFpag_cant_n());
+                        acumulado = 0;
+
+                        for(DataTableLC.AdeudoNormal r : dgANormal)
+                        {
+                            if( Double.parseDouble( r.getSaldo() ) >0  )
+                            {
+                                if (abonado - acumulado > 0)
+                                {
+                                    saldo = Double.parseDouble(r.getSaldo());
+                                    if (saldo <= (abonado - acumulado))
+                                    {
+                                        sql= string.formatSql2(Querys.Pagos.InsPago, String.valueOf(conf.getId()), r.getCred_referencia_str(),
+                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n() , rp.getReferenciaA(),
+                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
+                                        db.execSQL(sql);
+
+                                        acumulado += saldo;
+                                    }
+                                    else
+                                    {
+                                        saldo = (abonado - acumulado);
+                                        sql=string.formatSql2(Querys.Pagos.InsPago, String.valueOf(conf.getId()), r.getCred_referencia_str(),
+                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n(), rp.getReferenciaA(),
+                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
+                                        db.execSQL(sql);
+                                        acumulado += saldo;
+                                    }
+                                    r.setAbono( String.valueOf( Double.parseDouble(r.getAbono()) + saldo  ) );
+                                }
+                                else
+                                    break;
+                            }
+                        }
+                    }
+                }
+                // ------------- Cobranza -------------------------
+
+                sql=string.formatSql2("update ventas set ven_credito_n={1},ven_consigna_n={2} " +
+                        "where ven_folio_str='{0}'", folio, credito ? "1" : "0", consigna ? "1" : "0");
+                db.execSQL(sql);
+
                 db.setTransactionSuccessful();
+
+                Utils.msgInfo(this, "LA VENTA SE HA CONCRETADO, FALTA IMPRIMIR");
+
+                Intent i = getIntent();
+                i.putExtra("estado", "true");
+                i.putExtra("cve", rc.getCli_cve_n());
+                setResult(RESULT_OK, i);
+                finish();
 
             }catch (Exception e)
             {
