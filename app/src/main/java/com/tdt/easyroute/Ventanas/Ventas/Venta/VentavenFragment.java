@@ -272,7 +272,8 @@ public class VentavenFragment extends Fragment {
                 Toast.makeText(getContext(), getString(R.string.tt_ped14), Toast.LENGTH_SHORT).show();
             }
 
-            if (indice != -1) {
+            if (indice != -1)
+            {
                 ventaAdapterRecyclerView.actualizarItem(indice, lectura);
             } else {
                 String precio = prod.getLpre_precio_n().replace("$", "");
@@ -280,8 +281,8 @@ public class VentavenFragment extends Fragment {
                 double subtotal = Double.parseDouble(precio) * Double.parseDouble(lectura);
 
                 prod.setProd_cant_n(lectura);
-                prod.setSubtotal(string.FormatoPesos(subtotal));
-                prod.setLpre_precio_n( string.FormatoPesos( precio ) );
+                prod.setSubtotal( String.valueOf(subtotal));
+                prod.setLpre_precio_n(  precio  );
 
                 ventaAdapterRecyclerView.agregarItem(prod);
             }

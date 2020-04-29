@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.Reportes.Venta;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.VentasDiaVM;
@@ -80,17 +83,19 @@ public class TotalFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ventasDiaVM.getDtCobros().observe(getParentFragment(), new Observer< ArrayList<DataTableLC.Dtcobros>  >() {
+        ventasDiaVM.getDtCobros().observe(getParentFragment(), new Observer<ArrayList<DataTableLC.Dtcobros>>() {
             @Override
-            public void onChanged( ArrayList<DataTableLC.Dtcobros> dtCobros) {
-                dtcobros = dtCobros;
+            public void onChanged(ArrayList<DataTableLC.Dtcobros> dtcobro) {
+                dtcobros = dtcobro;
                 mostrarCobros();
             }
         });
+
     }
 
     private void mostrarTitulo()
@@ -110,15 +115,11 @@ public class TotalFragment extends Fragment {
     {
         if(dtcobros!=null)
         {
-            mostrarTitulo();
-
-            TableRow tr;
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ventasdinero, null);
-
             for(int i=0; i<dtcobros.size();i++)
             {
+                TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ventasdinero, null);
                 ((TextView) tr.findViewById(R.id.t_pago)).setText(dtcobros.get(i).getTpago());
-                ((TextView) tr.findViewById(R.id.t_monto)).setText("$"+dtcobros.get(i).getMonto());
+                ((TextView) tr.findViewById(R.id.t_monto)).setText(string.FormatoPesos( dtcobros.get(i).getMonto() ) );
                 tableLayout.addView(tr);
             }
         }

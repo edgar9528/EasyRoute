@@ -1,5 +1,7 @@
 package com.tdt.easyroute.Adapter;
 
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -17,15 +19,20 @@ public class PagerReporteventaAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
+        try {
+            switch (position) {
+                case 0:
                     ProductosvenFragment tab1 = new ProductosvenFragment();
                     return tab1;
-            case 1:
+                case 1:
                     TotalFragment tab2 = new TotalFragment();
                     return tab2;
-            default:
-                return null;
+                default:
+                    return null;
+            }
+        }catch (Exception e)
+        {
+            return  null;
         }
     }
     @Override

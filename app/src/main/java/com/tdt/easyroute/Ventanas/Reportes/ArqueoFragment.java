@@ -196,12 +196,11 @@ public class ArqueoFragment extends Fragment {
 
             }
 
-            et1.setText("$"+VentasDia);
-            et2.setText("$"+VentasContado);
-            et3.setText("$"+VentasCredito);
-            et4.setText("$"+Cobranza);
-            et5.setText("$"+(VentasContado+Cobranza));
-
+            et1.setText(string.FormatoPesos( VentasDia ) );
+            et2.setText(string.FormatoPesos( VentasContado ));
+            et3.setText(string.FormatoPesos( VentasCredito ) );
+            et4.setText(string.FormatoPesos( Cobranza ) );
+            et5.setText( string.FormatoPesos ( VentasContado+Cobranza));
 
         }catch (Exception e)
         {

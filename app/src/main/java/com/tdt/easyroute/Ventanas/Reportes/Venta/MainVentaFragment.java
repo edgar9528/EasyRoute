@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 import com.tdt.easyroute.Adapter.PagerReporteventaAdapter;
+import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.R;
 
 
@@ -31,40 +32,45 @@ public class MainVentaFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mainventa, container, false);
 
+        try {
 
-        //CONFIGURACION DE LAS TABS
-        TabLayout tabLayout =  view.findViewById(R.id.tab_layout);
+            //CONFIGURACION DE LAS TABS
+            TabLayout tabLayout = view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText( getResources().getString(R.string.tl_venta1) ));
-        tabLayout.addTab(tabLayout.newTab().setText(  getResources().getString(R.string.tl_venta2)  ));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.tl_venta1)));
+            tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.tl_venta2)));
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager =  view.findViewById(R.id.pager);
+            final ViewPager viewPager = view.findViewById(R.id.pager);
 
-        final PagerReporteventaAdapter adapter = new PagerReporteventaAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+            final PagerReporteventaAdapter adapter = new PagerReporteventaAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
-        viewPager.setAdapter(adapter);
+            viewPager.setAdapter(adapter);
 
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
+                }
+            });
 
-        //TERMINA CONFIGURACION DE LAS TABS
+            //TERMINA CONFIGURACION DE LAS TABS
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
+        }
 
 
         return view;

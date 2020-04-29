@@ -21,11 +21,11 @@ import java.util.ArrayList;
 
 public class AbonosAdapterRecyclerView extends RecyclerView.Adapter<AbonosAdapterRecyclerView.PagosViewHolder> {
 
-    private ArrayList<DataTableLC.DgPagos> pagoCardViews;
+    private ArrayList<DataTableLC.DgAbonos> pagoCardViews;
     private int resource;
     AbonoscredFragment abonosFragment;
 
-    public AbonosAdapterRecyclerView(ArrayList<DataTableLC.DgPagos> pagoCardViews, int resource, AbonoscredFragment abonosFragment) {
+    public AbonosAdapterRecyclerView(ArrayList<DataTableLC.DgAbonos> pagoCardViews, int resource, AbonoscredFragment abonosFragment) {
         this.pagoCardViews = pagoCardViews;
         this.resource = resource;
         this.abonosFragment = abonosFragment;
@@ -44,14 +44,14 @@ public class AbonosAdapterRecyclerView extends RecyclerView.Adapter<AbonosAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final AbonosAdapterRecyclerView.PagosViewHolder ventaViewHolder, int position) {
-        final DataTableLC.DgPagos pagoCardView = pagoCardViews.get(position);
+        final DataTableLC.DgAbonos pagoCardView = pagoCardViews.get(position);
 
-        ventaViewHolder.tv_numero.setText( pagoCardView.getNoPago());
+        ventaViewHolder.tv_numero.setText( pagoCardView.getNoAbono());
         ventaViewHolder.tv_idPago.setText( pagoCardView.getFpag_cve_n() );
         ventaViewHolder.tv_forma.setText(pagoCardView.getFpag_desc_str());
-        ventaViewHolder.tv_cantidad.setText(pagoCardView.getFpag_cant_n());
-        ventaViewHolder.tv_banco.setText(pagoCardView.getBancoP());
-        ventaViewHolder.tv_referencia.setText(pagoCardView.getReferenciaP());
+        ventaViewHolder.tv_cantidad.setText( string.FormatoPesos( pagoCardView.getFpag_cant_n() ) );
+        ventaViewHolder.tv_banco.setText(pagoCardView.getBancoA());
+        ventaViewHolder.tv_referencia.setText(pagoCardView.getReferenciaA());
 
         ventaViewHolder.linearLayout.setVisibility( View.GONE );
 
@@ -131,12 +131,12 @@ public class AbonosAdapterRecyclerView extends RecyclerView.Adapter<AbonosAdapte
 
     public void actualizarItem(int item, String cantidad)
     {
-        pagoCardViews.get(item).setFpag_cant_n(string.FormatoPesos(cantidad) );
+        pagoCardViews.get(item).setFpag_cant_n(cantidad );
         notifyItemChanged(item);
         abonosFragment.ActualizarDgPagos(pagoCardViews);
     }
 
-    public void agregarItem(DataTableLC.DgPagos pagoCardView)
+    public void agregarItem(DataTableLC.DgAbonos pagoCardView)
     {
         pagoCardViews.add(getItemCount(),pagoCardView);
         notifyItemInserted(getItemCount());

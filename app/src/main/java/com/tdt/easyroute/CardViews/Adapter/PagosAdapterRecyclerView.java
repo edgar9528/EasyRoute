@@ -48,7 +48,7 @@ public class PagosAdapterRecyclerView extends RecyclerView.Adapter<PagosAdapterR
         ventaViewHolder.tv_numero.setText( pagoCardView.getNoPago());
         ventaViewHolder.tv_idPago.setText( pagoCardView.getFpag_cve_n() );
         ventaViewHolder.tv_forma.setText(pagoCardView.getFpag_desc_str());
-        ventaViewHolder.tv_cantidad.setText(pagoCardView.getFpag_cant_n());
+        ventaViewHolder.tv_cantidad.setText( string.FormatoPesos( pagoCardView.getFpag_cant_n() ) );
         ventaViewHolder.tv_banco.setText(pagoCardView.getBancoP());
         ventaViewHolder.tv_referencia.setText(pagoCardView.getReferenciaP());
 
@@ -130,7 +130,7 @@ public class PagosAdapterRecyclerView extends RecyclerView.Adapter<PagosAdapterR
 
     public void actualizarItem(int item, String cantidad)
     {
-        pagoCardViews.get(item).setFpag_cant_n(string.FormatoPesos(cantidad) );
+        pagoCardViews.get(item).setFpag_cant_n(cantidad);
         notifyItemChanged(item);
         pagoFragment.ActualizarDgPagos(pagoCardViews);
     }

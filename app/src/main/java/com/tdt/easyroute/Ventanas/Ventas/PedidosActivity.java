@@ -186,8 +186,6 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                 .build();
 
         //TERMINA CONFIGURACION DE LAS TABS
-        ObtenerPromoEnvase("1","1","1","1","1","1");
-
     }
 
     @Override
@@ -233,6 +231,13 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             @Override
             public void onChanged(String s) {
                 _txtSaldo=s;
+            }
+        });
+
+        pedidosVM.getDgPagos().observe(this, new Observer<ArrayList<DataTableLC.DgPagos>>() {
+            @Override
+            public void onChanged(ArrayList<DataTableLC.DgPagos> dgPagosNew) {
+                dgPagos = dgPagosNew;
             }
         });
 
@@ -1017,6 +1022,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     }
 
                     pedidosVM.setDgPro2( dgProd2);
+                    pedidosVM.setDgPagos(dgPagos);
                 }
             } else
                 Toast.makeText(this, getString(R.string.tt_ped12), Toast.LENGTH_SHORT).show();
@@ -1754,7 +1760,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                 ruta = rutaN+ruta;
 
                 String fol = ven.substring(11);
-                int num = Integer.parseInt(fol);
+                int num = Integer.parseInt(fol)+1;
                 String numFol ="";
                 String folNum = String.valueOf(num);
                 int cerosN = 3-folNum.length();

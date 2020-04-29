@@ -412,7 +412,7 @@ public class PagoFragment extends Fragment {
                 pago.setNoPago( String.valueOf(k) );
                 pago.setFpag_cve_n( formasPago.get(indice).getFpag_cve_n() );
                 pago.setFpag_desc_str( formasPago.get(indice).getFpag_desc_str() );
-                pago.setFpag_cant_n( string.FormatoPesos(ab) );
+                pago.setFpag_cant_n( String.valueOf(ab) );
                 pago.setBancoP(banco);
                 pago.setReferenciaP(referencia);
 
@@ -444,6 +444,7 @@ public class PagoFragment extends Fragment {
 
             tv_saldo.setText(string.FormatoPesos(tot));
             pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
+            pedidosVM.setDgPagos( dgPagos );
 
         }catch (Exception e)
         {

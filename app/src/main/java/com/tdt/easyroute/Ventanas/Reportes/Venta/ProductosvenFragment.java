@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.Reportes.Venta;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -96,14 +97,20 @@ public class ProductosvenFragment extends Fragment {
             }
         });
 
+
+
         conf = Utils.ObtenerConf(getActivity().getApplication());
         mostrarTitulo();
         cargarVendidos();
         cargarPagos();
 
+
+
         return view;
+
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -212,13 +219,13 @@ public class ProductosvenFragment extends Fragment {
 
                 dtProdVenGral = ConvertirRespuesta.getDtprogralJson(json);
 
-
                 double suma = 0.00;
                 double suma2 = 0.00;
 
                 if(dtprodvenlist!=null)
                 {
-                    for (int i = 0; i < dtprodvenlist.size(); i++) {
+                    for (int i = 0; i < dtprodvenlist.size(); i++)
+                    {
                         if (dtprodvenlist.get(i).getCat_desc_str().equals("CERVEZA"))
                             suma += Double.parseDouble(dtprodvenlist.get(i).getTotal());
                         else
@@ -235,8 +242,6 @@ public class ProductosvenFragment extends Fragment {
 
                 mostrarVentas();
             }
-
-
         }
         catch (Exception e)
         {
@@ -249,14 +254,11 @@ public class ProductosvenFragment extends Fragment {
     {
         if(dtprodvenlist!=null)
         {
-            mostrarTitulo();
-
-            TableRow tr;
-            tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ventasdia, null);
-            DataTableLC.Dtproven dt;
             for (int i = 0; i < dtprodvenlist.size(); i++)
             {
-                dt= dtprodvenlist.get(i);
+                TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_ventasdia, null);
+                DataTableLC.Dtproven dt= dtprodvenlist.get(i);
+
                 ((TextView) tr.findViewById(R.id.t_sku)).setText(dt.getSku());
                 ((TextView) tr.findViewById(R.id.t_descripcion)).setText(dt.getDescr());
                 ((TextView) tr.findViewById(R.id.t_lp)).setText(dt.getDescr_LPre());
@@ -291,7 +293,6 @@ public class ProductosvenFragment extends Fragment {
             }
 
             ventasDiaVM.setDtCobros(dtcobros);
-
 
         }catch (Exception e)
         {
@@ -422,7 +423,7 @@ public class ProductosvenFragment extends Fragment {
 
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle(getString(R.string.msg_importante));
+            dialogo1.setTitle(getString(R.string.msg_impPre));
             dialogo1.setMessage(imp);
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
@@ -573,7 +574,7 @@ public class ProductosvenFragment extends Fragment {
 
                 }
             });
-            dialogo1.setNegativeButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     //cancelar();
                 }

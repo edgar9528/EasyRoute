@@ -44,9 +44,9 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
         String producto = ventaCardView.getProd_sku_str()+" - "+ ventaCardView.getProd_desc_str();
         ventaViewHolder.tv_producto.setText( producto );
         ventaViewHolder.tv_inventario.setText( ventaCardView.getProd_cantiv_n() );
-        ventaViewHolder.tv_precio.setText( ventaCardView.getLpre_precio_n() );
+        ventaViewHolder.tv_precio.setText( string.FormatoPesos( ventaCardView.getLpre_precio_n() )  );
         ventaViewHolder.tv_cantidad.setText( ventaCardView.getProd_cant_n() );
-        ventaViewHolder.tv_subtotal.setText( ventaCardView.getSubtotal() );
+        ventaViewHolder.tv_subtotal.setText( string.FormatoPesos(ventaCardView.getSubtotal()) );
 
         ventaViewHolder.cardViewVenta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,10 +104,9 @@ public class VentaAdapterRecyclerView extends RecyclerView.Adapter<VentaAdapterR
         {
             ventaCardViews.get(indice).setProd_cant_n(lectura);
             double subtotal = Double.parseDouble( string.DelCaracteres( ventaCardViews.get(indice).getLpre_precio_n() ) ) * Double.parseDouble(lectura);
-            ventaCardViews.get(indice).setSubtotal(string.FormatoPesos(subtotal));
+            ventaCardViews.get(indice).setSubtotal( String.valueOf(subtotal) );
         }
         notifyItemChanged(indice);
-
         ventavenFragment.actualizarLista(ventaCardViews);
     }
 

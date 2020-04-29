@@ -50,7 +50,7 @@ public class AbonoscredFragment extends Fragment {
     private DataTableLC.DtCliVentaNivel rc;
     PedidosActivity pedidosActivity;
     ArrayList<DataTableWS.FormasPago>  formasPago;
-    private ArrayList<DataTableLC.DgPagos> dgAbonos;
+    private ArrayList<DataTableLC.DgAbonos> dgAbonos;
     private AbonosAdapterRecyclerView abonosAdapterRecyclerView;
 
     public AbonoscredFragment() {
@@ -307,7 +307,7 @@ public class AbonoscredFragment extends Fragment {
                 return false;
             }
 
-            DataTableLC.DgPagos ri = null;
+            DataTableLC.DgAbonos ri = null;
             int rk = -1;
             String pagCve = formasPago.get(indice).getFpag_cve_n();
 
@@ -327,14 +327,14 @@ public class AbonoscredFragment extends Fragment {
             }
             else
             {
-                DataTableLC.DgPagos pago = new DataTableLC.DgPagos();
+                DataTableLC.DgAbonos pago = new DataTableLC.DgAbonos();
 
-                pago.setNoPago( String.valueOf(k) );
+                pago.setNoAbono( String.valueOf(k) );
                 pago.setFpag_cve_n( formasPago.get(indice).getFpag_cve_n() );
                 pago.setFpag_desc_str( formasPago.get(indice).getFpag_desc_str() );
-                pago.setFpag_cant_n( string.FormatoPesos(ab) );
-                pago.setBancoP(banco);
-                pago.setReferenciaP(referencia);
+                pago.setFpag_cant_n( String.valueOf(ab) );
+                pago.setBancoA(banco);
+                pago.setReferenciaA(referencia);
 
                 abonosAdapterRecyclerView.agregarItem(pago);
 
@@ -348,13 +348,14 @@ public class AbonoscredFragment extends Fragment {
         }
     }
 
-    public void ActualizarDgPagos(ArrayList<DataTableLC.DgPagos> dgRecycler)
+    public void ActualizarDgPagos(ArrayList<DataTableLC.DgAbonos> dgRecycler)
     {
         try {
             dgAbonos = dgRecycler;
+            pedidosVM.setDgAbonos(dgAbonos);
 
             double totPagos = 0;
-            for (DataTableLC.DgPagos p : dgAbonos)
+            for (DataTableLC.DgAbonos p : dgAbonos)
                 totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
 
             tv_totAbono.setText(string.FormatoPesos(totPagos));

@@ -16,6 +16,8 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<ArrayList<DataTableWS.FormasPago> > formasPago = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.EnvasesAdeudo>> dgDeudaEnv = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.EnvasesPed>> dgEnvase = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgPagos = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.DgAbonos> > dgAbonos = new MutableLiveData<>();
 
     private final MutableLiveData<String> producto = new MutableLiveData<>();
     private final MutableLiveData<String> estadoCredito = new MutableLiveData<>();
@@ -174,6 +176,20 @@ public class PedidosVM extends ViewModel
     }
     public void setTxtSaldo(String txtSaldo){
         this.txtSaldo.setValue(txtSaldo);
+    }
+
+    public LiveData<ArrayList<DataTableLC.DgPagos>> getDgPagos(){
+        return dgPagos;
+    }
+    public void setDgPagos(ArrayList<DataTableLC.DgPagos> dgPagos){
+        this.dgPagos.setValue(dgPagos);
+    }
+
+    public LiveData<ArrayList<DataTableLC.DgAbonos>> getDgAbonos(){
+        return dgAbonos;
+    }
+    public void setDgAbonos(ArrayList<DataTableLC.DgAbonos> dgAbonos){
+        this.dgAbonos.setValue(dgAbonos);
     }
 
 }
