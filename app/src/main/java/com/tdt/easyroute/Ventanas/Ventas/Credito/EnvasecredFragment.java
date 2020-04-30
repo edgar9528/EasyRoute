@@ -38,10 +38,10 @@ import java.util.Date;
 public class EnvasecredFragment extends Fragment {
 
 
-    PedidosVM pedidosVM;
+    private PedidosVM pedidosVM;
     private PedidosActivity pedidosActivity;
-    TextView tv_saldoDeudaEnv;
-    ArrayList<DataTableLC.EnvasesAdeudo> dgDeudaEnv;
+    private TextView tv_saldoDeudaEnv;
+    private ArrayList<DataTableLC.EnvasesAdeudo> dgDeudaEnv;
 
     private TableLayout tableLayout;
     private LayoutInflater layoutInflater;

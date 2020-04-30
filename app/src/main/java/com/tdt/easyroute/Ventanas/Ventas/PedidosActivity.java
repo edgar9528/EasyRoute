@@ -241,6 +241,20 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             }
         });
 
+        pedidosVM.getDgAbonos().observe(this, new Observer<ArrayList<DataTableLC.DgAbonos>>() {
+            @Override
+            public void onChanged(ArrayList<DataTableLC.DgAbonos> dgAbonosNew) {
+                dgAbonos = dgAbonosNew;
+            }
+        });
+
+        pedidosVM.getDgDeudaEnv().observe(this, new Observer<ArrayList<DataTableLC.EnvasesAdeudo>>() {
+            @Override
+            public void onChanged(ArrayList<DataTableLC.EnvasesAdeudo> envasesAdeudos) {
+                dgDeudaEnv = envasesAdeudos;
+            }
+        });
+
     }
 
     private void inicializar()
