@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.speech.tts.UtteranceProgressListener;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -164,7 +163,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visselec);
             iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visvenvacia );
             iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
-            iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera2);
             iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
 
             nombreBase = getContext().getString(R.string.nombreBD);
@@ -622,6 +621,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     clave = lvClientes.get(i).getCli_est() + " | " + lvClientes.get(i).getCli_cveext_n();
                     nombre = lvClientes.get(i).getCli_nombre();
                     icono = iconos[lvClientes.get(i).getIcono()];
+
+                    Log.d("salida","ICONO: "+lvClientes.get(i).getIcono());
 
                     if (nombre.length() > 20)
                         nombre = nombre.substring(0, 20) + "...";
@@ -1579,7 +1580,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     }
                     else
                     {
-                        Intent intent = new Intent(getContext(), PreventaActivity.class);
+                        Intent intent = new Intent(getContext(), PreventaActivity.class );
                         intent.putExtra("idcli",IdCli);
                         intent.putExtra("porEscanear",PorEscaner);
                         startActivityForResult(intent,2);

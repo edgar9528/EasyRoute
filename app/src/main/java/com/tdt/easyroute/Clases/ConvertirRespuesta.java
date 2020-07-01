@@ -1971,6 +1971,22 @@ public class ConvertirRespuesta {
     }
 
 
+    public static ArrayList<DataTableWS.VisitaPreventa> getDtVisitaPreventa(String respuesta)
+    {
+        ArrayList<DataTableWS.VisitaPreventa> al = null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<DataTableWS.VisitaPreventa>>() {}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if (al.size() == 0) return null;
+        } catch (Exception e) {
+            Log.d("salida", "error gson: " + e.toString());
+            al = null;
+        }
+        return al;
+    }
+
+
 
 
 }

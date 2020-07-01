@@ -3,10 +3,6 @@ package com.tdt.easyroute.Adapter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.ServidorrutaFragment;
-import com.tdt.easyroute.Ventanas.Configuracion.UtilidadFragment;
 import com.tdt.easyroute.Ventanas.Ventas.Credito.CreditomainFragment;
 import com.tdt.easyroute.Ventanas.Ventas.Envase.EnvaseFragment;
 import com.tdt.easyroute.Ventanas.Ventas.Pago.PagoFragment;

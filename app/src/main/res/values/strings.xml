@@ -491,5 +491,12 @@
     <string name="msg_ped13">El saldo de esta venta no ha sido liquidado, favor de verificar.</string>
     <string name="msg_ped14">Pago incorrecto por favor revise la venta y sus pagos.</string>
     <string name="error_ped1">Error al guardar la venta.</string>
+    <string name="tl_ped5">Preventa</string>
+    <string name="tl_ped6">Créditos</string>
+    <string name="hint_disponible">Disponible</string>
+    <string name="msg_prev1">Esta preventa generara una nota por: {0} en caso de una entrega completa. \n ¿Estas de acuerdo?</string>
+    <string name="msg_prev2">¿Esta seguro que desea guardar sin realizar preventa?</string>
+    <string name="msg_prev3">El saldo de la preventa no ha sido liquidado.</string>
+    <string name="errorPrev1">Error al guardar preventa.</string>
 
 </resources>

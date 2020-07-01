@@ -1,8 +1,6 @@
 package com.tdt.easyroute.Ventanas.Ventas.Credito;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,7 +20,6 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
@@ -32,8 +29,6 @@ import com.tdt.easyroute.Ventanas.Ventas.PedidosActivity;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 
 public class EnvasecredFragment extends Fragment {
 
