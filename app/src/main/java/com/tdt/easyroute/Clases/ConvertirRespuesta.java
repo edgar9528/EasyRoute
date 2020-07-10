@@ -1987,6 +1987,20 @@ public class ConvertirRespuesta {
     }
 
 
+    public static ArrayList<DataTableLC.EnvasesPreventa> getDtEnvasesPreventa(String respuesta)
+    {
+        ArrayList<DataTableLC.EnvasesPreventa> al = null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<DataTableLC.EnvasesPreventa>>() {}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if (al.size() == 0) return null;
+        } catch (Exception e) {
+            Log.d("salida", "error gson: " + e.toString());
+            al = null;
+        }
+        return al;
+    }
 
 
 }

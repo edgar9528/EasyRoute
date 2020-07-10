@@ -498,5 +498,9 @@
     <string name="msg_prev2">¿Esta seguro que desea guardar sin realizar preventa?</string>
     <string name="msg_prev3">El saldo de la preventa no ha sido liquidado.</string>
     <string name="errorPrev1">Error al guardar preventa.</string>
+    <string name="msg_prev4">Venta guardada con exito</string>
+    <string name="msg_prev5">Venta actualizada con exito</string>
+    <string name="msg_prev6">¿Desea modificar los datos?</string>
+    <string name="msg_prev7">Cliente Visitado</string>
 
 </resources>

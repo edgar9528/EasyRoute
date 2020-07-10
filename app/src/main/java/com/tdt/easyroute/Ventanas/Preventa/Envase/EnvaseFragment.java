@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class EnvaseFragment extends Fragment {
 
     private PedidosVM pedidosVM;
-    private ArrayList<DataTableLC.EnvasesPed> dgEnvase;
+    private ArrayList<DataTableLC.EnvasesPreventa> dgEnvase;
     private TableLayout tableLayout;
     private LayoutInflater layoutInflater;
 
@@ -64,13 +64,14 @@ public class EnvaseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        pedidosVM.getDgEnvase().observe(getActivity(), new Observer<ArrayList<DataTableLC.EnvasesPed>>() {
+        pedidosVM.getDgEnvasePrev().observe(getActivity(), new Observer<ArrayList<DataTableLC.EnvasesPreventa>>() {
             @Override
-            public void onChanged(ArrayList<DataTableLC.EnvasesPed> envasesPeds) {
-                dgEnvase = envasesPeds;
+            public void onChanged(ArrayList<DataTableLC.EnvasesPreventa> envasesPreventas) {
+                dgEnvase = envasesPreventas;
                 mostrarEnvases();
             }
         });
+
     }
 
     private void mostrarEnvases()
@@ -84,16 +85,16 @@ public class EnvaseFragment extends Fragment {
                 for(int i=0; i<dgEnvase.size();i++)
                 {
                     tr = (TableRow) layoutInflater.inflate(R.layout.tabla_envases, null);
-                    DataTableLC.EnvasesPed e = dgEnvase.get(i);
+                    DataTableLC.EnvasesPreventa e = dgEnvase.get(i);
                     //TextView abono = (TextView) tr.findViewById(R.id.dat2);
                     //TextView venta = (TextView) tr.findViewById(R.id.dat3);
 
                     ((TextView) tr.findViewById(R.id.t_sku)).setText( string.FormatoEntero(e.getProd_sku_str()) );
-                    ((TextView) tr.findViewById(R.id.dat1)).setText( string.FormatoEntero( e.getVenta() ) );
-                    ((TextView) tr.findViewById(R.id.dat2)).setText( string.FormatoEntero( e.getLpre_base_n() ) );
-                    ((TextView) tr.findViewById(R.id.dat3)).setText( string.FormatoEntero( e.getRestante() ) );
-                    ((TextView) tr.findViewById(R.id.dat4)).setText( string.FormatoEntero( e.getSubAbonoEnv() ) );
-                    ((TextView) tr.findViewById(R.id.dat5)).setText( string.FormatoEntero( e.getSubtotal() ) );
+                    ((TextView) tr.findViewById(R.id.dat1)).setText( string.FormatoEntero( e.getProd_venta_n() ) );
+                    ((TextView) tr.findViewById(R.id.dat2)).setText( string.FormatoEntero( e.getProd_precio_n() ) );
+                    ((TextView) tr.findViewById(R.id.dat3)).setText( string.FormatoEntero( e.getProd_cargo_n() ) );
+                    ((TextView) tr.findViewById(R.id.dat4)).setText( string.FormatoEntero( e.getProd_regalo_n() ) );
+                    ((TextView) tr.findViewById(R.id.dat5)).setText( string.FormatoEntero( e.getProd_subtotal_n() ) );
                     //abono.setText( string.FormatoEntero( e.getAbono() ) );
                     //venta.setText( string.FormatoEntero( e.getVenta() ) );
 

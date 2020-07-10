@@ -6565,4 +6565,129 @@ public class DataTableLC {
         }
     }
 
+
+    public static class EnvasesPreventa
+    {
+        private String prod_cve_n;
+        private String prod_sku_str;
+        private String prod_precio_n;
+        private String lpre_precio_n;
+        private String prod_cant_n;
+        private String prod_cantabono_n;
+        private String prod_saldo_n;
+        private String prod_abono_n;
+        private String prod_regalo_n;
+        private String prod_venta_n;
+        private String prod_cargo_n;
+        private String prod_final_n;
+        private String prod_subtotal_n;
+
+        public EnvasesPreventa() {
+        }
+
+        public String getProd_cve_n() {
+            return prod_cve_n;
+        }
+
+        public void setProd_cve_n(String prod_cve_n) {
+            this.prod_cve_n = prod_cve_n;
+        }
+
+        public String getProd_sku_str() {
+            return prod_sku_str;
+        }
+
+        public void setProd_sku_str(String prod_sku_str) {
+            this.prod_sku_str = prod_sku_str;
+        }
+
+        public String getProd_precio_n() {
+            return prod_precio_n;
+        }
+
+        public void setProd_precio_n(String prod_precio_n) {
+            this.prod_precio_n = prod_precio_n;
+        }
+
+        public String getLpre_precio_n() {
+            return lpre_precio_n;
+        }
+
+        public void setLpre_precio_n(String lpre_precio_n) {
+            this.lpre_precio_n = lpre_precio_n;
+        }
+
+        public String getProd_cant_n() {
+            return prod_cant_n;
+        }
+
+        public void setProd_cant_n(String prod_cant_n) {
+            this.prod_cant_n = prod_cant_n;
+        }
+
+        public String getProd_cantabono_n() {
+            return prod_cantabono_n;
+        }
+
+        public void setProd_cantabono_n(String prod_cantabono_n) {
+            this.prod_cantabono_n = prod_cantabono_n;
+        }
+
+        public String getProd_saldo_n() {
+            return prod_saldo_n;
+        }
+
+        public void setProd_saldo_n(String prod_saldo_n) {
+            this.prod_saldo_n = prod_saldo_n;
+        }
+
+        public String getProd_abono_n() {
+            return prod_abono_n;
+        }
+
+        public void setProd_abono_n(String prod_abono_n) {
+            this.prod_abono_n = prod_abono_n;
+        }
+
+        public String getProd_regalo_n() {
+            return prod_regalo_n;
+        }
+
+        public void setProd_regalo_n(String prod_regalo_n) {
+            this.prod_regalo_n = prod_regalo_n;
+        }
+
+        public String getProd_venta_n() {
+            return prod_venta_n;
+        }
+
+        public void setProd_venta_n(String prod_venta_n) {
+            this.prod_venta_n = prod_venta_n;
+        }
+
+        public String getProd_cargo_n() {
+            return prod_cargo_n;
+        }
+
+        public void setProd_cargo_n(String prod_cargo_n) {
+            this.prod_cargo_n = prod_cargo_n;
+        }
+
+        public String getProd_final_n() {
+            return prod_final_n;
+        }
+
+        public void setProd_final_n(String prod_final_n) {
+            this.prod_final_n = prod_final_n;
+        }
+
+        public String getProd_subtotal_n() {
+            return prod_subtotal_n;
+        }
+
+        public void setProd_subtotal_n(String prod_subtotal_n) {
+            this.prod_subtotal_n = prod_subtotal_n;
+        }
+    }
+
 }

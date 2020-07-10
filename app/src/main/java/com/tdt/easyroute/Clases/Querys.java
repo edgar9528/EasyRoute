@@ -1093,7 +1093,7 @@ public class Querys {
 
                 public static String InsertVisitaPrev = "insert into visitapreventa(visp_folio_str,"  +
                         "cli_cve_n,rut_cve_n,visp_fecha_dt,visp_coordenada_str,usu_cve_str) values ('{0}',{1}," +
-                        "{2},convert(datetime,'{3}',126),'{4}','{5}')";
+                        "{2},'{3}','{4}','{5}')";
 
                 public static String InsertVisitaPrev2 = "insert into visitapreventa(visp_folio_str," +
                         "cli_cve_n,rut_cve_n,visp_fecha_dt,visp_coordenada_str,usu_cve_str) values ('{0}',{1}," +
@@ -1134,7 +1134,7 @@ public class Querys {
 
                 public static String InsPreventa = "insert into preventa(prev_folio_str,cli_cve_n,rut_cve_n," +
                         "prev_fecha_dt,lpre_cve_n,dir_cve_n,usu_cve_str,prev_coordenada_str,rut_repcve_n,prev_comentario_str)" +
-                        "values ({0},{1},{2},datetime('now','localtime'),{3},{4},{5},{6},{7},{8})";
+                        "values ('{0}',{1},{2},datetime('now','localtime'),{3},{4},'{5}','{6}',{7},'{8}')";
 
                 public static String InsPreventaSinc = "insert into preventa(prev_folio_str," +
                         "cli_cve_n,rut_cve_n,prev_fecha_dt,lpre_cve_n,dir_cve_n,usu_cve_str," +

@@ -199,7 +199,6 @@ public class FamiliavenFragment extends Fragment {
                 {
                     productosAL.add(p.getProd_sku_str() + "\n" + p.getProd_desc_str());
                     productosTotalAL.add( p.getProd_sku_str() + "\n" + p.getProd_desc_str() );
-                    //Log.d("salida","Fam: "+fam + "   pres: "+pres+"   prod: "+p.getProd_sku_str());
                 }
             }
         }catch (Exception e)

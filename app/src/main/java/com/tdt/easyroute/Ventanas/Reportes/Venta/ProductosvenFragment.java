@@ -218,30 +218,31 @@ public class ProductosvenFragment extends Fragment {
                 json = BaseLocal.Select(con,getContext());
 
                 dtProdVenGral = ConvertirRespuesta.getDtprogralJson(json);
-
-                double suma = 0.00;
-                double suma2 = 0.00;
-
-                if(dtprodvenlist!=null)
-                {
-                    for (int i = 0; i < dtprodvenlist.size(); i++)
-                    {
-                        if (dtprodvenlist.get(i).getCat_desc_str().equals("CERVEZA"))
-                            suma += Double.parseDouble(dtprodvenlist.get(i).getTotal());
-                        else
-                            suma2 += Double.parseDouble(dtprodvenlist.get(i).getTotal());
-                    }
-                }
-
-                String str1,str2;
-
-                str1 = getResources().getString(R.string.tv_cerveza) + suma;
-                str2 = getResources().getString(R.string.tv_otros) + suma2;
-                tv_cerveza.setText( str1 );
-                tv_otros.setText( str2);
-
-                mostrarVentas();
             }
+
+            double suma = 0.00;
+            double suma2 = 0.00;
+
+            if(dtprodvenlist!=null)
+            {
+                for (int i = 0; i < dtprodvenlist.size(); i++)
+                {
+                    if (dtprodvenlist.get(i).getCat_desc_str().equals("CERVEZA"))
+                        suma += Double.parseDouble(dtprodvenlist.get(i).getTotal());
+                    else
+                        suma2 += Double.parseDouble(dtprodvenlist.get(i).getTotal());
+                }
+            }
+
+            String str1,str2;
+
+            str1 = getResources().getString(R.string.tv_cerveza) + suma;
+            str2 = getResources().getString(R.string.tv_otros) + suma2;
+            tv_cerveza.setText( str1 );
+            tv_otros.setText( str2);
+
+            mostrarVentas();
+
         }
         catch (Exception e)
         {
