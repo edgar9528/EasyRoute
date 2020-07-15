@@ -392,8 +392,17 @@ public class DataTableLC {
         private String prod_cantabono_n;
         private String trans_est_n;
         private String trans_fecha_dt;
+        private String cred_saldo_n;
 
         public Creditos() {
+        }
+
+        public String getCred_saldo_n() {
+            return cred_saldo_n;
+        }
+
+        public void setCred_saldo_n(String cred_saldo_n) {
+            this.cred_saldo_n = cred_saldo_n;
         }
 
         public String getCred_cve_n() {

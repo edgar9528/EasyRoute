@@ -692,7 +692,6 @@ public class FindiaFragment extends Fragment implements AsyncResponseJSON {
         }
 
         Utils.RegresarInicio(getActivity());
-
     }
 
     private void establecerNoEnviado(String men) {

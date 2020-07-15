@@ -43,7 +43,6 @@ public class CreditosFragment extends Fragment {
 
     private PedidosVM pedidosVM;
     private CreditosPrevAdapterRecyclerView pagosAdapterRecyclerView;
-
     private ArrayList<DataTableLC.ProductosPed> dgProd2;
     private ArrayList<DataTableWS.FormasPago> formasPago;
     private ArrayList<DataTableLC.DgPagos> dgPagos;

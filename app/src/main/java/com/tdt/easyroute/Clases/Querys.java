@@ -1095,6 +1095,7 @@ public class Querys {
                         "cli_cve_n,rut_cve_n,visp_fecha_dt,visp_coordenada_str,usu_cve_str) values ('{0}',{1}," +
                         "{2},'{3}','{4}','{5}')";
 
+
                 public static String InsertVisitaPrev2 = "insert into visitapreventa(visp_folio_str," +
                         "cli_cve_n,rut_cve_n,visp_fecha_dt,visp_coordenada_str,usu_cve_str) values ('{0}',{1}," +
                         "{2},'{3}','{4}','{5}')";

@@ -133,7 +133,6 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         noCli = getIntent().getStringExtra("idcli");
         Cliente = getIntent().getStringExtra("idext");
         ConVenta = getIntent().getBooleanExtra("conventa", false);
-        PorEscanear = getIntent().getBooleanExtra("porEscanear", false);
         PositionStr = getIntent().getStringExtra("PositionStr");
 
         inicializar();

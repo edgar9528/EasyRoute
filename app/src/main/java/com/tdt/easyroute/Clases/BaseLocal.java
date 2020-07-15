@@ -228,8 +228,8 @@ public class BaseLocal {
         String[] x = {"ven_credito_n","ven_consigna_n",
                       "prod_envase_n","prod_promo_n","prod_regalo_n","prod_cobranza_n","vdet_dia_n","vdet_kit_n",
                       "cred_engestoria_n","cred_esenvase_n","cred_especial_n",
-                      "pag_cobranza_n","pag_fba_n","pag_envase_n","pag_especie_n",
-
+                      "pag_cobranza_n","pag_fba_n","pag_envase_n","pag_especie_n","prev_condicionada_n",
+                      "prod_envase_n","prod_promo_n","prev_kit_n","ppag_cobranza_n"
                       };
         ArrayList<String> camposBoolean = new ArrayList<String>(Arrays.asList(x));
 
@@ -244,16 +244,25 @@ public class BaseLocal {
                 if (cursor.getColumnName(i) != null) {
                     try {
 
-                        if(camposBoolean.contains(cursor.getColumnName(i)))
+                        if(camposBoolean.contains(cursor.getColumnName(i)) )
                         {
-                            if(cursor.getString(i)==null)
-                                rowObject.put(cursor.getColumnName(i), false);
+                            if(cursor.getColumnName(i).equals("prod_regalo_n") && totalColumn<15)  //Agregado por que en una tabla es boolean y en otra no (PreventasEnv y VentasDet)
+                            {
+                                if(cursor.getString(i)==null)
+                                    rowObject.put(cursor.getColumnName(i), "");
+                                else
+                                    rowObject.put(cursor.getColumnName(i), cursor.getString(i));
+                            }
                             else
                             {
-                                if(cursor.getString(i).equals("1"))
-                                    rowObject.put(cursor.getColumnName(i), true);
-                                else
+                                if (cursor.getString(i) == null)
                                     rowObject.put(cursor.getColumnName(i), false);
+                                else {
+                                    if (cursor.getString(i).equals("1"))
+                                        rowObject.put(cursor.getColumnName(i), true);
+                                    else
+                                        rowObject.put(cursor.getColumnName(i), false);
+                                }
                             }
                         }
                         else

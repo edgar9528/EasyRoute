@@ -19,6 +19,7 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData< ArrayList<DataTableLC.EnvasesPreventa>> dgEnvasePrev = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgPagos = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.DgAbonos> > dgAbonos = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.Creditos> > dgCreditos = new MutableLiveData<>();
 
     private final MutableLiveData<String> producto = new MutableLiveData<>();
     private final MutableLiveData<String> estadoCredito = new MutableLiveData<>();
@@ -198,6 +199,13 @@ public class PedidosVM extends ViewModel
     }
     public void setDgAbonos(ArrayList<DataTableLC.DgAbonos> dgAbonos){
         this.dgAbonos.setValue(dgAbonos);
+    }
+
+    public LiveData<ArrayList<DataTableLC.Creditos>> getDgCreditos(){
+        return dgCreditos;
+    }
+    public void setDgCreditos(ArrayList<DataTableLC.Creditos> DgCreditos){
+        dgCreditos.setValue(DgCreditos);
     }
 
 }

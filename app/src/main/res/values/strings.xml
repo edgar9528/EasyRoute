@@ -502,5 +502,6 @@
     <string name="msg_prev5">Venta actualizada con exito</string>
     <string name="msg_prev6">¿Desea modificar los datos?</string>
     <string name="msg_prev7">Cliente Visitado</string>
+    <string name="msg_inf1">Información actualizada</string>
 
 </resources>

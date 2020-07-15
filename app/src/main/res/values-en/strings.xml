@@ -482,4 +482,41 @@
     <string name="tt_ped21">Sale made</string>
     <string name="tt_detPed1">Customer location not available</string>
 
+
+
+    <string name="msg_envCred1">Cantidad actual:</string>
+    <string name="msg_envCred2">No se puede recibir mas envase del que se adeuda</string>
+    <string name="msg_agregarAbono">Total a liquidar Adeudo:</string>
+    <string name="msg_ped2">No se ha realizado ninguna venta. ¿Continuar?</string>
+    <string name="msg_ped3">¿Desea guardar la visita del cliente sin venta?</string>
+    <string name="msg_abo1">La cantidad de los abonos no puede exceder la cantidad adeudada.</string>
+    <string name="msg_abo2">La cantidad del abono debe de ser mayor que cero.</string>
+    <string name="msg_ped4">Para cerrar la venta debe de estar dentro del establecimiento del cliente.</string>
+    <string name="msg_ped5">Usted ha excedido la cuota de venta mensual para este cliente.</string>
+    <string name="msg_ped51">"Limite cliente: "</string>
+    <string name="msg_ped52">"Sobrante: "</string>
+    <string name="msg_ped6">Esta venta genera una nota por: {0} , ¿Estas de acuerdo?</string>
+    <string name="msg_ped7">Los productos de venta condicionada como hielo y/o vasos no se pueden vender a los clientes especiales.</string>
+    <string name="msg_ped8">El producto {0} - {1} tiene venta condicionada.</string>
+    <string name="msg_ped9">Por favor verifique los abonos de envase.</string>
+    <string name="msg_ped10">Le recordamos que el cliente solo puede tener hasta {0} envases prestado(s). El cliente adeuda {1} envase(s). La venta se puede realizar</string>
+    <string name="msg_ped11">El cliente solo puede tener prestado hasta {0} envases. Está intentando prestar {1} envase(s) más de lo permitido. La venta no puede continuar.</string>
+    <string name="msg_ped12">No se puede hacer la venta. ¿Desea continuar?</string>
+    <string name="err_ped36">Error al guardar visita sin venta</string>
+    <string name="msg_ped13">El saldo de esta venta no ha sido liquidado, favor de verificar.</string>
+    <string name="msg_ped14">Pago incorrecto por favor revise la venta y sus pagos.</string>
+    <string name="error_ped1">Error al guardar la venta.</string>
+    <string name="tl_ped5">Preventa</string>
+    <string name="tl_ped6">Créditos</string>
+    <string name="hint_disponible">Disponible</string>
+    <string name="msg_prev1">Esta preventa generara una nota por: {0} en caso de una entrega completa. \n ¿Estas de acuerdo?</string>
+    <string name="msg_prev2">¿Esta seguro que desea guardar sin realizar preventa?</string>
+    <string name="msg_prev3">El saldo de la preventa no ha sido liquidado.</string>
+    <string name="errorPrev1">Error al guardar preventa.</string>
+    <string name="msg_prev4">Venta guardada con exito</string>
+    <string name="msg_prev5">Venta actualizada con exito</string>
+    <string name="msg_prev6">¿Desea modificar los datos?</string>
+    <string name="msg_prev7">Cliente Visitado</string>
+    <string name="msg_inf1">Información actualizada</string>
+
 </resources>

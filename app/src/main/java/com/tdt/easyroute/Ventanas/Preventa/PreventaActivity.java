@@ -66,7 +66,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
     private String noCli;
     private String Cliente;
     private boolean ConVenta;
-    private boolean PorEscanear;
     private boolean Visitado = false;
     private String PositionStr;
     private String comentario = "";
@@ -81,6 +80,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
     private long cliente = 0;
     private int result = 0;
 
+
     Configuracion conf;
     DataTableLC.DtCliVentaNivel rc;
     ArrayList<DataTableLC.ProductosPed> dtProductos;
@@ -92,11 +92,9 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
     ArrayList<DataTableLC.PedPromocionesKit> dtKits;
     ArrayList<DataTableLC.EnvasesPreventa> dgEnvase;
-    ArrayList<DataTableLC.Pagos> dtPagos;
     ArrayList<DataTableWS.FormasPago> formasPago;
     ArrayList<DataTableWS.FormasPago> formasPago2;
-    ArrayList<DataTableLC.AdeudoNormal> dgANormal;
-    ArrayList<DataTableLC.AdeudoNormal> dgAEspecial;
+    ArrayList<DataTableLC.Creditos> dgCreditos;
 
     boolean RutaMayorista = false;
     boolean RutaPromoCe = false;
@@ -107,12 +105,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
     int cathielo = -1;
     int lpre = -1;
     int lpBase = -1;
-
-    String FolioVisita = "";
-    String FolioPreventa = "";
-    String FolioConsigna = "";
-    String FolioPedido = "";
-    boolean ReqRefencia = false;
 
     boolean lpreCO = false;
 
@@ -134,12 +126,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         setTitle(getString(R.string.title_preventa));
 
 
-        esventa = getIntent().getBooleanExtra("venta", false);
         noCli = getIntent().getStringExtra("idcli");
-        Cliente = getIntent().getStringExtra("idext");
-        ConVenta = getIntent().getBooleanExtra("conventa", false);
-        PorEscanear = getIntent().getBooleanExtra("porEscanear", false);
-        PositionStr = getIntent().getStringExtra("PositionStr");
+        cliente = Long.parseLong(noCli);
 
         inicializar();
 
@@ -162,7 +150,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         viewPager.setPagingEnabled(false);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
+        ValidaCredito();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -277,15 +265,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         catvasos = ObtenerIdCat("VASOS");
         cathielo = ObtenerIdCat("HIELO");
 
-        lpre = ObtenerListaPrecio();
-        lpBase = ObtenerListaPrecio("BASE");
-
-        ObtenerEnvase();
-        ObtenerProductos();
-        ObtenerCreditos();
-
-        //ListarEnvase(lpBase);
-
         String sql = string.formatSql2("select visp_folio_str from visitapreventa " +
                 "where cli_cve_n={0} and strftime('%d-%m-%Y', visp_fecha_dt)= strftime('%d-%m-%Y', datetime('now','localtime'))", String.valueOf(cliente));
         folio = BaseLocal.SelectDato(sql,getApplicationContext());
@@ -339,21 +318,21 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         dgPagos = new ArrayList<>();
         dgAbonos = new ArrayList<>();
 
-        ObtenerPagos();
         ListarFormaPago();
         ListarFormaPago2();
+        ObtenerCreditos();
+        ObtenerEnvase();
+        ObtenerProductos();
 
-        ListarAdeudoEnvase();
+        lpre = ObtenerListaPrecio();
+        lpBase = ObtenerListaPrecio("BASE");
 
-        dgANormal = ListarAdeudoNormal();
-        dgAEspecial = ListarAdeudoEspecial();
-
-        pedidosVM.setDgANormal(dgANormal);
-        pedidosVM.setDgAEspecial(dgAEspecial);
+        if (Visitado &&  rc.getEst_cve_str().equals("A"))
+        {
+            CargarDatos();
+        }
 
         ValidaClienteInactivo();
-        ValidarSegundaVenta();
-
     }
 
     private void verificarModificar()
@@ -558,7 +537,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                 dtEnv.get(i).setProd_final_n( String.valueOf(sum) );
 
                 double sum2 = Double.parseDouble(e.getProd_venta_n()) * Double.parseDouble(e.getLpre_precio_n());
-                dtEnv.get(i).setProd_final_n( String.valueOf(sum2) );
+                dtEnv.get(i).setProd_subtotal_n( String.valueOf(sum2) );
             }
         }
 
@@ -569,19 +548,27 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
     private void ObtenerCreditos()
     {
+        ArrayList<DataTableLC.Creditos> dtcr;
 
-    }
+        String json = BaseLocal.Select  (string.formatSql2("select cred_cve_n,cred_referencia_str,cred_fecha_dt,cred_monto_n" +
+                ",cred_abono_n from creditos where cli_cve_n={0} and cred_esenvase_n=0 ", String.valueOf(cliente)),getApplicationContext());
 
-    private void ObtenerPagos()
-    {
-        try
+        dtcr = ConvertirRespuesta.getCreditos2Json(json);
+
+        if(dtcr!=null)
         {
-            String con = string.formatSql2("select * from pagos where cli_cve_n={0} and pag_cobranza_n=1", noCli);
-            String json = BaseLocal.Select(con, getApplicationContext());
-            dtPagos = ConvertirRespuesta.getPagosALJson(json);
-        } catch (Exception e) {
-            Utils.msgError(this, getString(R.string.err_ped9), e.getMessage());
+            for (int i = 0; i < dtcr.size(); i++) {
+                String saldo = String.valueOf(Double.parseDouble(dtcr.get(i).getCred_monto_n()) - Double.parseDouble(dtcr.get(i).getCred_abono_n()));
+                dtcr.get(i).setCred_saldo_n(saldo);
+            }
         }
+        else
+        {
+            dtcr = new ArrayList<>();
+        }
+
+        dgCreditos = dtcr;
+        pedidosVM.setDgCreditos(dgCreditos);
     }
 
     private void ListarFormaPago()
@@ -609,70 +596,9 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         }
     }
 
-    private void ListarAdeudoEnvase()
+    private void CargarDatos()
     {
-        try
-        {
-            String con = "select p.prod_cve_n,p.prod_sku_str,p.prod_desc_str,lp.lpre_precio_n," +
-                    "(coalesce(iv.inv_inicial_n,0)+coalesce(iv.inv_recarga_n,0)" +
-                    "+coalesce(iv.inv_devuelto_n,0)-coalesce(iv.inv_vendido_n,0)) prod_cantiv_n," +
-                    "0 Adeudo,0 Abono,0 Venta from precioproductos lp inner join productos p " +
-                    "on lp.prod_cve_n=p.prod_cve_n left join inventario iv on p.prod_cve_n=iv.prod_cve_n " +
-                    "and iv.rut_cve_n={2} where lp.lpre_cve_n={0} and p.cat_cve_n={1}";
 
-            String json = BaseLocal.Select(string.formatSql2(con, String.valueOf( lpre ) , String.valueOf(catenv) , conf.getRutaStr()), getApplicationContext());
-
-            ArrayList<DataTableLC.EnvasesAdeudo> dt = ConvertirRespuesta.getEnvasesAdeudoJson(json);
-
-            dt = actualizarAdeudoEnvase(dt);
-
-            con = "select cli_cve_n,prod_cve_n,sum(prod_cant_n) adeudo,sum(prod_cantabono_n) abono " +
-                    "from creditos where cli_cve_n={0} and prod_cve_n={1} and cred_esenvase_n=1 " +
-                    "group by cli_cve_n,prod_cve_n";
-
-            DataTableLC.EnvasesAdeudo r;
-            for (int i = 0; i < dt.size(); i++)
-            {
-                r = dt.get(i);
-                json = BaseLocal.Select(string.formatSql2(con, noCli, r.getProd_cve_n()), getApplicationContext());
-
-                ArrayList<DataTableLC.EnvasesAdeudo2> dtAdEnv = ConvertirRespuesta.getEnvasesAdeudo2Json(json);
-
-                if (dtAdEnv != null)
-                {
-                    DataTableLC.EnvasesAdeudo2 rae;
-                    for (int j = 0; j < dtAdEnv.size(); j++)
-                    {
-                        rae = dtAdEnv.get(j);
-
-                        dt.get(i).setAdeudo(String.valueOf(Integer.parseInt(rae.getAdeudo()) - Integer.parseInt(rae.getAbono())));
-                    }
-
-                    ArrayList<DataTableLC.EnvasesAdeudo3> dtAbonoEnv;
-                    con = "select cli_cve_n,prod_cve_n,sum(prod_abono_n) abono from pagos where prod_cve_n={0} and cli_cve_n={1} and pag_envase_n=1 and trans_est_n<>3 group by cli_cve_n,prod_cve_n";
-
-                    json = BaseLocal.Select(string.formatSql2(con, r.getProd_cve_n(), noCli ), getApplicationContext());
-                    dtAbonoEnv = ConvertirRespuesta.getEnvasesAdeudo3Json(json);
-
-                    double abonoAct = 0;
-
-                    if(dtAbonoEnv!=null)
-                    for (int j = 0; j < dtAbonoEnv.size(); j++) {
-                        abonoAct += Integer.parseInt(dtAbonoEnv.get(j).getAbono());
-                    }
-
-                    dt.get(i).setAdeudo(String.valueOf(Integer.parseInt(dt.get(i).getAdeudo()) - abonoAct));
-                }
-            }
-
-            dt = actualizarAdeudoEnvase(dt);
-
-            dgDeudaEnv = dt;
-            pedidosVM.setDgDeudaEnv(dgDeudaEnv);
-
-        } catch (Exception e) {
-            Utils.msgError(this, getString(R.string.err_ped11), e.getMessage());
-        }
     }
 
     private ArrayList<DataTableLC.EnvasesAdeudo> actualizarAdeudoEnvase(ArrayList<DataTableLC.EnvasesAdeudo> al)
@@ -692,126 +618,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         return al;
     }
 
-    private ArrayList<DataTableLC.AdeudoNormal> ListarAdeudoNormal()
-    {
-        try {
-            double limCred = Double.parseDouble(rc.getCli_montocredito_n());
-            pedidosVM.setTxtLimCred( String.valueOf( limCred ) ); //txtLimCred.Text = limCred.ToString("c");
-
-            String con = "select cred_cve_n,cred_referencia_str,cred_fecha_dt,cred_monto_n,cred_abono_n," +
-                    "0.0 abono from creditos where cli_cve_n={0} and cred_esenvase_n=0 and cred_especial_n=0";
-
-            Log.d("salida", "Consulta normal: " + string.formatSql2(con, noCli));
-
-            String json = BaseLocal.Select(string.formatSql2(con, noCli), getApplicationContext());
-
-            ArrayList<DataTableLC.AdeudoNormal> dtANormal = ConvertirRespuesta.getAdeudoNormalJson(json);
-
-            if (dtANormal != null) {
-                DataTableLC.AdeudoNormal r;
-                for (int i = 0; i < dtANormal.size(); i++) {
-                    r = dtANormal.get(i);
-                    if (dtPagos != null) {
-                        ArrayList<DataTableLC.Pagos> items = new ArrayList<>();
-                        for (int j = 0; j < dtPagos.size(); j++) {
-                            if (dtPagos.get(j).getPag_referencia_str().equals(r.getCred_referencia_str()))
-                                items.add(dtPagos.get(j));
-                        }
-
-                        if (items.size() > 0) {
-                            for (int j = 0; j < items.size(); j++) {
-                                String abono = String.valueOf(Double.parseDouble(r.getAbono()) + Double.parseDouble(items.get(j).getPag_abono_n()));
-                                dtANormal.get(i).setAbono(abono);
-                            }
-                        }
-                    }
-
-                    double saldo = Double.parseDouble(dtANormal.get(i).getCred_monto_n()) - Double.parseDouble(dtANormal.get(i).getCred_abono_n()) - Double.parseDouble(dtANormal.get(i).getAbono());
-                    String saldoStr = String.valueOf(saldo);
-                    dtANormal.get(i).setSaldo(saldoStr);
-                }
-
-            }
-
-
-            if (dtANormal != null)
-            {
-                int diascred = Integer.parseInt(rc.getCli_plazocredito_n());
-                double res = 0;
-                for (int i = 0; i < dtANormal.size(); i++) {
-                    Date fecha1 = Utils.FechaDT(dtANormal.get(i).getCred_fecha_dt());
-                    Date fecha2 = Utils.FechaDT(Utils.FechaModificarDias(Utils.FechaLocal(), -diascred));
-
-                    if (fecha1.compareTo(fecha2) < 0) {
-                        res += Double.parseDouble(dtANormal.get(i).getSaldo());
-                    }
-                }
-
-                pedidosVM.setTxtVencido(String.valueOf(res));
-
-                /*if (res <= 0)
-                {
-                    //txtVencido.BackColor = Color.LightSalmon;
-                    //txtVencido.Text = string.Format("{0:C}", res);
-                } else
-                    {
-                    //txtVencido.BackColor = Color.White;
-                    //txtVencido.Text = (0).ToString("C");
-                }*/
-            }
-
-            if(dtANormal==null)
-                dtANormal = new ArrayList<>();
-
-            return dtANormal;
-
-        } catch (Exception e) {
-            Utils.msgError(this, getString(R.string.err_ped12), e.getMessage());
-            return null;
-        }
-    }
-
-    private ArrayList<DataTableLC.AdeudoNormal> ListarAdeudoEspecial()
-    {
-        try {
-            String con = "select cred_cve_n,cred_referencia_str,cred_fecha_dt,cred_monto_n,cred_abono_n," +
-                    "cred_abono_n abono from creditos where cli_cve_n={0} and cred_esenvase_n=0 and cred_especial_n=1";
-
-            String json = BaseLocal.Select(string.formatSql2(con, noCli), getApplicationContext());
-
-            ArrayList<DataTableLC.AdeudoNormal> dtAE = ConvertirRespuesta.getAdeudoNormalJson(json);
-
-            if (dtAE != null)
-            {
-                DataTableLC.AdeudoNormal r;
-                for (int i = 0; i < dtAE.size(); i++) {
-                    r = dtAE.get(i);
-
-                    if (dtPagos != null) {
-                        ArrayList<DataTableLC.Pagos> items = new ArrayList<>();
-                        for (int j = 0; j < dtPagos.size(); j++) {
-                            if (r.getCred_referencia_str().equals(dtPagos.get(j).getPag_referencia_str())) {
-                                items.add(dtPagos.get(j));
-                            }
-                        }
-                        if (items.size() > 0) {
-                            for (int j = 0; j < items.size(); j++) {
-                                double abono = Double.parseDouble(r.getAbono()) + Double.parseDouble(items.get(i).getPag_abono_n());
-                                dtAE.get(i).setAbono(String.valueOf(abono));
-                            }
-                        }
-                    }
-                }
-            }
-            else
-                dtAE = new ArrayList<>();
-
-            return dtAE;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     private void ValidaClienteInactivo()
     {
         try {
@@ -828,71 +634,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
         } catch (Exception ex) {
             Utils.msgError(this, getString(R.string.err_ped13), ex.getMessage());
-        }
-    }
-
-    private void ValidarSegundaVenta()
-    {
-        try {
-            String lpreinvalidas = "8,9,10,16,17,18,20,21,22,23,24,26,27,28,29,30,32,33,35,36,37,43,51,52";
-
-            String con = string.formatSql("select * from ventas where cli_cve_n={0} and lpre_cve_n in ({1})", rc.getCli_cve_n(), lpreinvalidas);
-            String json = BaseLocal.Select(con, getApplicationContext());
-            ArrayList<DataTableLC.Venta> dt = ConvertirRespuesta.getVentaJson(json);
-
-            if (dt != null) {
-                if (Utils.getBool(rc.getCli_dobleventa_n())) {
-                    con = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
-                            conf.getUsuario(), conf.getRutaStr(), rc.getCli_cve_n(), "VALIDAR DOBLE VENTA", "INVALIDADO POR SISTEMAS", PositionStr);
-                    BaseLocal.Insert(con, getApplicationContext());
-
-                } else {
-                    con = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
-                            conf.getUsuario(), conf.getRutaStr(), rc.getCli_cve_n(), "VALIDAR DOBLE VENTA", "CLIENTE ABIERTO SOLO PARA ABONO", PositionStr);
-                    BaseLocal.Insert(con, getApplicationContext());
-
-                    removerVenta = true;
-
-                    Toast.makeText(getApplicationContext(), getString(R.string.tt_ped10), Toast.LENGTH_LONG).show();
-
-                }
-            }
-
-        } catch (Exception ex) {
-            Utils.msgError(this, getString(R.string.err_ped14), ex.getMessage());
-        }
-    }
-
-    private void CalcularVenta()
-    {
-        try {
-            double calculo = 0;
-            double DescKit = 0;
-            DescKit = Double.parseDouble( string.DelCaracteres(_txtKit) ) ; //decimal.Parse(txtKit.Text.Replace("$", ""));
-
-            for (DataTableLC.ProductosPed p : dgProd2)
-                calculo += Double.parseDouble(p.getSubtotal());
-
-            pedidosVM.setTxtSubtotal2( String.valueOf(calculo) ); //txtSubtotal2.Text = string.Format("{0:C}", decimal.Parse(calculo.ToString()));
-
-            calculo = 0;
-            for (DataTableLC.ProductosPed p : dgProd2)
-                if (p.getProd_vtaefectivo_n().equals("1") || (p.getProm_contado_n().equals("1") && p.getProd_promo_n().equals("1")))
-                    calculo += Double.parseDouble(p.getSubtotal());
-
-
-            double ventaEA = Double.parseDouble( string.FormatoPesos(_txtSaldoDeudaEnv) ) ; //decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""));
-            double ContEsp = calculo+ventaEA; //decimal.Parse(calculo.ToString())+ventaEA;
-
-            if (ContEsp >= DescKit)
-                ContEsp -= DescKit;
-            else
-                ContEsp = 0;
-
-            pedidosVM.setTxtContado( String.valueOf(ContEsp) ); //txtContado.Text = string.Format("{0:C}", ContEsp);
-
-        } catch (Exception e) {
-            Utils.msgError(this, getString(R.string.err_ped16), e.getMessage());
         }
     }
 
@@ -1134,6 +875,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         {
             ListarFormaPago();
 
+            pedidosVM.setEstadoCredito("Al Corriente");
+
             boolean SinCredito = false;
             totDeuda = Double.parseDouble( string.DelCaracteres( _tv_adeudoN )  ) ; //decimal.Parse(txtAdeudoN.Text.Replace("$", ""));
             totAbono = Double.parseDouble( string.DelCaracteres( _tv_totAbono)  ); //decimal.Parse(txtTotAbono.Text.Replace("$", ""));
@@ -1153,13 +896,13 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             int diascred =  Integer.parseInt( rc.getCli_plazocredito_n() );
 
             saldoVencido=0;
-            for(DataTableLC.AdeudoNormal an: dgANormal)
+            for(DataTableLC.Creditos an: dgCreditos)
             {
                 Date f1 = Utils.FechaDT( an.getCred_fecha_dt() );
                 Date f2 = Utils.FechaDT( Utils.FechaModificarDias( Utils.FechaLocal(),-diascred ) );
 
                 if(f1.compareTo(f2)<=0)
-                    saldoVencido+= Double.parseDouble( an.getSaldo() );
+                    saldoVencido+= Double.parseDouble( an.getCred_saldo_n() );
             }
 
             if (  !Utils.getBool( rc.getCli_credito_n()))
@@ -1512,6 +1255,12 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             {
                 Log.d("salida","IMPRIMIR TICKET");
                 Utils.msgInfo(this, "IMPRIMIR TICKET");
+
+                Intent i = getIntent();
+                i.putExtra("idcli", rc.getCli_cve_n());
+                i.putExtra("result", result);
+                setResult(RESULT_OK, i);
+                finish();
             }
 
         }
@@ -1960,25 +1709,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         startActivity(intent);
     }
 
-    private void clickBuscar()
-    {
-        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-        dialogo1.setTitle(getString(R.string.msg_importante));
-        dialogo1.setMessage(getString(R.string.msg_ped2));
-        dialogo1.setCancelable(false);
-        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-
-            }
-        });
-        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogo1, int id) {
-
-            }
-        });
-        dialogo1.show();
-
-    }
 
     private DataTableLC.DtCliVenta getDetcli(String cliente)
     {

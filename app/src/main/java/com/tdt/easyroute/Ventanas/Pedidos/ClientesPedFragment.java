@@ -48,6 +48,7 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Ventanas.Clientes.BuscarClientesActivity;
+import com.tdt.easyroute.Ventanas.FinDeDia.FindiaFragment;
 import com.tdt.easyroute.Ventanas.Inventario.Carga2Activity;
 import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.MainDetallesActivity;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
@@ -195,6 +196,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
     private void codigoLeido(String cod)
     {
         try {
+            Log.d("salida","CODIGO LEIDO: "+cod);
             et_codigo.setText("");
 
             String cliente = getCveCliente(cod);
@@ -1078,6 +1080,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                             }
                         }
                     }
+                    else
                     if(peticion.equals("Recargas"))
                     {
                         try
@@ -1097,6 +1100,22 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                             Utils.msgError(getContext(),getString(R.string.error_peticion), e.getMessage());
                         }
                     }
+                    else
+                    if (peticion.equals("RecibirDatos"))
+                    {
+                        DataTableWS.RetValInicioDia retVal = ConvertirRespuesta.getRetValInicioDiaJson(respuesta);
+                        if (retVal != null)
+                        {
+                            if (retVal.getRet().equals("true"))
+                                establecerEnviado(retVal.getMsj());
+                            else
+                                establecerNoEnviado(retVal.getMsj());
+                        }
+                        else
+                        {
+                            establecerNoEnviado("No se encontro información");
+                        }
+                    }
                 }
                 else
                 {
@@ -1104,6 +1123,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     {
                         mostrarMsj(clienteClick);
                     }
+                    if (peticion.equals("RecibirDatos"))
+                        establecerNoEnviado("No se encontro información");
                     Utils.msgError(getContext(), getString(R.string.error_peticion), getString(R.string.tt_noInformacion));
                 }
             }
@@ -1177,8 +1198,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         {
             try
             {
-                switch (requestCode)
-                {
+                switch (requestCode) {
                     case 0:
                         String cve_cliente = (String) intent.getStringExtra("clave");
                         resultadoBuscar(cve_cliente);
@@ -1187,16 +1207,21 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         mostrarMsj(clienteClick);
                         break;
                     case 2:
-
-                        boolean PorEscaner = intent.getBooleanExtra("porEscanear",false);
                         String cliente = intent.getStringExtra("idcli");
+                        int result = intent.getIntExtra("result", 1);
 
-                        Log.d("salida","Por escaner = "+PorEscaner);
-                        Log.d("salida","cliente cve = "+cliente);
+                        int indice1 = -1;
+                        for (int i = 0; i < lvClientes.size(); i++)
+                            if (cliente.equals(lvClientes.get(i).getCli_cve_n()))
+                                indice1 = i;
+
+                        if (result == 1)
+                            pedidosAdapterRecyclerView.actualiza(indice1, 1, iconos[1]);
+                        else if (result == 2)
+                            pedidosAdapterRecyclerView.actualiza(indice1, 2, iconos[2]);
 
                         CalcularEfectividad();
-
-                        Log.d("salida","se cerro ventana de pedidos o preventa");
+                        enviarCambios();
                         break;
 
                     case 3:
@@ -1204,22 +1229,27 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         String estado = intent.getStringExtra("estado");
                         String cve = intent.getStringExtra("cve");
 
-                        int indice=-1;
-                        for(int i=0; i<lvClientes.size();i++)
-                            if( cve.equals( lvClientes.get(i).getCli_cve_n() ) )
-                                indice=i;
+                        int indice2 = -1;
+                        for (int i = 0; i < lvClientes.size(); i++)
+                            if (cve.equals(lvClientes.get(i).getCli_cve_n()))
+                                indice2 = i;
 
-                        if(estado.equals("true"))
-                            pedidosAdapterRecyclerView.actualiza(indice, 1,iconos[1] );
+                        if (estado.equals("true"))
+                            pedidosAdapterRecyclerView.actualiza(indice2, 1, iconos[1]);
                         else
-                            pedidosAdapterRecyclerView.actualiza(indice, 2,iconos[2] );
+                            pedidosAdapterRecyclerView.actualiza(indice2, 2, iconos[2]);
 
                         CalcularEfectividad();
+                        enviarCambios();
 
                         Toast.makeText(getContext(), getString(R.string.tt_ped21), Toast.LENGTH_LONG).show();
 
                         break;
 
+                    case 4:
+                        Utils.msgInfo(getContext(),getString(R.string.msg_inf1));
+                        enviarCambios();
+                    break;
                 }
 
             } catch (Exception e)
@@ -1574,7 +1604,6 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         intent.putExtra("idcli",IdCli);
                         intent.putExtra("idext",IdExtCli);
                         intent.putExtra("conventa",conventa);
-                        intent.putExtra("porEscanear",PorEscaner);
                         intent.putExtra("PositionStr",PositionStr);
                         startActivityForResult(intent,3);
                     }
@@ -1582,7 +1611,6 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     {
                         Intent intent = new Intent(getContext(), PreventaActivity.class );
                         intent.putExtra("idcli",IdCli);
-                        intent.putExtra("porEscanear",PorEscaner);
                         startActivityForResult(intent,2);
                     }
                 }
@@ -1596,16 +1624,14 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     intent.putExtra("idcli",IdCli);
                     intent.putExtra("idext",IdExtCli);
                     intent.putExtra("conventa",conventa);
-                    intent.putExtra("porEscanear",PorEscaner);
                     intent.putExtra("PositionStr",PositionStr);
-                    startActivityForResult(intent,2);
+                    startActivityForResult(intent,4);
                 }
                 else
                 {
                     Intent intent = new Intent(getContext(), PreventaActivity.class);
                     intent.putExtra("idcli",IdCli);
-                    intent.putExtra("porEscanear",PorEscaner);
-                    startActivityForResult(intent,2);
+                    startActivityForResult(intent,4);
                 }
             }
         }catch (Exception e)
@@ -1613,4 +1639,133 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
         }
     }
+
+    private void enviarCambios()
+    {
+        try
+        {
+            String ds;
+
+            // Establecer ventas a enviar
+            BaseLocal.Insert("update ventas set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Ventas
+            String ventas = BaseLocal.SelectUpload("select * from ventas where trans_est_n=1",getContext());
+            // Leer Detalle Ventas
+            String ventasDet = BaseLocal.SelectUpload("select * from ventasdet where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext() );
+            // Leer Venta Envase
+            String ventasEnv=BaseLocal.SelectUpload("select * from ventaenv where ven_folio_str in (select ven_folio_str from ventas where trans_est_n=1)",getContext());
+            // Establecer Creditos a enviar
+            BaseLocal.Insert("update creditos set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Creditos
+            String creditos = BaseLocal.SelectUpload("select * from creditos where trans_est_n=1",getContext());
+            // Establecer Pagos a enviar
+            BaseLocal.Insert("update Pagos set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Pagos
+            String pagos = BaseLocal.SelectUpload("select * from Pagos where trans_est_n=1",getContext());
+            // Establecer Visitas a enviar
+            BaseLocal.Insert("update visitas set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Visitas
+            String visitas= BaseLocal.SelectUpload("select * from visitas where trans_est_n=1",getContext());
+            // Establecer Bitacora a enviar
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=1 where trans_est_n=0",getContext());
+            // Leer Bitacora
+            String bitacoraHH = BaseLocal.SelectUpload ("select * from BitacoraHH where trans_est_n=1",getContext());
+
+            //ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+
+            ds = ventas+"|"+ventasDet+"|"+ventasEnv+"|"+creditos+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+
+            //ds = "[]"+"|"+"[]"+"|"+"[]"+"|"+"[]"+"|"+pagos+"|"+visitas+"|"+bitacoraHH;
+
+            //----- Preventa ------
+            if (conf.getPreventa() == 1)
+            {
+                String preventa= BaseLocal.SelectUpload("select * from preventa",getContext());
+                String preventaDet= BaseLocal.SelectUpload("select * from preventadet",getContext());
+                String preventaEnv= BaseLocal.SelectUpload("select * from preventaenv",getContext());
+                String preventaPagos= BaseLocal.SelectUpload("select * from preventapagos",getContext());
+                String visitaPreventa= BaseLocal.SelectUpload("select * from visitapreventa",getContext());
+
+                ds+="|"+preventa+"|"+preventaDet+"|"+preventaEnv+"|"+preventaPagos+"|"+visitaPreventa;
+            }
+
+            Log.d("salida","ds: "+ds);
+
+            peticion="RecibirDatos";
+
+            //parametros del metodo
+            ArrayList<PropertyInfo> propertyInfos = new ArrayList<>();
+            PropertyInfo piUser = new PropertyInfo();
+            piUser.setName("ds");
+            piUser.setValue(ds);
+            propertyInfos.add(piUser);
+
+            PropertyInfo piPass = new PropertyInfo();
+            piPass.setName("ruta");
+            piPass.setValue(conf.getRuta());
+            propertyInfos.add(piPass);
+
+            //conexion con el metodo
+            ConexionWS_JSON conexionWS = new ConexionWS_JSON(getContext(), "RecibirDatos2J");
+            conexionWS.delegate = ClientesPedFragment.this;
+            conexionWS.propertyInfos = propertyInfos;
+            conexionWS.execute();
+
+        }catch (Exception e)
+        {
+            Log.d("salida","Error: "+e.toString());
+            Utils.msgError(getContext(), getString(R.string.error_intPeticion), e.getMessage() );
+        }
+    }
+
+    private void establecerEnviado(String men)
+    {
+        try {
+            // Establecer ventas como enviadas
+            BaseLocal.Insert("update ventas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Creditos como enviados
+            BaseLocal.Insert("update creditos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Pagos como enviados
+            BaseLocal.Insert("update Pagos set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Visitas como enviadas
+            BaseLocal.Insert("update visitas set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+            // Establecer Bitacora como enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=2,trans_fecha_dt=datetime('now','localtime') where trans_est_n=1", getContext());
+
+            Utils.msgInfo(getContext(), getString(R.string.msg_servidor)+ " "+ men );
+            //Toast.makeText(getContext(), getString(R.string.msg_servidor)+ " "+ men, Toast.LENGTH_LONG).show();
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar),e.getMessage());
+        }
+
+    }
+
+    private void establecerNoEnviado(String men)
+    {
+        try
+        {
+            // Establecer ventas como no enviadas
+            BaseLocal.Insert("update ventas set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Creditos como no enviados
+            BaseLocal.Insert("update creditos set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Pagos como no enviados
+            BaseLocal.Insert("update Pagos set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Visitas como no enviadas
+            BaseLocal.Insert("update visitas set trans_est_n=0 where trans_est_n=1", getContext());
+            // Establecer Bitacora como no enviadas
+            BaseLocal.Insert("update BitacoraHH set trans_est_n=0 where trans_est_n=1", getContext());
+
+            Utils.msgInfo(getContext(), getString(R.string.msg_servidor)+ " "+ men );
+            //Toast.makeText(getContext(), getString(R.string.msg_servidor)+ " "+ men, Toast.LENGTH_LONG).show();
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_almacenar),e.getMessage());
+        }
+
+    }
+
+
 }
