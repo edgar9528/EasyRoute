@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.MainActivity;
@@ -228,32 +229,35 @@ public class ClientesCarFragment extends Fragment {
 
             menImp += "C A R T E R A\n\n";
 
-            menImp+="CLIENTE      NEGOCIO      SALDO\n\n";
+            menImp+="CLIENTE    NEGOCIO    SALDO\n\n";
 
 
             double TotCartera=0.0;
-            String negocio;
+            String negocio,cvecli,fsaldo;
             for(int i=0; i<dgCartera.size();i++)
             {
                 DataTableLC.ClientesSaldo r = dgCartera.get(i);
-                negocio = r.getCli_nombrenegocio_str();
 
-                if(negocio.length()>13)
-                    negocio=negocio.substring(0,13);
+                cvecli= Impresora.DarTamaño( r.getCli_cveext_str(),11 );
+                negocio = Impresora.DarTamaño( r.getCli_nombrenegocio_str().replace(" ","_"),10 )+" ";
+                fsaldo = Impresora.DarTamaño( string.FormatoPesos(r.getSaldo()), 10 );
 
-                menImp+= string.formatSql("{0} {1} {2}",r.getCli_cveext_str(),negocio, string.FormatoPesos(r.getSaldo()) )+"\n";
+                menImp+= cvecli+negocio+fsaldo+"\n";
+
                 TotCartera+=r.getSaldo();
             }
 
             menImp+= "\nSaldo Total Ruta: "+ string.FormatoPesos(TotCartera);
+            menImp+= "\n\n";
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle(getString(R.string.msg_impInv));
             dialogo1.setMessage(menImp);
             dialogo1.setCancelable(false);
+            final String finalMenImp = menImp;
             dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-
+                    Impresora.imprimir(finalMenImp.replace("\n","\r"), getContext());
                 }
             });
             dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {

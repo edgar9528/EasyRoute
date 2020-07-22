@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
@@ -90,6 +91,13 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                     } else {
                         Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_LONG).show();
                     }
+                }
+            });
+
+            button_pruImp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pruebaImpresora();
                 }
             });
 
@@ -335,6 +343,39 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
 
     }
 
+    private void pruebaImpresora()
+    {
+        String macAddress = et_imp.getText().toString();
+        String mma;
+
+        if(macAddress.length() == 12){
+            mma = macAddress;
+            mma = mma.substring(0, 2) + ":" + mma.substring(2, 4) + ":" + mma.substring(4, 6) + ":" + mma.substring(6, 8) + ":" + mma.substring(8, 10) + ":" + mma.substring(10, 12);
+        }
+        else
+            if(macAddress.length()!=17)
+            {
+                Toast.makeText(getContext(),getString(R.string.err_mac),Toast.LENGTH_SHORT).show();
+                return;
+            }
+            else
+            {
+                mma = macAddress;
+            }
+
+        Utils.guardarImpresora( mma, getActivity().getApplication());
+
+        String pruebaImpresora="********************************\r\r\r";
+        pruebaImpresora+="Leyendo informacion...\r\r\r";
+        pruebaImpresora+="Version de software: "+ Utils.Version() + "\r\r\r";
+        pruebaImpresora+="Fecha: "+ Utils.FechaLocal() + "\r\r\r";
+        pruebaImpresora+="Hora: "+ Utils.HoraLocal() + "\r\r\r";
+        pruebaImpresora+="**Prueba de impresion exitosa**\r\r\r";
+        pruebaImpresora+="********************************\r\r\r";
+
+        Impresora.imprimir(pruebaImpresora, getContext());
+
+    }
 
 
 }

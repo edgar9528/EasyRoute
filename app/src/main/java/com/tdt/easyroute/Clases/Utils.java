@@ -103,6 +103,13 @@ public class Utils {
         editor.apply();
     }
 
+    public static void guardarImpresora(String imp, Application app) {
+        SharedPreferences sharedPref = app.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("imp", imp);
+        editor.apply();
+    }
+
     public static void ActualizaConf(String config, String valor, Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("ConfiguracionPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

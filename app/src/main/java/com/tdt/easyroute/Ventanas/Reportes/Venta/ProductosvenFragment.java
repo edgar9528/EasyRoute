@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.MainActivity;
@@ -371,34 +372,39 @@ public class ProductosvenFragment extends Fragment {
             else
                 imp+="V E N T A S\n";
 
-            imp+=string.formatSql("{0} {1} {2}", "   SKU  ", " VTA ", "  PRECIO  \n");
+            String fila = string.formatSql("{0} {1} {2}", "   SKU  ", " VTA ", "  PRECIO  \n");
+
+            imp+= Impresora.CrearFila(fila,3);
 
             double TotPza=0;
 
             if(dtprodvenlist!=null)
                 for(int i=0; i< dtprodvenlist.size();i++)
                 {
-                    imp+= dtprodvenlist.get(i).getSku() + "  " + dtprodvenlist.get(i).getTotal()+"  "+ dtprodvenlist.get(i).getDescr_LPre()+"\n";
+                    imp+= Impresora.CrearFila( dtprodvenlist.get(i).getSku() + "  " + dtprodvenlist.get(i).getTotal()+"  "+ dtprodvenlist.get(i).getDescr_LPre()+"\n",3 ) ;
                     TotPza += Double.parseDouble( dtprodvenlist.get(i).getTotal() );
                 }
 
             imp+= "TOTAL PZAS VENDIDAS: "+ TotPza+"\n\n";
 
             imp+="M O V I M I E N T O S\n";
-            imp+= string.formatSql("{0} {1}", "  CANTIDAD  ", "      FORMA      \n");
+            fila= string.formatSql("{0} {1}", "  CANTIDAD  ", "      FORMA      \n");
+            imp+= Impresora.CrearFila(fila,2);
 
             double Cobranza = 0;
             if(dtcobros!=null)
                 for(int i=0; i<dtcobros.size();i++)
                 {
-                    imp+= dtcobros.get(i).getMonto() + "  "+ dtcobros.get(i).getTpago()+"\n";
+                    fila =  string.FormatoPesos( dtcobros.get(i).getMonto() ) + "  "+ dtcobros.get(i).getTpago()+"\n";
+                    imp+=  Impresora.CrearFila(fila,2);
                     Cobranza += Double.parseDouble( dtcobros.get(i).getMonto() );
                 }
-            imp+="TOTAL COBRANZA: $"+Cobranza+"\n\n";
+            imp+="TOTAL COBRANZA: "+ string.FormatoPesos(Cobranza) +"\n\n";
 
 
             imp+= "E N V A S E\n";
-            imp+=string.formatSql("{0}{1}{2}{3}{4}{5}\n", " SKU "," INI "," CAR "," ABO "," VEN "," FIN ");
+            fila=string.formatSql("{0}{1}{2}{3}{4}{5}\n", " SKU "," INI "," CAR "," ABO "," VEN "," FIN ");
+            imp+= Impresora.CrearFila(fila,6);
 
             DataTableLC.EnvPrev r;
             DataTableLC.Env r2;
@@ -408,7 +414,8 @@ public class ProductosvenFragment extends Fragment {
                     for(int i=0; i<dtEnvPrev.size();i++)
                     {
                         r = dtEnvPrev.get(i);
-                        imp+=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r.getProd_sku_str(), r.getINI(), r.getCAR(), r.getABO(), r.getVEN(),r.getFIN());
+                        fila=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r.getProd_sku_str(), r.getINI(), r.getCAR(), r.getABO(), r.getVEN(),r.getFIN());
+                        imp+= Impresora.CrearFila(fila,6);
                     }
             }
             else
@@ -417,19 +424,22 @@ public class ProductosvenFragment extends Fragment {
                     for(int i=0; i<dtEnv.size();i++)
                     {
                         r2 = dtEnv.get(i);
-                        imp+=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r2.getProd_sku_str(), r2.getInv_inicial_n(), r2.getInv_cargo_n(),
+                        fila=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r2.getProd_sku_str(), r2.getInv_inicial_n(), r2.getInv_cargo_n(),
                                 r2.getInv_abono_n(), r2.getInv_venta_n(), r2.getInv_fin_n());
+                        imp+= Impresora.CrearFila(fila,6);
                     }
             }
+            imp+="\n\n";
 
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle(getString(R.string.msg_impPre));
             dialogo1.setMessage(imp);
             dialogo1.setCancelable(false);
+            final String finalImp = imp;
             dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-
+                    Impresora.imprimir(finalImp.replace("\n","\r"),getContext());
                 }
             });
             dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
@@ -511,37 +521,45 @@ public class ProductosvenFragment extends Fragment {
             else
                 imp+="V E N T A S \n";
 
+            String fila;
 
-            imp+=string.formatSql("{0}{1}{2} \n", "   SKU  ", "        DESCRIPCION       ", " VTA");
+            fila=string.formatSql("{0}{1}{2} \n", "   SKU  ", "        DESCRIPCION       ", " VTA");
+
+            imp+= Impresora.CrearFila(fila,3);
+
 
             double TotPza = 0;
             DataTableLC.Dtprogral r;
             for(int i=0; i<dtProdVenGral.size();i++)
             {
                 r=dtProdVenGral.get(i);
-                imp+= string.formatSql("{0}{1}{2} \n", r.getSku(), r.getDescr(), r.getTotal());
+                fila= string.formatSql("{0} {1} {2}\n", r.getSku(), r.getDescr().trim().replace(" ","_"), r.getTotal());
+                imp+= Impresora.CrearFila(fila,3);
                 TotPza += Double.parseDouble( r.getTotal() );
             }
-            imp+="TOTAL PZAS VENDIDAS: "+TotPza+"\n";
+            imp+="TOTAL PZAS VENDIDAS: "+TotPza+"\n\n";
 
 
             imp+="M O V I M I E N T O S\n";
-            imp+= string.formatSql("{0} {1}", "  CANTIDAD  ", "      FORMA      \n");
+            fila= string.formatSql("{0} {1}", "  CANTIDAD  ", "      FORMA      \n");
+            imp+= Impresora.CrearFila(fila,2);
 
             double Cobranza = 0;
             if(dtcobros!=null)
                 for(int i=0; i<dtcobros.size();i++)
                 {
-                    imp+= dtcobros.get(i).getMonto() + "  "+ dtcobros.get(i).getTpago()+"\n";
+                    fila= string.FormatoPesos(dtcobros.get(i).getMonto()) + "  "+ dtcobros.get(i).getTpago()+"\n";
+                    imp+= Impresora.CrearFila(fila,2);
                     Cobranza += Double.parseDouble( dtcobros.get(i).getMonto() );
                 }
-            imp+="TOTAL COBRANZA: $"+Cobranza+"\n\n";
+            imp+="TOTAL COBRANZA: "+ string.FormatoPesos(Cobranza) +"\n\n";
 
 
 
 
             imp+= "E N V A S E\n";
-            imp+=string.formatSql("{0}{1}{2}{3}{4}{5}\n", " SKU "," INI "," CAR "," ABO "," VEN "," FIN ");
+            fila=string.formatSql("{0}{1}{2}{3}{4}{5}\n", " SKU "," INI "," CAR "," ABO "," VEN "," FIN ");
+            imp+= Impresora.CrearFila(fila,6);
 
             DataTableLC.EnvPrev r1;
             DataTableLC.Env r2;
@@ -551,7 +569,8 @@ public class ProductosvenFragment extends Fragment {
                     for(int i=0; i<dtEnvPrev.size();i++)
                     {
                         r1 = dtEnvPrev.get(i);
-                        imp+=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r1.getProd_sku_str(), r1.getINI(), r1.getCAR(), r1.getABO(), r1.getVEN(),r1.getFIN());
+                        fila=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r1.getProd_sku_str(), r1.getINI(), r1.getCAR(), r1.getABO(), r1.getVEN(),r1.getFIN());
+                        imp+= Impresora.CrearFila(fila,6);
                     }
             }
             else
@@ -560,19 +579,23 @@ public class ProductosvenFragment extends Fragment {
                     for(int i=0; i<dtEnv.size();i++)
                     {
                         r2 = dtEnv.get(i);
-                        imp+=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r2.getProd_sku_str(), r2.getInv_inicial_n(), r2.getInv_cargo_n(),
+                        fila=string.formatSql("{0}   {1}   {2}   {3}   {4}   {5} \n",r2.getProd_sku_str(), r2.getInv_inicial_n(), r2.getInv_cargo_n(),
                                 r2.getInv_abono_n(), r2.getInv_venta_n(), r2.getInv_fin_n());
+                        imp+= Impresora.CrearFila(fila,6);
                     }
             }
+
+            imp+="\n\n";
 
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle(getString(R.string.msg_impSku));
             dialogo1.setMessage(imp);
             dialogo1.setCancelable(false);
+            final String finalImp = imp;
             dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-
+                    Impresora.imprimir(finalImp.replace("\n","\r"),getContext());
                 }
             });
             dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {

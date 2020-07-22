@@ -19,7 +19,7 @@
     <string name="hint_timeOut">Tiempo de espera/TimeOut (ms)</string>
     <string name="bt_prueba">Prueba WebService</string>
     <string name="hint_ruta">Ruta</string>
-    <string name="hint_impresora">Puerto de impresora</string>
+    <string name="hint_impresora">Dir. MAC Impresora</string>
     <string name="bt_listar">Listar</string>
     <string name="bt_pruebaImp">Prueba</string>
     <string name="bt_salir">Salir</string>
@@ -503,5 +503,6 @@
     <string name="msg_prev6">¿Desea modificar los datos?</string>
     <string name="msg_prev7">Cliente Visitado</string>
     <string name="msg_inf1">Información actualizada</string>
+    <string name="err_mac">Mac Address Incorrecta</string>
 
 </resources>

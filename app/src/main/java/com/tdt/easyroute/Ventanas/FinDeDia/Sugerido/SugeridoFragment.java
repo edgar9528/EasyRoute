@@ -30,6 +30,7 @@ import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
@@ -234,34 +235,37 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             if (dtRutas != null && dtRutas.size() == 0) dtRutas = null;
 
             if (rutaDes != null)
-                mensajeImp += "Ruta: " + rutaDes + "\n";
+                mensajeImp += "RUTA: " + rutaDes + "\n";
             else
-                mensajeImp += "Ruta: \n";
+                mensajeImp += "RUTA: \n";
 
             mensajeImp += string.formatSql("ASESOR: {0} {1} {2}\r\n", user.getNombre(), user.getAppat(), user.getApmat());
 
-            mensajeImp += "FECHA IMPRESION: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+            mensajeImp += "FECHA: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
 
-            mensajeImp += "S U G E R I D O \n\n";
+            mensajeImp += "S U G E R I D O \n";
 
-            mensajeImp += string.formatSql("{0} {1} {2} \n", "  SKU  ", "      PRODUCTO      ", "CANT.");
+            mensajeImp += string.formatSql("{0}{1}{2}\n", "SKU", "       PRODUCTO", "         CANT.");
 
             DataTableLC.Sugerido r;
-            String des;
+            String des,sku,sug,linea;
             for (int i = 0; i < dgSugerido.size(); i++) {
                 r = dgSugerido.get(i);
 
                 if (Double.parseDouble(r.getProd_sug_n()) > 0 && !r.getCat_desc_str().equals("ENVASE")) {
                     cerv += Long.parseLong(r.getProd_sug_n());
-                    des = r.getProd_desc_str();
-                    if (des.length() > 20)
-                        des = des.substring(0, 20);
 
-                    mensajeImp += string.formatSql("{0}   {1}      {2}\n", r.getProd_sku_str(), des, r.getProd_sug_n());
+                    sku =r.getProd_sku_str();
+                    des = r.getProd_desc_str();
+                    sug = r.getProd_sug_n();
+
+                    linea = Impresora.DarTamaño(sku,7) + Impresora.DarTamaño(des.replace(" ","_"),19)+" "+ Impresora.DarTamaño(sug,5)+"\n";
+
+                    mensajeImp += linea;
                 }
             }
 
-            mensajeImp += "E N V A S E\n";
+            mensajeImp += "\nE N V A S E\n";
 
             mensajeImp += string.formatSql("{0} {1} {2} {3}\n", "  SKU  ", "   ENVASE   ", "LLENO", "VACIO");
 
@@ -277,11 +281,25 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                             s = s + Double.parseDouble(dgSugerido.get(j).getProd_sug_n());
                     }
 
-                    des = r.getProd_desc_str();
-                    if (des.length() > 20)
-                        des = des.substring(0, 20);
 
-                    mensajeImp += string.formatSql("{0}  {1}  {2}  {3}\n", r.getProd_sku_str(), des, String.valueOf(s), "0");
+                    String[] palabras = r.getProd_desc_str().split(" ");
+                    String descripcion="";
+                    for(int k=0; k<palabras.length; k++)
+                    {
+                        if(palabras[k].length()>3)
+                            descripcion += palabras[k].substring(0,3)+".";
+                        else
+                            descripcion += palabras[k]+".";
+                    }
+                    if(descripcion.length()>13)
+                        descripcion = descripcion.substring(0,13);
+
+                    linea= string.formatSql("{0} {1}", r.getProd_sku_str(), descripcion);
+
+                    for(int k=linea.length(); k<19;k++ )
+                        linea+=" ";
+
+                    mensajeImp += linea+ string.formatSql("{2} {3} \n", String.valueOf(s), "0");
                 }
             }
 
@@ -309,9 +327,10 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         dialogo1.setTitle(getString(R.string.msg_impSug));
         dialogo1.setMessage(mensajeImp);
         dialogo1.setCancelable(false);
+        final String finalMensajeImp = mensajeImp;
         dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
-
+                Impresora.imprimir(finalMensajeImp.replace("\n","\r"),getContext());
             }
         });
         dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {

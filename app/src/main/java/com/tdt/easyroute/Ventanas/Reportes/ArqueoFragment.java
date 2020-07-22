@@ -1,5 +1,8 @@
 package com.tdt.easyroute.Ventanas.Reportes;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -18,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
@@ -26,8 +30,8 @@ import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.R;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
-
 
 public class ArqueoFragment extends Fragment {
 
@@ -140,8 +144,6 @@ public class ArqueoFragment extends Fragment {
                         VentasContado += Double.parseDouble( dr2.get(i).getTotal() );
                 }
 
-
-
                 json = BaseLocal.SelectDato(string.formatSql(Querys.Liquidacion.VentasCredito2, String.valueOf(conf.getRuta()) ),getContext());
 
                 if(json!=null)
@@ -221,13 +223,13 @@ public class ArqueoFragment extends Fragment {
 
             rutac = BaseLocal.SelectDato(string.formatSql("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr()), getContext());
 
-            imp += "RUTA: " + rutac + "\n";
+            imp += "RUTA: " + rutac + "\r";
 
             asesor = "ASESOR: " + string.formatSql("{0} {1} {2}", user.getNombre(), user.getAppat(), user.getApmat());
 
-            imp += asesor + "\n";
+            imp += asesor + "\r";
 
-            imp += "FECHA: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+            imp += "FECHA: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\r\r";
 
             String con, json;
 
@@ -241,20 +243,26 @@ public class ArqueoFragment extends Fragment {
             json = BaseLocal.Select(con, getContext());
             dtVC = ConvertirRespuesta.getArqueo_vcJson(json);
 
-            imp += "R E S U M E N \n\n";
+            imp += "R E S U M E N \r\r";
 
             double TotVC = 0;
             if (dtVC != null) {
-                imp += "C O N T A D O\n";
+                imp += "C O N T A D O\r";
 
-                imp += "CLIENTE    PAGO    FORMA PAGO\n";
+                imp += "CLIENTE     PAGO      FORMA PAGO\r";
 
                 for (int i = 0; i < dtVC.size(); i++) {
                     TotVC += Double.parseDouble(dtVC.get(i).getPag_abono_n());
-                    imp += dtVC.get(i).getCli_cveext_str() + "  " + dtVC.get(i).getPag_abono_n() + "  " + dtVC.get(i).getFpag_desc_str() + "\n";
+                    imp += dtVC.get(i).getCli_cveext_str() + "  " + string.FormatoPesos(dtVC.get(i).getPag_abono_n()) ;
+                    String ant = dtVC.get(i).getCli_cveext_str() + "  " + string.FormatoPesos(dtVC.get(i).getPag_abono_n()) ;
+                    String agregar="";
+                    for(int j=ant.length(); j<25;j++)
+                            agregar+=" ";
+                    agregar+=dtVC.get(i).getFpag_desc_str().substring(0,4) + "\r";
+                    imp+=agregar;
                 }
 
-                imp += "TOTAL CONTADO: " + TotVC+"\n\n";
+                imp += "TOTAL CONTADO: " + string.FormatoPesos(TotVC) +"\r\r";
             }
 
 
@@ -272,17 +280,17 @@ public class ArqueoFragment extends Fragment {
 
             if(dtVCred!=null)
             {
-                imp +="C R E D I T O \n";
+                imp +="C R E D I T O \r";
 
-                imp+= "CLIENTE   SALDO   REFERENCIA\n";
+                imp+= "CLIENTE   SALDO   REFERENCIA\r";
 
                 for(int i=0; i< dtVCred.size();i++)
                 {
                     TotVCred += Double.parseDouble(dtVCred.get(i).getCred_monto_n());
-                    imp += dtVCred.get(i).getCli_cveext_str() + " "+dtVCred.get(i).getCred_monto_n()+"  "+ dtVCred.get(i).getCred_referencia_str()+"\n";
+                    imp += dtVCred.get(i).getCli_cveext_str() + " "+ string.FormatoPesos(dtVCred.get(i).getCred_monto_n()) +"  "+ dtVCred.get(i).getCred_referencia_str()+"\n";
                 }
 
-                imp+="TOTAL CREDITO: "+TotVCred+"\n\n";
+                imp+="TOTAL CREDITO: "+ string.FormatoPesos(TotVCred) +"\r\r";
             }
 
 
@@ -300,15 +308,23 @@ public class ArqueoFragment extends Fragment {
             double TotCob=0.00;
             if(dtVCr!=null)
             {
-                imp +="C O B R A N Z A \n";
-                imp+= "CLIENTE   ABONO   FORMA PAGO\n";
+                imp +="C O B R A N Z A \r";
+                imp+= "CLIENTE    ABONO     FORMA PAGO\r";
 
                 for(int i=0; i<dtVCr.size();i++)
                 {
                     TotCob += Double.parseDouble( dtVCr.get(i).getPag_abono_n() );
-                    imp+= dtVCr.get(i).getCli_cveext_str() + " "+ dtVCr.get(i).getPag_abono_n()+ " " +dtVCr.get(i).getFpag_desc_str()+"\n";
+                    imp+= dtVCr.get(i).getCli_cveext_str() + " "+ string.FormatoPesos( dtVCr.get(i).getPag_abono_n() ) ;
+
+                    String ant = dtVCr.get(i).getCli_cveext_str() + " "+ string.FormatoPesos( dtVCr.get(i).getPag_abono_n() ) ;
+                    String agregar="";
+                    for(int j=ant.length(); j<25;j++)
+                        agregar+=" ";
+                    agregar+=dtVCr.get(i).getFpag_desc_str().substring(0,4) + "\r";
+                    imp+=agregar;
                 }
-                imp+="TOTAL COBRANZA: "+TotCob+"\n\n";
+
+                imp+="TOTAL COBRANZA: "+TotCob+"\r\r";
             }
 
 
@@ -356,9 +372,9 @@ public class ArqueoFragment extends Fragment {
                     }
                 }
 
-            imp+="E N V A S E\n";
+            imp+="E N V A S E\r";
 
-            imp+=string.formatSql("{0} {1} {2} {3}", "  SKU  ", "  ENVASE  ", "LLENO", "VACIO")+"\n";
+            imp+=string.formatSql("{0} {1} {2} {3}", "SKU", "    ENVASE", "    LLENO", "VACIO")+"\r";
 
             DataTableLC.InvP r;
             for(int i=0; i<dtVacio.size();i++)
@@ -372,13 +388,31 @@ public class ArqueoFragment extends Fragment {
 
                 dtVacioAdd.get(i).setProd_lleno_n( String.valueOf(s));
 
-                imp+= string.formatSql("{0} {1} {2} {3} \n", r.getProd_sku_str(), r.getProd_desc_str(), dtVacioAdd.get(i).getProd_lleno_n(), dtVacioAdd.get(i).getProd_vacio_n());
+                String[] palabras = r.getProd_desc_str().split(" ");
+                String descripcion="";
+                for(int k=0; k<palabras.length; k++)
+                {
+                    if(palabras[k].length()>3)
+                        descripcion += palabras[k].substring(0,3)+".";
+                    else
+                        descripcion += palabras[k]+".";
+                }
+                if(descripcion.length()>13)
+                    descripcion = descripcion.substring(0,13);
+
+                String linea= string.formatSql("{0} {1}", r.getProd_sku_str(), descripcion);
+
+                for(int k=linea.length(); k<19;k++ )
+                    linea+=" ";
+
+                imp+= linea+ string.formatSql("{2} {3} \r", dtVacioAdd.get(i).getProd_lleno_n(), dtVacioAdd.get(i).getProd_vacio_n());
+
             }
 
 
-            imp+="\nT O T A L E S\n";
+            imp+="\rT O T A L E S\r";
 
-            imp+="TOTAL VENTAS DEL DIA: $"+(TotVC + TotVCred)+"\n";
+            imp+="TOTAL VENTAS DEL DIA: "+  string.FormatoPesos  (TotVC + TotVCred)+"\r";
 
 
 
@@ -402,7 +436,7 @@ public class ArqueoFragment extends Fragment {
                 for (int i = 0; i < dtRec.size(); i++)
                 {
                     r2 = dtRec.get(i);
-                    imp+= "TOTAL "+r2.getFpag_desc_str() +": $"+r2.getPag_abono_n()+"\n";
+                    imp+= "TOTAL "+r2.getFpag_desc_str() +": " + string.FormatoPesos( r2.getPag_abono_n() )+"\r";
 
                     if(r2.getFpag_desc_str().equals("EFECTIVO"))
                     {
@@ -413,23 +447,23 @@ public class ArqueoFragment extends Fragment {
                 }
             }
 
-            imp+= "TOTAL ENTREGAR A CAJA: $" + (TotVC + TotCob) +"\n\n";
+            imp+= "TOTAL ENTREGAR A CAJA: " + string.FormatoPesos (TotVC + TotCob) +"\r\r";
 
             imp+= string.formatSql("YO {0} RESPONSABLE DE LA RUTA {1} DEBO Y PAGARE " +
-                    "A LA EMPRESA _, S.A. DE C.V. LA CANTIDAD DE ${2}",asesor,rutac, String.valueOf (TotVC+TotCob));
+                    "A LA EMPRESA _, S.A. DE C.V. LA CANTIDAD DE {2}",asesor,rutac, string.FormatoPesos (TotVC+TotCob));
 
+            imp+="\r\r\r";
 
-
-            Log.d("salida","FINALIZO DE IMPRIMIR");
-
+            String impAux = imp.replace("\r","\n");
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle("¿Imprimir inventario?");
-            dialogo1.setMessage(imp);
+            dialogo1.setMessage(impAux);
             dialogo1.setCancelable(false);
+            final String finalImp = imp;
             dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-
+                    Impresora.imprimir(finalImp, getContext());
                 }
             });
             dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -439,8 +473,6 @@ public class ArqueoFragment extends Fragment {
             });
             dialogo1.show();
 
-
-
         }
         catch (Exception e)
         {
@@ -448,5 +480,4 @@ public class ArqueoFragment extends Fragment {
             Toast.makeText(getContext(), "Error al imprimir: "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 }
