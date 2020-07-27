@@ -29,6 +29,7 @@ import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
@@ -563,11 +564,11 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             String rutaCve = Utils.LeefConfig("ruta", getContext());
             String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}", rutaCve), getContext());
 
-            mensajeImp += "Ruta: " + rutaDes + "\n";
+            mensajeImp += "RUTA: " + rutaDes + "\n";
 
             mensajeImp += string.formatSql("ASESOR: {0} {1} {2}\r\n", user.getNombre(), user.getAppat(), user.getApmat());
 
-            mensajeImp += "FECHA IMPRESION: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+            mensajeImp += "FECHA: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
             mensajeImp += "I N V E N T A R I O\n\n";
 
             ArrayList<DataTableLC.InvP> dgInventario = al_invP;
@@ -576,12 +577,12 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             DataTableLC.InvP dg;
             String des;
 
-            final int maxCaracteres = 14;
+            int maxCaracteres = 15;
             long cerv = 0;
             long env = 0;
 
-            mensajeImp += string.formatSql("{0} {1} {2} {3}", "  SKU ", "    PRODUCTO       ", "CANT", " CAN") + "\n";
-
+            mensajeImp += string.formatSql("{0}{1}{2}{3}", "SKU ", "   PRODUCTO", "        CANT", " CANC") + "\n";
+            String linea,prod1,prod2;
             for (int i = 0; i < dgInventario.size(); i++) {
                 dg = dgInventario.get(i);
                 if (Integer.parseInt(dg.getProd_cant_n()) > 0 && !dg.getCat_desc_str().equals("ENVASE")) {
@@ -594,15 +595,24 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                             des = des.concat(" ");
                         }
                     }
-                    mensajeImp += string.formatSql("{0}    {1}   {2}    {3}", dg.getProd_sku_str(), des, dg.getProd_cant_n(), dg.getProd_cancelado_n()) + "\n";
+                    linea= string.formatSql("{0} {1} ", dg.getProd_sku_str(), des);
+
+                    prod1= dg.getProd_cant_n();
+                    prod2= dg.getProd_cancelado_n();
+
+                    if(prod1.length()<4)
+                        for(int j=prod1.length();j<4;j++)
+                            prod1+=" ";
+
+                    mensajeImp+= linea+prod1+" "+prod2+"\n";
 
                     cerv += Integer.parseInt(dg.getProd_cant_n());
                 }
             }
 
 
-            mensajeImp += "\n\n" + string.formatSql("{0} {1} {2} {3} {4}", "SKU  ", " ENVASE     ", "LLENO", "VACIO", "CAN") + "\n";
-
+            mensajeImp += "\n\n" + string.formatSql("{0}{1}{2}{3}{4}", "SKU  ", "  ENVASE", "  LLENO", " VACIO", " CANC") + "\n";
+            maxCaracteres=12;
             for (int i = 0; i < dgInventario.size(); i++) {
                 dg = dgInventario.get(i);
                 if (dg.getCat_desc_str().equals("ENVASE")) {
@@ -615,7 +625,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                             des = des.concat(" ");
                         }
                     }
-                    mensajeImp += string.formatSql("{0}   {1}  {2}   {3}   {4}", dg.getProd_sku_str(), des, "0", "0", dg.getProd_cancelado_n()) + "\n";
+                    mensajeImp += string.formatSql("{0} {1}  {2}    {3}    {4}", dg.getProd_sku_str(), des, "0", "0", dg.getProd_cancelado_n()) + "\n";
 
                     env += Integer.parseInt(dg.getProd_cant_n());
                 }
@@ -633,9 +643,11 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             dialogo1.setTitle(getString(R.string.msg_impInv));
             dialogo1.setMessage(mensajeImp);
             dialogo1.setCancelable(false);
+            final String finalMensajeImp = mensajeImp;
             dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     obtenerUbicacion("InsertBitacora");
+                    Impresora.imprimir(finalMensajeImp.replace("\n","\r"),getContext());
                 }
             });
             dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {

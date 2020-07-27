@@ -158,13 +158,18 @@ public class AbonosFragment extends Fragment {
             }
         });
 
-
-
         pedidosVM.getTxtSaldoDeudaEnv().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String saldoDeudaEnv) {
                 _txtSaldoDeudaEnv = Double.parseDouble( string.DelCaracteres( saldoDeudaEnv ));
                 actualizarTotales();
+            }
+        });
+
+        pedidosVM.getDgAbonosVisitado().observe(getActivity(), new Observer<ArrayList<DataTableLC.DgAbonos>>() {
+            @Override
+            public void onChanged(ArrayList<DataTableLC.DgAbonos> dgAbonos) {
+
             }
         });
 

@@ -120,13 +120,6 @@ public class CreditosFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        pedidosVM.getDgPro2().observe(getActivity(), new Observer<ArrayList<DataTableLC.ProductosPed>>() {
-            @Override
-            public void onChanged(ArrayList<DataTableLC.ProductosPed> DgProd2) {
-                dgProd2 = DgProd2;
-                actualizarTotales();
-            }
-        });
 
         pedidosVM.getFormasPago().observe(getActivity(), new Observer< ArrayList<DataTableWS.FormasPago>  >() {
             @Override

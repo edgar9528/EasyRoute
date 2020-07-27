@@ -49,8 +49,10 @@ import com.tdt.easyroute.Clases.ViewPagerNonSwipable;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
+import com.tdt.easyroute.Model.PreventaPagos;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.MainDetallesActivity;
+import com.tdt.easyroute.Ventanas.Preventa.Venta.VentavenFragment;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
@@ -337,6 +339,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
     private void verificarModificar()
     {
+        Visitado = true;
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
         dialogo1.setTitle(getString(R.string.msg_prev7));
         dialogo1.setMessage(getString(R.string.msg_prev6));
@@ -598,6 +601,89 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
     private void CargarDatos()
     {
+        ArrayList<DataTableLC.ProdAlm> dtpg = new ArrayList<>();
+        ArrayList<DataTableLC.PreventaPagos> dtpag = new ArrayList<>();
+        ArrayList<DataTableLC.PrevEnv> dtenva = new ArrayList<>();
+
+        String sql = string.formatSql2("select prod_sku_str,sum(prod_cant_n) prod_cant_n from preventadet where prev_folio_str='{0}' group by prod_sku_str", folio);
+        String json = BaseLocal.Select(sql, getApplicationContext());
+        dtpg = ConvertirRespuesta.getDtProdAlm(json);
+
+        sql = string.formatSql2("select f.*,p.fpag_desc_str from preventapagos f inner join formaspago p on f.fpag_cve_n=p.fpag_cve_n where f.prev_folio_str='{0}' order by f.ppag_num_n",folio);
+        json = BaseLocal.Select(sql,getApplicationContext());
+        dtpag = ConvertirRespuesta.getPreventaPagosLCJson(json);
+
+        sql = string.formatSql2("select * from preventaenv where prev_folio_str='{0}'", folio);
+        json = BaseLocal.Select(sql, getApplicationContext());
+        dtenva = ConvertirRespuesta.getDtPrevEnv(json);
+
+        //carga productos
+
+        ArrayList<String[]> productosPreventa = new ArrayList<>();
+
+        for(DataTableLC.ProdAlm r : dtpg)
+        {
+            String[] producto = new String[2];
+            producto[0]= r.getProd_sku_str();
+            producto[1]= r.getProd_cant_n();
+            productosPreventa.add(producto);
+        }
+        pedidosVM.setProductoPreventa(productosPreventa);
+
+        //carga abonos
+        for (DataTableLC.PreventaPagos r : dtpag)
+        {
+            if (Utils.getBool( r.getPpag_cobranza_n() ) )
+            {
+                DataTableLC.DgAbonos rn = new DataTableLC.DgAbonos();
+
+                rn.setNoAbono( r.getPpag_num_n() );
+                rn.setFpag_cve_n( r.getFpag_cve_n() );
+                rn.setFpag_desc_str( r.getFpag_desc_str() );
+                rn.setFpag_cant_n( r.getFpag_cant_n() );
+                dgAbonos.add(rn);
+            }
+        }
+        pedidosVM.setDgAbonosVisitado(dgAbonos);
+
+        //carga pagos
+        for (DataTableLC.PreventaPagos r : dtpag)
+        {
+            if (!Utils.getBool( r.getPpag_cobranza_n() ) )
+            {
+                DataTableLC.DgPagos rn = new DataTableLC.DgPagos();
+
+                rn.setNoPago( r.getPpag_num_n() );
+                rn.setFpag_cve_n( r.getFpag_cve_n() );
+                rn.setFpag_desc_str( r.getFpag_desc_str() );
+                rn.setFpag_cant_n( r.getFpag_cant_n() );
+
+                dgPagos.add(rn);
+            }
+        }
+        pedidosVM.setDgPagosVisitado(dgPagos);
+
+        //Carga Envases
+        for (DataTableLC.PrevEnv r : dtenva)
+        {
+            int indice=-1;
+            for(int i=0; i<dgEnvase.size();i++)
+            {
+                if(dgEnvase.get(i).getProd_cve_n().equals( r.getProd_cve_n() ))
+                {
+                    indice = i;
+                    break;
+                }
+            }
+
+            if(indice!=-1)
+            {
+                dgEnvase.get(indice).setProd_abono_n(  r.getProd_abono_n() );
+                dgEnvase.get(indice).setProd_regalo_n( r.getProd_regalo_n() );
+                dgEnvase.get(indice).setProd_venta_n( r.getProd_venta_n() );
+            }
+        }
+        pedidosVM.setDgEnvasePrev(dgEnvase);
 
     }
 

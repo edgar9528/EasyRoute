@@ -518,5 +518,6 @@
     <string name="msg_prev6">Do you want to modify the data?</string>
     <string name="msg_prev7">Client Visited</string>
     <string name="msg_inf1">Updated information</string>
+    <string name="err_mac">Incorrect Mac Address</string>
 
 </resources>

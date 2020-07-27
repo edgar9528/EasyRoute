@@ -2,6 +2,7 @@ package com.tdt.easyroute.Ventanas.Preventa.Venta;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,7 +122,17 @@ public class VentavenFragment extends Fragment {
         pedidosVM.getProducto().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String cve_prod) {
-                AgregarProducto(cve_prod);
+                AgregarProducto(cve_prod,-1);
+            }
+        });
+
+        pedidosVM.getProductoPreventa().observe(getActivity(), new Observer<ArrayList<String[]>>() {
+            @Override
+            public void onChanged(ArrayList<String[]> strings) {
+                for(int i=0; i< strings.size();i++)
+                {
+                    AgregarProducto( strings.get(i)[0], Integer.parseInt( strings.get(i)[1] )  );
+                }
             }
         });
 
@@ -134,19 +145,27 @@ public class VentavenFragment extends Fragment {
 
     }
 
-    private void AgregarProducto(String cve_producto)
+    public void AgregarProducto(String cve_producto,int cargarDatos)
     {
         try {
             ArrayList<DataTableLC.ProductosPed> re;
-
             re = BuscarProducto(cve_producto, dgProd2);
             if (re.size() > 0) {
                 int indice = dgProd2.indexOf(re.get(0));
-                ingresarCantidad(indice, re.get(0));
+
+                if(cargarDatos==-1)
+                    ingresarCantidad(indice, re.get(0));
+                else
+                    actualizarProductos(indice,String.valueOf(cargarDatos),re.get(0));
+
             } else {
                 re = BuscarProducto(cve_producto, dtProductos);
-                if (re.size() > 0) {
-                    ingresarCantidad(-1, re.get(0));
+                if (re.size() > 0)
+                {
+                    if(cargarDatos==-1)
+                        ingresarCantidad(-1, re.get(0));
+                    else
+                        actualizarProductos(-1,String.valueOf(cargarDatos),re.get(0));
                 }
             }
         }catch (Exception e)
@@ -188,7 +207,8 @@ public class VentavenFragment extends Fragment {
         ArrayList<DataTableLC.ProductosPed> producto = new ArrayList<>();
         try {
             for (int i = 0; i < arrayList.size(); i++) {
-                if (cve.equals(arrayList.get(i).getProd_cve_n())) {
+                if (cve.equals(arrayList.get(i).getProd_cve_n())  || cve.equals(arrayList.get(i).getProd_sku_str()))
+                {
                     producto.add(arrayList.get(i));
                     i = arrayList.size();
                 }

@@ -937,7 +937,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     if ( item.getIcono()==1)
                     {
                         Toast.makeText(getContext(), getString(R.string.tt_ped6), Toast.LENGTH_LONG).show();
-                        return;
+                        //return;
                     }
                 }
             }

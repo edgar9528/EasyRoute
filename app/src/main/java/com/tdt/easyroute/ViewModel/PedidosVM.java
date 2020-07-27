@@ -36,6 +36,10 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<String> txtVenta = new MutableLiveData<>();
     private final MutableLiveData<String> txtSaldo = new MutableLiveData<>();
 
+    private final MutableLiveData< ArrayList<String[]> > productoPreventa = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgPagosVisitado = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.DgAbonos> > dgAbonosVisitado = new MutableLiveData<>();
+
     private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgANormal = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgAEspecial = new MutableLiveData<>();
 
@@ -58,6 +62,14 @@ public class PedidosVM extends ViewModel
     }
     public void setProducto(String Producto){
         producto.setValue(Producto);
+    }
+
+
+    public LiveData< ArrayList<String[]> > getProductoPreventa(){
+        return productoPreventa;
+    }
+    public void setProductoPreventa(ArrayList<String[]> ProductoPreventa){
+        productoPreventa.setValue(ProductoPreventa);
     }
 
     public LiveData<ArrayList<DataTableWS.FormasPago>> getFormasPago() {
@@ -194,11 +206,25 @@ public class PedidosVM extends ViewModel
         this.dgPagos.setValue(dgPagos);
     }
 
+    public LiveData<ArrayList<DataTableLC.DgPagos>> getDgPagosVisitado(){
+        return dgPagosVisitado;
+    }
+    public void setDgPagosVisitado(ArrayList<DataTableLC.DgPagos> DgPagosVisitado){
+        this.dgPagosVisitado.setValue(DgPagosVisitado);
+    }
+
     public LiveData<ArrayList<DataTableLC.DgAbonos>> getDgAbonos(){
         return dgAbonos;
     }
     public void setDgAbonos(ArrayList<DataTableLC.DgAbonos> dgAbonos){
         this.dgAbonos.setValue(dgAbonos);
+    }
+
+    public LiveData<ArrayList<DataTableLC.DgAbonos>> getDgAbonosVisitado(){
+        return dgAbonosVisitado;
+    }
+    public void setDgAbonosVisitado(ArrayList<DataTableLC.DgAbonos> DgAbonos){
+        this.dgAbonosVisitado.setValue(DgAbonos);
     }
 
     public LiveData<ArrayList<DataTableLC.Creditos>> getDgCreditos(){

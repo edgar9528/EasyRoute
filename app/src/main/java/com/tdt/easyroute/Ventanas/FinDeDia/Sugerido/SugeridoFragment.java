@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.FinDeDia.Sugerido;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -131,6 +132,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         return view;
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -267,7 +269,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
 
             mensajeImp += "\nE N V A S E\n";
 
-            mensajeImp += string.formatSql("{0} {1} {2} {3}\n", "  SKU  ", "   ENVASE   ", "LLENO", "VACIO");
+            mensajeImp += string.formatSql("{0} {1} {2} {3}\n", "SKU", "    ENVASE", "     LLENO", "VACIO");
 
 
             for (int i = 0; i < dgSugerido.size(); i++) {
@@ -291,15 +293,15 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                         else
                             descripcion += palabras[k]+".";
                     }
-                    if(descripcion.length()>13)
-                        descripcion = descripcion.substring(0,13);
+                    if(descripcion.length()>15)
+                        descripcion = descripcion.substring(0,15);
 
                     linea= string.formatSql("{0} {1}", r.getProd_sku_str(), descripcion);
 
-                    for(int k=linea.length(); k<19;k++ )
+                    for(int k=linea.length(); k<20;k++ )
                         linea+=" ";
 
-                    mensajeImp += linea+ string.formatSql("{2} {3} \n", String.valueOf(s), "0");
+                    mensajeImp += linea+ string.formatSql("{2}  {3} \n", String.valueOf(s), "0.0");
                 }
             }
 
@@ -317,11 +319,9 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
         {
             for(int i=0; i <dtRutas.size();i++)
             {
-                Toast.makeText(getContext(), "Ticket impreso", Toast.LENGTH_SHORT).show();
                 imprimirRuta( dtRutas.get(i).getRut_cve_n() );
             }
         }
-
 
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
         dialogo1.setTitle(getString(R.string.msg_impSug));

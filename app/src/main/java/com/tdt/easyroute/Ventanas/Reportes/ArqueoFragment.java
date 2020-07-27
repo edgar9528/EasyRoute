@@ -409,12 +409,9 @@ public class ArqueoFragment extends Fragment {
 
             }
 
-
             imp+="\rT O T A L E S\r";
 
             imp+="TOTAL VENTAS DEL DIA: "+  string.FormatoPesos  (TotVC + TotVCred)+"\r";
-
-
 
             ArrayList<DataTableLC.Arqueo_rec> dtRec=null;
 
@@ -425,7 +422,6 @@ public class ArqueoFragment extends Fragment {
             json = BaseLocal.Select(con,getContext());
 
             dtRec = ConvertirRespuesta.getArqueo_recJson(json);
-
 
             double Efe = 0.00;
             double TotRec = 0.00;

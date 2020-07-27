@@ -2002,5 +2002,37 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.ProdAlm> getDtProdAlm(String respuesta)
+    {
+        ArrayList<DataTableLC.ProdAlm> al = null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<DataTableLC.ProdAlm>>() {}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if (al.size() == 0) return null;
+        } catch (Exception e) {
+            Log.d("salida", "error gson: " + e.toString());
+            al = null;
+        }
+        return al;
+    }
+
+    public static ArrayList<DataTableLC.PrevEnv> getDtPrevEnv(String respuesta)
+    {
+        ArrayList<DataTableLC.PrevEnv> al = null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<DataTableLC.PrevEnv>>() {}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if (al.size() == 0) return null;
+        } catch (Exception e) {
+            Log.d("salida", "error gson: " + e.toString());
+            al = null;
+        }
+        return al;
+    }
+
+
+
 
 }

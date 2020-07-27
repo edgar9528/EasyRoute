@@ -63,6 +63,7 @@ public class PagoFragment extends Fragment {
     private double _txtSaldoDeudaEnv=0;
     private double _txtSubEnv=0;
 
+
     public PagoFragment() {
         // Required empty public constructor
     }
@@ -175,6 +176,16 @@ public class PagoFragment extends Fragment {
             public void onChanged(String saldoDeudaEnv) {
                 _txtSaldoDeudaEnv = Double.parseDouble( string.DelCaracteres( saldoDeudaEnv ));
                 actualizarTotales();
+            }
+        });
+
+
+        pedidosVM.getDgPagosVisitado().observe(getActivity(), new Observer<ArrayList<DataTableLC.DgPagos>>() {
+            @Override
+            public void onChanged(ArrayList<DataTableLC.DgPagos> DgPagosVisitado) {
+                    for(DataTableLC.DgPagos d : DgPagosVisitado)
+                        pagosAdapterRecyclerView.agregarItem(d);
+
             }
         });
 
@@ -433,6 +444,7 @@ public class PagoFragment extends Fragment {
     public void ActualizarDgPagos(ArrayList<DataTableLC.DgPagos> dgRecycler)
     {
         try {
+
             dgPagos = dgRecycler;
 
             double DescKit = Double.parseDouble(string.DelCaracteres(tv_kit.getText().toString()));
