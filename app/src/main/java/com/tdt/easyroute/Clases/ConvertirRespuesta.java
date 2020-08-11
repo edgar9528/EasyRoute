@@ -2032,6 +2032,37 @@ public class ConvertirRespuesta {
         return al;
     }
 
+    public static ArrayList<DataTableLC.VentasEnv> getDtVentasEnv(String respuesta)
+    {
+        ArrayList<DataTableLC.VentasEnv> al = null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<DataTableLC.VentasEnv>>() {}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if (al.size() == 0) return null;
+        } catch (Exception e) {
+            Log.d("salida", "error gson: " + e.toString());
+            al = null;
+        }
+        return al;
+    }
+
+    public static DataTableWS.Usuarios getUsuarioLocal(String respuesta)
+    {
+        ArrayList<DataTableWS.Usuarios> al = null;
+        try {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<DataTableWS.Usuarios>>() {}.getType();
+            al = gson.fromJson(respuesta, listType);
+            if (al.size() == 0)
+                return null;
+            else
+               return al.get(0);
+        } catch (Exception e) {
+            Log.d("salida", "error gson: " + e.toString());
+            return null;
+        }
+    }
 
 
 

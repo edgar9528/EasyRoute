@@ -2284,7 +2284,23 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
                 db.setTransactionSuccessful();
 
-                Utils.msgInfo(this, "LA VENTA SE HA CONCRETADO, FALTA IMPRIMIR");
+                if(db.isOpen())
+                {
+                    db.endTransaction();
+                    db.close();
+                }
+
+                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+
+                String sqlA = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET CLIENTE ORIGINAL", coordenada);
+
+                BaseLocal.Insert(sqlA, getApplicationContext() );
+
+                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ),this ), false,this,conf);
+                sqlA =  string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET ASESOR ORIGINAL", coordenada);
+                BaseLocal.Insert(sqlA, getApplicationContext() );
 
                 Intent i = getIntent();
                 i.putExtra("estado", "true");

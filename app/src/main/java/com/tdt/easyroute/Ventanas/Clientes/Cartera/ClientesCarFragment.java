@@ -238,9 +238,9 @@ public class ClientesCarFragment extends Fragment {
             {
                 DataTableLC.ClientesSaldo r = dgCartera.get(i);
 
-                cvecli= Impresora.DarTamaño( r.getCli_cveext_str(),11 );
-                negocio = Impresora.DarTamaño( r.getCli_nombrenegocio_str().replace(" ","_"),10 )+" ";
-                fsaldo = Impresora.DarTamaño( string.FormatoPesos(r.getSaldo()), 10 );
+                cvecli= Impresora.DarTamañoDer( r.getCli_cveext_str(),11 );
+                negocio = Impresora.DarTamañoDer( r.getCli_nombrenegocio_str().replace(" ","_"),10 )+" ";
+                fsaldo = Impresora.DarTamañoDer( string.FormatoPesos(r.getSaldo()), 10 );
 
                 menImp+= cvecli+negocio+fsaldo+"\n";
 

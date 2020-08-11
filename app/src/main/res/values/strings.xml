@@ -504,5 +504,7 @@
     <string name="msg_prev7">Cliente Visitado</string>
     <string name="msg_inf1">Información actualizada</string>
     <string name="err_mac">Mac Address Incorrecta</string>
+    <string name="err_utils1">Error al obtener visita bebidas</string>
+    <string name="err_utils2">Error al obtener visita preventa bebidas</string>
 
 </resources>

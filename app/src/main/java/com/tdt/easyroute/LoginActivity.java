@@ -32,9 +32,13 @@ import com.tdt.easyroute.Ventanas.PruebasActivity;
 import org.ksoap2.serialization.PropertyInfo;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity implements AsyncResponseJSON {
 
@@ -638,9 +642,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
 
     }
 
-    private void pruebas()
-    {
-        ArrayList<DataTableLC.Prueba> alOriginal= new ArrayList<>();
+    private void pruebas() throws ParseException {
+        /*ArrayList<DataTableLC.Prueba> alOriginal= new ArrayList<>();
 
         alOriginal.add( new DataTableLC.Prueba("edgar","1"));
         alOriginal.add( new DataTableLC.Prueba("juan",null));
@@ -669,6 +672,11 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                 }
             }
         }
+
+         */
+
+
+
     }
 
 }

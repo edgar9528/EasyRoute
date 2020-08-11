@@ -12,11 +12,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tdt.easyroute.Clases.string;
-import com.tdt.easyroute.Model.Creditos;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.Ventanas.Preventa.Pago.CreditosFragment;
-import com.tdt.easyroute.Ventanas.Preventa.Pago.PagoFragment;
 
 import java.util.ArrayList;
 

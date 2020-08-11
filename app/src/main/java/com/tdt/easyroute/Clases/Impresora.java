@@ -144,21 +144,43 @@ public class Impresora {
         }
     }
 
-    public static String DarTamaño(String palabra,int tamaño)
+    public static String DarTamañoDer(String palabra,int tamaño)
     {
         try {
-
             if (palabra.length() > tamaño)
                 palabra = palabra.substring(0, tamaño);
             else if (palabra.length() < tamaño)
                 for (int i = palabra.length(); i < tamaño; i++)
                     palabra += " ";
             return palabra;
-
         }catch (Exception e)
         {
             return palabra;
         }
+    }
+
+    public static String DarTamañoIzq(String palabra, int tamaño)
+    {
+        if( palabra.length() <tamaño)
+            for(int i=palabra.length(); i<tamaño;i++)
+                palabra= " "+palabra;
+        else
+            palabra=palabra.substring(0,tamaño);
+
+        return palabra;
+    }
+
+    public static String Centrar(String texto)
+    {
+        if(texto.length()<=charMax)
+        {
+            int espacios = ( charMax-texto.length() )/2;
+            for(int i=0; i<espacios;i++)
+            {
+                texto= " "+texto+" ";
+            }
+        }
+        return texto;
     }
 
 }

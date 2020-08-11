@@ -261,7 +261,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                     des = r.getProd_desc_str();
                     sug = r.getProd_sug_n();
 
-                    linea = Impresora.DarTamaño(sku,7) + Impresora.DarTamaño(des.replace(" ","_"),19)+" "+ Impresora.DarTamaño(sug,5)+"\n";
+                    linea = Impresora.DarTamañoDer(sku,7) + Impresora.DarTamañoDer(des.replace(" ","_"),19)+" "+ Impresora.DarTamañoDer(sug,5)+"\n";
 
                     mensajeImp += linea;
                 }

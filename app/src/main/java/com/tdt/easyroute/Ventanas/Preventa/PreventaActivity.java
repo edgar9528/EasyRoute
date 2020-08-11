@@ -1339,8 +1339,13 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
             if(guardado)
             {
-                Log.d("salida","IMPRIMIR TICKET");
-                Utils.msgInfo(this, "IMPRIMIR TICKET");
+                Log.d("salida","ENTRO A IMPRIMIR");
+                Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente,this),  false, "C L I E N T E", conf ,this);
+                Log.d("salida","SALIO IMPRIMIR");
+
+                Log.d("salida","ENTRO A IMPRIMIR 2");
+                Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente,this),  false, "A S E S O R", conf ,this);
+                Log.d("salida","SALIO IMPRIMIR 2");
 
                 Intent i = getIntent();
                 i.putExtra("idcli", rc.getCli_cve_n());

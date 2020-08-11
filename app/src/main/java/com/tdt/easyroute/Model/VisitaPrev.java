@@ -1,14 +1,14 @@
 package com.tdt.easyroute.Model;
 
-public class VisitaPrev {
-
+public class VisitaPrev
+{
     public long cli_cve_n;
     public String cli_cveext_str;
     public Preventa[] Preventas;
-    public PreventaEnvase[] Envase;
-    public Creditos[] Creditos;
-    public PreventaPagos[] Cobranza;
-    public Creditos[] CreditosEnv;
+    public DataTableWS.PreventaEnv[] Envase;
+    public DataTableLC.Creditos[] Creditos;
+    public DataTableLC.PreventaPagos[] Cobranza;
+    public DataTableLC.Creditos[] CreditosEnv;
 
     public VisitaPrev() {
     }
@@ -42,35 +42,35 @@ public class VisitaPrev {
         Preventas = preventas;
     }
 
-    public PreventaEnvase[] getEnvase() {
+    public DataTableWS.PreventaEnv[] getEnvase() {
         return Envase;
     }
 
-    public void setEnvase(PreventaEnvase[] envase) {
+    public void setEnvase(DataTableWS.PreventaEnv[] envase) {
         Envase = envase;
     }
 
-    public com.tdt.easyroute.Model.Creditos[] getCreditos() {
+    public DataTableLC.Creditos[] getCreditos() {
         return Creditos;
     }
 
-    public void setCreditos(com.tdt.easyroute.Model.Creditos[] creditos) {
+    public void setCreditos(DataTableLC.Creditos[] creditos) {
         Creditos = creditos;
     }
 
-    public PreventaPagos[] getCobranza() {
+    public DataTableLC.PreventaPagos[] getCobranza() {
         return Cobranza;
     }
 
-    public void setCobranza(PreventaPagos[] cobranza) {
+    public void setCobranza(DataTableLC.PreventaPagos[] cobranza) {
         Cobranza = cobranza;
     }
 
-    public com.tdt.easyroute.Model.Creditos[] getCreditosEnv() {
+    public DataTableLC.Creditos[] getCreditosEnv() {
         return CreditosEnv;
     }
 
-    public void setCreditosEnv(com.tdt.easyroute.Model.Creditos[] creditosEnv) {
+    public void setCreditosEnv(DataTableLC.Creditos[] creditosEnv) {
         CreditosEnv = creditosEnv;
     }
 }

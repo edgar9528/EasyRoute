@@ -520,4 +520,7 @@
     <string name="msg_inf1">Updated information</string>
     <string name="err_mac">Incorrect Mac Address</string>
 
+    <string name="err_utils1">Error getting visit drinks</string>
+    <string name="err_utils2">Error getting drinks presale visit</string>
+
 </resources>
