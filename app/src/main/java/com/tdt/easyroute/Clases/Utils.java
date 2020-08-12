@@ -1984,6 +1984,8 @@ public class Utils {
         p+= "+SALDO INICIAL: "+ string.FormatoPesos( InicialCred )+"\n";
         p+= "+VENTA DEL DIA: "+ string.FormatoPesos( SubtotalVenta )+"\n";
         p+= "+VENTA DE ENVASE DEL DIA: "+ string.FormatoPesos( SubTotalE )+"\n";
+        p+= "=SALDO FINAL PREVENTA: "+ string.FormatoPesos( (InicialCred + SubtotalVenta + SubTotalE) )+"\n\n";
+        p+= "SALDO EFECTIVO PREV: "+ string.FormatoPesos( InicialCred + SubtotalVenta + SubTotalE )+"\n";
 
         p+="\n\n";
         p= p.replace("\n","\r");

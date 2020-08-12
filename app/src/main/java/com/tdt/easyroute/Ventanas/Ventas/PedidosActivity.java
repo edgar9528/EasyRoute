@@ -55,6 +55,7 @@ import com.tdt.easyroute.Ventanas.Clientes.BuscarClientesActivity;
 import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.MainDetallesActivity;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -2297,7 +2298,30 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
                 BaseLocal.Insert(sqlA, getApplicationContext() );
 
-                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ),this ), false,this,conf);
+
+                try
+                {
+                    final Context context = this;
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            try {
+                                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ),context ), false,context,conf);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, 3000);
+
+                }catch (Exception e)
+                {
+
+                }
+
+
+
                 sqlA =  string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
                         conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET ASESOR ORIGINAL", coordenada);
                 BaseLocal.Insert(sqlA, getApplicationContext() );

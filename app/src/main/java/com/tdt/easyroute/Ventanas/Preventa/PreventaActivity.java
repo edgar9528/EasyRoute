@@ -47,12 +47,11 @@ import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.ViewPagerNonSwipable;
 import com.tdt.easyroute.Clases.string;
+import com.tdt.easyroute.MainActivity;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
-import com.tdt.easyroute.Model.PreventaPagos;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.Ventanas.Pedidos.DetallesCliente.MainDetallesActivity;
-import com.tdt.easyroute.Ventanas.Preventa.Venta.VentavenFragment;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
@@ -458,7 +457,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                     for (int i = 0; i < promo.size(); i++) {
                         r = promo.get(i);
 
-                        switch (Integer.parseInt(r.getTprom_cve_n())) {
+                        switch (Integer.parseInt(r.getTprom_cve_n()))
+                        {
                             case 1:
                                 DataTableLC.ProductosPed ri = null;
                                 int k = -1;
@@ -516,7 +516,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         String json = BaseLocal.Select( string.formatSql2("select * from listaprecios where lpre_cve_n={0}", rc.getLpre_cve_n()), getApplicationContext() );
         dtLpre = ConvertirRespuesta.getListaPreciosJson(json);
 
-        Double lpreb=0.0;
+        double lpreb=0.0;
         if (dtLpre.size() > 0)
         {
             if ( dtLpre.get(0).getLpre_base_n().equals("0")  )
@@ -1343,9 +1343,22 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                 Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente,this),  false, "C L I E N T E", conf ,this);
                 Log.d("salida","SALIO IMPRIMIR");
 
-                Log.d("salida","ENTRO A IMPRIMIR 2");
-                Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente,this),  false, "A S E S O R", conf ,this);
-                Log.d("salida","SALIO IMPRIMIR 2");
+                try
+                {
+                    final Context context = this;
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente,context),  false, "A S E S O R", conf ,context);
+                        }
+                    }, 3000);
+
+                }catch (Exception e)
+                {
+
+                }
 
                 Intent i = getIntent();
                 i.putExtra("idcli", rc.getCli_cve_n());

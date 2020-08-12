@@ -80,7 +80,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
     private Configuracion conf;
     private View vista;
     private int tipo = 0;// 1.- no venta 2.- no lectura
-    private boolean mensajeAbierto=false, FrmBuscar = false;;
+    private boolean mensajeAbierto=false, FrmBuscar = false;
     ArrayList<String> metodosWS;
 
     private Toolbar toolbar;
@@ -244,7 +244,6 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             {
                 graficoVisitas(visitas, lvClientes.size());
                 graficoEfectividad(ConVenta, visitas );
-
                 //et_efectividad.setText((ConVenta / lvClientes.size()) + " %");
             }
             else
@@ -316,7 +315,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
             float porcentaje;
             if(total!=0)
-                 porcentaje= (conVenta*100) / total;
+                 porcentaje= (float) ( conVenta*100) / total;
             else
                 porcentaje=0;
 
@@ -864,7 +863,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
                     Toast.makeText(getContext(), getString(R.string.tt_ped4), Toast.LENGTH_LONG).show();
-                    //return;
+                    return;
                 }
             }
             if (tipo == 2)
@@ -872,7 +871,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
                     Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
-                    //return;
+                    return;
                 }
             }
 
@@ -937,7 +936,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     if ( item.getIcono()==1)
                     {
                         Toast.makeText(getContext(), getString(R.string.tt_ped6), Toast.LENGTH_LONG).show();
-                        //return;
+                        return;
                     }
                 }
             }
@@ -1200,7 +1199,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             {
                 switch (requestCode) {
                     case 0:
-                        String cve_cliente = (String) intent.getStringExtra("clave");
+                        String cve_cliente = intent.getStringExtra("clave");
                         resultadoBuscar(cve_cliente);
                         break;
                     case 1:
@@ -1254,7 +1253,6 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
             } catch (Exception e)
             {
-                Log.d("salida", e.getMessage());
                 Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage());
             }
         }
