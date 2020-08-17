@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.Clientes.OrdenaCliente;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -140,6 +141,7 @@ public class CfueraFragment extends Fragment {
     }
 
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

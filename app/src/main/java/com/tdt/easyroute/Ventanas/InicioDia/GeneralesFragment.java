@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.InicioDia;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -149,16 +150,19 @@ public class GeneralesFragment extends Fragment implements AsyncResponseJSON {
         return view;
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        startdayVM.getSincro().observe(getParentFragment(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean s) {
-                sincro=s;
-                Log.d("salida","Boolean sincro: "+sincro);
-            }
-        });
+
+            startdayVM.getSincro().observe(getParentFragment(), new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean s) {
+                    sincro = s;
+                    Log.d("salida", "Boolean sincro: " + sincro);
+                }
+            });
+
 
 
     }

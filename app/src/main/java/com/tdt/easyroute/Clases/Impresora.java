@@ -1,14 +1,21 @@
 package com.tdt.easyroute.Clases;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tdt.easyroute.R;
+import com.tdt.easyroute.Ventanas.PruebasActivity;
+
 import java.io.OutputStream;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class Impresora {
 
@@ -16,53 +23,63 @@ public class Impresora {
     private static BluetoothDevice mmDevice;
     private static BluetoothSocket mmSocket;
     private static OutputStream mmOut;
-    private static Context context;
     private static int charMax = 32;
 
-    public static void imprimir(String msg, Context context1)
+    public static boolean imprimir(String mensajeImp, Context contextImp)
     {
-        context=context1;
         try
         {
-            String mma= Utils.LeefConfig("imp",context);
+            Log.d("impresora","1 Se mando a llamar a imprimir");
+
+            String mma= Utils.LeefConfig("imp",contextImp);
 
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (!mBluetoothAdapter.isEnabled()) {
+            if (!mBluetoothAdapter.isEnabled())
+            {
                 mBluetoothAdapter.enable();
                 try {
                     mmOut.wait(4000);
+                    Log.d("impresora","2 Se activo la impresora");
                 } catch (Exception e) {
-
+                    return false;
                 }
             }
-            try {
+
+            try
+            {
                 mmDevice = mBluetoothAdapter.getRemoteDevice(mma);
+                Log.d("impresora","3 Encontro impresora");
             } catch (Exception e) {
-                Toast.makeText(context, "Error al buscar impresora", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            conec(mmDevice);
-            try{
-                Thread.sleep(500);
-            }catch (Exception ex){
-
+                Toast.makeText(contextImp, "Error al buscar impresora", Toast.LENGTH_SHORT).show();
+                return false;
             }
 
-            try {
-                mmOut.write(msg.getBytes());
+            conec(mmDevice,contextImp);
+            Log.d("impresora","4 se conecto impresora");
+            Thread.sleep(500);
+
+            try
+            {
+                Log.d("impresora","5 comenzo a imprimir");
+                mmOut.write(mensajeImp.getBytes());
                 mmOut.flush();
                 mmOut.close();
-            } catch (Exception e) {
-                Toast.makeText(context, "Impresora NO encontrada", Toast.LENGTH_SHORT).show();
-                return;
+                Log.d("impresora","6 Termino de imprimir");
+                return true;
+            } catch (Exception e)
+            {
+                Toast.makeText(contextImp, "Impresora NO encontrada", Toast.LENGTH_SHORT).show();
+                return false;
             }
 
         } catch (Exception ex) {
-            Toast.makeText(context, "[EX] " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(contextImp, "[EX] " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
-    public static void conec(BluetoothDevice device) {
+    public static void conec(BluetoothDevice device, Context contextImp)
+    {
         // si la impresora no estÃ¡ vinculada pide autorizacion y pin para vincular
         try {
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -71,7 +88,7 @@ public class Impresora {
             mmSocket.connect();
             mmOut = mmSocket.getOutputStream();
         } catch (Exception e) {
-            Toast.makeText(context, "Error 3:" + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(contextImp, "Error 3:" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

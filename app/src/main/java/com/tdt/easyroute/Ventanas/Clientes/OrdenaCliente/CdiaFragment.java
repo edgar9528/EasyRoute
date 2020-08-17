@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.Clientes.OrdenaCliente;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -190,6 +191,7 @@ public class CdiaFragment extends Fragment implements AsyncResponseJSON {
         return  view;
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.InicioDia;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -118,6 +119,7 @@ public class DatosFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

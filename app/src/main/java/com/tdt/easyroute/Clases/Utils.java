@@ -34,6 +34,8 @@ import java.util.Locale;
 
 public class Utils {
 
+    private static String mensajeImprimir;
+
     public static String Encriptar(String _cadenaAencriptar) {
         byte[] bytes = _cadenaAencriptar.getBytes(StandardCharsets.UTF_16LE);
         String base64 = android.util.Base64.encodeToString(bytes, Base64.NO_WRAP);
@@ -885,520 +887,480 @@ public class Utils {
         return vis;
     }
 
-
-    public static void ImprimirVentaBebidas(Visita v, boolean ReImp, Context context, Configuracion conf) throws ParseException {
-        int c = 38;
-        String ruta = "";
-        String vendedor = "";
-        String direccion = "";
-        String p="";
-        int pc = 0;
-
-        String sql = string.formatSql2("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr());
-        ruta = BaseLocal.SelectDato(sql, context);
-
-        p+= "RUTA: "+ ruta.toUpperCase() +"\n\n";
-
-        sql=string.formatSql2("Select * from usuarios where usu_cve_str='{0}'", conf.getUsuario());
-        String json = BaseLocal.Select(sql, context);
-
-        DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
-
-        if(usu!=null)
-            p+= string.formatSql("ASESOR: \n{0} {1} {2}\n\n",usu.getUsu_nom_str(),usu.getUsu_app_str(),usu.getUsu_apm_str());
-
-        ArrayList<DataTableWS.Clientes> alCli;
-        DataTableWS.Clientes dtc;
-
-        sql = string.formatSql("Select * from clientes where cli_cve_n={0}", String.valueOf(v.getCli_cve_n()) );
-        json = BaseLocal.Select(sql,context);
-        alCli = ConvertirRespuesta.getClientesJson(json);
-
-        if(alCli.size()>0)
+    public static boolean ImprimirVentaBebidas(Visita v, boolean ReImp, Context context, Configuracion conf)
+    {
+        try
         {
-            dtc=alCli.get(0);
+            int c = 38;
+            String ruta = "";
+            String vendedor = "";
+            String direccion = "";
+            String p = "";
+            int pc = 0;
 
-            pc = Integer.parseInt(dtc.getCli_plazocredito_n());
+            String sql = string.formatSql2("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr());
+            ruta = BaseLocal.SelectDato(sql, context);
 
-            p+= "CLIENTE: " + dtc.getCli_cveext_str()+"\n\n";
-            p+= "RAZON SOCIAL: \n" + dtc.getCli_nombrenegocio_str()+"\n\n";
-            p+= "NEGOCIO: \n" + dtc.getCli_razonsocial_str()+"\n\n";
+            p += "RUTA: " + ruta.toUpperCase() + "\n\n";
 
-            ArrayList<DataTableWS.Direcciones>  dtd;
-            sql = string.formatSql("Select * from direcciones where cli_cve_n={0}   and dir_cve_n={1}",
-                   String.valueOf( v.getCli_cve_n() ) , dtc.getCli_dirent_n());
+            sql = string.formatSql2("Select * from usuarios where usu_cve_str='{0}'", conf.getUsuario());
+            String json = BaseLocal.Select(sql, context);
+
+            DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
+
+            if (usu != null)
+                p += string.formatSql("ASESOR: \n{0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
+
+            ArrayList<DataTableWS.Clientes> alCli;
+            DataTableWS.Clientes dtc;
+
+            sql = string.formatSql("Select * from clientes where cli_cve_n={0}", String.valueOf(v.getCli_cve_n()));
             json = BaseLocal.Select(sql, context);
-            dtd = ConvertirRespuesta.getDireccionesJson(json);
+            alCli = ConvertirRespuesta.getClientesJson(json);
 
-            if(dtd.size()>0)
-            {
-                DataTableWS.Direcciones r = dtd.get(0);
-                p+=string.formatSql("DIRECCION: \n{0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
-                        r.getDir_noext_str(), r.getDir_colonia_str(), r.getDir_municipio_str(), r.getDir_estado_str(),
-                        r.getDir_codigopostal_str());
+            if (alCli.size() > 0) {
+                dtc = alCli.get(0);
+
+                pc = Integer.parseInt(dtc.getCli_plazocredito_n());
+
+                p += "CLIENTE: " + dtc.getCli_cveext_str() + "\n\n";
+                p += "RAZON SOCIAL: \n" + dtc.getCli_nombrenegocio_str() + "\n\n";
+                p += "NEGOCIO: \n" + dtc.getCli_razonsocial_str() + "\n\n";
+
+                ArrayList<DataTableWS.Direcciones> dtd;
+                sql = string.formatSql("Select * from direcciones where cli_cve_n={0}   and dir_cve_n={1}",
+                        String.valueOf(v.getCli_cve_n()), dtc.getCli_dirent_n());
+                json = BaseLocal.Select(sql, context);
+                dtd = ConvertirRespuesta.getDireccionesJson(json);
+
+                if (dtd.size() > 0) {
+                    DataTableWS.Direcciones r = dtd.get(0);
+                    p += string.formatSql("DIRECCION: \n{0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
+                            r.getDir_noext_str(), r.getDir_colonia_str(), r.getDir_municipio_str(), r.getDir_estado_str(),
+                            r.getDir_codigopostal_str());
+                }
+
+                if (dtc.getCli_Tel1_str() != null && !dtc.getCli_Tel1_str().equals("0"))
+                    p += "TEL: " + dtc.getCli_Tel1_str() + "\n";
+
             }
 
-            if(dtc.getCli_Tel1_str()!=null && !dtc.getCli_Tel1_str().equals("0"))
-                p+="TEL: "+dtc.getCli_Tel1_str()+"\n";
+            p += "FECHA IMP: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+            p += "       MENSAJE IMPORTANTE\n";
 
-        }
+            p += " RECUERDE SIEMPRE SOLICITAR SU\n";
+            p += "TICKET DE COMPRA A SU ASESOR DE\n";
+            p += "  VENTAS, EL MISMO INCLUYE SU \n";
+            p += "         SALDO AL DIA.\n\n";
 
-        p+= "FECHA IMP: " + Utils.FechaLocal()+" "+Utils.HoraLocal()+"\n\n";
-        p+= "       MENSAJE IMPORTANTE\n";
+            if (ReImp) {
+                p += "       *** C O P I A ***\n\n";
+            } else {
+                p += "    *** O R I G I N A L ***\n\n";
+            }
 
-        p+= " RECUERDE SIEMPRE SOLICITAR SU\n";
-        p+= "TICKET DE COMPRA A SU ASESOR DE\n";
-        p+= "  VENTAS, EL MISMO INCLUYE SU \n";
-        p+= "         SALDO AL DIA.\n\n";
+            ArrayList<DataTableWS.Productos> dtp = new ArrayList<>();
 
-        if (ReImp)
-        {
-            p+= "       *** C O P I A ***\n\n";
-        }
-        else
-        {
-            p+= "    *** O R I G I N A L ***\n\n";
-        }
+            json = BaseLocal.Select("Select * from productos", context);
+            dtp = ConvertirRespuesta.getProductosJson(json);
 
-        ArrayList<DataTableWS.Productos> dtp = new ArrayList<>();
+            ArrayList<DataTableWS.FormasPago> dtfp = new ArrayList<>();
+            json = BaseLocal.Select("Select * from formaspago", context);
+            dtfp = ConvertirRespuesta.getFormasPagoJson(json);
 
-        json = BaseLocal.Select( "Select * from productos", context );
-        dtp = ConvertirRespuesta.getProductosJson(json);
+            ArrayList<DataTableLC.Pagos> dtPagos = new ArrayList<>();
+            sql = string.formatSql("select * from pagos where cli_cve_n={0}", String.valueOf(v.getCli_cve_n()));
+            json = BaseLocal.Select(sql, context);
+            dtPagos = ConvertirRespuesta.getPagosALJson(json);
 
-        ArrayList<DataTableWS.FormasPago> dtfp = new ArrayList<>();
-        json = BaseLocal.Select("Select * from formaspago",context );
-        dtfp = ConvertirRespuesta.getFormasPagoJson(json);
+            double SubtotalVenta = 0;
+            double SubtotalVtaEnv = 0;
+            double SubTotalBase = 0;
 
-        ArrayList<DataTableLC.Pagos> dtPagos = new ArrayList<>();
-        sql =string.formatSql("select * from pagos where cli_cve_n={0}", String.valueOf( v.getCli_cve_n() )  );
-        json = BaseLocal.Select(sql, context);
-        dtPagos = ConvertirRespuesta.getPagosALJson(json);
+            if (v.ventas != null) {
+                for (Venta vta : v.ventas) {
+                    p += "FECHA VENTA: " + Utils.FechaHoraFormato(vta.getVenta().getVen_fecha_dt()) + "\n";
+                    p += "FOLIO: " + vta.getVenta().getVen_folio_str() + "\n\n";
 
-        double SubtotalVenta = 0;
-        double SubtotalVtaEnv = 0;
-        double SubTotalBase = 0;
+                    double descvta = 0;
 
-        if(v.ventas!=null)
-        {
-            for(Venta vta : v.ventas)
-            {
-                p+="FECHA VENTA: " + Utils.FechaHoraFormato( vta.getVenta().getVen_fecha_dt() ) +"\n" ;
-                p+="FOLIO: " + vta.getVenta().getVen_folio_str()+"\n\n";
+                    if (vta.getDetalles() != null || vta.getBebidas() != null) {
+                        double SubTotalF = 0;
+                        double SubTotalCvz = 0;
+                        double SubTotalBeb = 0;
 
-                double descvta = 0;
+                        p += "             VENTA\n";
+                        p += "* SKU    DESC  CAN PRECIO SUBTOT\n\n";
 
-                if (vta.getDetalles() != null || vta.getBebidas()!=null)
-                {
-                    double SubTotalF = 0;
-                    double SubTotalCvz = 0;
-                    double SubTotalBeb = 0;
+                        String aah = "";
+                        if (vta.getDetalles() != null) {
+                            p += "------------CERVEZA------------\n";
 
-                    p+="             VENTA\n";
-                    p+="* SKU    DESC  CAN PRECIO SUBTOT\n\n";
+                            for (int i = 0; i < vta.getDetalles().length; i++) {
+                                String desc = "";
+                                if (!Utils.getBool(vta.getDetalles()[i].getProd_envase_n())) {
+                                    DataTableWS.Productos r = null;
+                                    for (int j = 0; j < dtp.size(); j++)
+                                        if (vta.getDetalles()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                            r = dtp.get(j);
 
-                    String aah = "";
-                    if (vta.getDetalles() != null)
-                    {
-                        p+="------------CERVEZA------------\n";
+                                    if (r != null) {
+                                        desc = r.getProd_desc_str();
+                                    }
 
-                        for (int i = 0; i < vta.getDetalles().length; i++)
-                        {
+                                    if (Utils.getBool(vta.getDetalles()[i].getProd_promo_n()) ||
+                                            (Double.parseDouble(vta.getDetalles()[i].getLpre_precio_n()) < Double.parseDouble(vta.getDetalles()[i].getLpre_base_n()))) {
+                                        aah = "*";
+                                        descvta += (Double.parseDouble(vta.getDetalles()[i].getLpre_base_n()) - Double.parseDouble(vta.getDetalles()[i].getLpre_precio_n())) * Double.parseDouble(vta.getDetalles()[i].getProd_cant_n());
+                                    } else
+                                        aah = " ";
+
+                                    p += aah + " ";
+                                    p += Impresora.DarTamañoDer(vta.getDetalles()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(desc, 5) + " ";
+
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getProd_cant_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getLpre_precio_n(), 6) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getProd_subtotal_n(), 6) + "\n";
+
+                                    SubTotalBase += (Double.parseDouble(vta.getDetalles()[i].getLpre_base_n()) * Double.parseDouble(vta.getDetalles()[i].getProd_cant_n()));
+                                    SubTotalF += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
+                                    SubTotalCvz += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
+                                }
+                            }
+                            p += "TOTAL CERVEZA: " + string.FormatoPesos(SubTotalCvz) + "\n\n";
+                        }
+
+                        //-------------------- Bebidas ----------------------------
+
+                        if (vta.getBebidas() != null) {
+                            p += "---------OTRAS BEBIDAS---------\n";
+                            for (int i = 0; i < vta.getBebidas().length; i++) {
+                                String desc = "";
+                                if (!Utils.getBool(vta.getBebidas()[i].getProd_envase_n())) {
+                                    DataTableWS.Productos r = null;
+                                    for (int j = 0; j < dtp.size(); j++)
+                                        if (vta.getBebidas()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                            r = dtp.get(j);
+
+                                    if (r != null) {
+                                        desc = r.getProd_desc_str();
+                                    }
+
+                                    if (Utils.getBool(vta.getBebidas()[i].getProd_promo_n()) ||
+                                            (Double.parseDouble(vta.getBebidas()[i].getLpre_precio_n()) < Double.parseDouble(vta.getBebidas()[i].getLpre_base_n()))) {
+                                        aah = "*";
+                                        descvta += (Double.parseDouble(vta.getBebidas()[i].getLpre_base_n()) - Double.parseDouble(vta.getBebidas()[i].getLpre_precio_n())) * Double.parseDouble(vta.getBebidas()[i].getProd_cant_n());
+                                    } else
+                                        aah = " ";
+
+
+                                    p += aah + " ";
+                                    p += Impresora.DarTamañoDer(vta.getBebidas()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(desc, 5) + " ";
+
+                                    p += Impresora.DarTamañoIzq(vta.getBebidas()[i].getProd_cant_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getBebidas()[i].getLpre_precio_n(), 6) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getBebidas()[i].getProd_subtotal_n(), 6) + "\n";
+
+                                    SubTotalBase += (Double.parseDouble(vta.getBebidas()[i].getLpre_base_n()) * Double.parseDouble(vta.getBebidas()[i].getProd_cant_n()));
+                                    SubTotalF += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
+                                    SubTotalBeb += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
+
+                                }
+                            }
+                            p += "TOTAL OTRAS BEBIDAS: " + string.FormatoPesos(SubTotalBeb) + "\n\n";
+                        }
+                        //-------------------- Bebidas ------------------------//
+                        SubtotalVenta += SubTotalF;
+
+                        p += "TOTAL FACTURA: " + string.FormatoPesos(SubTotalF) + "\n\n";
+
+                        if (descvta > 0) {
+                            p += "ESTIMADO CLIENTE CON ESTA COMPRA\n";
+                            p += Impresora.Centrar("USTED AHORRO " + string.FormatoPesos(descvta) + " PESOS") + "\n";
+                            p += Impresora.Centrar("EQUIVALENTE A " + String.format("%.2f", descvta / SubTotalBase) + " DE AHORRO") + "\n\n";
+                        }
+
+                        double SubTotalE = 0;
+
+                        if (vta.getEnvase() != null) {
+                            p += Impresora.Centrar("ENVASE") + "\n";
+                            p += "SKU    DESC CAR ABO PRO VTA FIN" + "\n\n";
+
                             String desc = "";
-                            if( !Utils.getBool( vta.getDetalles()[i].getProd_envase_n() )  )
-                            {
-                                DataTableWS.Productos r=null;
-                                for(int j=0; j< dtp.size();j++)
-                                    if(vta.getDetalles()[i].getProd_cve_n().equals( dtp.get(j).getProd_cve_n()) )
-                                        r=dtp.get(j);
+                            for (int i = 0; i < vta.getEnvase().length; i++) {
+                                DataTableWS.Productos r = null;
 
-                                if(r!=null)
-                                {
+                                for (int j = 0; j < dtp.size(); j++)
+                                    if (vta.getEnvase()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                        r = dtp.get(j);
+
+                                if (r != null) {
                                     desc = r.getProd_desc_str();
+
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(desc, 4) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_cargo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_abono_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_regalo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_venta_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_prestamo_n(), 3) + "\n";
+
+                                    SubTotalE += Double.parseDouble(vta.getEnvase()[i].getVen_prestamo_n()) * Double.parseDouble(vta.getEnvase()[i].getLpre_precio_n());
                                 }
-
-                                if( Utils.getBool( vta.getDetalles()[i].getProd_promo_n() ) ||
-                                    ( Double.parseDouble( vta.getDetalles()[i].getLpre_precio_n() )  < Double.parseDouble( vta.getDetalles()[i].getLpre_base_n() )  )  )
-                                {
-                                    aah = "*";
-                                    descvta += ( Double.parseDouble( vta.getDetalles()[i].getLpre_base_n() )  - Double.parseDouble(vta.getDetalles()[i].getLpre_precio_n())) * Double.parseDouble(vta.getDetalles()[i].getProd_cant_n());
-                                }
-                                else
-                                    aah = " ";
-
-                                p+=aah+" ";
-                                p+= Impresora.DarTamañoDer(vta.getDetalles()[i].getProd_sku_str(),6 ) +" ";
-                                p+= Impresora.DarTamañoDer(desc,5)+" ";
-
-                                p+= Impresora.DarTamañoIzq( vta.getDetalles()[i].getProd_cant_n(),3 )+" ";
-                                p+= Impresora.DarTamañoIzq( vta.getDetalles()[i].getLpre_precio_n(), 6 )  +" ";
-                                p+= Impresora.DarTamañoIzq( vta.getDetalles()[i].getProd_subtotal_n(), 6 )  +"\n";
-
-                                SubTotalBase += ( Double.parseDouble(vta.getDetalles()[i].getLpre_base_n())* Double.parseDouble( vta.getDetalles()[i].getProd_cant_n() )  ) ;
-                                SubTotalF += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
-                                SubTotalCvz += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
                             }
+                            p += "TOTAL ENVASE: " + String.format("%.2f", SubTotalE) + "\n\n";
                         }
-                        p+="TOTAL CERVEZA: "+ string.FormatoPesos(SubTotalCvz)+"\n\n";
+
+                        SubtotalVtaEnv += SubTotalE;
                     }
+                }
+            } else {
+                p += Impresora.Centrar("SIN VENTA") + "\n\n";
+            }
 
-                    //-------------------- Bebidas ----------------------------
+            double SubTotalP = 0;
+            double Pagos = 0;
 
-                    if ( vta.getBebidas()!= null)
-                    {
-                        p+="---------OTRAS BEBIDAS---------\n";
-                        for (int i = 0; i < vta.getBebidas().length; i++)
-                        {
-                            String desc = "";
-                            if ( !Utils.getBool(vta.getBebidas()[i].getProd_envase_n()))
-                            {
-                                DataTableWS.Productos r=null;
-                                for(int j=0; j< dtp.size();j++)
-                                    if(vta.getBebidas()[i].getProd_cve_n().equals( dtp.get(j).getProd_cve_n()) )
-                                        r=dtp.get(j);
+            if (v.pagos != null) {
+                p += Impresora.Centrar("PAGOS") + "\n\n";
+                p += "REF            PAGO        FORMA\n";
+                String fp = "";
 
-                                if (r!=null)
-                                {
-                                    desc = r.getProd_desc_str();
-                                }
+                for (int i = 0; i < v.pagos.length; i++) {
+                    fp = "";
 
-                                if( Utils.getBool( vta.getBebidas()[i].getProd_promo_n() ) ||
-                                        ( Double.parseDouble( vta.getBebidas()[i].getLpre_precio_n() )  < Double.parseDouble( vta.getBebidas()[i].getLpre_base_n() )  )  )
-                                {
-                                    aah = "*";
-                                    descvta += ( Double.parseDouble( vta.getBebidas()[i].getLpre_base_n() )  - Double.parseDouble(vta.getBebidas()[i].getLpre_precio_n())) * Double.parseDouble(vta.getBebidas()[i].getProd_cant_n());
-                                }
-                                else
-                                    aah = " ";
-
-
-                                p+=aah+" ";
-                                p+= Impresora.DarTamañoDer(vta.getBebidas()[i].getProd_sku_str(),6 )+" ";
-                                p+= Impresora.DarTamañoDer(desc,5)+" ";
-
-                                p+= Impresora.DarTamañoIzq( vta.getBebidas()[i].getProd_cant_n(),3 )+" ";
-                                p+= Impresora.DarTamañoIzq( vta.getBebidas()[i].getLpre_precio_n(), 6 )  +" ";
-                                p+= Impresora.DarTamañoIzq( vta.getBebidas()[i].getProd_subtotal_n(), 6 )  +"\n";
-
-                                SubTotalBase += ( Double.parseDouble(vta.getBebidas()[i].getLpre_base_n())* Double.parseDouble( vta.getBebidas()[i].getProd_cant_n() )  ) ;
-                                SubTotalF += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
-                                SubTotalBeb += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
-
-                            }
+                    DataTableWS.FormasPago pf = null;
+                    for (int j = 0; j < dtfp.size(); j++)
+                        if (v.pagos[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
+                            pf = dtfp.get(j);
+                            j = dtfp.size();
                         }
-                        p+="TOTAL OTRAS BEBIDAS: "+ string.FormatoPesos(SubTotalBeb)+"\n\n";
-                    }
-                    //-------------------- Bebidas ------------------------//
-                    SubtotalVenta += SubTotalF;
 
-                    p+="TOTAL FACTURA: " + string.FormatoPesos(SubTotalF)+"\n\n";
+                    if (pf != null)
+                        fp = pf.getFpag_desc_str();
 
-                    if (descvta > 0)
-                    {
-                        p+="ESTIMADO CLIENTE CON ESTA COMPRA\n";
-                        p+= Impresora.Centrar( "USTED AHORRO "+ string.FormatoPesos(descvta) +" PESOS" ) +"\n";
-                        p+= Impresora.Centrar( "EQUIVALENTE A "+ String.format("%.2f", descvta / SubTotalBase) +" DE AHORRO" ) +"\n\n" ;
-                    }
+                    p += Impresora.DarTamañoDer(v.pagos[i].getPag_referencia_str(), 14) + " ";
+                    p += Impresora.DarTamañoIzq(string.FormatoPesos(v.pagos[i].getPag_abono_n()), 11) + " ";
+                    p += Impresora.DarTamañoDer(fp, 5) + "\n";
 
-                    double SubTotalE = 0;
+                    Pagos += Double.parseDouble(v.pagos[i].getPag_abono_n());
+                    SubTotalP += Double.parseDouble(v.pagos[i].getPag_abono_n());
+                }
 
-                    if(vta.getEnvase()!=null)
-                    {
-                        p+= Impresora.Centrar("ENVASE")+"\n";
-                        p+="SKU    DESC CAR ABO PRO VTA FIN"+"\n\n";
+                p += "TOTAL PAGOS: " + string.FormatoPesos(SubTotalP) + "\n\n";
+            } else {
+                p += Impresora.Centrar("SIN PAGOS") + "\n\n";
+            }
 
-                        String desc = "";
-                        for (int i = 0; i < vta.getEnvase().length; i++)
-                        {
-                            DataTableWS.Productos r=null;
+            double SubTotalC = 0;
+            double Cobranza = 0;
 
-                            for(int j=0; j< dtp.size();j++)
-                                if(vta.getEnvase()[i].getProd_cve_n().equals( dtp.get(j).getProd_cve_n()) )
-                                    r=dtp.get(j);
+            if (v.cobranza != null) {
+                p += Impresora.Centrar("COBRANZA") + "\n\n";
+                p += "REF            PAGO        FORMA\n";
+                String fp = "";
 
-                            if (r!=null)
-                            {
-                                desc = r.getProd_desc_str();
+                for (int i = 0; i < v.cobranza.length; i++) {
+                    fp = "";
 
-                                p+= Impresora.DarTamañoDer( vta.getEnvase()[i].getProd_sku_str(),6 )+" ";
-                                p+= Impresora.DarTamañoDer( desc,4 )+" ";
-                                p+= Impresora.DarTamañoDer( vta.getEnvase()[i].getVen_cargo_n() ,3 )+" ";
-                                p+= Impresora.DarTamañoDer( vta.getEnvase()[i].getVen_abono_n() ,3)+" ";
-                                p+= Impresora.DarTamañoDer( vta.getEnvase()[i].getVen_regalo_n() ,3)+" ";
-                                p+= Impresora.DarTamañoDer( vta.getEnvase()[i].getVen_venta_n() ,3)+" ";
-                                p+= Impresora.DarTamañoDer( vta.getEnvase()[i].getVen_prestamo_n() ,3)+"\n";
-
-                                SubTotalE += Double.parseDouble ( vta.getEnvase()[i].getVen_prestamo_n() ) * Double.parseDouble(vta.getEnvase()[i].getLpre_precio_n());
-                            }
+                    DataTableWS.FormasPago pf = null;
+                    for (int j = 0; j < dtfp.size(); j++)
+                        if (v.cobranza[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
+                            pf = dtfp.get(j);
+                            j = dtfp.size();
                         }
-                        p+="TOTAL ENVASE: "+ String.format("%.2f",SubTotalE)+"\n\n";
-                    }
 
-                    SubtotalVtaEnv += SubTotalE;
+                    if (pf != null)
+                        fp = pf.getFpag_desc_str();
+
+                    p += Impresora.DarTamañoDer(v.cobranza[i].getPag_referencia_str(), 14) + " ";
+                    p += Impresora.DarTamañoIzq(string.FormatoPesos(v.cobranza[i].getPag_abono_n()), 11) + " ";
+                    p += Impresora.DarTamañoDer(fp, 5) + "\n";
+
+                    SubTotalC += Double.parseDouble(v.cobranza[i].getPag_abono_n());
+                    Cobranza += Double.parseDouble(v.cobranza[i].getPag_abono_n());
                 }
+
+                p += "TOTAL COBRANZA: " + string.FormatoPesos(SubTotalC) + "\n\n";
+
+            } else {
+                p += Impresora.Centrar("SIN COBRANZA") + "\n\n";
             }
-        }
-        else
-        {
-            p+= Impresora.Centrar("SIN VENTA")+"\n\n";
-        }
 
-        double SubTotalP = 0;
-        double Pagos = 0;
+            if (v.devenvase != null) {
+                p += Impresora.Centrar("DEV. ENVASE") + "\n\n";
 
-        if (v.pagos != null)
-        {
-            p+=Impresora.Centrar("PAGOS")+"\n\n";
-            p+="REF            PAGO        FORMA\n";
-            String fp = "";
+                double CantEnvDev = 0;
 
-            for (int i = 0; i < v.pagos.length; i++)
-            {
-                fp = "";
+                p += "E SKU    ABONADO  REFERENCIA    \n";
 
-                DataTableWS.FormasPago pf=null;
-                for(int j=0; j < dtfp.size();j++)
-                    if(v.pagos[i].getFpag_cve_n().equals( dtfp.get(j).getFpag_cve_n() ))
-                    {
-                        pf = dtfp.get(j);
-                        j = dtfp.size();
+                for (int i = 0; i < v.devenvase.length; i++) {
+                    p += Utils.getBool(v.devenvase[i].getPag_especie_n()) ? "*" : " " + " ";
+                    p += Impresora.DarTamañoDer(v.devenvase[i].getProd_sku_str(), 6) + " ";
+                    p += Impresora.DarTamañoDer(v.devenvase[i].getProd_abono_n(), 8) + " ";
+                    p += Impresora.DarTamañoDer(v.devenvase[i].getPag_referencia_str(), 14) + "\n";
+
+                    CantEnvDev += Double.parseDouble(v.devenvase[i].getProd_abono_n());
+                }
+
+                p += "TOTAL DE ENVASE DEVUELTO: " + String.format("%.2f", CantEnvDev);
+            } else {
+                p += Impresora.Centrar("SIN DEVOLUCION DE ENVASE") + "\n\n";
+            }
+
+            double SubTotalCred = 0;
+            double InicialCred = 0;
+            boolean vencido = false;
+
+            if (v.creditos != null) {
+                p += Impresora.Centrar("CREDITOS") + "\n\n";
+
+                p += "REF            SALDO_AN SALDO_AC\n";
+
+                for (int i = 0; i < v.creditos.length; i++) {
+                    ArrayList<DataTableLC.Pagos> pf = new ArrayList<>();
+                    for (int j = 0; j < dtPagos.size(); j++) {
+                        if (dtPagos.get(j).getPag_referencia_str().equals(v.creditos[i].getCred_referencia_str())
+                                && dtPagos.get(j).getPag_envase_n().equals("0")
+                                && dtPagos.get(j).getPag_cobranza_n().equals("1")) {
+                            pf.add(dtPagos.get(j));
+                        }
                     }
 
-                if (pf!=null)
-                    fp = pf.getFpag_desc_str();
+                    double saldoant = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n());
+                    double AbonoActCred = 0;
 
-                p+= Impresora.DarTamañoDer( v.pagos[i].getPag_referencia_str(),14 ) + " ";
-                p+= Impresora.DarTamañoIzq( string.FormatoPesos( v.pagos[i].getPag_abono_n() ) ,11 ) + " ";
-                p+= Impresora.DarTamañoDer( fp,5 ) + "\n";
-
-                Pagos += Double.parseDouble( v.pagos[i].getPag_abono_n() ) ;
-                SubTotalP += Double.parseDouble( v.pagos[i].getPag_abono_n() );
-            }
-
-            p+="TOTAL PAGOS: "+ string.FormatoPesos( SubTotalP )+"\n\n";
-        }
-        else
-        {
-            p+= Impresora.Centrar("SIN PAGOS")+"\n\n";
-        }
-
-        double SubTotalC = 0;
-        double Cobranza = 0;
-
-        if (v.cobranza != null)
-        {
-            p+=Impresora.Centrar("COBRANZA")+"\n\n";
-            p+="REF            PAGO        FORMA\n";
-            String fp = "";
-
-            for(int i=0; i< v.cobranza.length; i++)
-            {
-                fp = "";
-
-                DataTableWS.FormasPago pf=null;
-                for(int j=0; j < dtfp.size();j++)
-                    if(v.cobranza[i].getFpag_cve_n().equals( dtfp.get(j).getFpag_cve_n() ))
-                    {
-                        pf = dtfp.get(j);
-                        j = dtfp.size();
+                    for (DataTableLC.Pagos pfi : pf) {
+                        AbonoActCred += Double.parseDouble(pfi.getPag_abono_n());
                     }
 
-                if (pf!=null)
-                    fp = pf.getFpag_desc_str();
+                    double saldo = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n()) - AbonoActCred;
 
-                p+= Impresora.DarTamañoDer( v.cobranza[i].getPag_referencia_str(),14 ) + " ";
-                p+= Impresora.DarTamañoIzq( string.FormatoPesos( v.cobranza[i].getPag_abono_n() ) ,11 ) + " ";
-                p+= Impresora.DarTamañoDer( fp,5 ) + "\n";
+                    if (v.creditos[i].getTrans_est_n() != null)
+                        if (v.creditos[i].getTrans_est_n().equals("3"))
+                            InicialCred += saldoant;
 
-                SubTotalC += Double.parseDouble( v.cobranza[i].getPag_abono_n() ) ;
-                Cobranza += Double.parseDouble( v.cobranza[i].getPag_abono_n() );
-            }
+                    p += Impresora.DarTamañoDer(v.creditos[i].getCred_referencia_str(), 14);
+                    double salAnt = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n());
+                    p += Impresora.DarTamañoDer(String.format("%.2f", salAnt), 8) + " ";
+                    p += Impresora.DarTamañoDer(String.format("%.2f", saldo), 8) + "\n";
 
-            p+="TOTAL COBRANZA: "+ string.FormatoPesos( SubTotalC )+"\n\n";
+                    SubTotalCred += saldo;
 
-        }
-        else
-        {
-            p+= Impresora.Centrar("SIN COBRANZA")+"\n\n";
-        }
 
-        if (v.devenvase != null)
-        {
-            p+=Impresora.Centrar("DEV. ENVASE")+"\n\n";
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.getDefault());
+                    Date fechaAc = formato.parse(Utils.FechaLocal() + " " + Utils.HoraLocal());
+                    Date fechaBd = formato.parse(v.creditos[i].getCred_fecha_dt());
+                    int dias = (int) ((fechaAc.getTime() - fechaBd.getTime()) / 86400000);
 
-            double CantEnvDev = 0;
-
-            p+="E SKU    ABONADO  REFERENCIA    \n";
-
-            for (int i = 0; i < v.devenvase.length; i++)
-            {
-                p+= Utils.getBool( v.devenvase[i].getPag_especie_n() )?"*":" " + " ";
-                p+= Impresora.DarTamañoDer( v.devenvase[i].getProd_sku_str(),6 )+" ";
-                p+= Impresora.DarTamañoDer( v.devenvase[i].getProd_abono_n(),8 )+" ";
-                p+= Impresora.DarTamañoDer( v.devenvase[i].getPag_referencia_str(),14 )+"\n";
-
-                CantEnvDev += Double.parseDouble(v.devenvase[i].getProd_abono_n());
-            }
-
-            p+= "TOTAL DE ENVASE DEVUELTO: "+ String.format("%.2f",CantEnvDev);
-        }
-        else
-        {
-            p+= Impresora.Centrar("SIN DEVOLUCION DE ENVASE")+"\n\n";
-        }
-
-        double SubTotalCred = 0;
-        double InicialCred = 0;
-        boolean vencido = false;
-
-        if (v.creditos != null)
-        {
-            p+=Impresora.Centrar("CREDITOS")+"\n\n";
-
-            p+="REF            SALDO_AN SALDO_AC\n";
-
-            for (int i = 0; i < v.creditos.length; i++)
-            {
-                ArrayList<DataTableLC.Pagos>  pf = new ArrayList<>();
-                for(int j=0; j< dtPagos.size();j++)
-                {
-                    if( dtPagos.get(j).getPag_referencia_str().equals( v.creditos[i].getCred_referencia_str() )
-                        && dtPagos.get(j).getPag_envase_n().equals("0")
-                        && dtPagos.get(j).getPag_cobranza_n().equals("1"))
-                    {
-                        pf.add( dtPagos.get(j) ) ;
+                    if (dias > pc && saldo > 0) {
+                        vencido = true;
                     }
                 }
 
-                double saldoant = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble( v.creditos[i].getCred_abono_n() );
-                double AbonoActCred = 0;
+                p += "TOTAL CREDITOS: " + string.FormatoPesos(SubTotalCred) + "\n\n";
 
-                for (DataTableLC.Pagos pfi : pf)
-                {
-                    AbonoActCred += Double.parseDouble(pfi.getPag_abono_n());
+                if (vencido) {
+                    p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
                 }
-
-                double saldo = Double.parseDouble( v.creditos[i].getCred_monto_n() )  - Double.parseDouble( v.creditos[i].getCred_abono_n() )  - AbonoActCred;
-
-                if (v.creditos[i].getTrans_est_n() != null)
-                    if (v.creditos[i].getTrans_est_n().equals("3"))
-                        InicialCred += saldoant;
-
-                p+= Impresora.DarTamañoDer(v.creditos[i].getCred_referencia_str(),14);
-                double salAnt = Double.parseDouble( v.creditos[i].getCred_monto_n() ) - Double.parseDouble( v.creditos[i].getCred_abono_n() );
-                p+= Impresora.DarTamañoDer( String.format("%.2f",salAnt ),8 ) +" ";
-                p+= Impresora.DarTamañoDer( String.format("%.2f",saldo ),8 ) +"\n";
-
-                SubTotalCred += saldo;
-
-
-                SimpleDateFormat formato=new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.getDefault());
-                Date fechaAc = formato.parse(Utils.FechaLocal()+" "+Utils.HoraLocal());
-                Date fechaBd= formato.parse(v.creditos[i].getCred_fecha_dt());
-                int dias=(int) ((fechaAc.getTime()-fechaBd.getTime())/86400000);
-
-                if (dias > pc && saldo > 0)
-                {
-                    vencido = true;
-                }
+            } else {
+                p += Impresora.Centrar("SIN CREDITOS") + "\n\n";
             }
 
-            p+= "TOTAL CREDITOS: "+ string.FormatoPesos(SubTotalCred)+"\n\n";
+            double SubTotalCredEsp = 0;
 
-            if (vencido)
-            {
-                p+= Impresora.Centrar( "*SU CUENTA TIENE SALDO VENCIDO*" )+ "\n\n";
-            }
-        }
-        else
-        {
-            p+= Impresora.Centrar("SIN CREDITOS")+"\n\n";
-        }
+            double SubTotalCredEnv = 0;
+            double SaldoEnv = 0;
+            vencido = false;
 
-        double SubTotalCredEsp = 0;
+            if (v.credenv != null) {
+                p += Impresora.Centrar("CREDITOS DE ENVASE") + "\n\n";
 
-        double SubTotalCredEnv = 0;
-        double SaldoEnv = 0;
-        vencido = false;
+                p += "REF            INI   ABO   FIN  \n";
 
-        if (v.credenv != null)
-        {
-            p+=Impresora.Centrar("CREDITOS DE ENVASE")+"\n\n";
+                for (int i = 0; i < v.credenv.length; i++) {
+                    ArrayList<DataTableLC.Pagos> pf = new ArrayList<>();
+                    for (int j = 0; j < dtPagos.size(); j++) {
+                        if (dtPagos.get(j).getPag_referencia_str().equals(v.credenv[i].getCred_referencia_str())
+                                && dtPagos.get(j).getPag_envase_n().equals("1")
+                                && dtPagos.get(j).getPag_cobranza_n().equals("1")) {
+                            pf.add(dtPagos.get(j));
+                        }
+                    }
 
-            p+="REF            INI   ABO   FIN  \n";
+                    double AboEnvDia = 0;
 
-            for (int i = 0; i < v.credenv.length; i++)
-            {
-                ArrayList<DataTableLC.Pagos>  pf = new ArrayList<>();
-                for(int j=0; j< dtPagos.size();j++)
-                {
-                    if( dtPagos.get(j).getPag_referencia_str().equals( v.credenv[i].getCred_referencia_str() )
-                            && dtPagos.get(j).getPag_envase_n().equals("1")
-                            && dtPagos.get(j).getPag_cobranza_n().equals("1"))
-                    {
-                        pf.add( dtPagos.get(j) ) ;
+                    for (DataTableLC.Pagos pfi : pf) {
+                        AboEnvDia += Double.parseDouble(pfi.getProd_abono_n());
+                    }
+
+                    double saldo = Double.parseDouble(v.credenv[i].getProd_cant_n()) - Double.parseDouble(v.credenv[i].getProd_cantabono_n()) - AboEnvDia;
+
+                    int can = Integer.parseInt(v.credenv[i].getProd_cant_n()) - Integer.parseInt(v.credenv[i].getProd_cantabono_n());
+
+                    p += Impresora.DarTamañoDer(v.credenv[i].getCred_referencia_str(), 14) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf(can), 5) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf(AboEnvDia), 5) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf(saldo), 5) + "\n";
+
+                    SubTotalCredEnv += saldo;
+                    SaldoEnv += saldo * Double.parseDouble(v.credenv[i].getProd_precio_n());
+
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.getDefault());
+                    Date fechaAc = formato.parse(Utils.FechaLocal() + " " + Utils.HoraLocal());
+                    Date fechaBd = formato.parse(v.credenv[i].getCred_fecha_dt());
+                    int dias = (int) ((fechaAc.getTime() - fechaBd.getTime()) / 86400000);
+
+                    if (dias > pc && saldo > 0) {
+                        vencido = true;
                     }
                 }
 
-                double AboEnvDia = 0;
 
-                for (DataTableLC.Pagos pfi : pf)
-                {
-                    AboEnvDia += Double.parseDouble(pfi.getProd_abono_n());
+                p += "TOTAL DEUDA ENV CANT: " + SubTotalCredEnv + "\n\n";
+                p += "TOTAL DEUDA ENV: " + SaldoEnv + "\n\n";
+                if (vencido) {
+                    p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
                 }
-
-                double saldo = Double.parseDouble( v.credenv[i].getProd_cant_n() ) - Double.parseDouble( v.credenv[i].getProd_cantabono_n() ) -  AboEnvDia;
-
-                int can = Integer.parseInt( v.credenv[i].getProd_cant_n() ) - Integer.parseInt(v.credenv[i].getProd_cantabono_n());
-
-                p+= Impresora.DarTamañoDer( v.credenv[i].getCred_referencia_str(), 14 ) + " ";
-                p+= Impresora.DarTamañoIzq( String.valueOf(can),5 )+" ";
-                p+= Impresora.DarTamañoIzq( String.valueOf(AboEnvDia),5 )+" ";
-                p+= Impresora.DarTamañoIzq( String.valueOf(saldo),5 )+"\n";
-
-                SubTotalCredEnv += saldo;
-                SaldoEnv += saldo * Double.parseDouble( v.credenv[i].getProd_precio_n() );
-
-                SimpleDateFormat formato=new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.getDefault());
-                Date fechaAc = formato.parse(Utils.FechaLocal()+" "+Utils.HoraLocal());
-                Date fechaBd= formato.parse(v.credenv[i].getCred_fecha_dt());
-                int dias=(int) ((fechaAc.getTime()-fechaBd.getTime())/86400000);
-
-                if (dias > pc && saldo > 0)
-                {
-                    vencido = true;
-                }
+            } else {
+                p += Impresora.Centrar("SIN CREDITOS DE ENVASE") + "\n\n";
             }
 
+            p += Impresora.Centrar("SALDOS") + "\n\n";
 
-            p+="TOTAL DEUDA ENV CANT: " + SubTotalCredEnv+"\n\n";
-            p+="TOTAL DEUDA ENV: " + SaldoEnv+"\n\n";
-            if (vencido)
+            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
+            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
+            p += "-PAGOS: " + string.FormatoPesos(Pagos) + "\n";
+            p += "-ABONOS: " + string.FormatoPesos(Cobranza) + "\n";
+            p += "=SALDO FINAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n\n";
+            p += "SALDO EN EFECTIVO: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n";
+            p += "SALDO EN ENVASE: " + string.FormatoPesos(SaldoEnv) + "\n";
+            p += "SALDO TOTAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv) + "\n";
+
+            p += "\n\n";
+            mensajeImprimir = p;
+
+            p = p.replace("\n", "\r");
+            boolean imprimio = Impresora.imprimir(p, context);
+
+            if (imprimio)
             {
-                p+= Impresora.Centrar( "*SU CUENTA TIENE SALDO VENCIDO*" )+ "\n\n";
+                return true;
+            }
+            else
+            {
+                mensajeImprimir="";
+                return false;
             }
         }
-        else
+        catch (Exception e)
         {
-            p+= Impresora.Centrar("SIN CREDITOS DE ENVASE")+"\n\n";
+            mensajeImprimir="";
+            return false;
         }
-
-        p+= Impresora.Centrar("SALDOS")+"\n\n";
-
-        p+= "+SALDO INICIAL: "+ string.FormatoPesos( InicialCred ) +"\n";
-        p+= "+VENTA DEL DIA: "+ string.FormatoPesos( SubtotalVenta ) +"\n";
-        p+= "-PAGOS: "+ string.FormatoPesos( Pagos )+"\n";
-        p+= "-ABONOS: "+ string.FormatoPesos( Cobranza ) +"\n";
-        p+= "=SALDO FINAL: "+ string.FormatoPesos (InicialCred + SubtotalVenta - Cobranza - Pagos)+"\n\n";
-        p+= "SALDO EN EFECTIVO: "+ string.FormatoPesos (InicialCred + SubtotalVenta - Cobranza - Pagos)+"\n";
-        p+= "SALDO EN ENVASE: "+ string.FormatoPesos(SaldoEnv)+"\n";
-        p+= "SALDO TOTAL: "+ string.FormatoPesos (InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv)+"\n";
-
-        p+="\n\n";
-        p= p.replace("\n","\r");
-        Impresora.imprimir(p,context);
-
     }
-
 
     public static VisitaPrev ObtenerVisitaPrevBebidas(long cliente, Context context)
     {
@@ -1585,413 +1547,409 @@ public class Utils {
         return vis;
     }
 
-    public static void ImprimirPreVentaBebidas(VisitaPrev v, boolean ReImp, String copia,Configuracion conf, Context context)
+    public static boolean ImprimirPreVentaBebidas(VisitaPrev v, boolean ReImp, String copia,Configuracion conf, Context context)
     {
-        String sql = string.formatSql2("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr());
-        String ruta = BaseLocal.SelectDato(sql, context);
-        String p ="";
-
-        p+= "RUTA: "+ ruta.toUpperCase() +"\n\n";
-
-        sql=string.formatSql2("Select * from usuarios where usu_cve_str='{0}'", conf.getUsuario());
-        String json = BaseLocal.Select(sql, context);
-
-        DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
-
-        if(usu!=null)
-            p+= string.formatSql("ASESOR:\n{0} {1} {2}\n\n",usu.getUsu_nom_str(),usu.getUsu_app_str(),usu.getUsu_apm_str());
-
-        ArrayList<DataTableWS.Clientes> alCli;
-        DataTableWS.Clientes dtc;
-
-        sql = string.formatSql("Select * from clientes where cli_cve_n={0}", String.valueOf(v.getCli_cve_n()) );
-        json = BaseLocal.Select(sql,context);
-        alCli = ConvertirRespuesta.getClientesJson(json);
-
-        if(alCli.size()>0)
+        try
         {
-            dtc=alCli.get(0);
+            String sql = string.formatSql2("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr());
+            String ruta = BaseLocal.SelectDato(sql, context);
+            String p = "";
 
-            p+= "CLIENTE: " + dtc.getCli_cveext_str()+"\n\n";
-            p+= "RAZON SOCIAL: \n" + dtc.getCli_nombrenegocio_str()+"\n\n";
-            p+= "NEGOCIO: \n" + dtc.getCli_razonsocial_str()+"\n\n";
+            p += "RUTA: " + ruta.toUpperCase() + "\n\n";
 
-            ArrayList<DataTableWS.Direcciones>  dtd;
-            sql = string.formatSql("Select * from direcciones where cli_cve_n={0}   and dir_cve_n={1}",
-                    String.valueOf( v.getCli_cve_n() ) , dtc.getCli_dirent_n());
+            sql = string.formatSql2("Select * from usuarios where usu_cve_str='{0}'", conf.getUsuario());
+            String json = BaseLocal.Select(sql, context);
+
+            DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
+
+            if (usu != null)
+                p += string.formatSql("ASESOR:\n{0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
+
+            ArrayList<DataTableWS.Clientes> alCli;
+            DataTableWS.Clientes dtc;
+
+            sql = string.formatSql("Select * from clientes where cli_cve_n={0}", String.valueOf(v.getCli_cve_n()));
             json = BaseLocal.Select(sql, context);
-            dtd = ConvertirRespuesta.getDireccionesJson(json);
+            alCli = ConvertirRespuesta.getClientesJson(json);
 
-            if(dtd.size()>0)
-            {
-                DataTableWS.Direcciones r = dtd.get(0);
-                p+=string.formatSql("DIRECCION: \n{0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
-                        r.getDir_noext_str(), r.getDir_colonia_str(), r.getDir_municipio_str(), r.getDir_estado_str(),
-                        r.getDir_codigopostal_str());
+            if (alCli.size() > 0) {
+                dtc = alCli.get(0);
+
+                p += "CLIENTE: " + dtc.getCli_cveext_str() + "\n\n";
+                p += "RAZON SOCIAL: \n" + dtc.getCli_nombrenegocio_str() + "\n\n";
+                p += "NEGOCIO: \n" + dtc.getCli_razonsocial_str() + "\n\n";
+
+                ArrayList<DataTableWS.Direcciones> dtd;
+                sql = string.formatSql("Select * from direcciones where cli_cve_n={0}   and dir_cve_n={1}",
+                        String.valueOf(v.getCli_cve_n()), dtc.getCli_dirent_n());
+                json = BaseLocal.Select(sql, context);
+                dtd = ConvertirRespuesta.getDireccionesJson(json);
+
+                if (dtd.size() > 0) {
+                    DataTableWS.Direcciones r = dtd.get(0);
+                    p += string.formatSql("DIRECCION: \n{0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
+                            r.getDir_noext_str(), r.getDir_colonia_str(), r.getDir_municipio_str(), r.getDir_estado_str(),
+                            r.getDir_codigopostal_str());
+                }
+
+                if (dtc.getCli_Tel1_str() != null && !dtc.getCli_Tel1_str().equals("0"))
+                    p += "TEL: " + dtc.getCli_Tel1_str() + "\n";
             }
 
-            if(dtc.getCli_Tel1_str()!=null && !dtc.getCli_Tel1_str().equals("0"))
-                p+="TEL: "+dtc.getCli_Tel1_str()+"\n";
-        }
 
+            p += "FECHA IMP: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
 
-        p+= "FECHA IMP: " + Utils.FechaLocal()+" "+Utils.HoraLocal()+"\n\n";
+            if (ReImp) {
+                p += Impresora.Centrar(string.formatSql("* C O P I A {0} *", copia.toUpperCase())) + "\n\n";
+            } else {
+                p += Impresora.Centrar(string.formatSql("*O R I G I N A L {0} *", copia.toUpperCase())) + "\n\n";
+            }
 
-        if (ReImp)
-        {
-            p+= Impresora.Centrar( string.formatSql( "* C O P I A {0} *", copia.toUpperCase() ) )   +"\n\n";
-        }
-        else
-        {
-            p+= Impresora.Centrar( string.formatSql( "*O R I G I N A L {0} *", copia.toUpperCase() ) ) +  "\n\n";
-        }
+            ArrayList<DataTableWS.Productos> dtp = new ArrayList<>();
+            json = BaseLocal.Select("Select * from productos", context);
+            dtp = ConvertirRespuesta.getProductosJson(json);
 
-        ArrayList<DataTableWS.Productos> dtp = new ArrayList<>();
-        json = BaseLocal.Select( "Select * from productos", context );
-        dtp = ConvertirRespuesta.getProductosJson(json);
+            ArrayList<DataTableWS.FormasPago> dtfp = new ArrayList<>();
+            json = BaseLocal.Select("Select * from formaspago", context);
+            dtfp = ConvertirRespuesta.getFormasPagoJson(json);
 
-        ArrayList<DataTableWS.FormasPago> dtfp = new ArrayList<>();
-        json = BaseLocal.Select("Select * from formaspago",context );
-        dtfp = ConvertirRespuesta.getFormasPagoJson(json);
+            double SubtotalVenta = 0;
+            double SubtotalDeudaEnv = 0;
+            double SubtotalVtaEnv = 0;
+            double SubTotalDE = 0;
+            double SubTotalE = 0;
+            double TotPzasEnv = 0;
 
-        double SubtotalVenta = 0;
-        double SubtotalDeudaEnv = 0;
-        double SubtotalVtaEnv = 0;
-        double SubTotalDE = 0;
-        double SubTotalE = 0;
-        double TotPzasEnv = 0;
+            if (v.getPreventas() != null) {
+                for (Preventa vta : v.getPreventas()) {
+                    p += "FECHA PREVENTA: \n" + Utils.FechaHoraFormato(vta.getPreventa().getPrev_fecha_dt()) + "\n\n";
+                    p += "FOLIO: " + vta.getPreventa().getPrev_folio_str() + "\n\n";
 
-        if (v.getPreventas() != null)
-        {
-            for(Preventa vta : v.getPreventas())
-            {
-                p+="FECHA PREVENTA: \n" + Utils.FechaHoraFormato( vta.getPreventa().getPrev_fecha_dt()) +"\n\n";
-                p+="FOLIO: " +  vta.getPreventa().getPrev_folio_str()+"\n\n";
+                    if (vta.getDetalles() != null || vta.getBebidas() != null) {
+                        double SubTotalF = 0;
+                        double SubTotalCvz = 0;
+                        double SubTotalBeb = 0;
 
-                if (vta.getDetalles() != null || vta.getBebidas()!=null)
-                {
-                    double SubTotalF = 0;
-                    double SubTotalCvz = 0;
-                    double SubTotalBeb = 0;
+                        p += Impresora.Centrar("PREVENTA") + "\n\n";
 
-                    p+= Impresora.Centrar( "PREVENTA" ) +"\n\n" ;
+                        p += "* SKU    DESC  CAN PRECIO SUBTOT\n\n";
 
-                    p+="* SKU    DESC  CAN PRECIO SUBTOT\n\n";
+                        if (vta.getDetalles() != null) {
+                            p += "------------CERVEZA------------\n";
 
-                    if (vta.getDetalles() != null)
-                    {
-                        p+="------------CERVEZA------------\n";
+                            for (int i = 0; i < vta.getDetalles().length; i++) {
+                                String desc = "";
+                                if (!Utils.getBool(vta.getDetalles()[i].getProd_envase_n())) {
+                                    DataTableWS.Productos r = null;
+                                    for (int j = 0; j < dtp.size(); j++)
+                                        if (vta.getDetalles()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                            r = dtp.get(j);
 
-                        for (int i = 0; i < vta.getDetalles().length; i++)
-                        {
-                            String desc = "";
-                            if( !Utils.getBool( vta.getDetalles()[i].getProd_envase_n() )  )
-                            {
-                                DataTableWS.Productos r=null;
-                                for(int j=0; j< dtp.size();j++)
-                                    if(vta.getDetalles()[i].getProd_cve_n().equals( dtp.get(j).getProd_cve_n()) )
-                                        r=dtp.get(j);
+                                    if (r != null) {
+                                        desc = r.getProd_desc_str();
+                                    }
 
-                                if(r!=null)
-                                {
-                                    desc = r.getProd_desc_str();
+                                    String aah = Utils.getBool(vta.getDetalles()[i].getProd_promo_n()) ? "P" : " ";
+
+                                    p += aah + " ";
+                                    p += Impresora.DarTamañoDer(vta.getDetalles()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(desc, 5) + " ";
+
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getProd_cant_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getLpre_precio_n(), 6) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getProd_subtotal_n(), 6) + "\n";
+
+                                    SubTotalF += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
+                                    SubTotalCvz += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
                                 }
-
-                                String aah = Utils.getBool(vta.getDetalles()[i].getProd_promo_n() )?"P":" ";
-
-                                p+=aah+" ";
-                                p+= Impresora.DarTamañoDer(vta.getDetalles()[i].getProd_sku_str(),6 ) +" ";
-                                p+= Impresora.DarTamañoDer(desc,5)+" ";
-
-                                p+= Impresora.DarTamañoIzq( vta.getDetalles()[i].getProd_cant_n(),3 )+" ";
-                                p+= Impresora.DarTamañoIzq( vta.getDetalles()[i].getLpre_precio_n(), 6 )  +" ";
-                                p+= Impresora.DarTamañoIzq( vta.getDetalles()[i].getProd_subtotal_n(), 6 )  +"\n";
-
-                                SubTotalF += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
-                                SubTotalCvz += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
                             }
+                            p += "TOTAL CERVEZA: " + string.FormatoPesos(SubTotalCvz) + "\n\n";
                         }
-                        p+="TOTAL CERVEZA: "+ string.FormatoPesos(SubTotalCvz)+"\n\n";
-                    }
 
 
-                    //-------------------- Bebidas ----------------------------
+                        //-------------------- Bebidas ----------------------------
 
-                    if ( vta.getBebidas()!= null)
-                    {
-                        p+="---------OTRAS BEBIDAS---------\n";
-                        for (int i = 0; i < vta.getBebidas().length; i++)
-                        {
-                            String desc = "";
-                            if ( !Utils.getBool(vta.getBebidas()[i].getProd_envase_n()))
-                            {
-                                DataTableWS.Productos r=null;
-                                for(int j=0; j< dtp.size();j++)
-                                    if(vta.getBebidas()[i].getProd_cve_n().equals( dtp.get(j).getProd_cve_n()) )
-                                        r=dtp.get(j);
+                        if (vta.getBebidas() != null) {
+                            p += "---------OTRAS BEBIDAS---------\n";
+                            for (int i = 0; i < vta.getBebidas().length; i++) {
+                                String desc = "";
+                                if (!Utils.getBool(vta.getBebidas()[i].getProd_envase_n())) {
+                                    DataTableWS.Productos r = null;
+                                    for (int j = 0; j < dtp.size(); j++)
+                                        if (vta.getBebidas()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                            r = dtp.get(j);
 
-                                if (r!=null)
-                                {
-                                    desc = r.getProd_desc_str();
+                                    if (r != null) {
+                                        desc = r.getProd_desc_str();
+                                    }
+
+                                    String aah = Utils.getBool(vta.getBebidas()[i].getProd_promo_n()) ? "P" : " ";
+
+
+                                    p += aah + " ";
+                                    p += Impresora.DarTamañoDer(vta.getBebidas()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(desc, 5) + " ";
+
+                                    p += Impresora.DarTamañoIzq(vta.getBebidas()[i].getProd_cant_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getBebidas()[i].getLpre_precio_n(), 6) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getBebidas()[i].getProd_subtotal_n(), 6) + "\n";
+
+                                    SubTotalF += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
+                                    SubTotalBeb += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
+
                                 }
-
-                                String aah = Utils.getBool( vta.getBebidas()[i].getProd_promo_n() )?"P":" ";
-
-
-                                p+=aah+" ";
-                                p+= Impresora.DarTamañoDer(vta.getBebidas()[i].getProd_sku_str(),6 )+" ";
-                                p+= Impresora.DarTamañoDer(desc,5)+" ";
-
-                                p+= Impresora.DarTamañoIzq( vta.getBebidas()[i].getProd_cant_n(),3 )+" ";
-                                p+= Impresora.DarTamañoIzq( vta.getBebidas()[i].getLpre_precio_n(), 6 )  +" ";
-                                p+= Impresora.DarTamañoIzq( vta.getBebidas()[i].getProd_subtotal_n(), 6 )  +"\n";
-
-                                SubTotalF += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
-                                SubTotalBeb += Double.parseDouble(vta.getBebidas()[i].getProd_subtotal_n());
-
                             }
+                            p += "TOTAL OTRAS BEBIDAS: " + string.FormatoPesos(SubTotalBeb) + "\n\n";
                         }
-                        p+="TOTAL OTRAS BEBIDAS: "+ string.FormatoPesos(SubTotalBeb)+"\n\n";
-                    }
-                    //-------------------- Bebidas ------------------------//
-                    SubtotalVenta += SubTotalF;
+                        //-------------------- Bebidas ------------------------//
+                        SubtotalVenta += SubTotalF;
 
-                    p+="TOTAL FACTURA: " + string.FormatoPesos(SubTotalF)+"\n\n";
+                        p += "TOTAL FACTURA: " + string.FormatoPesos(SubTotalF) + "\n\n";
 
 
-                    if(v.getEnvase()!=null)
-                    {
-                        p+= Impresora.Centrar("ENVASE")+"\n";
-                        p+="SKU    INI. CAR ABO PRO VTA FIN"+"\n";
+                        if (v.getEnvase() != null) {
+                            p += Impresora.Centrar("ENVASE") + "\n";
+                            p += "SKU    INI. CAR ABO PRO VTA FIN" + "\n";
 
-                        String desc = "";
-                        for (int i = 0; i < v.getEnvase().length; i++)
-                        {
-                            DataTableWS.Productos r=null;
+                            String desc = "";
+                            for (int i = 0; i < v.getEnvase().length; i++) {
+                                DataTableWS.Productos r = null;
 
-                            for(int j=0; j< dtp.size();j++)
-                                if(v.getEnvase()[i].getProd_cve_n().equals( dtp.get(j).getProd_cve_n()) )
-                                    r=dtp.get(j);
+                                for (int j = 0; j < dtp.size(); j++)
+                                    if (v.getEnvase()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                        r = dtp.get(j);
 
-                            if (r!=null)
-                            {
-                                desc = r.getProd_desc_str();
+                                if (r != null) {
+                                    desc = r.getProd_desc_str();
 
-                                p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_sku_str(),6 )+" ";
-                                p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_inicial_n(),4 )+" ";
-                                p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_cargo_n() ,3 )+" ";
-                                p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_abono_n() ,3)+" ";
-                                p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_regalo_n() ,3)+" ";
-                                p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_venta_n() ,3)+" ";
-                                p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_final_n() ,3)+"\n";
+                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_inicial_n(), 4) + " ";
+                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_cargo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_abono_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_regalo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_venta_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_final_n(), 3) + "\n";
 
-                                SubTotalDE += Double.parseDouble(v.getEnvase()[i].getProd_final_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
-                                SubTotalE += Double.parseDouble( v.getEnvase()[i].getProd_venta_n() ) * Double.parseDouble( v.getEnvase()[i].getLpre_precio_n() );
-                                TotPzasEnv += Double.parseDouble( v.getEnvase()[i].getProd_final_n() );
+                                    SubTotalDE += Double.parseDouble(v.getEnvase()[i].getProd_final_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
+                                    SubTotalE += Double.parseDouble(v.getEnvase()[i].getProd_venta_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
+                                    TotPzasEnv += Double.parseDouble(v.getEnvase()[i].getProd_final_n());
 
+                                }
                             }
+
+                            p += "TOTAL ENVASE PZAS: " + String.format("%.2f", TotPzasEnv) + "\n";
+                            p += "TOTAL ENVASE: " + string.FormatoPesos(SubTotalDE) + "\n\n";
                         }
 
-                        p+="TOTAL ENVASE PZAS: "+ String.format("%.2f",TotPzasEnv)+"\n";
-                        p+="TOTAL ENVASE: "+ string.FormatoPesos(SubTotalDE)+"\n\n";
-                    }
-
-                    SubtotalDeudaEnv += SubTotalDE;
-                    SubtotalVtaEnv += SubTotalE;
-                }
-            }
-        }
-        else
-        {
-            p+= Impresora.Centrar("SIN PREVENTA")+"\n\n";
-
-            if(v.getEnvase()!=null)
-            {
-                p+= Impresora.Centrar("ENVASE")+"\n";
-                p+="SKU    INI. CAR ABO PRO VTA FIN"+"\n\n";
-
-                String desc = "";
-                for (int i = 0; i < v.getEnvase().length; i++)
-                {
-                    DataTableWS.Productos r=null;
-
-                    for(int j=0; j< dtp.size();j++)
-                        if(v.getEnvase()[i].getProd_cve_n().equals( dtp.get(j).getProd_cve_n()) )
-                            r=dtp.get(j);
-
-                    if (r!=null)
-                    {
-                        desc = r.getProd_desc_str();
-
-                        p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_sku_str(),6 )+" ";
-                        p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_inicial_n(),4 )+" ";
-                        p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_cargo_n() ,3 )+" ";
-                        p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_abono_n() ,3)+" ";
-                        p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_regalo_n() ,3)+" ";
-                        p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_venta_n() ,3)+" ";
-                        p+= Impresora.DarTamañoDer( v.getEnvase()[i].getProd_final_n() ,3)+"\n";
-
-                        SubTotalDE += Double.parseDouble(v.getEnvase()[i].getProd_final_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
-                        SubTotalE += Double.parseDouble( v.getEnvase()[i].getProd_venta_n() ) * Double.parseDouble( v.getEnvase()[i].getLpre_precio_n() );
-                        TotPzasEnv += Double.parseDouble( v.getEnvase()[i].getProd_final_n() );
-
+                        SubtotalDeudaEnv += SubTotalDE;
+                        SubtotalVtaEnv += SubTotalE;
                     }
                 }
+            } else {
+                p += Impresora.Centrar("SIN PREVENTA") + "\n\n";
 
-                p+="TOTAL ENVASE PZAS: "+ String.format("%.2f",TotPzasEnv)+"\n\n";
-                p+="TOTAL ENVASE: "+ String.format("%.2f",SubTotalDE)+"\n\n";
-            }
+                if (v.getEnvase() != null) {
+                    p += Impresora.Centrar("ENVASE") + "\n";
+                    p += "SKU    INI. CAR ABO PRO VTA FIN" + "\n\n";
 
-            SubtotalDeudaEnv += SubTotalDE;
-            SubtotalVtaEnv += SubTotalE;
-        }
+                    String desc = "";
+                    for (int i = 0; i < v.getEnvase().length; i++) {
+                        DataTableWS.Productos r = null;
 
-        double SubTotalP = 0;
-        double Pagos = 0;
-        double PagoCredito = 0;
+                        for (int j = 0; j < dtp.size(); j++)
+                            if (v.getEnvase()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                r = dtp.get(j);
 
-        if (v.getCobranza() != null)
-        {
-            //p+=Impresora.Centrar("COBRANZA")+"\n\n";
-            //p+="REF            PAGO        FORMA\n";
-            String fp = "";
+                        if (r != null) {
+                            desc = r.getProd_desc_str();
 
-            for(int i=0; i< v.getCobranza().length; i++)
-            {
-                if( !Utils.getBool( v.getCobranza()[i].getPpag_cobranza_n() ) )
-                {
-                    fp = "";
-                    DataTableWS.FormasPago pf = null;
-                    for (int j = 0; j < dtfp.size(); j++)
-                        if (v.getCobranza()[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
-                            pf = dtfp.get(j);
-                            j = dtfp.size();
+                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_sku_str(), 6) + " ";
+                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_inicial_n(), 4) + " ";
+                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_cargo_n(), 3) + " ";
+                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_abono_n(), 3) + " ";
+                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_regalo_n(), 3) + " ";
+                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_venta_n(), 3) + " ";
+                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_final_n(), 3) + "\n";
+
+                            SubTotalDE += Double.parseDouble(v.getEnvase()[i].getProd_final_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
+                            SubTotalE += Double.parseDouble(v.getEnvase()[i].getProd_venta_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
+                            TotPzasEnv += Double.parseDouble(v.getEnvase()[i].getProd_final_n());
+
                         }
+                    }
 
-                    if (pf != null)
-                        fp = pf.getFpag_desc_str();
+                    p += "TOTAL ENVASE PZAS: " + String.format("%.2f", TotPzasEnv) + "\n\n";
+                    p += "TOTAL ENVASE: " + String.format("%.2f", SubTotalDE) + "\n\n";
+                }
 
-                    if (fp.equals("CREDITO"))
-                        PagoCredito = Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
-                    else
-                    {
+                SubtotalDeudaEnv += SubTotalDE;
+                SubtotalVtaEnv += SubTotalE;
+            }
 
-                        Pagos += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
-                        SubTotalP += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
+            double SubTotalP = 0;
+            double Pagos = 0;
+            double PagoCredito = 0;
+
+            if (v.getCobranza() != null) {
+                //p+=Impresora.Centrar("COBRANZA")+"\n\n";
+                //p+="REF            PAGO        FORMA\n";
+                String fp = "";
+
+                for (int i = 0; i < v.getCobranza().length; i++) {
+                    if (!Utils.getBool(v.getCobranza()[i].getPpag_cobranza_n())) {
+                        fp = "";
+                        DataTableWS.FormasPago pf = null;
+                        for (int j = 0; j < dtfp.size(); j++)
+                            if (v.getCobranza()[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
+                                pf = dtfp.get(j);
+                                j = dtfp.size();
+                            }
+
+                        if (pf != null)
+                            fp = pf.getFpag_desc_str();
+
+                        if (fp.equals("CREDITO"))
+                            PagoCredito = Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
+                        else {
+
+                            Pagos += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
+                            SubTotalP += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
+                        }
                     }
                 }
+            } else {
+                //p+= Impresora.Centrar("SIN COBRANZA")+"\n\n";
             }
-        }
-        else
-        {
-            //p+= Impresora.Centrar("SIN COBRANZA")+"\n\n";
-        }
 
-        double SubTotalC = 0;
-        double Cobranza = 0;
+            double SubTotalC = 0;
+            double Cobranza = 0;
 
 
-        if (v.getCobranza() != null)
-        {
-            //p+=Impresora.Centrar("COBRANZA")+"\n\n";
-            //p+="REF            PAGO        FORMA\n";
-            String fp = "";
+            if (v.getCobranza() != null) {
+                //p+=Impresora.Centrar("COBRANZA")+"\n\n";
+                //p+="REF            PAGO        FORMA\n";
+                String fp = "";
 
-            for(int i=0; i< v.getCobranza().length; i++)
-            {
-                if( Utils.getBool( v.getCobranza()[i].getPpag_cobranza_n() ) )
-                {
-                    fp = "";
-                    DataTableWS.FormasPago pf = null;
-                    for (int j = 0; j < dtfp.size(); j++)
-                        if (v.getCobranza()[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
-                            pf = dtfp.get(j);
-                            j = dtfp.size();
-                        }
+                for (int i = 0; i < v.getCobranza().length; i++) {
+                    if (Utils.getBool(v.getCobranza()[i].getPpag_cobranza_n())) {
+                        fp = "";
+                        DataTableWS.FormasPago pf = null;
+                        for (int j = 0; j < dtfp.size(); j++)
+                            if (v.getCobranza()[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
+                                pf = dtfp.get(j);
+                                j = dtfp.size();
+                            }
 
-                    if (pf != null)
-                        fp = pf.getFpag_desc_str();
+                        if (pf != null)
+                            fp = pf.getFpag_desc_str();
 
-                    SubTotalC += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
-                    Cobranza += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
+                        SubTotalC += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
+                        Cobranza += Double.parseDouble(v.getCobranza()[i].getFpag_cant_n());
+
+                    }
+                }
+            } else {
+                //p+= Impresora.Centrar("SIN COBRANZA")+"\n\n";
+            }
+
+            double SubTotalCred = 0;
+            double InicialCred = 0;
+
+            if (v.getCreditos() != null) {
+                for (int i = 0; i < v.getCreditos().length; i++) {
+
+                    double saldoant = Double.parseDouble(v.getCreditos()[i].getCred_monto_n()) - Double.parseDouble(v.getCreditos()[i].getCred_abono_n());
+                    double AbonoActCred = 0;
+
+                    double saldo = Double.parseDouble(v.getCreditos()[i].getCred_monto_n()) - Double.parseDouble(v.getCreditos()[i].getCred_abono_n()) - AbonoActCred;
+
+                    if (v.getCreditos()[i].getTrans_est_n() != null)
+                        if (v.getCreditos()[i].getTrans_est_n().equals("3"))
+                            InicialCred += saldoant;
+
+
+                    SubTotalCred += saldo;
 
                 }
+            } else {
+                // p+= Impresora.Centrar("SIN CREDITOS")+"\n\n";
             }
-        }
-        else
-        {
-            //p+= Impresora.Centrar("SIN COBRANZA")+"\n\n";
-        }
 
-        double SubTotalCred = 0;
-        double InicialCred = 0;
+            double SubTotalCredEsp = 0;
+            double SubTotalCredEnv = 0;
+            double SaldoEnv = 0;
 
-        if (v.getCreditos() != null)
-        {
-            for (int i = 0; i < v.getCreditos().length; i++)
-            {
-
-                double saldoant = Double.parseDouble(v.getCreditos()[i].getCred_monto_n()) - Double.parseDouble( v.getCreditos()[i].getCred_abono_n() );
-                double AbonoActCred = 0;
-
-                double saldo = Double.parseDouble( v.getCreditos()[i].getCred_monto_n() )  - Double.parseDouble( v.getCreditos()[i].getCred_abono_n() )  - AbonoActCred;
-
-                if (v.getCreditos()[i].getTrans_est_n() != null)
-                    if (v.getCreditos()[i].getTrans_est_n().equals("3"))
-                        InicialCred += saldoant;
-
-
-                SubTotalCred += saldo;
-
-            }
-        }
-        else
-        {
-           // p+= Impresora.Centrar("SIN CREDITOS")+"\n\n";
-        }
-
-        double SubTotalCredEsp = 0;
-        double SubTotalCredEnv = 0;
-        double SaldoEnv = 0;
-
-        if (v.getCreditosEnv() != null)
-        {
-            for (int i = 0; i < v.getCreditosEnv().length; i++)
-            {
-                double can = Double.parseDouble(v.getCreditosEnv()[i].getProd_cant_n()) - Double.parseDouble(v.getCreditosEnv()[i].getProd_cantabono_n());
-                if (can != 0)
-                {
-                    double AboEnvDia = 0;
-                    double saldo = Double.parseDouble( v.getCreditosEnv()[i].getProd_cant_n() ) - Double.parseDouble( v.getCreditosEnv()[i].getProd_cantabono_n() ) -  AboEnvDia;
-                    SubTotalCredEnv += saldo;
-                    SaldoEnv += saldo * Double.parseDouble( v.getCreditosEnv()[i].getProd_precio_n() );
+            if (v.getCreditosEnv() != null) {
+                for (int i = 0; i < v.getCreditosEnv().length; i++) {
+                    double can = Double.parseDouble(v.getCreditosEnv()[i].getProd_cant_n()) - Double.parseDouble(v.getCreditosEnv()[i].getProd_cantabono_n());
+                    if (can != 0) {
+                        double AboEnvDia = 0;
+                        double saldo = Double.parseDouble(v.getCreditosEnv()[i].getProd_cant_n()) - Double.parseDouble(v.getCreditosEnv()[i].getProd_cantabono_n()) - AboEnvDia;
+                        SubTotalCredEnv += saldo;
+                        SaldoEnv += saldo * Double.parseDouble(v.getCreditosEnv()[i].getProd_precio_n());
+                    }
                 }
+            } else {
+                //p+= Impresora.Centrar("SIN CREDITOS DE ENVASE")+"\n\n";
             }
-        }
-        else
+
+
+            p += Impresora.Centrar("SALDOS") + "\n\n";
+
+            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
+            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
+            p += "+VENTA DE ENVASE DEL DIA: " + string.FormatoPesos(SubTotalE) + "\n";
+            p += "=SALDO FINAL PREVENTA: " + string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE) + "\n\n";
+
+            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
+            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
+            p += "+VENTA DE ENVASE DEL DIA: " + string.FormatoPesos(SubTotalE) + "\n";
+            p += "=SALDO FINAL PREVENTA: " + string.FormatoPesos((InicialCred + SubtotalVenta + SubTotalE)) + "\n\n";
+            p += "SALDO EFECTIVO PREV: " + string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE) + "\n";
+
+            p += "\n\n";
+            mensajeImprimir = p;
+            p = p.replace("\n", "\r");
+            boolean imprimio = Impresora.imprimir(p, context);
+
+            if (imprimio)
+            {
+                return true;
+            }
+            else
+            {
+                mensajeImprimir="";
+                return false;
+            }
+
+        }catch (Exception e)
         {
-            //p+= Impresora.Centrar("SIN CREDITOS DE ENVASE")+"\n\n";
+            mensajeImprimir="";
+            return false;
         }
-
-
-        p+= Impresora.Centrar("SALDOS")+"\n\n";
-
-        p+= "+SALDO INICIAL: "+ string.FormatoPesos( InicialCred ) +"\n";
-        p+= "+VENTA DEL DIA: "+ string.FormatoPesos( SubtotalVenta ) +"\n";
-        p+= "+VENTA DE ENVASE DEL DIA: "+ string.FormatoPesos( SubTotalE )+"\n";
-        p+= "=SALDO FINAL PREVENTA: "+ string.FormatoPesos( InicialCred + SubtotalVenta + SubTotalE )+"\n\n";
-
-        p+= "+SALDO INICIAL: "+ string.FormatoPesos( InicialCred )+"\n";
-        p+= "+VENTA DEL DIA: "+ string.FormatoPesos( SubtotalVenta )+"\n";
-        p+= "+VENTA DE ENVASE DEL DIA: "+ string.FormatoPesos( SubTotalE )+"\n";
-        p+= "=SALDO FINAL PREVENTA: "+ string.FormatoPesos( (InicialCred + SubtotalVenta + SubTotalE) )+"\n\n";
-        p+= "SALDO EFECTIVO PREV: "+ string.FormatoPesos( InicialCred + SubtotalVenta + SubTotalE )+"\n";
-
-        p+="\n\n";
-        p= p.replace("\n","\r");
-        Impresora.imprimir(p,context);
 
     }
 
+    public static int tiempoImpresion(String mensaje)
+    {
+        int tiempo = 0;
+        try
+        {
+            tiempo = mensaje.split("\n").length;
+            tiempo = (tiempo * 7)/110;  //110 lineas - 7 segundos
+            tiempo = tiempo * 1000;
+
+            if(tiempo<0) tiempo=0;
+
+        }catch (Exception e)
+        {
+            tiempo=0;
+        }
+        return tiempo;
+    }
+
+    public static String getMensajeImprimir() {
+        return mensajeImprimir;
+    }
 
 }

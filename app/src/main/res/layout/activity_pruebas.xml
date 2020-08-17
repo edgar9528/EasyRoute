@@ -24,9 +24,19 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/prueba"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_iniciar"
+            android:theme="@style/ButtonDark"
+            android:paddingTop="@dimen/paddingControles"
+            />
 
 
     </LinearLayout>
+
+
 
 
 

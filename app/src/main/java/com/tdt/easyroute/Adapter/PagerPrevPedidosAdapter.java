@@ -13,10 +13,11 @@ import com.tdt.easyroute.Ventanas.Preventa.Venta.VentamainFragment;
 public class PagerPrevPedidosAdapter extends FragmentStatePagerAdapter {
 
     int mNumOfTabs;
-    public PagerPrevPedidosAdapter(FragmentManager fm, int NumOfTabs) {
+    boolean removerVenta;
+    public PagerPrevPedidosAdapter(FragmentManager fm, int NumOfTabs, boolean removerVenta) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
-
+        this.removerVenta = removerVenta;
     }
 
 
@@ -30,11 +31,27 @@ public class PagerPrevPedidosAdapter extends FragmentStatePagerAdapter {
                 AbonosFragment tab2 = new AbonosFragment();
                 return tab2;
             case 2:
-                VentamainFragment tab3 = new VentamainFragment();
-                return tab3;
+                if(removerVenta)
+                {
+                    EnvaseFragment tab4 = new EnvaseFragment();
+                    return tab4;
+                }
+                else
+                {
+                    VentamainFragment tab3 = new VentamainFragment();
+                    return tab3;
+                }
             case 3:
-                EnvaseFragment tab4 = new EnvaseFragment();
-                return tab4;
+                if(removerVenta)
+                {
+                    PagoFragment tab5 = new PagoFragment();
+                    return tab5;
+                }
+                else
+                {
+                    EnvaseFragment tab4 = new EnvaseFragment();
+                    return tab4;
+                }
             case 4:
                 PagoFragment tab5 = new PagoFragment();
                 return tab5;

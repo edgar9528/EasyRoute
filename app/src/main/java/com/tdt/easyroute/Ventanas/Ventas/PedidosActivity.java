@@ -116,6 +116,11 @@ public class PedidosActivity extends AppCompatActivity implements         Google
     PedidosVM pedidosVM;
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ordenes_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -2291,46 +2296,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     db.close();
                 }
 
-                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+                imprimir(false, false, coordenada);
 
-                String sqlA = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
-                        conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET CLIENTE ORIGINAL", coordenada);
-
-                BaseLocal.Insert(sqlA, getApplicationContext() );
-
-
-                try
-                {
-                    final Context context = this;
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            try {
-                                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ),context ), false,context,conf);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, 3000);
-
-                }catch (Exception e)
-                {
-
-                }
-
-
-
-                sqlA =  string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
-                        conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET ASESOR ORIGINAL", coordenada);
-                BaseLocal.Insert(sqlA, getApplicationContext() );
-
-                Intent i = getIntent();
-                i.putExtra("estado", "true");
-                i.putExtra("cve", rc.getCli_cve_n());
-                setResult(RESULT_OK, i);
-                finish();
 
             }catch (Exception e)
             {
@@ -2350,6 +2317,86 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             Utils.msgError(this, getString(R.string.error_ped1), e.getMessage());
         }
 
+    }
+
+    private void imprimir(boolean impCliente,boolean impAsesor,String coordenada)
+    {
+        int tiempoImp = 0;
+        try
+        {
+            if(!impCliente)
+            {
+                impCliente = Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+
+                String sqlA = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
+                        conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET CLIENTE ORIGINAL", coordenada);
+
+                BaseLocal.Insert(sqlA, getApplicationContext() );
+
+                tiempoImp = Utils.tiempoImpresion( Utils.getMensajeImprimir() );
+            }
+        }
+        catch (Exception e)
+        {
+            impCliente = false;
+        }
+
+        if(impCliente)
+        {
+            try { Thread.sleep(tiempoImp); }
+            catch (InterruptedException e)
+            { e.printStackTrace(); }
+
+            if(!impAsesor)
+            {
+                try
+                {
+                    impAsesor =  Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ), this ), false,this,conf);
+
+                    String sqlA =  string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
+                            conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET ASESOR ORIGINAL", coordenada);
+                    BaseLocal.Insert(sqlA, getApplicationContext() );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if( (impCliente && impAsesor)  )
+        {
+            Intent i = getIntent();
+            i.putExtra("estado", "true");
+            i.putExtra("cve", rc.getCli_cve_n());
+            setResult(RESULT_OK, i);
+            finish();
+        }
+        else
+        {
+            impresionFallida(impCliente, impAsesor,coordenada);
+        }
+    }
+
+    private void impresionFallida(final boolean impCliente, final boolean impAsesor, final String coordenada)
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+        dialogo1.setTitle(getString(R.string.msg_prev8));
+        dialogo1.setMessage(getString(R.string.msg_prev9));
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                imprimir(impCliente,impAsesor,coordenada);
+            }
+        });
+        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                Intent i = getIntent();
+                i.putExtra("estado", "true");
+                i.putExtra("cve", rc.getCli_cve_n());
+                setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+        dialogo1.show();
     }
 
     private void GuardarVisitaSinVenta2()

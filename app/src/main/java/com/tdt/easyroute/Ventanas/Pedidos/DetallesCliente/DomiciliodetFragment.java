@@ -189,6 +189,7 @@ public class DomiciliodetFragment extends Fragment {
             });
         }catch (Exception e)
         {
+            Log.d("salida","ERROR MAPA: "+e.getMessage());
             Utils.msgError(getContext(), getString(R.string.err_ped5), e.getMessage());
         }
     }

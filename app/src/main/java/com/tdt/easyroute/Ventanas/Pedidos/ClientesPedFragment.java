@@ -693,7 +693,13 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
     {
         try
         {
-            Log.d("salida","Entro a la opción imprimir");
+            if (conf.getPreventa() == 1)
+                Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas( Long.parseLong(item.getCli_cve_n()), getContext() ), true, "a s e s o r", conf, getContext());
+            else
+                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(Long.parseLong(item.getCli_cve_n()),getContext()), true, getContext(), conf);
+
+            String sql = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), item.getCli_cve_n(), "TICKET IMPRESO", "TICKET ASESOR COPIA", PositionStr);
+            BaseLocal.Insert(sql,getContext());
         }
         catch (Exception e)
         {

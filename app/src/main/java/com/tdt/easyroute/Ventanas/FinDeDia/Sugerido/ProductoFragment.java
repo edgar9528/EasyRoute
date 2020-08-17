@@ -1,5 +1,6 @@
 package com.tdt.easyroute.Ventanas.FinDeDia.Sugerido;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -101,6 +102,7 @@ public class ProductoFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

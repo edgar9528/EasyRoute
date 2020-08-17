@@ -506,5 +506,7 @@
     <string name="err_mac">Mac Address Incorrecta</string>
     <string name="err_utils1">Error al obtener visita bebidas</string>
     <string name="err_utils2">Error al obtener visita preventa bebidas</string>
+    <string name="msg_prev8">Error al imprimir ticket</string>
+    <string name="msg_prev9">¿Desea reintentar?</string>
 
 </resources>

@@ -112,6 +112,11 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
     PedidosVM pedidosVM;
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ordenes_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -141,12 +146,16 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_ped3));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_ped4));
 
+        final int tabsid[] = {0,1,3,4}; // para cuando se remueve la venta
+
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPagerNonSwipable viewPager = findViewById(R.id.pager);
-        final PagerPrevPedidosAdapter adapter = new PagerPrevPedidosAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerPrevPedidosAdapter adapter = new PagerPrevPedidosAdapter(getSupportFragmentManager(), tabLayout.getTabCount(),removerVenta);
 
         viewPager.setOffscreenPageLimit(5);
+
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnabled(false);
 
@@ -154,7 +163,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         ValidaCredito();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            public void onTabSelected(TabLayout.Tab tab)
+            {
                 ValidaCredito();
                 viewPager.setCurrentItem(tab.getPosition());
             }
@@ -1339,32 +1349,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
             if(guardado)
             {
-                Log.d("salida","ENTRO A IMPRIMIR");
-                Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente,this),  false, "C L I E N T E", conf ,this);
-                Log.d("salida","SALIO IMPRIMIR");
-
-                try
-                {
-                    final Context context = this;
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente,context),  false, "A S E S O R", conf ,context);
-                        }
-                    }, 3000);
-
-                }catch (Exception e)
-                {
-
-                }
-
-                Intent i = getIntent();
-                i.putExtra("idcli", rc.getCli_cve_n());
-                i.putExtra("result", result);
-                setResult(RESULT_OK, i);
-                finish();
+                imprimir(false,false,false);
             }
 
         }
@@ -1373,6 +1358,70 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             Utils.msgError(this,getString(R.string.errorPrev1), e.getMessage());
         }
 
+    }
+
+    private void imprimir(boolean impCliente,boolean impAsesor,boolean reimprimir)
+    {
+        int tiempoImp = 0;
+        try
+        {
+            if(!impCliente)
+            {
+                impCliente = Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente, this), false, "C L I E N T E", conf, this);
+                tiempoImp = Utils.tiempoImpresion( Utils.getMensajeImprimir() );
+            }
+        }catch (Exception e)
+        {
+            impCliente = false;
+        }
+
+        if(impCliente)
+        {
+            try { Thread.sleep(tiempoImp); }
+            catch (InterruptedException e)
+            { e.printStackTrace(); }
+
+            if(!impAsesor)
+                impAsesor = Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente, this), false, "A S E S O R", conf, this);
+
+        }
+
+        if( (impCliente && impAsesor)  )
+        {
+            Intent i = getIntent();
+            i.putExtra("idcli", rc.getCli_cve_n());
+            i.putExtra("result", result);
+            setResult(RESULT_OK, i);
+            finish();
+        }
+        else
+        {
+            impresionFallida(impCliente, impAsesor);
+        }
+
+    }
+
+    private void impresionFallida(final boolean impCliente, final boolean impAsesor)
+    {
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+        dialogo1.setTitle(getString(R.string.msg_prev8));
+        dialogo1.setMessage(getString(R.string.msg_prev9));
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                imprimir(impCliente,impAsesor,true);
+            }
+        });
+        dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                Intent i = getIntent();
+                i.putExtra("idcli", rc.getCli_cve_n());
+                i.putExtra("result", result);
+                setResult(RESULT_OK, i);
+                finish();
+            }
+        });
+        dialogo1.show();
     }
 
     private boolean guardar2()
@@ -1534,13 +1583,13 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
                 db.setTransactionSuccessful();
 
-                Utils.msgInfo(this, getString(R.string.msg_prev4));
-
                 if(db.isOpen())
                 {
                     db.endTransaction();
                     db.close();
                 }
+
+                Log.d("Salida","ENTRO AQUI, GUARDO INFORMACION");
 
                 return true;
             }catch (Exception e)
@@ -1720,8 +1769,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                 }
 
                 db.setTransactionSuccessful();
-
-                Utils.msgInfo(this, getString(R.string.msg_prev5));
 
                 if(db.isOpen())
                 {
