@@ -18,12 +18,14 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -44,6 +46,7 @@ import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.ViewPagerNonSwipable;
@@ -413,23 +416,26 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                                 DataTableLC.ProductosPed ri = null;
                                 int k = -1;
                                 for (int j = 0; j < dtProductos.size(); j++) {
-                                    if (dtProductos.get(i).getProd_cve_n().equals(r.getProd_cve_n())) {
-                                        ri = dtProductos.get(i);
+                                    if (dtProductos.get(j).getProd_cve_n().equals(r.getProd_cve_n())) {
+                                        ri = dtProductos.get(j);
                                         k = j;
                                     }
                                 }
 
-                                if (ri != null) {
+                                if (ri != null)
+                                {
                                     if (Double.parseDouble(r.getLpre_precio_n()) < Double.parseDouble(dtProductos.get(k).getLpre_cliente_n())) {
                                         dtProductos.get(k).setLpre_promo_n(r.getLpre_precio_n());
                                         dtProductos.get(k).setLpre_precio_n(r.getLpre_precio_n());
-                                        dtProductos.get(k).setLpre_precio2_n(r.getLpre_precio2_n() == null ? r.getLpre_precio_n() : r.getLpre_precio2_n());
+                                        dtProductos.get(k).setLpre_precio2_n(r.getLpre_precio2_n().isEmpty()? r.getLpre_precio_n() : r.getLpre_precio2_n());
                                         dtProductos.get(k).setProd_promo_n("1");
                                         dtProductos.get(k).setProm_cve_n(r.getProm_cve_n());
                                         dtProductos.get(k).setProm_contado_n(r.getProm_contado_n());
                                     } else {
-                                        if (r.getLpre_precio2_n() != null) {
-                                            if (Double.parseDouble(r.getLpre_precio2_n()) < Double.parseDouble(dtProductos.get(k).getLpre_cliente_n())) {
+                                        if (r.getLpre_precio2_n() != null && !r.getLpre_precio2_n().isEmpty() )
+                                        {
+                                            if (Double.parseDouble(r.getLpre_precio2_n()) < Double.parseDouble(dtProductos.get(k).getLpre_cliente_n()))
+                                            {
                                                 dtProductos.get(k).setLpre_promo_n(dtProductos.get(k).getLpre_cliente_n());
                                                 dtProductos.get(k).setLpre_precio_n(dtProductos.get(k).getLpre_cliente_n());
                                                 dtProductos.get(k).setLpre_precio2_n(r.getLpre_precio2_n() == null ? dtProductos.get(k).getLpre_cliente_n() : r.getLpre_precio2_n());
@@ -2296,7 +2302,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     db.close();
                 }
 
-                imprimir(false, false, coordenada);
+                previsualizar(coordenada);
 
 
             }catch (Exception e)
@@ -2319,6 +2325,28 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
     }
 
+    private void previsualizar(final String coordenada)
+    {
+        String msg_imprimir = Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+        dialogo1.setTitle(getString(R.string.msg_ticket));
+        dialogo1.setMessage(msg_imprimir);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                imprimir(false, false, coordenada);
+            }
+        });
+        AlertDialog alertDialog = dialogo1.show();
+
+        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            textView.setTextAppearance( R.style.estiloImprimir);
+        }
+    }
+
     private void imprimir(boolean impCliente,boolean impAsesor,String coordenada)
     {
         int tiempoImp = 0;
@@ -2326,14 +2354,18 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         {
             if(!impCliente)
             {
-                impCliente = Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+                String msg_imprimir = Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+
+                tiempoImp = Utils.tiempoImpresion( msg_imprimir );
+
+                msg_imprimir = msg_imprimir.replace("\n", "\r");
+
+                impCliente = Impresora.imprimir(msg_imprimir, this);
 
                 String sqlA = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
                         conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET CLIENTE ORIGINAL", coordenada);
 
                 BaseLocal.Insert(sqlA, getApplicationContext() );
-
-                tiempoImp = Utils.tiempoImpresion( Utils.getMensajeImprimir() );
             }
         }
         catch (Exception e)
@@ -2351,7 +2383,11 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             {
                 try
                 {
-                    impAsesor =  Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ), this ), false,this,conf);
+                    String msg_imprimir =  Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ), this ), false,this,conf);
+
+                    msg_imprimir = msg_imprimir.replace("\n", "\r");
+
+                    impAsesor = Impresora.imprimir(msg_imprimir, this);
 
                     String sqlA =  string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido,
                             conf.getUsuario(), conf.getRutaStr(), noCli, "TICKET IMPRESO", "TICKET ASESOR ORIGINAL", coordenada);

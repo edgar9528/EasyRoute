@@ -508,5 +508,8 @@
     <string name="err_utils2">Error al obtener visita preventa bebidas</string>
     <string name="msg_prev8">Error al imprimir ticket</string>
     <string name="msg_prev9">¿Desea reintentar?</string>
+    <string name="msg_impArq">Imprimir arqueo</string>
+    <string name="msg_impCar">¿Imprimir cartera?</string>
+    <string name="msg_ticket">Previsualizacion de ticket</string>
 
 </resources>

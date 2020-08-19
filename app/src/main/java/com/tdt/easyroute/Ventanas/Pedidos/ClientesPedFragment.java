@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
@@ -28,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -43,6 +45,7 @@ import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.ParametrosWS;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
@@ -694,16 +697,47 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         try
         {
             if (conf.getPreventa() == 1)
-                Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas( Long.parseLong(item.getCli_cve_n()), getContext() ), true, "a s e s o r", conf, getContext());
+            {
+                String msg_imp= Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(Long.parseLong(item.getCli_cve_n()), getContext()), true, "a s e s o r", conf, getContext());
+                previsualizar(msg_imp, item);
+            }
             else
-                Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(Long.parseLong(item.getCli_cve_n()),getContext()), true, getContext(), conf);
-
-            String sql = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), item.getCli_cve_n(), "TICKET IMPRESO", "TICKET ASESOR COPIA", PositionStr);
-            BaseLocal.Insert(sql,getContext());
+            {
+                String msg_imp= Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(Long.parseLong(item.getCli_cve_n()), getContext()), true, getContext(), conf);
+                previsualizar(msg_imp,item);
+            }
         }
         catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_imprimir), e.getMessage());
+        }
+    }
+
+    private void previsualizar(final String msg_imprimir, final DataTableLC.PedidosLv item)
+    {
+        androidx.appcompat.app.AlertDialog.Builder dialogo1 = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        dialogo1.setTitle(getString(R.string.msg_ticket));
+        dialogo1.setMessage(msg_imprimir);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                String imprimir = msg_imprimir.replace("\n", "\r");
+                boolean imprimio = Impresora.imprimir(imprimir, getContext());
+                if(imprimio)
+                {
+                    String sql = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), item.getCli_cve_n(), "TICKET IMPRESO", "TICKET ASESOR COPIA", PositionStr);
+                    BaseLocal.Insert(sql,getContext());
+                }
+            }
+        });
+        dialogo1.setNegativeButton(getString(R.string.bt_cancelar), null  );
+
+        androidx.appcompat.app.AlertDialog alertDialog = dialogo1.show();
+
+        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            textView.setTextAppearance( R.style.estiloImprimir);
         }
     }
 

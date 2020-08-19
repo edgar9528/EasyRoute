@@ -3,6 +3,7 @@ package com.tdt.easyroute.Ventanas.Reportes.Venta;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -431,7 +432,6 @@ public class ProductosvenFragment extends Fragment {
             }
             imp+="\n\n";
 
-
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle(getString(R.string.msg_impPre));
             dialogo1.setMessage(imp);
@@ -447,7 +447,12 @@ public class ProductosvenFragment extends Fragment {
                     //cancelar();
                 }
             });
-            dialogo1.show();
+            AlertDialog alertDialog = dialogo1.show();
+
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textView.setTextAppearance( R.style.estiloImprimir);
+            }
 
         }catch (Exception e)
         {
@@ -587,7 +592,6 @@ public class ProductosvenFragment extends Fragment {
 
             imp+="\n\n";
 
-
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
             dialogo1.setTitle(getString(R.string.msg_impSku));
             dialogo1.setMessage(imp);
@@ -603,7 +607,12 @@ public class ProductosvenFragment extends Fragment {
                     //cancelar();
                 }
             });
-            dialogo1.show();
+
+            AlertDialog alertDialog = dialogo1.show();
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textView.setTextAppearance( R.style.estiloImprimir);
+            }
 
         }catch (Exception e)
         {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -338,8 +339,13 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                 //cancelar();
             }
         });
-        dialogo1.show();
 
+        AlertDialog alertDialog = dialogo1.show();
+        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            textView.setTextAppearance( R.style.estiloImprimir);
+        }
 
     }
 
@@ -406,9 +412,10 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
             dialogo1.setTitle(getString(R.string.msg_impSug));
             dialogo1.setMessage(menImp);
             dialogo1.setCancelable(false);
+            final String finalMenImp = menImp;
             dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-
+                    Impresora.imprimir(finalMenImp.replace("\n","\r"),getContext());
                 }
             });
             dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
@@ -416,7 +423,13 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                     //cancelar();
                 }
             });
-            dialogo1.show();
+
+            AlertDialog alertDialog = dialogo1.show();
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                textView.setTextAppearance( R.style.estiloImprimir);
+            }
 
 
         }

@@ -525,4 +525,8 @@
     <string name="msg_prev8">Error printing ticket</string>
     <string name="msg_prev9">Do you want to retry?</string>
 
+    <string name="msg_impArq">Print count</string>
+    <string name="msg_impCar">Print portfolio?</string>
+    <string name="msg_ticket">Ticket preview</string>
+
 </resources>

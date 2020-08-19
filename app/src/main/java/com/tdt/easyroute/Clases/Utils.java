@@ -887,15 +887,15 @@ public class Utils {
         return vis;
     }
 
-    public static boolean ImprimirVentaBebidas(Visita v, boolean ReImp, Context context, Configuracion conf)
+    public static String ImprimirVentaBebidas(Visita v, boolean ReImp, Context context, Configuracion conf)
     {
+        String p = "";
         try
         {
             int c = 38;
             String ruta = "";
             String vendedor = "";
             String direccion = "";
-            String p = "";
             int pc = 0;
 
             String sql = string.formatSql2("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr());
@@ -1340,25 +1340,13 @@ public class Utils {
             p += "SALDO TOTAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv) + "\n";
 
             p += "\n\n";
-            mensajeImprimir = p;
 
-            p = p.replace("\n", "\r");
-            boolean imprimio = Impresora.imprimir(p, context);
+            return p;
 
-            if (imprimio)
-            {
-                return true;
-            }
-            else
-            {
-                mensajeImprimir="";
-                return false;
-            }
         }
         catch (Exception e)
         {
-            mensajeImprimir="";
-            return false;
+            return "";
         }
     }
 
@@ -1547,13 +1535,13 @@ public class Utils {
         return vis;
     }
 
-    public static boolean ImprimirPreVentaBebidas(VisitaPrev v, boolean ReImp, String copia,Configuracion conf, Context context)
+    public static String ImprimirPreVentaBebidas(VisitaPrev v, boolean ReImp, String copia,Configuracion conf, Context context)
     {
+        String p="";
         try
         {
             String sql = string.formatSql2("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr());
             String ruta = BaseLocal.SelectDato(sql, context);
-            String p = "";
 
             p += "RUTA: " + ruta.toUpperCase() + "\n\n";
 
@@ -1905,27 +1893,13 @@ public class Utils {
             p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
             p += "+VENTA DE ENVASE DEL DIA: " + string.FormatoPesos(SubTotalE) + "\n";
             p += "=SALDO FINAL PREVENTA: " + string.FormatoPesos((InicialCred + SubtotalVenta + SubTotalE)) + "\n\n";
-            p += "SALDO EFECTIVO PREV: " + string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE) + "\n";
+            p += "SALDO EFECTIVO PREV: " + string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE) + "\n\n\n";
 
-            p += "\n\n";
-            mensajeImprimir = p;
-            p = p.replace("\n", "\r");
-            boolean imprimio = Impresora.imprimir(p, context);
-
-            if (imprimio)
-            {
-                return true;
-            }
-            else
-            {
-                mensajeImprimir="";
-                return false;
-            }
+            return p;
 
         }catch (Exception e)
         {
-            mensajeImprimir="";
-            return false;
+            return "";
         }
 
     }

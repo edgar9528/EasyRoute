@@ -3,6 +3,7 @@ package com.tdt.easyroute.Ventanas.Clientes.Cartera;
 
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -251,7 +252,7 @@ public class ClientesCarFragment extends Fragment {
             menImp+= "\n\n";
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle(getString(R.string.msg_impInv));
+            dialogo1.setTitle(getString(R.string.msg_impCar));
             dialogo1.setMessage(menImp);
             dialogo1.setCancelable(false);
             final String finalMenImp = menImp;
@@ -265,9 +266,14 @@ public class ClientesCarFragment extends Fragment {
                     //cancelar();
                 }
             });
-            dialogo1.show();
 
+            AlertDialog alertDialog = dialogo1.show();
 
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                textView.setTextAppearance( R.style.estiloImprimir);
+            }
 
         }catch (Exception e)
         {

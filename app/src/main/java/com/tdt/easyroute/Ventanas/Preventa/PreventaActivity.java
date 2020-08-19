@@ -10,11 +10,13 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +45,7 @@ import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.ViewPagerNonSwipable;
@@ -483,12 +486,13 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                                     if (Double.parseDouble(r.getLpre_precio_n()) < Double.parseDouble(dtProductos.get(k).getLpre_cliente_n())) {
                                         dtProductos.get(k).setLpre_promo_n(r.getLpre_precio_n());
                                         dtProductos.get(k).setLpre_precio_n(r.getLpre_precio_n());
-                                        dtProductos.get(k).setLpre_precio2_n(r.getLpre_precio2_n() == null ? r.getLpre_precio_n() : r.getLpre_precio2_n());
+                                        dtProductos.get(k).setLpre_precio2_n(r.getLpre_precio2_n().isEmpty() ? r.getLpre_precio_n() : r.getLpre_precio2_n());
                                         dtProductos.get(k).setProd_promo_n("1");
                                         dtProductos.get(k).setProm_cve_n(r.getProm_cve_n());
                                         dtProductos.get(k).setProm_contado_n(r.getProm_contado_n());
                                     } else {
-                                        if (r.getLpre_precio2_n() != null) {
+                                        if (r.getLpre_precio2_n() != null && !r.getLpre_precio2_n().isEmpty())
+                                        {
                                             if (Double.parseDouble(r.getLpre_precio2_n()) < Double.parseDouble(dtProductos.get(k).getLpre_cliente_n())) {
                                                 dtProductos.get(k).setLpre_promo_n(dtProductos.get(k).getLpre_cliente_n());
                                                 dtProductos.get(k).setLpre_precio_n(dtProductos.get(k).getLpre_cliente_n());
@@ -1349,7 +1353,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
             if(guardado)
             {
-                imprimir(false,false,false);
+                previsualizar();
             }
 
         }
@@ -1360,6 +1364,28 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
     }
 
+    private void previsualizar()
+    {
+        String msg_imprimir = Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente, this), false, "C L I E N T E", conf, this);
+
+        AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+        dialogo1.setTitle(getString(R.string.msg_ticket));
+        dialogo1.setMessage(msg_imprimir);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                imprimir(false,false,false);
+            }
+        });
+        AlertDialog alertDialog = dialogo1.show();
+
+        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            textView.setTextAppearance( R.style.estiloImprimir);
+        }
+    }
+
     private void imprimir(boolean impCliente,boolean impAsesor,boolean reimprimir)
     {
         int tiempoImp = 0;
@@ -1367,8 +1393,10 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         {
             if(!impCliente)
             {
-                impCliente = Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente, this), false, "C L I E N T E", conf, this);
-                tiempoImp = Utils.tiempoImpresion( Utils.getMensajeImprimir() );
+                String msg_imprimir = Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente, this), false, "C L I E N T E", conf, this);
+                tiempoImp = Utils.tiempoImpresion( msg_imprimir );
+                msg_imprimir = msg_imprimir.replace("\n", "\r");
+                impCliente = Impresora.imprimir(msg_imprimir, this);
             }
         }catch (Exception e)
         {
@@ -1382,8 +1410,11 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             { e.printStackTrace(); }
 
             if(!impAsesor)
-                impAsesor = Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente, this), false, "A S E S O R", conf, this);
-
+            {
+                String msg_imprimir = Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente, this), false, "A S E S O R", conf, this);
+                msg_imprimir = msg_imprimir.replace("\n", "\r");
+                impAsesor = Impresora.imprimir(msg_imprimir, this);
+            }
         }
 
         if( (impCliente && impAsesor)  )

@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -453,8 +455,8 @@ public class ArqueoFragment extends Fragment {
             String impAux = imp.replace("\r","\n");
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());
-            dialogo1.setTitle("¿Imprimir inventario?");
-            dialogo1.setMessage(impAux);
+            dialogo1.setTitle(getString(R.string.msg_impArq));
+            dialogo1.setMessage( impAux );
             dialogo1.setCancelable(false);
             final String finalImp = imp;
             dialogo1.setPositiveButton("Si", new DialogInterface.OnClickListener() {
@@ -467,8 +469,13 @@ public class ArqueoFragment extends Fragment {
                     //cancelar();
                 }
             });
-            dialogo1.show();
 
+            AlertDialog alertDialog = dialogo1.show();
+
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textView.setTextAppearance( R.style.estiloImprimir);
+            }
         }
         catch (Exception e)
         {

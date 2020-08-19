@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -655,7 +656,13 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                     //cancelar();
                 }
             });
-            dialogo1.show();
+            AlertDialog alertDialog = dialogo1.show();
+
+            TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                textView.setTextAppearance( R.style.estiloImprimir);
+            }
 
             Log.d("salida", mensajeImp);
 
