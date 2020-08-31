@@ -1,0 +1,78 @@
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="14"
+    >
+
+    <TextView
+        android:padding="@dimen/paddingCardView"
+        android:id="@+id/t_sku"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/table_sku"
+        style="@style/tv_titulos.normal"
+        />
+
+    <TextView
+        android:padding="@dimen/paddingCardView"
+        android:id="@+id/dat1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/table_sku"
+        style="@style/tv_titulos.normal"
+        />
+
+    <TextView
+        android:padding="@dimen/paddingCardView"
+        android:id="@+id/dat2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/table_sku"
+        style="@style/tv_titulos.normal"
+        />
+
+    <TextView
+        android:padding="@dimen/paddingCardView"
+        android:id="@+id/dat3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/table_sku"
+        style="@style/tv_titulos.normal"
+        />
+
+    <TextView
+        android:padding="@dimen/paddingCardView"
+        android:id="@+id/dat4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/table_sku"
+        style="@style/tv_titulos.normal"
+        />
+
+    <TextView
+        android:padding="@dimen/paddingCardView"
+        android:id="@+id/dat5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/table_sku"
+        style="@style/tv_titulos.normal"
+        />
+
+    <TextView
+        android:padding="@dimen/paddingCardView"
+        android:id="@+id/dat6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="@string/table_sku"
+        style="@style/tv_titulos.normal"
+        />
+
+</TableRow>

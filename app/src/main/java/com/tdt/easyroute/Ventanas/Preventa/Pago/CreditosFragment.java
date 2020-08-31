@@ -82,7 +82,7 @@ public class CreditosFragment extends Fragment {
 
             tv_saldo.setText(string.FormatoPesos(0));
             tv_kit.setText(string.FormatoPesos(0));
-            pedidosActivity.setTextKit(tv_kit.getText().toString());
+            //pedidosActivity.setTextKit(tv_kit.getText().toString());
 
             pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
 

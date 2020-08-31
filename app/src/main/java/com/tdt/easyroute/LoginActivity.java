@@ -1,6 +1,4 @@
 package com.tdt.easyroute;
-
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
@@ -28,17 +25,10 @@ import com.tdt.easyroute.Model.Permisos;
 import com.tdt.easyroute.Model.Usuario;
 import com.tdt.easyroute.Ventanas.Configuracion.ConfiguracionActivity;
 import com.tdt.easyroute.Ventanas.PruebasActivity;
-
 import org.ksoap2.serialization.PropertyInfo;
-
-import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity implements AsyncResponseJSON {
 
@@ -50,8 +40,6 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
     private Usuario u;
     private String user,pass;
     boolean bloq;
-
-    private ImageView iv_logo;
 
     @Override
     public void onBackPressed() {
@@ -84,9 +72,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        try {
-
-
+        try
+        {
             pruebas();
 
             Button button_sesion;
@@ -95,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             button_sesion = findViewById(R.id.Blogin);
             ti_usuario = findViewById(R.id.TIusername);
             ti_contrasena = findViewById(R.id.TIpassword);
-            iv_logo = findViewById(R.id.imageView);
+            ImageView iv_logo = findViewById(R.id.imageView);
 
             ti_usuario.setText("AGUTIERREZ");
             ti_contrasena.setText("772");
@@ -125,10 +112,15 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                     Intent intent = new Intent(LoginActivity.this, ConfiguracionActivity.class);
                     intent.putExtra("admin", true);
                     startActivity(intent);
+                }
+            });
 
-                    /*Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
-                    startActivity(intent);*/
-
+            iv_logo.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(LoginActivity.this, PruebasActivity.class);
+                    startActivity(intent);
+                    return true;
                 }
             });
 
@@ -145,7 +137,8 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
     {
         try {
 
-            if (!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty()) {
+            if (!ti_usuario.getText().toString().isEmpty() && !ti_contrasena.getText().toString().isEmpty())
+            {
                 user = ti_usuario.getText().toString();
                 pass = ti_contrasena.getText().toString();
 
@@ -283,9 +276,10 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             actualizarUsuario();
         }
 
-        try {
-
-            if (bd != null) {
+        try
+        {
+            if (bd != null)
+            {
 
                 if (!u.getEstatus().equals("H") || u.getBloqueado() == 1)
                 {
@@ -305,10 +299,11 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                     bd.execSQL(con);
 
                     iniciarSesion();
-
                 }
+
+                if(bd.isOpen())
+                    bd.close();
             }
-            bd.close();
 
         }catch (Exception e)
         {
@@ -644,39 +639,36 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
     }
 
     private void pruebas() throws ParseException {
-        /*ArrayList<DataTableLC.Prueba> alOriginal= new ArrayList<>();
+        ArrayList<DataTableLC.Prueba> alOriginal= new ArrayList<>();
 
         alOriginal.add( new DataTableLC.Prueba("edgar","1"));
-        alOriginal.add( new DataTableLC.Prueba("juan",null));
-        alOriginal.add( new DataTableLC.Prueba("pedro","1"));
-        alOriginal.add( new DataTableLC.Prueba("jasmin","1"));
-        alOriginal.add( new DataTableLC.Prueba(null,"5"));
-        alOriginal.add( new DataTableLC.Prueba("pedro","2"));
-        alOriginal.add( new DataTableLC.Prueba("pedro","1"));
-        alOriginal.add( new DataTableLC.Prueba("edgar","1"));
-        alOriginal.add( new DataTableLC.Prueba("may",null));
-        alOriginal.add( new DataTableLC.Prueba("edgar","1"));
-        alOriginal.add( new DataTableLC.Prueba("giovanny","1"));
+        alOriginal.add( new DataTableLC.Prueba("juan","1"));
 
-        ArrayList<DataTableLC.Prueba> alCopia= new ArrayList<>();
-        ArrayList<String> clavesGroupby = new ArrayList<>();
+        //ArrayList<DataTableLC.Prueba> alCopia = alOriginal;
+        ArrayList<DataTableLC.Prueba> alCopia =  new ArrayList<>(alOriginal);
 
-        for(DataTableLC.Prueba p : alOriginal)
+        for(int i=0; i<alOriginal.size();i++)
+            Log.d("salida","al original: "+ alOriginal.get(i).getNombre());
+
+        for(int i=0; i<alCopia.size();i++)
+            Log.d("salida","al copia: "+ alCopia.get(i).getNombre());
+
+        alCopia.add( new DataTableLC.Prueba("edgar","2"));
+
+        for(int i=0; i<alOriginal.size();i++)
+            Log.d("salida","al original: "+ alOriginal.get(i).getNombre());
+
+        for(int i=0; i<alCopia.size();i++)
+            Log.d("salida","al copia: "+ alCopia.get(i).getNombre());
+
+        for(DataTableLC.Prueba p : alCopia)
         {
-            if( p.getEdad()!=null && !p.getEdad().isEmpty())
-            {
-                String cve = p.getNombre() + "_" + p.getEdad();
-                if (!clavesGroupby.contains(cve))
-                {
-                    alCopia.add(p);
-                    clavesGroupby.add(cve);
-                }
-            }
+            p.setNombre("Prueba");
+            p.setEdad("Correcta");
         }
 
-         */
-
-
+        for(int i=0; i<alCopia.size();i++)
+            Log.d("salida","al copia: "+ alCopia.get(i).getNombre() +" "+alCopia.get(i).getEdad());
 
     }
 

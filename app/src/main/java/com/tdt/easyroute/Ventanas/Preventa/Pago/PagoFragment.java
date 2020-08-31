@@ -60,7 +60,6 @@ public class PagoFragment extends Fragment {
     private TextView tv_saldo;
     private double disponible;
     private double AdeudoAct = 0;
-    private double _txtSaldoDeudaEnv=0;
     private double _txtSubEnv=0;
 
 
@@ -96,7 +95,6 @@ public class PagoFragment extends Fragment {
             tv_saldo.setText(string.FormatoPesos(0));
             tv_contadoEsp.setText(string.FormatoPesos(0));
             tv_kit.setText(string.FormatoPesos(0));
-            pedidosActivity.setTextKit(tv_kit.getText().toString());
 
             pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
             pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
@@ -171,21 +169,27 @@ public class PagoFragment extends Fragment {
             }
         });
 
-        pedidosVM.getTxtSaldoDeudaEnv().observe(getActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String saldoDeudaEnv) {
-                _txtSaldoDeudaEnv = Double.parseDouble( string.DelCaracteres( saldoDeudaEnv ));
-                actualizarTotales();
-            }
-        });
-
-
         pedidosVM.getDgPagosVisitado().observe(getActivity(), new Observer<ArrayList<DataTableLC.DgPagos>>() {
             @Override
             public void onChanged(ArrayList<DataTableLC.DgPagos> DgPagosVisitado) {
                     for(DataTableLC.DgPagos d : DgPagosVisitado)
                         pagosAdapterRecyclerView.agregarItem(d);
 
+            }
+        });
+
+        pedidosVM.getTxtKit().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                tv_kit.setText(s);
+            }
+        });
+
+        pedidosVM.getTxtSubEnv().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                _txtSubEnv = Double.parseDouble(string.DelCaracteres(s) );
+                actualizarTotales();
             }
         });
 
@@ -204,7 +208,7 @@ public class PagoFragment extends Fragment {
 
             double DescKit = Double.parseDouble( string.DelCaracteres(tv_kit.getText().toString()) );
 
-            total = total + _txtSubEnv+ _txtSaldoDeudaEnv;
+            total = total + _txtSubEnv;
 
             tv_totalVenta.setText(string.FormatoPesos(total));
             pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );

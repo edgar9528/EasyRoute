@@ -34,8 +34,6 @@ import java.util.Locale;
 
 public class Utils {
 
-    private static String mensajeImprimir;
-
     public static String Encriptar(String _cadenaAencriptar) {
         byte[] bytes = _cadenaAencriptar.getBytes(StandardCharsets.UTF_16LE);
         String base64 = android.util.Base64.encodeToString(bytes, Base64.NO_WRAP);
@@ -1110,7 +1108,7 @@ public class Utils {
                                     SubTotalE += Double.parseDouble(vta.getEnvase()[i].getVen_prestamo_n()) * Double.parseDouble(vta.getEnvase()[i].getLpre_precio_n());
                                 }
                             }
-                            p += "TOTAL ENVASE: " + String.format("%.2f", SubTotalE) + "\n\n";
+                            p += "TOTAL ENVASE: " + string.FormatoPesos( SubTotalE) + "\n\n";
                         }
 
                         SubtotalVtaEnv += SubTotalE;
@@ -1920,10 +1918,6 @@ public class Utils {
             tiempo=0;
         }
         return tiempo;
-    }
-
-    public static String getMensajeImprimir() {
-        return mensajeImprimir;
     }
 
 }

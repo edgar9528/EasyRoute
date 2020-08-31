@@ -66,24 +66,19 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                     GoogleApiClient.ConnectionCallbacks,
                     LocationListener {
 
-    private boolean esventa;
     private String noCli;
-    private String Cliente;
-    private boolean ConVenta;
     private boolean Visitado = false;
     private String PositionStr;
     private String comentario = "";
     private boolean removerVenta = false;
     private String _tv_adeudoN;
     private String _tv_totAbono;
-    private String _txtKit;
-    private String _txtSaldoDeudaEnv;
     private String _txtVenta;
     private String _txtSaldo;
+    private String _txtKit;
     private String folio = "";
     private long cliente = 0;
     private int result = 0;
-
 
     Configuracion conf;
     DataTableLC.DtCliVentaNivel rc;
@@ -134,7 +129,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
         setTitle(getString(R.string.title_preventa));
 
-
         noCli = getIntent().getStringExtra("idcli");
         cliente = Long.parseLong(noCli);
 
@@ -144,13 +138,10 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_ped6));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_cred3));
-        if (!removerVenta)
+        if (!removerVenta) //se maneja en PagerPrevPedidosAdapter
             tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_ped2));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_ped3));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tl_ped4));
-
-        final int tabsid[] = {0,1,3,4}; // para cuando se remueve la venta
-
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -169,6 +160,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             public void onTabSelected(TabLayout.Tab tab)
             {
                 ValidaCredito();
+                CalcularKit();
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -220,13 +212,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             @Override
             public void onChanged(String s) {
                 _tv_totAbono = s;
-            }
-        });
-
-        pedidosVM.getTxtSaldoDeudaEnv().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                _txtSaldoDeudaEnv=s;
             }
         });
 
@@ -701,22 +686,12 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
     }
 
-    private ArrayList<DataTableLC.EnvasesAdeudo> actualizarAdeudoEnvase(ArrayList<DataTableLC.EnvasesAdeudo> al)
+    public void UpdateDgEnvase(ArrayList<DataTableLC.EnvasesPreventa> nuevoEnvases)
     {
-        double adeudo,abono,venta,lprePrecio;
-        for(int i=0; i<al.size(); i++)
-        {
-            adeudo = Double.parseDouble(al.get(i).getAdeudo());
-            abono = Double.parseDouble(al.get(i).getAbono());
-            venta = Double.parseDouble(al.get(i).getVenta());
-            lprePrecio = Double.parseDouble(al.get(i).getLpre_precio_n());
-
-            al.get(i).setSaldo( String.valueOf( adeudo-abono-venta  ) );
-            al.get(i).setSubPagoEnv( String.valueOf( abono+venta ) );
-            al.get(i).setSubTotal( String.valueOf( lprePrecio*venta ) );
-        }
-        return al;
+        dgEnvase =  nuevoEnvases;
+        CalcularEnvase();
     }
+
 
     private void ValidaClienteInactivo()
     {
@@ -739,9 +714,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
     public void CalcularEnvase()
     {
-        try {
-            boolean HayNegativos = false;
-
+        try
+        {
             for (DataTableLC.EnvasesPreventa r : dgEnvase) {
                 double can = 0;
                 for (DataTableLC.ProductosPed p : dgProd2) {
@@ -749,12 +723,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                         can += Double.parseDouble(p.getProd_cant_n());
                 }
                 r.setProd_cargo_n(String.valueOf(can));
-
-                /*if (Integer.parseInt(r.getRestante()) < 0) {
-                    r.setRecibido("0");
-                    r.setVenta("0");
-                    HayNegativos = true;
-                }*/
             }
 
             ArrayList<DataTableLC.PromocionesEnv> PromoEnv = ObtenerPromoEnvase( rc.getNvc_nivel_n(),
@@ -900,14 +868,37 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                 }
             }
 
-            if (HayNegativos)
-            {
-                Toast.makeText(this, getString(R.string.tt_ped13), Toast.LENGTH_SHORT).show();
-            }
+            dgEnvase = actualizarEnvase(dgEnvase);
+            pedidosVM.setDgEnvasePrev(dgEnvase);
+
+            double total = 0;
+            for(DataTableLC.EnvasesPreventa ep : dgEnvase)
+                total+= Double.parseDouble( ep.getProd_subtotal_n() );
+
+            pedidosVM.setTxtSubEnv(String.valueOf(total));
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped17), e.getMessage());
         }
+    }
+
+    private ArrayList<DataTableLC.EnvasesPreventa> actualizarEnvase(ArrayList<DataTableLC.EnvasesPreventa> al)
+    {
+        double prod_saldo,prod_cargo,prod_abono_n,prod_regalo_n,prod_venta_n,lpre_precio_n;
+        for(int i=0; i<al.size(); i++)
+        {
+            prod_saldo = Double.parseDouble(al.get(i).getProd_saldo_n());
+            prod_cargo = Double.parseDouble(al.get(i).getProd_cargo_n());
+            prod_abono_n = Double.parseDouble(al.get(i).getProd_abono_n());
+            prod_regalo_n = Double.parseDouble(al.get(i).getProd_regalo_n());
+            prod_venta_n = Double.parseDouble(al.get(i).getProd_venta_n());
+            lpre_precio_n = Double.parseDouble(al.get(i).getLpre_precio_n());
+
+            al.get(i).setProd_final_n( String.valueOf( prod_saldo+prod_cargo-prod_abono_n-prod_regalo_n-prod_venta_n ) );
+            al.get(i).setProd_subtotal_n( String.valueOf(prod_venta_n*lpre_precio_n) );
+
+        }
+        return al;
     }
 
     public void CalcularTotales()
@@ -964,6 +955,125 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         {
             Utils.msgError(this, getString(R.string.err_ped20), e.getMessage());
         }
+    }
+
+    private void CalcularKit()
+    {
+        Log.d("salida","ENTRO A CALCULAR KIT");
+
+        if (dtKits == null)
+        {
+            _txtKit = string.FormatoPesos("0");
+            pedidosVM.setTxtKit(_txtKit);
+            return;
+        }
+
+        double DescKit = 0;
+
+        ArrayList<String> gk = new ArrayList<>();
+        for(DataTableLC.PedPromocionesKit pk: dtKits)
+            if(!gk.contains(pk.getProm_cve_n()))
+                gk.add(pk.getProm_cve_n());
+
+        ArrayList<DataTableLC.ProductosPed> Aux = new ArrayList<>(dgProd2);
+
+        if (Aux==null || Aux.size() <= 0)
+            return;
+
+        for(DataTableLC.ProductosPed kp: Aux)
+            kp.setProm_kit_n("0");
+
+        boolean AplicaKit=true;
+
+        for (DataTableLC.PedPromocionesKit tk : dtKits)
+            tk.setProm_veces_n("0");
+
+        for(String ki : gk)
+        {
+            ArrayList<DataTableLC.PedPromocionesKit> rk = new ArrayList<>();
+            for(int i=0; i<dtKits.size();i++)
+            {
+                if(ki.equals( dtKits.get(i).getProm_cve_n() ))
+                    rk.add(dtKits.get(i));
+            }
+
+            if (rk.size() > 0)
+            {
+                AplicaKit = true;
+                for (DataTableLC.PedPromocionesKit ik : rk)
+                {
+                    //item kit existe ike
+                    ArrayList<DataTableLC.ProductosPed> ike = new ArrayList<>();
+
+                    for(int i=0; i<Aux.size();i++)
+                    {
+                        if( ik.getProd_cve_n().equals( Aux.get(i).getProd_cve_n() ) &&
+                                ik.getProd_cant_n().equals( Aux.get(i).getProd_cant_n() ) &&
+                                Aux.get(i).getProm_kit_n().equals("0")
+                        )
+                            ike.add(Aux.get(i));
+                    }
+
+                    if (ike.size() <= 0)
+                    {
+                        AplicaKit = false;
+                        break;
+                    }
+                    else
+                    {
+
+                        int prom_veces = (int) ( Double.parseDouble( ike.get(0).getProd_cant_n() ) / Double.parseDouble(ik.getProd_cant_n()) ) ;
+
+                        ik.setProm_veces_n( String.valueOf(prom_veces) );
+
+                    }
+                }
+                if (AplicaKit)
+                {
+
+                    int veces = Integer.parseInt(rk.get(0).getProm_veces_n());
+                    for(int i=0; i<rk.size();i++)
+                        if (Integer.parseInt(rk.get(i).getProm_veces_n()) < veces)
+                            veces = Integer.parseInt(rk.get(i).getProm_veces_n());
+
+                    for(DataTableLC.PedPromocionesKit ik : rk)
+                    {
+                        //item kit existe ike
+                        ArrayList<DataTableLC.ProductosPed> ikea = new ArrayList<>();
+
+                        for(int i=0; i< Aux.size(); i++ )
+                        {
+                            if( ik.getProd_cve_n().equals( Aux.get(i).getProd_cve_n() ) &&
+                                    Double.parseDouble( Aux.get(i).getProd_cant_n() ) >= Double.parseDouble(ik.getProd_cant_n()) )
+                            {
+                                ikea.add( Aux.get(i) );
+                            }
+
+                        }
+
+                        if (ikea.size() > 0)
+                        {
+                            //---- Valida si la promo tiene mejor precio
+                            if( Double.parseDouble(ikea.get(0).getLpre_precio_n()) > Double.parseDouble(ik.getLpre_precio_n()) )
+                            {
+                                DescKit += veces * Double.parseDouble ( ik.getProd_cant_n() )
+                                        * ( Double.parseDouble(ikea.get(0).getLpre_precio_n()) - Double.parseDouble(ik.getLpre_precio_n()) )  ;
+                            }
+                            else
+                                DescKit += 0;
+
+                            ik.setProm_veces_n( String.valueOf(veces) );
+                            ikea.get(0).setProm_kit_n( ik.getProm_cve_n() );
+
+                        }// Existe el item para la promo
+                    }// For para descuento de promo
+                } // if aplico promocion
+            }// if si la promo tiene SKU
+        }// for para cada promocion
+
+        _txtKit = string.FormatoPesos(DescKit);
+        pedidosVM.setTxtKit( _txtKit );
+
     }
 
     double totDeuda = 0, totAbono = 0, montoCredito = 0, disponible = 0;
@@ -1987,11 +2097,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
     }
 
     //region variables compartidas
-
-    public boolean getEsVenta()
-    {
-        return esventa;
-    }
     public DataTableLC.DtCliVentaNivel getRC()
     {
         return rc;
@@ -2000,10 +2105,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
     {
         return disponible;
     };
-    public void setTextKit(String kit)
-    {
-        _txtKit = kit;
-    }
 
     //endregion
 

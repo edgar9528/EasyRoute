@@ -1393,7 +1393,7 @@ public class Querys {
                         "usu_cve_str,cred_fecha_dt,cred_descripcion_str,cred_vencimiento_dt,cred_monto_n," +
                         "cred_abono_n,cred_engestoria_n,cred_esenvase_n,cred_especial_n,prod_cve_n,prod_sku_str," +
                         "prod_precio_n,prod_cant_n,prod_cantabono_n,trans_est_n,trans_fecha_dt) " +
-                        "values ('{0}',{1},'{2}',datetime('now','localtime'),'{3}',dateadd(day,15,datetime('now','localtime')),{4}," +
+                        "values ('{0}',{1},'{2}',datetime('now','localtime'),'{3}',datetime('now','localtime', '+15 DAYS'),{4}," +
                         "0,0,{5},0,{6},'{9}',{7},{8},0,0,null)";
 
                 //No utilizado hay que reordenar parametros
@@ -1401,28 +1401,28 @@ public class Querys {
                         "usu_cve_str,cred_fecha_dt,cred_descripcion_str,cred_vencimiento_dt,cred_monto_n," +
                         "cred_abono_n,cred_engestoria_n,cred_esenvase_n,cred_especial_n,prod_cve_n,prod_sku_str," +
                         "prod_precio_n,prod_cant_n,prod_cantabono_n,trans_est_n,trans_fecha_dt) " +
-                        "values ('{0}',{1},'{2}',datetime('now','localtime'),'{3}',dateadd(day,{4},datetime('now','localtime')),{5}," +
+                        "values ('{0}',{1},'{2}',datetime('now','localtime'),'{3}',datetime('now','localtime', '+{4} DAYS'),{5}," +
                         "0,0,{6},0,{7},'{8}',{9},{10},0,0,null)";
 
                 public static String InsCreditosPago3 = "insert into Creditos(cred_referencia_str,cli_cve_n," +
                         "usu_cve_str,cred_fecha_dt,cred_descripcion_str,cred_vencimiento_dt,cred_monto_n," +
                         "cred_abono_n,cred_engestoria_n,cred_esenvase_n,cred_especial_n,prod_cve_n,prod_sku_str," +
                         "prod_precio_n,prod_cant_n,prod_cantabono_n,trans_est_n,trans_fecha_dt) " +
-                        "values ('{0}',{1},'{2}',datetime('now','localtime'),'{3}',dateadd(day,{10},datetime('now','localtime')),{4}," +
+                        "values ('{0}',{1},'{2}',datetime('now','localtime'),'{3}',datetime('now','localtime', '+{10} DAYS'),{4}," +
                         "0,0,{5},0,{6},'{9}',{7},{8},0,0,null)";
 
                 public static String InsConsignaPago = "insert into Creditos(cred_referencia_str,cli_cve_n," +
                         "usu_cve_str,cred_fecha_dt,cred_descripcion_str,cred_vencimiento_dt,cred_monto_n," +
                         "cred_abono_n,cred_engestoria_n,cred_esenvase_n,cred_especial_n,prod_cve_n,prod_sku_str,prod_precio_n,prod_cant_n," +
                         "prod_cantabono_n,trans_est_n,trans_fecha_dt) values ('{0}',{1}," +
-                        "'{2}',datetime('now','localtime'),'{3}',dateadd(day,{9},datetime('now','localtime')),{4}," +
+                        "'{2}',datetime('now','localtime'),'{3}',datetime('now','localtime', '+{9} DAYS'),{4}," +
                         "0,0,{5},1,{6},'{10}',{7},{8},0,0,null)";
 
                 public static String InsCreditosPagoEnv = "insert into Creditos(cred_referencia_str,cli_cve_n," +
                         "usu_cve_str,cred_fecha_dt,cred_descripcion_str,cred_vencimiento_dt,cred_monto_n," +
                         "cred_abono_n,cred_engestoria_n,cred_esenvase_n,cred_especial_n,prod_cve_n,prod_sku,str,prod_precio_n,prod_cant_n," +
                         "prod_cantabono_n,trans_est_n,trans_fecha_dt) values ('{0}',{1}," +
-                        "'{2}',datetime('now','localtime'),'{3}',dateadd(day,15,datetime('now','localtime')),{4}," +
+                        "'{2}',datetime('now','localtime'),'{3}',datetime('now','localtime', '+15 DAYS'),{4}," +
                         "0,0,{5},0,{6},'{9}',{7},{8},0,0,null)";
 
                 public static String DelCreditos = "delete from Creditos ";

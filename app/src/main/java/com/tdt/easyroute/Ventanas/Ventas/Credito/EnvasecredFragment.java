@@ -40,7 +40,6 @@ public class EnvasecredFragment extends Fragment {
 
     private TableLayout tableLayout;
     private LayoutInflater layoutInflater;
-    private View vista;
     private TextView tv_anterior;
 
     public EnvasecredFragment() { }
@@ -64,7 +63,6 @@ public class EnvasecredFragment extends Fragment {
 
         tableLayout = view.findViewById(R.id.tableLayout);
         layoutInflater = inflater;
-        vista=view;
         tv_anterior = new TextView(getContext());
 
         return view;

@@ -95,7 +95,6 @@ public class PagoFragment extends Fragment {
             tv_saldo.setText(string.FormatoPesos(0));
             tv_contadoEsp.setText(string.FormatoPesos(0));
             tv_kit.setText(string.FormatoPesos(0));
-            pedidosActivity.setTextKit(tv_kit.getText().toString());
 
             pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
             pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
@@ -174,6 +173,22 @@ public class PagoFragment extends Fragment {
             @Override
             public void onChanged(String saldoDeudaEnv) {
                 _txtSaldoDeudaEnv = Double.parseDouble( string.DelCaracteres( saldoDeudaEnv ));
+                actualizarTotales();
+            }
+        });
+
+        pedidosVM.getTxtSubEnv().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                _txtSubEnv = Double.parseDouble( string.DelCaracteres(s)) ;
+                actualizarTotales();
+            }
+        });
+
+        pedidosVM.getTxtKit().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                tv_kit.setText( string.FormatoPesos(s));
                 actualizarTotales();
             }
         });

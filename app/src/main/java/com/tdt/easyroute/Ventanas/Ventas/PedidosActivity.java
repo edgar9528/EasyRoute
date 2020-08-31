@@ -169,6 +169,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 ValidaCredito();
+                CalcularKit();
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -1059,7 +1060,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
     private void CalcularVenta()
     {
-        try {
+        try
+        {
             double calculo = 0;
             double DescKit = 0;
             DescKit = Double.parseDouble( string.DelCaracteres(_txtKit) ) ; //decimal.Parse(txtKit.Text.Replace("$", ""));
@@ -1092,7 +1094,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
     public void CalcularEnvase()
     {
-        try {
+        try
+        {
             boolean HayNegativos = false;
 
             for (DataTableLC.EnvasesPed r : dgEnvase) {
@@ -1103,7 +1106,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                 }
                 r.setEntregado(String.valueOf(can));
 
-                if (Integer.parseInt(r.getRestante()) < 0) {
+                if (Double.parseDouble(r.getRestante()) < 0) {
                     r.setRecibido("0");
                     r.setVenta("0");
                     HayNegativos = true;
@@ -1186,9 +1189,9 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
                                         for(DataTableLC.PromocionesEnv p : rp)
                                         {
-                                            int m = Integer.parseInt(p.getProm_m_n());
-                                            int n = Integer.parseInt( p.getProm_n_n() );
-                                            int k = Integer.parseInt(x.getProd_cant_n());
+                                            int m = (int) Double.parseDouble(p.getProm_m_n());
+                                            int n = (int) Double.parseDouble(p.getProm_n_n() );
+                                            int k = (int) Double.parseDouble(x.getProd_cant_n());
                                             kp += (k / m) * n;
                                         }
                                         r.setRegalo(String.valueOf(kp));
@@ -1239,9 +1242,9 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
                                         for(DataTableLC.PromocionesEnv p : rp)
                                         {
-                                            int m = Integer.parseInt(p.getProm_m_n() );
-                                            int n = Integer.parseInt(p.getProm_n_n());
-                                            int k = Integer.parseInt(rea.getProd_cant_n());
+                                            int m = (int)Double.parseDouble(p.getProm_m_n() );
+                                            int n = (int)Double.parseDouble(p.getProm_n_n());
+                                            int k = (int)Double.parseDouble(rea.getProd_cant_n());
                                             kp += (k/m)*n;
                                         }
                                     }
@@ -1253,6 +1256,14 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                 }
             }
 
+            dgEnvase = actualizarEnvase(dgEnvase);
+            pedidosVM.setDgEnvase(dgEnvase);
+
+            double total = 0;
+            for(DataTableLC.EnvasesPed ep : dgEnvase)
+                total+= Double.parseDouble( ep.getSubtotal() );
+            pedidosVM.setTxtSubEnv(String.valueOf(total));
+
             if (HayNegativos)
             {
                 Toast.makeText(this, getString(R.string.tt_ped13), Toast.LENGTH_SHORT).show();
@@ -1261,6 +1272,30 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped17), e.getMessage());
         }
+    }
+
+    public void UpdateDgEnvase(ArrayList<DataTableLC.EnvasesPed> nuevoEnvases)
+    {
+        dgEnvase =  nuevoEnvases;
+        CalcularEnvase();
+    }
+
+    private ArrayList<DataTableLC.EnvasesPed> actualizarEnvase(ArrayList<DataTableLC.EnvasesPed> al)
+    {
+        double entregado,recibido,regalo,venta,lprePrecio;
+        for(int i=0; i<al.size(); i++)
+        {
+            entregado = Double.parseDouble(al.get(i).getEntregado());
+            recibido = Double.parseDouble(al.get(i).getRecibido());
+            regalo = Double.parseDouble(al.get(i).getRegalo());
+            venta = Double.parseDouble(al.get(i).getVenta());
+            lprePrecio = Double.parseDouble(al.get(i).getLpre_precio_n());
+
+            al.get(i).setRestante( String.valueOf(entregado-recibido-regalo-venta) );
+            al.get(i).setSubAbonoEnv( String.valueOf(recibido-regalo-venta) );
+            al.get(i).setSubtotal( String.valueOf(lprePrecio*venta) );
+        }
+        return al;
     }
 
     public void CalcularTotales()
@@ -1317,6 +1352,124 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         {
             Utils.msgError(this, getString(R.string.err_ped20), e.getMessage());
         }
+    }
+
+    private void CalcularKit()
+    {
+        Log.d("salida","ENTRO A CALCULAR KIT");
+
+        if (dtKits == null)
+        {
+            _txtKit = string.FormatoPesos("0");
+            pedidosVM.setTxtKit(_txtKit);
+            return;
+        }
+
+        double DescKit = 0;
+
+        ArrayList<String> gk = new ArrayList<>();
+        for(DataTableLC.PedPromocionesKit pk: dtKits)
+            if(!gk.contains(pk.getProm_cve_n()))
+                gk.add(pk.getProm_cve_n());
+
+        ArrayList<DataTableLC.ProductosPed> Aux = new ArrayList<>(dgProd2);
+
+        if (Aux==null || Aux.size() <= 0)
+            return;
+
+        for(DataTableLC.ProductosPed kp: Aux)
+            kp.setProm_kit_n("0");
+
+        boolean AplicaKit=true;
+
+        for (DataTableLC.PedPromocionesKit tk : dtKits)
+            tk.setProm_veces_n("0");
+
+        for(String ki : gk)
+        {
+            ArrayList<DataTableLC.PedPromocionesKit> rk = new ArrayList<>();
+            for(int i=0; i<dtKits.size();i++)
+            {
+                if(ki.equals( dtKits.get(i).getProm_cve_n() ))
+                    rk.add(dtKits.get(i));
+            }
+
+            if (rk.size() > 0)
+            {
+                AplicaKit = true;
+                for (DataTableLC.PedPromocionesKit ik : rk)
+                {
+                    //item kit existe ike
+                    ArrayList<DataTableLC.ProductosPed> ike = new ArrayList<>();
+
+                    for(int i=0; i<Aux.size();i++)
+                    {
+                        if( ik.getProd_cve_n().equals( Aux.get(i).getProd_cve_n() ) &&
+                            ik.getProd_cant_n().equals( Aux.get(i).getProd_cant_n() ) &&
+                            Aux.get(i).getProm_kit_n().equals("0")
+                          )
+                            ike.add(Aux.get(i));
+                    }
+
+                    if (ike.size() <= 0)
+                    {
+                        AplicaKit = false;
+                        break;
+                    }
+                    else
+                    {
+
+                        int prom_veces = (int) ( Double.parseDouble( ike.get(0).getProd_cant_n() ) / Double.parseDouble(ik.getProd_cant_n()) ) ;
+
+                        ik.setProm_veces_n( String.valueOf(prom_veces) );
+
+                    }
+                }
+                if (AplicaKit)
+                {
+
+                    int veces = Integer.parseInt(rk.get(0).getProm_veces_n());
+                    for(int i=0; i<rk.size();i++)
+                        if (Integer.parseInt(rk.get(i).getProm_veces_n()) < veces)
+                            veces = Integer.parseInt(rk.get(i).getProm_veces_n());
+
+                    for(DataTableLC.PedPromocionesKit ik : rk)
+                    {
+                        //item kit existe ike
+                        ArrayList<DataTableLC.ProductosPed> ikea = new ArrayList<>();
+
+                        for(int i=0; i< Aux.size(); i++ )
+                        {
+                            if( ik.getProd_cve_n().equals( Aux.get(i).getProd_cve_n() ) &&
+                               Double.parseDouble( Aux.get(i).getProd_cant_n() ) >= Double.parseDouble(ik.getProd_cant_n()) )
+                            {
+                                ikea.add( Aux.get(i) );
+                            }
+
+                        }
+
+                        if (ikea.size() > 0)
+                        {
+                            //---- Valida si la promo tiene mejor precio
+                            if( Double.parseDouble(ikea.get(0).getLpre_precio_n()) > Double.parseDouble(ik.getLpre_precio_n()) )
+                            {
+                                DescKit += veces * Double.parseDouble ( ik.getProd_cant_n() )
+                                        * ( Double.parseDouble(ikea.get(0).getLpre_precio_n()) - Double.parseDouble(ik.getLpre_precio_n()) )  ;
+                            }
+                            else
+                                DescKit += 0;
+
+                            ik.setProm_veces_n( String.valueOf(veces) );
+                            ikea.get(0).setProm_kit_n( ik.getProm_cve_n() );
+
+                        }// Existe el item para la promo
+                    }// For para descuento de promo
+                } // if aplico promocion
+            }// if si la promo tiene SKU
+        }// for para cada promocion
+
+        _txtKit = string.FormatoPesos(DescKit);
+        pedidosVM.setTxtKit( _txtKit );
     }
 
     double totDeuda = 0, totAbono = 0, montoCredito = 0, disponible = 0;
@@ -1724,7 +1877,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         boolean consigna = false;
         boolean credito = false;
         String folio=null;
-        String coordenada = "NO VALIDA";
+        String coordenada = getLatLon();
         //if (Utils.position.PositionValid)
             //coordenada = Utils.position.PositionStr;
         try
@@ -1747,9 +1900,12 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
             // -----------  Organizar movimientos de envase ------------------//
             ArrayList<DataTableLC.MovimientosEnv> vme = new ArrayList<>();
-            for (DataTableLC.EnvasesPed ed : dgEnvase) {
-                for (DataTableLC.EnvasesAdeudo ea : dgDeudaEnv) {
-                    if (ed.getProd_sku_str().equals(ea.getProd_sku_str())) {
+            for (DataTableLC.EnvasesPed ed : dgEnvase)
+            {
+                for (DataTableLC.EnvasesAdeudo ea : dgDeudaEnv)
+                {
+                    if (ed.getProd_sku_str().equals(ea.getProd_sku_str()))
+                    {
                         DataTableLC.MovimientosEnv o = new DataTableLC.MovimientosEnv();
 
                         o.setProd_cve_n(ed.getProd_cve_n());
@@ -2639,8 +2795,6 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                 }
                 //--------------- Trabajo con envase  ---------------------//
 
-
-
                 con= string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido,
                         conf.getUsuario(), conf.getRutaStr(), noCli, "CON COBRANZA", "VISITA CON COBRANZA", coordenada);
                 db.execSQL(con);
@@ -2763,7 +2917,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
         for(DataTableLC.EnvasesPed er : dgEnvase)
         {
-            if(Integer.parseInt( er.getRestante() ) < 0)
+            if( (int) Double.parseDouble( er.getRestante() ) < 0)
             {
                 Utils.msgInfo(this, getString(R.string.msg_ped9));
                 return false;
@@ -2973,10 +3127,6 @@ public class PedidosActivity extends AppCompatActivity implements         Google
     {
         return disponible;
     };
-    public void setTextKit(String kit)
-    {
-        _txtKit = kit;
-    }
 
     //endregion
 
@@ -2988,6 +3138,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
     private LocationRequest locRequest;
     String latLon=null;
     //endregion
+
     //region Obtener ubicación actual
 
     public String getLatLon()

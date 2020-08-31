@@ -44,7 +44,7 @@ public class VentavenFragment extends Fragment {
     private ArrayList<DataTableLC.ProductosPed> dgProd2;
     private VentaPrevAdapterRecyclerView ventaAdapterRecyclerView;
     private TextView tv_subTotal2;
-    private boolean esVenta;
+    private PreventaActivity preventaActivity;
 
     public VentavenFragment() { }
 
@@ -63,8 +63,7 @@ public class VentavenFragment extends Fragment {
 
         try
         {
-            PreventaActivity pedidosActivity = (PreventaActivity) getActivity();
-            esVenta=pedidosActivity.getEsVenta();
+            preventaActivity = (PreventaActivity) getActivity();
 
             tv_subTotal2 = view.findViewById(R.id.tv_subTotal2);
             tv_subTotal2.setText( string.FormatoPesos(0) );
@@ -305,9 +304,11 @@ public class VentavenFragment extends Fragment {
                 ventaAdapterRecyclerView.agregarItem(prod);
             }
 
+            preventaActivity.CalcularEnvase();
+
         }catch (Exception e)
         {
-            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
+            Utils.msgError(getContext(), getString(R.string.err_ped34), e.getMessage());
         }
     }
 

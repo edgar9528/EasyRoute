@@ -47,6 +47,7 @@ public class VentavenFragment extends Fragment {
     private VentaAdapterRecyclerView ventaAdapterRecyclerView;
     private TextView tv_subTotal2;
     private boolean esVenta;
+    private PedidosActivity pedidosActivity;
 
     public VentavenFragment() { }
 
@@ -65,7 +66,7 @@ public class VentavenFragment extends Fragment {
 
         try
         {
-            PedidosActivity pedidosActivity = (PedidosActivity) getActivity();
+            pedidosActivity = (PedidosActivity) getActivity();
             esVenta=pedidosActivity.getEsVenta();
 
             tv_subTotal2 = view.findViewById(R.id.tv_subTotal2);
@@ -286,6 +287,8 @@ public class VentavenFragment extends Fragment {
 
                 ventaAdapterRecyclerView.agregarItem(prod);
             }
+
+            pedidosActivity.CalcularEnvase();
 
         }catch (Exception e)
         {

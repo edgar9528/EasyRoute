@@ -32,9 +32,10 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<String> txtLimCred = new MutableLiveData<>();
     private final MutableLiveData<String> txtVencido = new MutableLiveData<>();
     private final MutableLiveData<String> txtSaldoCredito = new MutableLiveData<>();
-    private final MutableLiveData<Double> txtSubEnv = new MutableLiveData<>();
+    private final MutableLiveData<String> txtSubEnv = new MutableLiveData<>();
     private final MutableLiveData<String> txtVenta = new MutableLiveData<>();
     private final MutableLiveData<String> txtSaldo = new MutableLiveData<>();
+    private final MutableLiveData<String> txtKit = new MutableLiveData<>();
 
     private final MutableLiveData< ArrayList<String[]> > productoPreventa = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgPagosVisitado = new MutableLiveData<>();
@@ -192,11 +193,25 @@ public class PedidosVM extends ViewModel
         this.txtVenta.setValue(txtVenta);
     }
 
+    public LiveData<String> getTxtSubEnv(){
+        return txtSubEnv;
+    }
+    public void setTxtSubEnv(String Subenv){
+        this.txtSubEnv.setValue(Subenv);
+    }
+
     public LiveData<String> getTxtSaldo(){
         return txtSaldo;
     }
     public void setTxtSaldo(String txtSaldo){
         this.txtSaldo.setValue(txtSaldo);
+    }
+
+    public LiveData<String> getTxtKit(){
+        return txtKit;
+    }
+    public void setTxtKit(String txtKit){
+        this.txtKit.setValue(txtKit);
     }
 
     public LiveData<ArrayList<DataTableLC.DgPagos>> getDgPagos(){

@@ -8,22 +8,18 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ExpandableListView;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.tdt.easyroute.Clases.Utils;
-import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
-import com.tdt.easyroute.Ventanas.Pedidos.ClientesPedFragment;
-
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class PruebasActivity extends AppCompatActivity {
@@ -37,16 +33,30 @@ public class PruebasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pruebas);
 
         Button prueba = findViewById(R.id.prueba);
+        final EditText ti_pruebaImprimir = findViewById(R.id.et_prueba);
+
 
         prueba.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                InicializarAsync inicializar = new InicializarAsync();
-                inicializar.execute();
+            public void onClick(View v)
+            {
+                String mensaje;
+                if(ti_pruebaImprimir.getText()!=null)
+                {
+                    mensaje = ti_pruebaImprimir.getText().toString();
+                    mensaje = mensaje.replace("\n","\r");
+                    mensaje= "\r"+mensaje+"\r\r";
+                    InicializarAsync inicializar = new InicializarAsync(mensaje);
+                    inicializar.execute();
+                }
+                else
+                {
+                    Utils.msgInfo(PruebasActivity.this,"Escribe un mensaje");
+                }
+
+
             }
         });
-
-
 
 
 
@@ -56,13 +66,13 @@ public class PruebasActivity extends AppCompatActivity {
 
     private class InicializarAsync extends AsyncTask<Boolean,Integer,Boolean>
     {
-
-        public InicializarAsync() {
-        }
-
-        private String mensaje="";
-
+        private String mensaje;
         private ProgressDialog progreso;
+
+        public InicializarAsync(String msg)
+        {
+            mensaje=msg;
+        }
 
         @Override protected void onPreExecute() {
             progreso = new ProgressDialog(PruebasActivity.this);
@@ -76,19 +86,8 @@ public class PruebasActivity extends AppCompatActivity {
 
             try
             {
-                String msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r";
-                msg+=msg="HOLA   PRRO    \r\n\n";
 
-                imprimir(msg);
+                imprimir(mensaje);
 
                 return true;
             }catch (Exception e)
