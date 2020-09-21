@@ -9,5 +9,6 @@
     <dimen name="paddingHeader">10dp</dimen>
     <dimen name="paddingImprimir">15dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="titulosArqueo">20sp</dimen>
 
 </resources>

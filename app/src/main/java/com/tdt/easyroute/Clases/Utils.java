@@ -703,6 +703,595 @@ public class Utils {
         }
     }
 
+    public static Visita ObtenerVisita(long cliente, Context context)
+    {
+        Visita vis = null;
+        vis = new Visita();
+        vis.cli_cve_n = cliente;
+
+        try
+        {
+            String sql, json;
+            ArrayList<DataTableLC.Venta> dtVen = new ArrayList<>();
+            sql = string.formatSql2("Select * from ventas where cli_cve_n={0}", String.valueOf(cliente) );
+            json = BaseLocal.Select(sql, context);
+            dtVen = ConvertirRespuesta.getVentaJson(json);
+
+            if(dtVen!=null)
+            {
+                Venta[] ventasConsulta = new Venta[dtVen.size()];
+
+                for (int i = 0; i < dtVen.size(); i++)
+                {
+                    Venta vta = new Venta(dtVen.get(i));
+
+                    ArrayList<DataTableLC.VentasDet> dtVenDet = new ArrayList<>();
+                    sql = string.formatSql2("select d.* from ventasdet d  " +
+                            "inner join productos p on d.prod_cve_n=p.prod_cve_n " +
+                            "inner join categorias c on p.cat_cve_n=c.cat_cve_n " +
+                            "where d.ven_folio_str='{0}' and c.cat_desc_str not in ('AGUA','REFRESCO','BEBIDA ENERGIZANTE','JUGO')", vta.getVenta().getVen_folio_str());
+                    json = BaseLocal.Select(sql, context);
+                    dtVenDet = ConvertirRespuesta.getVentasDetJson(json);
+
+                    if (dtVenDet != null) {
+                        DataTableLC.VentasDet[] Detalles = new DataTableLC.VentasDet[dtVenDet.size()];
+                        for (int j = 0; j < dtVenDet.size(); j++) {
+                            Detalles[j] = dtVenDet.get(j);
+                        }
+                        vta.setDetalles(Detalles);
+                    }
+
+                    //--------------- Envases ------------------//
+                    ArrayList<DataTableLC.VentasEnv> dtVenEnv = new ArrayList<>();
+
+                    sql = string.formatSql2("select * from ventaenv where ven_folio_str='{0}'", vta.getVenta().getVen_folio_str());
+                    json = BaseLocal.Select(sql, context);
+                    dtVenEnv = ConvertirRespuesta.getDtVentasEnv(json);
+
+                    if (dtVenEnv != null) {
+                        DataTableLC.VentasEnv[] Envases = new DataTableLC.VentasEnv[dtVenEnv.size()];
+
+                        for (int j = 0; j < dtVenEnv.size(); j++) {
+                            Envases[j] = dtVenEnv.get(j);
+                        }
+                        vta.setEnvase(Envases);
+                    }
+
+                    ventasConsulta[i] = vta;
+                }
+
+                vis.setVentas(ventasConsulta);
+            }
+
+            ArrayList<DataTableLC.Pagos> dtp = new ArrayList<>();
+            sql = string.formatSql2("Select * from pagos where cli_cve_n={0} and pag_cobranza_n=0", String.valueOf(cliente) );
+            json = BaseLocal.Select(sql,context);
+            dtp = ConvertirRespuesta.getPagosALJson(json);
+
+            if(dtp!=null)
+            {
+                DataTableLC.Pagos[] pagos = new DataTableLC.Pagos[dtp.size()];
+
+                for(int i=0; i<dtp.size();i++)
+                    pagos[i] = dtp.get(i);
+
+                vis.setPagos(pagos);
+            }
+
+            ArrayList<DataTableLC.Pagos> dtc = new ArrayList<>();
+
+            sql = string.formatSql2("Select * from pagos where cli_cve_n={0} and conf_cve_n in " +
+                    "(select conf_cve_n from configuracionhh where est_cve_str='A') and pag_envase_n=0 and pag_cobranza_n=1 ", String.valueOf(cliente));
+            json = BaseLocal.Select(sql,context);
+            dtc = ConvertirRespuesta.getPagosALJson(json);
+
+            if(dtc!=null)
+            {
+                DataTableLC.Pagos[] cobranza = new DataTableLC.Pagos[dtc.size()];
+                for(int i=0; i<dtc.size();i++)
+                    cobranza[i]= dtc.get(i);
+                vis.setCobranza(cobranza);
+            }
+
+            ArrayList<DataTableLC.Creditos> dtcr = new ArrayList<>();
+
+            sql = string.formatSql2("Select * from creditos where cli_cve_n={0} and cred_esenvase_n=0 and cred_especial_n=0", String.valueOf(cliente));
+            json = BaseLocal.Select(sql, context);
+            dtcr = ConvertirRespuesta.getCreditos2Json(json);
+
+            if(dtcr!=null)
+            {
+                DataTableLC.Creditos[] creditos = new DataTableLC.Creditos[dtcr.size()];
+                for(int i=0; i<dtcr.size();i++)
+                {
+                    creditos[i] = dtcr.get(i);
+                }
+                vis.setCreditos(creditos);
+            }
+
+            ArrayList<DataTableLC.Creditos> dtcres = new ArrayList<>();
+            sql = string.formatSql2("Select * from creditos where cli_cve_n={0} and cred_esenvase_n=0 and cred_especial_n=1", String.valueOf(cliente));
+            json = BaseLocal.Select(sql, context);
+            dtcres = ConvertirRespuesta.getCreditos2Json(json);
+
+            if(dtcres!=null)
+            {
+                DataTableLC.Creditos[] creditose = new DataTableLC.Creditos[dtcres.size()];
+                for(int i=0; i< dtcres.size();i++)
+                {
+                    creditose[i] = dtcres.get(i);
+                }
+                vis.setCreditose(creditose);
+            }
+
+            ArrayList<DataTableLC.Creditos> dtcrenv = new ArrayList<>();
+            sql = string.formatSql2("Select * from creditos where cli_cve_n={0} and cred_esenvase_n=1 and cred_especial_n=0", String.valueOf(cliente));
+            json = BaseLocal.Select(sql, context);
+            dtcrenv = ConvertirRespuesta.getCreditos2Json(json);
+
+            if(dtcrenv!=null)
+            {
+                DataTableLC.Creditos[] credenv = new DataTableLC.Creditos[dtcrenv.size()];
+                for(int i=0; i<dtcrenv.size(); i++)
+                {
+                    credenv[i]= dtcrenv.get(i);
+                }
+                vis.setCredenv(credenv);
+            }
+
+            ArrayList<DataTableLC.Pagos> dtdv = new ArrayList<>();
+
+            sql = string.formatSql2("Select * from pagos where cli_cve_n={0} and conf_cve_n in " +
+                    "(select conf_cve_n from configuracionhh where est_cve_str='A') and pag_envase_n=1 and pag_cobranza_n=1 ", String.valueOf(cliente));
+            json = BaseLocal.Select(sql, context);
+            dtdv = ConvertirRespuesta.getPagosALJson(json);
+
+            if(dtdv!=null)
+            {
+                DataTableLC.Pagos[] devenvase = new DataTableLC.Pagos[dtdv.size()];
+                for(int i=0; i<dtdv.size();i++)
+                {
+                    devenvase[i]= dtdv.get(i);
+                }
+                vis.setDevenvase(devenvase);
+            }
+
+
+        }catch (Exception e)
+        {
+            Utils.msgError(context, context.getString(R.string.err_utils1), e.getMessage());
+            Log.d("salida","EROR: "+ e.getMessage());
+        }
+
+        return vis;
+    }
+
+    public static String ImprimirVenta(Visita v, boolean ReImp, Context context, Configuracion conf)
+    {
+        String p = "";
+        try
+        {
+            int c = 38;
+            String ruta = "";
+            String vendedor = "";
+            String direccion = "";
+            int pc = 0;
+
+            String sql = string.formatSql2("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr());
+            ruta = BaseLocal.SelectDato(sql, context);
+
+            p += "RUTA: " + ruta.toUpperCase() + "\n\n";
+
+            sql = string.formatSql2("Select * from usuarios where usu_cve_str='{0}'", conf.getUsuario());
+            String json = BaseLocal.Select(sql, context);
+
+            DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
+
+            if (usu != null)
+                p += string.formatSql("ASESOR: \n{0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
+
+            ArrayList<DataTableWS.Clientes> alCli;
+            DataTableWS.Clientes dtc;
+
+            sql = string.formatSql("Select * from clientes where cli_cve_n={0}", String.valueOf(v.getCli_cve_n()));
+            json = BaseLocal.Select(sql, context);
+            alCli = ConvertirRespuesta.getClientesJson(json);
+
+            if (alCli.size() > 0) {
+                dtc = alCli.get(0);
+
+                pc = Integer.parseInt(dtc.getCli_plazocredito_n());
+
+                p += "CLIENTE: " + dtc.getCli_cveext_str() + "\n\n";
+                p += "RAZON SOCIAL: \n" + dtc.getCli_nombrenegocio_str() + "\n\n";
+                p += "NEGOCIO: \n" + dtc.getCli_razonsocial_str() + "\n\n";
+
+                ArrayList<DataTableWS.Direcciones> dtd;
+                sql = string.formatSql("Select * from direcciones where cli_cve_n={0}   and dir_cve_n={1}",
+                        String.valueOf(v.getCli_cve_n()), dtc.getCli_dirent_n());
+                json = BaseLocal.Select(sql, context);
+                dtd = ConvertirRespuesta.getDireccionesJson(json);
+
+                if (dtd.size() > 0) {
+                    DataTableWS.Direcciones r = dtd.get(0);
+                    p += string.formatSql("DIRECCION: \n{0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
+                            r.getDir_noext_str(), r.getDir_colonia_str(), r.getDir_municipio_str(), r.getDir_estado_str(),
+                            r.getDir_codigopostal_str());
+                }
+
+                if (dtc.getCli_Tel1_str() != null && !dtc.getCli_Tel1_str().equals("0"))
+                    p += "TEL: " + dtc.getCli_Tel1_str() + "\n";
+
+            }
+
+            p += "FECHA IMP: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
+            p += "       MENSAJE IMPORTANTE\n";
+
+            p += " RECUERDE SIEMPRE SOLICITAR SU\n";
+            p += "TICKET DE COMPRA A SU ASESOR DE\n";
+            p += "  VENTAS, EL MISMO INCLUYE SU \n";
+            p += "         SALDO AL DIA.\n\n";
+
+            if (ReImp) {
+                p += "       *** C O P I A ***\n\n";
+            } else {
+                p += "    *** O R I G I N A L ***\n\n";
+            }
+
+            ArrayList<DataTableWS.Productos> dtp = new ArrayList<>();
+
+            json = BaseLocal.Select("Select * from productos", context);
+            dtp = ConvertirRespuesta.getProductosJson(json);
+
+            ArrayList<DataTableWS.FormasPago> dtfp = new ArrayList<>();
+            json = BaseLocal.Select("Select * from formaspago", context);
+            dtfp = ConvertirRespuesta.getFormasPagoJson(json);
+
+            ArrayList<DataTableLC.Pagos> dtPagos = new ArrayList<>();
+            sql = string.formatSql("select * from pagos where cli_cve_n={0}", String.valueOf(v.getCli_cve_n()));
+            json = BaseLocal.Select(sql, context);
+            dtPagos = ConvertirRespuesta.getPagosALJson(json);
+
+            double SubtotalVenta = 0;
+            double SubtotalVtaEnv = 0;
+            double SubTotalBase = 0;
+
+            if (v.ventas != null) {
+                for (Venta vta : v.ventas) {
+                    p += "FECHA VENTA: " + Utils.FechaHoraFormato(vta.getVenta().getVen_fecha_dt()) + "\n";
+                    p += "FOLIO: " + vta.getVenta().getVen_folio_str() + "\n\n";
+
+                    double descvta = 0;
+
+                    if (vta.getDetalles() != null || vta.getBebidas() != null) {
+                        double SubTotalF = 0;
+                        double SubTotalCvz = 0;
+                        double SubTotalBeb = 0;
+
+                        p += "             VENTA\n";
+                        p += "* SKU    DESC  CAN PRECIO SUBTOT\n\n";
+
+                        String aah = "";
+                        if (vta.getDetalles() != null)
+                        {
+                            for (int i = 0; i < vta.getDetalles().length; i++)
+                            {
+                                String desc = "";
+                                if (!Utils.getBool(vta.getDetalles()[i].getProd_envase_n()))
+                                {
+                                    DataTableWS.Productos r = null;
+                                    for (int j = 0; j < dtp.size(); j++)
+                                        if (vta.getDetalles()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                            r = dtp.get(j);
+
+                                    if (r != null) {
+                                        desc = r.getProd_desc_str();
+                                    }
+
+                                    if (Utils.getBool(vta.getDetalles()[i].getProd_promo_n()) ||
+                                            (Double.parseDouble(vta.getDetalles()[i].getLpre_precio_n()) < Double.parseDouble(vta.getDetalles()[i].getLpre_base_n()))) {
+                                        aah = "*";
+                                        descvta += (Double.parseDouble(vta.getDetalles()[i].getLpre_base_n()) - Double.parseDouble(vta.getDetalles()[i].getLpre_precio_n())) * Double.parseDouble(vta.getDetalles()[i].getProd_cant_n());
+                                    } else
+                                        aah = " ";
+
+                                    p += aah + " ";
+                                    p += Impresora.DarTamañoDer(vta.getDetalles()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(desc, 5) + " ";
+
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getProd_cant_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getLpre_precio_n(), 6) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getDetalles()[i].getProd_subtotal_n(), 6) + "\n";
+
+                                    SubTotalBase += (Double.parseDouble(vta.getDetalles()[i].getLpre_base_n()) * Double.parseDouble(vta.getDetalles()[i].getProd_cant_n()));
+                                    SubTotalF += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
+
+                                }
+                            }
+                        }
+
+
+                        //-------------------- Bebidas ------------------------//
+                        SubtotalVenta += SubTotalF;
+
+                        p += "TOTAL FACTURA: " + string.FormatoPesos(SubTotalF) + "\n\n";
+
+                        if (descvta > 0) {
+                            p += "ESTIMADO CLIENTE CON ESTA COMPRA\n";
+                            p += Impresora.Centrar("USTED AHORRO " + string.FormatoPesos(descvta) + " PESOS") + "\n";
+                            p += Impresora.Centrar("EQUIVALENTE A " + String.format("%.2f", descvta / SubTotalBase) + " DE AHORRO") + "\n\n";
+                        }
+
+                        double SubTotalE = 0;
+
+                        if (vta.getEnvase() != null)
+                        {
+                            p += Impresora.Centrar("ENVASE") + "\n";
+                            p += "SKU    DESC CAR ABO PRO VTA FIN" + "\n\n";
+
+                            String desc = "";
+                            for (int i = 0; i < vta.getEnvase().length; i++) {
+                                DataTableWS.Productos r = null;
+
+                                for (int j = 0; j < dtp.size(); j++)
+                                    if (vta.getEnvase()[i].getProd_cve_n().equals(dtp.get(j).getProd_cve_n()))
+                                        r = dtp.get(j);
+
+                                if (r != null) {
+                                    desc = r.getProd_desc_str();
+
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getProd_sku_str(), 6) + " ";
+                                    p += Impresora.DarTamañoDer(desc, 4) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_cargo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_abono_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_regalo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_venta_n(), 3) + " ";
+                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_prestamo_n(), 3) + "\n";
+
+                                    SubTotalE += Double.parseDouble(vta.getEnvase()[i].getVen_prestamo_n()) * Double.parseDouble(vta.getEnvase()[i].getLpre_precio_n());
+                                }
+                            }
+                            p += "TOTAL ENVASE: " + string.FormatoPesos( SubTotalE) + "\n\n";
+                        }
+
+                        SubtotalVtaEnv += SubTotalE;
+                    }
+                }
+            } else {
+                p += Impresora.Centrar("SIN VENTA") + "\n\n";
+            }
+
+            double SubTotalP = 0;
+            double Pagos = 0;
+
+            if (v.pagos != null) {
+                p += Impresora.Centrar("PAGOS") + "\n\n";
+                p += "REF            PAGO        FORMA\n";
+                String fp = "";
+
+                for (int i = 0; i < v.pagos.length; i++) {
+                    fp = "";
+
+                    DataTableWS.FormasPago pf = null;
+                    for (int j = 0; j < dtfp.size(); j++)
+                        if (v.pagos[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
+                            pf = dtfp.get(j);
+                            j = dtfp.size();
+                        }
+
+                    if (pf != null)
+                        fp = pf.getFpag_desc_str();
+
+                    p += Impresora.DarTamañoDer(v.pagos[i].getPag_referencia_str(), 14) + " ";
+                    p += Impresora.DarTamañoIzq(string.FormatoPesos(v.pagos[i].getPag_abono_n()), 11) + " ";
+                    p += Impresora.DarTamañoDer(fp, 5) + "\n";
+
+                    Pagos += Double.parseDouble(v.pagos[i].getPag_abono_n());
+                    SubTotalP += Double.parseDouble(v.pagos[i].getPag_abono_n());
+                }
+
+                p += "TOTAL PAGOS: " + string.FormatoPesos(SubTotalP) + "\n\n";
+            } else {
+                p += Impresora.Centrar("SIN PAGOS") + "\n\n";
+            }
+
+            double SubTotalC = 0;
+            double Cobranza = 0;
+
+            if (v.cobranza != null) {
+                p += Impresora.Centrar("COBRANZA") + "\n\n";
+                p += "REF            PAGO        FORMA\n";
+                String fp = "";
+
+                for (int i = 0; i < v.cobranza.length; i++) {
+                    fp = "";
+
+                    DataTableWS.FormasPago pf = null;
+                    for (int j = 0; j < dtfp.size(); j++)
+                        if (v.cobranza[i].getFpag_cve_n().equals(dtfp.get(j).getFpag_cve_n())) {
+                            pf = dtfp.get(j);
+                            j = dtfp.size();
+                        }
+
+                    if (pf != null)
+                        fp = pf.getFpag_desc_str();
+
+                    p += Impresora.DarTamañoDer(v.cobranza[i].getPag_referencia_str(), 14) + " ";
+                    p += Impresora.DarTamañoIzq(string.FormatoPesos(v.cobranza[i].getPag_abono_n()), 11) + " ";
+                    p += Impresora.DarTamañoDer(fp, 5) + "\n";
+
+                    SubTotalC += Double.parseDouble(v.cobranza[i].getPag_abono_n());
+                    Cobranza += Double.parseDouble(v.cobranza[i].getPag_abono_n());
+                }
+
+                p += "TOTAL COBRANZA: " + string.FormatoPesos(SubTotalC) + "\n\n";
+
+            } else {
+                p += Impresora.Centrar("SIN COBRANZA") + "\n\n";
+            }
+
+            if (v.devenvase != null) {
+                p += Impresora.Centrar("DEV. ENVASE") + "\n\n";
+
+                double CantEnvDev = 0;
+
+                p += "E SKU    ABONADO  REFERENCIA    \n";
+
+                for (int i = 0; i < v.devenvase.length; i++) {
+                    p += Utils.getBool(v.devenvase[i].getPag_especie_n()) ? "*" : " " + " ";
+                    p += Impresora.DarTamañoDer(v.devenvase[i].getProd_sku_str(), 6) + " ";
+                    p += Impresora.DarTamañoDer(v.devenvase[i].getProd_abono_n(), 8) + " ";
+                    p += Impresora.DarTamañoDer(v.devenvase[i].getPag_referencia_str(), 14) + "\n";
+
+                    CantEnvDev += Double.parseDouble(v.devenvase[i].getProd_abono_n());
+                }
+
+                p += "TOTAL DE ENVASE DEVUELTO: " + String.format("%.2f", CantEnvDev);
+            } else {
+                p += Impresora.Centrar("SIN DEVOLUCION DE ENVASE") + "\n\n";
+            }
+
+            double SubTotalCred = 0;
+            double InicialCred = 0;
+            boolean vencido = false;
+
+            if (v.creditos != null) {
+                p += Impresora.Centrar("CREDITOS") + "\n\n";
+
+                p += "REF            SALDO_AN SALDO_AC\n";
+
+                for (int i = 0; i < v.creditos.length; i++) {
+                    ArrayList<DataTableLC.Pagos> pf = new ArrayList<>();
+                    for (int j = 0; j < dtPagos.size(); j++) {
+                        if (dtPagos.get(j).getPag_referencia_str().equals(v.creditos[i].getCred_referencia_str())
+                                && dtPagos.get(j).getPag_envase_n().equals("0")
+                                && dtPagos.get(j).getPag_cobranza_n().equals("1")) {
+                            pf.add(dtPagos.get(j));
+                        }
+                    }
+
+                    double saldoant = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n());
+                    double AbonoActCred = 0;
+
+                    for (DataTableLC.Pagos pfi : pf) {
+                        AbonoActCred += Double.parseDouble(pfi.getPag_abono_n());
+                    }
+
+                    double saldo = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n()) - AbonoActCred;
+
+                    if (v.creditos[i].getTrans_est_n() != null)
+                        if (v.creditos[i].getTrans_est_n().equals("3"))
+                            InicialCred += saldoant;
+
+                    p += Impresora.DarTamañoDer(v.creditos[i].getCred_referencia_str(), 14);
+                    double salAnt = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n());
+                    p += Impresora.DarTamañoDer(String.format("%.2f", salAnt), 8) + " ";
+                    p += Impresora.DarTamañoDer(String.format("%.2f", saldo), 8) + "\n";
+
+                    SubTotalCred += saldo;
+
+
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.getDefault());
+                    Date fechaAc = formato.parse(Utils.FechaLocal() + " " + Utils.HoraLocal());
+                    Date fechaBd = formato.parse(v.creditos[i].getCred_fecha_dt());
+                    int dias = (int) ((fechaAc.getTime() - fechaBd.getTime()) / 86400000);
+
+                    if (dias > pc && saldo > 0) {
+                        vencido = true;
+                    }
+                }
+
+                p += "TOTAL CREDITOS: " + string.FormatoPesos(SubTotalCred) + "\n\n";
+
+                if (vencido) {
+                    p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
+                }
+            } else {
+                p += Impresora.Centrar("SIN CREDITOS") + "\n\n";
+            }
+
+            double SubTotalCredEsp = 0;
+
+            double SubTotalCredEnv = 0;
+            double SaldoEnv = 0;
+            vencido = false;
+
+            if (v.credenv != null) {
+                p += Impresora.Centrar("CREDITOS DE ENVASE") + "\n\n";
+
+                p += "REF            INI   ABO   FIN  \n";
+
+                for (int i = 0; i < v.credenv.length; i++)
+                {
+                    ArrayList<DataTableLC.Pagos> pf = new ArrayList<>();
+                    for (int j = 0; j < dtPagos.size(); j++) {
+                        if (dtPagos.get(j).getPag_referencia_str().equals(v.credenv[i].getCred_referencia_str())
+                                && dtPagos.get(j).getPag_envase_n().equals("1")
+                                && dtPagos.get(j).getPag_cobranza_n().equals("1")) {
+                            pf.add(dtPagos.get(j));
+                        }
+                    }
+
+                    double AboEnvDia = 0;
+
+                    for (DataTableLC.Pagos pfi : pf) {
+                        AboEnvDia += Double.parseDouble(pfi.getProd_abono_n());
+                    }
+
+                    double saldo = Double.parseDouble(v.credenv[i].getProd_cant_n()) - Double.parseDouble(v.credenv[i].getProd_cantabono_n()) - AboEnvDia;
+
+                    int can = Integer.parseInt(v.credenv[i].getProd_cant_n()) - Integer.parseInt(v.credenv[i].getProd_cantabono_n());
+
+                    p += Impresora.DarTamañoDer(v.credenv[i].getCred_referencia_str(), 14) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf(can), 5) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf(AboEnvDia), 5) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf(saldo), 5) + "\n";
+
+                    SubTotalCredEnv += saldo;
+                    SaldoEnv += saldo * Double.parseDouble(v.credenv[i].getProd_precio_n());
+
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd H:mm:ss", Locale.getDefault());
+                    Date fechaAc = formato.parse(Utils.FechaLocal() + " " + Utils.HoraLocal());
+                    Date fechaBd = formato.parse(v.credenv[i].getCred_fecha_dt());
+                    int dias = (int) ((fechaAc.getTime() - fechaBd.getTime()) / 86400000);
+
+                    if (dias > pc && saldo > 0) {
+                        vencido = true;
+                    }
+                }
+
+
+                p += "TOTAL DEUDA ENV CANT: " + SubTotalCredEnv + "\n\n";
+                p += "TOTAL DEUDA ENV: " + SaldoEnv + "\n\n";
+                if (vencido) {
+                    p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
+                }
+            } else {
+                p += Impresora.Centrar("SIN CREDITOS DE ENVASE") + "\n\n";
+            }
+
+            p += Impresora.Centrar("SALDOS") + "\n\n";
+
+            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
+            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
+            p += "-PAGOS: " + string.FormatoPesos(Pagos) + "\n";
+            p += "-ABONOS: " + string.FormatoPesos(Cobranza) + "\n";
+            p += "=SALDO FINAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n\n";
+            p += "SALDO EN EFECTIVO: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n";
+            p += "SALDO EN ENVASE: " + string.FormatoPesos(SaldoEnv) + "\n";
+            p += "SALDO TOTAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv) + "\n";
+
+            p += "\n\n";
+
+            return p;
+
+        }
+        catch (Exception e)
+        {
+            return "";
+        }
+    }
+
     public static Visita ObtenerVisitaBebidas(long cliente, Context context)
     {
         Visita vis = null;

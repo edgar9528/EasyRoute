@@ -529,4 +529,10 @@
     <string name="msg_impCar">Print portfolio?</string>
     <string name="msg_ticket">Ticket preview</string>
 
+    <string name="estCredVigente">Valid</string>
+    <string name="hint_ventasDia_prev">Presales of the day</string>
+    <string name="hint_ventasContado_prev">Presale Cash</string>
+    <string name="hint_ventasCredito_prev">Presale Credit</string>
+    <string name="hint_cobranza_prev">Total presale</string>
+
 </resources>

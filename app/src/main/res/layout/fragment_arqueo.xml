@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frameLayout13"
@@ -28,85 +29,157 @@
             android:orientation="vertical"
             >
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til1"
+            <TextView
+                android:id="@+id/t1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack"
-                android:hint="@string/hint_ventasDia"
+                android:text="@string/hint_ventasDia"
+                android:textSize="@dimen/titulosArqueo"
+                style="@style/tv_titulos.tv_mensajes"
                 >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+            </TextView>
 
-                    android:singleLine="true"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til2"
+            <TextView
+                android:id="@+id/et1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack"
-                android:hint="@string/hint_ventasContado"
+                android:text="@string/hint_ventasDia"
+                android:textSize="@dimen/titulosArqueo"
+                android:paddingStart="@dimen/paddingImprimir"
+                android:paddingEnd="@dimen/paddingImprimir"
+                style="@style/tv_titulos"
+                android:textAlignment="textEnd"
                 >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+            </TextView>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til3"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:layout_marginTop="@dimen/paddingHeader"
+                android:layout_marginBottom="@dimen/paddingHeader"
+            />
+
+
+            <TextView
+                android:id="@+id/t2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_ventasContado"
+                android:textSize="@dimen/titulosArqueo"
+            style="@style/tv_titulos.tv_mensajes"
+            >
+        </TextView>
+
+            <TextView
+                android:id="@+id/et2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack"
-                android:hint="@string/hint_ventasCredito"
+                android:text="@string/hint_ventasDia"
+                android:textSize="@dimen/titulosArqueo"
+                android:paddingStart="@dimen/paddingImprimir"
+                android:paddingEnd="@dimen/paddingImprimir"
+                style="@style/tv_titulos"
+                android:textAlignment="textEnd"
                 >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+            </TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:layout_marginTop="@dimen/paddingHeader"
+                android:layout_marginBottom="@dimen/paddingHeader"
+                />
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til4"
+
+            <TextView
+                android:id="@+id/t3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack"
-                android:hint="@string/hint_cobranza"
+                android:text="@string/hint_ventasCredito"
+                android:textSize="@dimen/titulosArqueo"
+                style="@style/tv_titulos.tv_mensajes"
                 >
-                <com.google.android.material.textfield.TextInputEditText
+            </TextView>
 
-                    android:id="@+id/et4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til5"
+            <TextView
+                android:id="@+id/et3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextBlack"
-                android:hint="@string/hint_ventasEntregar"
+                android:text="@string/hint_ventasDia"
+                android:textSize="@dimen/titulosArqueo"
+                android:paddingStart="@dimen/paddingImprimir"
+                android:paddingEnd="@dimen/paddingImprimir"
+                style="@style/tv_titulos"
+                android:textAlignment="textEnd"
                 >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+            </TextView>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:layout_marginTop="@dimen/paddingHeader"
+                android:layout_marginBottom="@dimen/paddingHeader"
+                />
+
+
+            <TextView
+                android:id="@+id/t4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_cobranza"
+                android:textSize="@dimen/titulosArqueo"
+                style="@style/tv_titulos.tv_mensajes"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/et4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_ventasDia"
+                android:textSize="@dimen/titulosArqueo"
+                android:paddingStart="@dimen/paddingImprimir"
+                android:paddingEnd="@dimen/paddingImprimir"
+                style="@style/tv_titulos"
+                android:textAlignment="textEnd"
+                >
+            </TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:layout_marginTop="@dimen/paddingHeader"
+                android:layout_marginBottom="@dimen/paddingHeader"
+                />
+
+
+            <TextView
+                android:id="@+id/t5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_ventasEntregar"
+                android:textSize="@dimen/titulosArqueo"
+                style="@style/tv_titulos.tv_mensajes"
+                >
+            </TextView>
+
+            <TextView
+                android:id="@+id/et5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_ventasDia"
+                android:textSize="@dimen/titulosArqueo"
+                android:paddingStart="@dimen/paddingImprimir"
+                android:paddingEnd="@dimen/paddingImprimir"
+                android:textAlignment="textEnd"
+                style="@style/tv_titulos"
+                >
+            </TextView>
 
         </LinearLayout>
 
@@ -136,23 +209,10 @@
 
         app:layout_constraintBaseline_toBaselineOf="@id/button_salir"
         app:layout_constraintStart_toEndOf="@id/button_salir"
-        app:layout_constraintEnd_toStartOf="@id/button_calcular"
-
-        />
-
-    <Button
-        android:id="@+id/button_calcular"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/bt_calcular"
-        android:theme="@style/ButtonDark"
-
-        app:layout_constraintBaseline_toBaselineOf="@id/button_salir"
-        app:layout_constraintStart_toEndOf="@id/button_imprimir"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/paddingGeneral"
 
         />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

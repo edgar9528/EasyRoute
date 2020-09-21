@@ -26,7 +26,7 @@
         android:id="@+id/et_credito"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/hint_credito"
+        android:text="@string/estCredVigente"
         android:textAlignment="textEnd"
         style="@style/tv_titulos.tv_mensajes"
 

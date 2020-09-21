@@ -30,6 +30,9 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:text="@string/table_saldo"
+        android:textAlignment="textEnd"
+        android:paddingStart="0dp"
+        android:paddingEnd="10dp"
         android:textSize="18sp"
         android:textColor="@color/colorPrimaryDark"
         />

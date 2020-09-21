@@ -136,8 +136,6 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
         pedidosVM = ViewModelProviders.of( this).get(PedidosVM.class);
 
-        setTitle(getString(R.string.title_pedidos));
-
         esventa = getIntent().getBooleanExtra("venta", false);
         noCli = getIntent().getStringExtra("idcli");
         Cliente = getIntent().getStringExtra("idext");
@@ -272,6 +270,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
         conf = Utils.ObtenerConf(getApplication());
         rc = ObtenerCliente();
+
+        setTitle(rc.getCli_cve_n() +" "+ rc.getCli_nombrenegocio_str());
 
         catenv = ObtenerIdCat("ENVASE");
         catcvz = ObtenerIdCat("CERVEZA");
@@ -2491,7 +2491,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         dialogo1.setCancelable(false);
         dialogo1.setPositiveButton(getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
-                imprimir(false, false, coordenada);
+                imprimir(false, false, coordenada, 0);
             }
         });
         AlertDialog alertDialog = dialogo1.show();
@@ -2503,14 +2503,21 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         }
     }
 
-    private void imprimir(boolean impCliente,boolean impAsesor,String coordenada)
+    private void imprimir(boolean impCliente,boolean impAsesor,String coordenada, int opcion )
     {
         int tiempoImp = 0;
         try
         {
             if(!impCliente)
             {
-                String msg_imprimir = Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+                String msg_imprimir="";
+
+                if(opcion==0)
+                     msg_imprimir = Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli) ,this), false, this, conf);
+                else
+                    if(opcion==1)
+                        msg_imprimir = Utils.ImprimirVenta(Utils.ObtenerVisita( Long.parseLong(noCli) ,this), false, this, conf);
+
 
                 tiempoImp = Utils.tiempoImpresion( msg_imprimir );
 
@@ -2539,7 +2546,13 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             {
                 try
                 {
-                    String msg_imprimir =  Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ), this ), false,this,conf);
+                    String msg_imprimir="";
+
+                    if(opcion==0)
+                        msg_imprimir =  Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas( Long.parseLong(noCli ), this ), false,this,conf);
+                    else
+                        if(opcion==1)
+                            msg_imprimir =  Utils.ImprimirVenta(Utils.ObtenerVisita( Long.parseLong(noCli ), this ), false,this,conf);
 
                     msg_imprimir = msg_imprimir.replace("\n", "\r");
 
@@ -2556,19 +2569,26 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
         if( (impCliente && impAsesor)  )
         {
-            Intent i = getIntent();
-            i.putExtra("estado", "true");
-            i.putExtra("cve", rc.getCli_cve_n());
-            setResult(RESULT_OK, i);
-            finish();
+            if(opcion==0)
+            {
+                Intent i = getIntent();
+                i.putExtra("estado", "true");
+                i.putExtra("cve", rc.getCli_cve_n());
+                setResult(RESULT_OK, i);
+                finish();
+            }
+            else
+            {
+                finalizarSinVenta();
+            }
         }
         else
         {
-            impresionFallida(impCliente, impAsesor,coordenada);
+            impresionFallida(impCliente, impAsesor,coordenada, opcion);
         }
     }
 
-    private void impresionFallida(final boolean impCliente, final boolean impAsesor, final String coordenada)
+    private void impresionFallida(final boolean impCliente, final boolean impAsesor, final String coordenada, final int opcion)
     {
         AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
         dialogo1.setTitle(getString(R.string.msg_prev8));
@@ -2576,16 +2596,24 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         dialogo1.setCancelable(false);
         dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
-                imprimir(impCliente,impAsesor,coordenada);
+                imprimir(impCliente,impAsesor,coordenada,opcion);
             }
         });
         dialogo1.setNegativeButton(getString(R.string.msg_no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo1, int id) {
-                Intent i = getIntent();
-                i.putExtra("estado", "true");
-                i.putExtra("cve", rc.getCli_cve_n());
-                setResult(RESULT_OK, i);
-                finish();
+
+                if(opcion==0)
+                {
+                    Intent i = getIntent();
+                    i.putExtra("estado", "true");
+                    i.putExtra("cve", rc.getCli_cve_n());
+                    setResult(RESULT_OK, i);
+                    finish();
+                }
+                else
+                    if(opcion==1)
+                        finalizarSinVenta();
+
             }
         });
         dialogo1.show();
@@ -2596,7 +2624,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         try
         {
             boolean cobranza = false;
-            String coordenada = "NO VALIDA";
+            String coordenada = PositionStr;
             //if (Utils.position.PositionValid)
             //  coordenada = Utils.position.PositionStr;
 
@@ -2827,29 +2855,34 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
             if(cobranza)
             {
-                Utils.msgInfo(this,"IMPRIMIR TICKET");
-            }
-
-            if (ConVenta)
-            {
-                Intent i = getIntent();
-                i.putExtra("estado", "true");
-                i.putExtra("cve", rc.getCli_cve_n());
-                setResult(RESULT_OK, i);
-                finish();
+                imprimir(false, false, coordenada, 1);
             }
             else
-            {
-                Intent i = getIntent();
-                i.putExtra("estado", "false");
-                i.putExtra("cve", rc.getCli_cve_n());
-                setResult(RESULT_OK, i);
-                finish();
-            }
+                finalizarSinVenta();
 
         }catch (Exception e)
         {
             Utils.msgError(this, getString(R.string.err_ped36), e.getMessage());
+        }
+    }
+
+    private void finalizarSinVenta()
+    {
+        if (ConVenta)
+        {
+            Intent i = getIntent();
+            i.putExtra("estado", "true");
+            i.putExtra("cve", rc.getCli_cve_n());
+            setResult(RESULT_OK, i);
+            finish();
+        }
+        else
+        {
+            Intent i = getIntent();
+            i.putExtra("estado", "false");
+            i.putExtra("cve", rc.getCli_cve_n());
+            setResult(RESULT_OK, i);
+            finish();
         }
     }
 

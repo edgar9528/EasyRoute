@@ -127,8 +127,6 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
         pedidosVM = ViewModelProviders.of( this).get(PedidosVM.class);
 
-        setTitle(getString(R.string.title_preventa));
-
         noCli = getIntent().getStringExtra("idcli");
         cliente = Long.parseLong(noCli);
 
@@ -258,6 +256,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
         conf = Utils.ObtenerConf(getApplication());
         rc = ObtenerCliente();
+
+        setTitle(rc.getCli_cve_n() +" "+ rc.getCli_nombrenegocio_str());
 
         catenv = ObtenerIdCat("ENVASE");
         catcvz = ObtenerIdCat("CERVEZA");

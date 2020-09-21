@@ -224,11 +224,11 @@ public class ClientesCarFragment extends Fragment {
             String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}", String.valueOf(conf.getRuta())  ),getContext());
 
             menImp = "RUTA: "+rutaDes+"\n\n";
-            menImp += string.formatSql("ASESOR: {0} {1} {2}",user.getNombre(), user.getAppat(), user.getApmat())+"\n\n";
+            menImp += string.formatSql("ASESOR:\n{0} {1} {2}",user.getNombre(), user.getAppat(), user.getApmat())+"\n\n";
 
-            menImp += "FECHA DE IMPRESION: "+ Utils.FechaLocal() + " "+ Utils.HoraLocal()+"\n\n";
+            menImp += "FECHA DE IMPRESION: \n"+ Utils.FechaLocal() + " "+ Utils.HoraLocal()+"\n\n";
 
-            menImp += "C A R T E R A\n\n";
+            menImp += Impresora.Centrar( "C A R T E R A" )+"\n\n";
 
             menImp+="CLIENTE    NEGOCIO    SALDO\n\n";
 
@@ -241,7 +241,7 @@ public class ClientesCarFragment extends Fragment {
 
                 cvecli= Impresora.DarTamañoDer( r.getCli_cveext_str(),11 );
                 negocio = Impresora.DarTamañoDer( r.getCli_nombrenegocio_str().replace(" ","_"),10 )+" ";
-                fsaldo = Impresora.DarTamañoDer( string.FormatoPesos(r.getSaldo()), 10 );
+                fsaldo = Impresora.DarTamañoIzq( string.FormatoPesos(r.getSaldo()), 10 );
 
                 menImp+= cvecli+negocio+fsaldo+"\n";
 

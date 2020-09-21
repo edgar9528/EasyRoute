@@ -46,9 +46,9 @@ public class ArqueoFragment extends Fragment {
 
     Configuracion conf=null;
 
-    TextInputLayout til1,til2,til3,til4,til5;
-    EditText et1,et2,et3,et4,et5;
-    Button b_salir, b_imprimir, b_calcular;
+    TextView t1,t2,t3,t4,t5;
+    TextView et1,et2,et3,et4,et5;
+    Button b_salir, b_imprimir;
 
     Usuario user;
 
@@ -60,11 +60,11 @@ public class ArqueoFragment extends Fragment {
         MainActivity mainActivity = (MainActivity) getActivity();
         user = mainActivity.getUsuario();
 
-        til1 = view.findViewById(R.id.til1);
-        til2 = view.findViewById(R.id.til2);
-        til3 = view.findViewById(R.id.til3);
-        til4 = view.findViewById(R.id.til4);
-        til5 = view.findViewById(R.id.til5);
+        t1 = view.findViewById(R.id.t1);
+        t2 = view.findViewById(R.id.t2);
+        t3 = view.findViewById(R.id.t3);
+        t4 = view.findViewById(R.id.t4);
+        t5 = view.findViewById(R.id.t5);
 
         et1 = view.findViewById(R.id.et1);
         et2 = view.findViewById(R.id.et2);
@@ -74,18 +74,15 @@ public class ArqueoFragment extends Fragment {
 
         b_salir = view.findViewById(R.id.button_salir);
         b_imprimir = view.findViewById(R.id.button_imprimir);
-        b_calcular = view.findViewById(R.id.button_calcular);
 
         conf = Utils.ObtenerConf(getActivity().getApplication());
 
         if (conf!=null && conf.getPreventa()==1)
         {
-            til1.setHint( "Preventas del día:" );
-            til2.setHint("Preventa Contado:");
-            til3.setHint( "Preventa Crédito:" );
-            //label4.Text = "";
-            til4.setHint( "Total Preventa:" );
-
+            t1.setText( getString(R.string.hint_ventasDia_prev) );
+            t2.setText(getString(R.string.hint_ventasContado_prev));
+            t3.setText( getString(R.string.hint_ventasCredito_prev) );
+            t4.setText( getString(R.string.hint_cobranza_prev) );
         }
 
         calcular();
@@ -94,13 +91,6 @@ public class ArqueoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Utils.RegresarInicio(getActivity());
-            }
-        });
-
-        b_calcular.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                calcular();
             }
         });
 

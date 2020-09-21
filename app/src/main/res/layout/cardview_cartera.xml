@@ -79,6 +79,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/blanco"
                         android:layout_weight="2"
+                        android:textAlignment="textEnd"
                         />
 
                 </LinearLayout>
@@ -109,6 +110,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/blanco"
                         android:layout_weight="2"
+                        android:textAlignment="textEnd"
                         />
 
                 </LinearLayout>
@@ -139,6 +141,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/blanco"
                         android:layout_weight="2"
+                        android:textAlignment="textEnd"
                         />
 
                 </LinearLayout>
@@ -170,6 +173,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/blanco"
                         android:layout_weight="2"
+                        android:textAlignment="textEnd"
                         />
                 </LinearLayout>
 

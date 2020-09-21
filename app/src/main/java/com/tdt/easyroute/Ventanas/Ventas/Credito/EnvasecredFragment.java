@@ -65,6 +65,17 @@ public class EnvasecredFragment extends Fragment {
         layoutInflater = inflater;
         tv_anterior = new TextView(getContext());
 
+
+        TableLayout tableTitulos = view.findViewById(R.id.tableTitulos);
+        TableRow tr = (TableRow) layoutInflater.inflate(R.layout.tabla_envases_cred, null);
+        ((TextView) tr.findViewById(R.id.t_sku)).setText( "SKU" );
+        ((TextView) tr.findViewById(R.id.dat1)).setText( "SAL" );
+        ((TextView) tr.findViewById(R.id.dat2)).setText( "ABO" );
+        ((TextView) tr.findViewById(R.id.dat3)).setText( "VTA" );
+        ((TextView) tr.findViewById(R.id.dat4)).setText( "TOT" );
+
+        tableTitulos.addView(tr);
+
         return view;
     }
 

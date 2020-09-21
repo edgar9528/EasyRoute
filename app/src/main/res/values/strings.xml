@@ -511,5 +511,10 @@
     <string name="msg_impArq">Imprimir arqueo</string>
     <string name="msg_impCar">¿Imprimir cartera?</string>
     <string name="msg_ticket">Previsualizacion de ticket</string>
+    <string name="estCredVigente">Vigente</string>
+    <string name="hint_ventasDia_prev">Preventas del día</string>
+    <string name="hint_ventasContado_prev">Preventa Contado</string>
+    <string name="hint_ventasCredito_prev">Preventa Crédito</string>
+    <string name="hint_cobranza_prev">Total Preventa</string>
 
 </resources>

@@ -71,7 +71,7 @@
                 android:layout_height="2dp"
                 android:layout_marginTop="@dimen/paddingControles"
                 android:layout_marginBottom="@dimen/paddingControles"
-                android:background="@color/grey" />
+                android:background="@color/bgDefault" />
 
 
             <LinearLayout
