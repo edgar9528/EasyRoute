@@ -626,7 +626,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     nombre = lvClientes.get(i).getCli_nombre();
                     icono = iconos[lvClientes.get(i).getIcono()];
 
-                    Log.d("salida","ICONO: "+lvClientes.get(i).getIcono());
+                    Log.d("salida","ICONO: " + lvClientes.get(i).getIcono());
 
                     if (nombre.length() > 20)
                         nombre = nombre.substring(0, 20) + "...";
@@ -1295,6 +1295,10 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             {
                 Utils.msgError(getContext(), getString(R.string.error_buscarInfo), e.getMessage());
             }
+        }
+        else
+        {
+            Log.d("salida","SALIO DE LA VENTA PRRO");
         }
 
     }

@@ -271,7 +271,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         conf = Utils.ObtenerConf(getApplication());
         rc = ObtenerCliente();
 
-        setTitle(rc.getCli_cve_n() +" "+ rc.getCli_nombrenegocio_str());
+        String cveExt= String.valueOf(Long.parseLong(rc.getCli_cveext_str().replace("PR", "").replace("C", "").replace("P", "").replace("V", "")));
+        setTitle( cveExt +" | "+ rc.getCli_nombrenegocio_str());
 
         catenv = ObtenerIdCat("ENVASE");
         catcvz = ObtenerIdCat("CERVEZA");
@@ -1468,6 +1469,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             }// if si la promo tiene SKU
         }// for para cada promocion
 
+        Log.d("salida","DESCUENTO: "+DescKit);
+
         _txtKit = string.FormatoPesos(DescKit);
         pedidosVM.setTxtKit( _txtKit );
     }
@@ -1670,8 +1673,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             case R.id.action_detalles:
                 clickDetalles();
                 return true;
-            case R.id.action_buscar:
-                 //clickBuscar();
+            case R.id.action_salir:
+                obtenerUbicacion(2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -1701,6 +1704,9 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     Log.d("salida", "Ubicacion nueva: Pedidos: " + getLatLon());
                     if(clave==1)
                         clickBTguardar();
+                    else
+                        if(clave==2)
+                            clickBTsalir();
 
                 }
             }, 3000);
@@ -1709,6 +1715,37 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         {
             Utils.msgError(this, getString(R.string.error_ubicacion),e.getMessage());
             Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
+    private void clickBTsalir()
+    {
+        final String coordenada = getLatLon();
+
+        if ( Double.parseDouble( string.DelCaracteres(_txtVenta ) )  != 0)
+        {
+
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+            dialogo1.setTitle(getString(R.string.msg_venta));
+            dialogo1.setMessage( R.string.msg_ped15 );
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id)
+                {
+
+                    BaseLocal.Insert( string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), noCli, "VENTA CANCELADA", "VISITA SIN MOVIMIENTOS", coordenada), getApplicationContext() );
+                    BaseLocal.Insert( string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), noCli, "CIERRE CLIENTE", "CIERRE SIN VENTA", coordenada), getApplicationContext() );
+                    finish();
+                }
+            });
+            dialogo1.setNegativeButton(getString(R.string.msg_no),  null);
+            dialogo1.show();
+        }
+        else
+        {
+            BaseLocal.Insert(string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), noCli, "APERTURA CANCELADA", "VISITA SIN MOVIMIENTOS", coordenada), getApplicationContext() );
+            BaseLocal.Insert( string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), noCli, "CIERRE CLIENTE", "CIERRE SIN VENTA", coordenada), getApplicationContext() );
+            finish();
         }
     }
 

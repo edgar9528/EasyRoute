@@ -4,10 +4,10 @@
     >
 
     <item
-        android:id="@+id/action_guardar"
+        android:id="@+id/action_salir"
         android:orderInCategory="300"
-        android:title="@string/bt_guardar"
-        android:icon="@drawable/ic_save"
+        android:title="@string/bt_salir"
+        android:icon="@drawable/ic_exit_white"
         app:showAsAction="ifRoom" />
 
     <item
@@ -18,9 +18,11 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_buscar"
+        android:id="@+id/action_guardar"
         android:orderInCategory="300"
-        android:title="@string/bt_buscar"
-        android:icon="@drawable/ic_find"
+        android:title="@string/bt_guardar"
+        android:icon="@drawable/ic_save"
         app:showAsAction="ifRoom" />
+
+
 </menu>

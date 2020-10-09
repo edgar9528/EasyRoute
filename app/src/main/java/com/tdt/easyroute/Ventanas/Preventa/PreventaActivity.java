@@ -257,7 +257,9 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
         conf = Utils.ObtenerConf(getApplication());
         rc = ObtenerCliente();
 
-        setTitle(rc.getCli_cve_n() +" "+ rc.getCli_nombrenegocio_str());
+        String cveExt= String.valueOf(Long.parseLong(rc.getCli_cveext_str().replace("PR", "").replace("C", "").replace("P", "").replace("V", "")));
+
+        setTitle(cveExt +" | "+ rc.getCli_nombrenegocio_str());
 
         catenv = ObtenerIdCat("ENVASE");
         catcvz = ObtenerIdCat("CERVEZA");
@@ -461,8 +463,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                                 DataTableLC.ProductosPed ri = null;
                                 int k = -1;
                                 for (int j = 0; j < dtProductos.size(); j++) {
-                                    if (dtProductos.get(i).getProd_cve_n().equals(r.getProd_cve_n())) {
-                                        ri = dtProductos.get(i);
+                                    if (dtProductos.get(j).getProd_cve_n().equals(r.getProd_cve_n())) {
+                                        ri = dtProductos.get(j);
                                         k = j;
                                     }
                                 }
@@ -1276,11 +1278,35 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             case R.id.action_detalles:
                 clickDetalles();
                 return true;
-            case R.id.action_buscar:
-                 //clickBuscar();
+            case R.id.action_salir:
+                clickBTsalir();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void clickBTsalir()
+    {
+        if ( Double.parseDouble( string.DelCaracteres(_txtVenta ) )  != 0)
+        {
+
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+            dialogo1.setTitle(getString(R.string.msg_preventa));
+            dialogo1.setMessage( R.string.msg_prev10 );
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton(getString(R.string.msg_si), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id)
+                {
+                    finish();
+                }
+            });
+            dialogo1.setNegativeButton(getString(R.string.msg_no),  null);
+            dialogo1.show();
+        }
+        else
+        {
+            finish();
         }
     }
 

@@ -188,7 +188,7 @@ public class PagoFragment extends Fragment {
         pedidosVM.getTxtKit().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                tv_kit.setText( string.FormatoPesos(s));
+                tv_kit.setText(s);
                 actualizarTotales();
             }
         });

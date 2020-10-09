@@ -44,12 +44,11 @@ public class CreditoLiqAdapterRecyclerView extends RecyclerView.Adapter<CreditoL
     public void onBindViewHolder(@NonNull final CreditoLiqAdapterRecyclerView.PagosViewHolder dgAnormalViewHolder, int position) {
         final DataTableLC.AdeudoNormal dgANormal = dgANormals.get(position);
 
-        dgAnormalViewHolder.tv_numero.setText( dgANormal.getCred_cve_n() );
-        dgAnormalViewHolder.tv_monto.setText(  string.FormatoPesos( dgANormal.getCred_monto_n() )  );
+        dgAnormalViewHolder.tv_saldo.setText( string.FormatoPesos( dgANormal.getSaldo() )  );
         dgAnormalViewHolder.tv_fecha.setText(Utils.FechaFormato(dgANormal.getCred_fecha_dt())  );
         dgAnormalViewHolder.tv_referencia.setText( dgANormal.getCred_referencia_str() );
         dgAnormalViewHolder.tv_abono.setText( string.FormatoPesos( dgANormal.getCred_abono_n() )  );
-        dgAnormalViewHolder.tv_saldo.setText( string.FormatoPesos( dgANormal.getSaldo() )  );
+        dgAnormalViewHolder.tv_monto.setText(  string.FormatoPesos( dgANormal.getCred_monto_n() )  );
 
         dgAnormalViewHolder.linearLayout.setVisibility( View.GONE );
 
@@ -94,7 +93,6 @@ public class CreditoLiqAdapterRecyclerView extends RecyclerView.Adapter<CreditoL
         private LinearLayout linearLayout;
         private ImageButton ib_icono;
 
-        private TextView tv_numero;
         private TextView tv_monto;
         private TextView tv_fecha;
         private TextView tv_referencia;
@@ -108,7 +106,6 @@ public class CreditoLiqAdapterRecyclerView extends RecyclerView.Adapter<CreditoL
             linearLayout = itemView.findViewById(R.id.linearOcultar);
             ib_icono = itemView.findViewById(R.id.ib_icono);
 
-            tv_numero = itemView.findViewById(R.id.tv_numero);
             tv_monto = itemView.findViewById(R.id.tv_monto);
             tv_fecha = itemView.findViewById(R.id.tv_fecha);
             tv_referencia = itemView.findViewById(R.id.tv_referencia);

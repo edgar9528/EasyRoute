@@ -535,4 +535,9 @@
     <string name="hint_ventasCredito_prev">Presale Credit</string>
     <string name="hint_cobranza_prev">Total presale</string>
 
+    <string name="msg_venta">Incomplete sale</string>
+    <string name="msg_ped15">If you continue the changes will be lost. Do you want to cancel it?</string>
+    <string name="msg_preventa">Incomplete presale</string>
+    <string name="msg_prev10">There is a pending pre-sale, do you want to exit?</string>
+
 </resources>

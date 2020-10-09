@@ -202,6 +202,7 @@
     <string name="catalogos2">CondicionesVenta,Productos,Rutas,ListaPrecios,PrecioProductos,FormasPago,FrecuenciasVisita,Categorias,Familias,Presentaciones,Promociones,PromocionesKit</string>
     <string name="catalogos3">LimpiarDatos,Empresas,Estatus,Roles,RolesModulos,Modulos,Usuarios,TipoRutas,Rutas,Marcas,Unidades,CondicionesVenta,Productos,ListaPrecios,PrecioProductos,NivelCliente,FormasPago,FrecuenciasVisita,MotivosNoVenta,MotivosNoLectura,Categorias,Familias,Presentaciones,Clientes,Creditos,Direcciones,ClientesVentaMes,Promociones,PromocionesKit,Consignas</string>
     <string name="catalogos4">,Preventa</string>
+
     <string name="title_inventario1">Descarga de inventario</string>
     <string name="title_inventario2">Inventario actual</string>
     <string name="bt_descargar">Descargar</string>
@@ -516,5 +517,9 @@
     <string name="hint_ventasContado_prev">Preventa Contado</string>
     <string name="hint_ventasCredito_prev">Preventa Crédito</string>
     <string name="hint_cobranza_prev">Total Preventa</string>
+    <string name="msg_venta">Venta incompleta</string>
+    <string name="msg_ped15">Si continua los cambios se perderan. ¿Desea cancelarla?</string>
+    <string name="msg_preventa">Preventa incompleta</string>
+    <string name="msg_prev10">Hay una preventa pendiente, ¿Desea salir?</string>
 
 </resources>

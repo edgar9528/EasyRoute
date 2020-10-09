@@ -182,6 +182,7 @@ public class PagoFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 tv_kit.setText(s);
+                actualizarTotales();
             }
         });
 

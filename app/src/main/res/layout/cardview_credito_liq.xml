@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:ignore="ContentDescription"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="1dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="2dp"
 
     android:layout_marginTop="@dimen/paddingCardViewSmall"
     android:layout_marginBottom="@dimen/paddingCardViewSmall"
@@ -27,31 +27,8 @@
         android:padding="@dimen/paddingControles"
         >
 
-        <ImageView
-            android:id="@+id/iv_id"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleType="fitCenter"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent"
-            card_view:srcCompat="@drawable/ic_circle"
-            />
-
         <TextView
-            android:id="@+id/tv_numero"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:textColor="@color/blanco"
-            >
-
-        </TextView>
-
-        <TextView
-        android:id="@+id/tv_monto"
+        android:id="@+id/tv_saldo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/tv_ejemplo"
@@ -60,7 +37,7 @@
         android:layout_marginStart="@dimen/paddingCardView"
         android:layout_marginEnd="@dimen/paddingCardView"
         card_view:layout_constraintTop_toTopOf="@+id/iv_id"
-        card_view:layout_constraintStart_toEndOf="@+id/iv_id"
+        card_view:layout_constraintStart_toStartOf="parent"
         card_view:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
@@ -72,7 +49,8 @@
         android:text="@string/tv_ejemplo"
         style="@style/tv_titulos.normal"
 
-        card_view:layout_constraintStart_toEndOf="@+id/iv_id"
+        card_view:layout_constraintTop_toBottomOf="@id/tv_saldo"
+        card_view:layout_constraintStart_toStartOf="parent"
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintBottom_toBottomOf="@+id/iv_id" />
 
@@ -157,12 +135,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/tv_saldo"
+                    android:text="@string/tv_monto"
                     style="@style/tv_titulos"
                     >
                 </TextView>
                 <TextView
-                    android:id="@+id/tv_saldo"
+                    android:id="@+id/tv_monto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
