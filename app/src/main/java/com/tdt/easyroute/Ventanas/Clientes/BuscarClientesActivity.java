@@ -308,41 +308,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         }
     }
 
-    private void obtenerUbicacion(final String consulta)
-    {
-        try {
-            final String[] ubi = new String[1];
-            final ProgressDialog progress = new ProgressDialog(this);
-            progress.setTitle(getString(R.string.msg_cargando));
-            progress.setMessage(getString(R.string.msg_espera));
-            progress.show();
-            progress.setCancelable(false);
-
-            enableLocationUpdates();
-
-            ubi[0] = getLatLon();
-            Log.d("salida", "Ubicacion anterior: " + ubi[0]);
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    progress.cancel();
-                    disableLocationUpdates();
-                    ubi[0] = getLatLon();
-                    Log.d("salida", "Ubicacion nueva: " + ubi[0]);
-
-                    BaseLocal.Insert( string.formatSql(consulta, ubi[0])  ,getApplicationContext());
-                }
-            }, 3000);
-
-        }catch (Exception e)
-        {
-            Utils.msgError(this, getString(R.string.error_ubicacion),e.getMessage());
-            Log.d("salida","Error: "+e.getMessage());
-        }
-    }
-
     public void imprimir(int indice)
     {
         try
@@ -393,10 +358,45 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         }
     }
 
+    public void obtenerUbicacion(final int indice)
+    {
+        try
+        {
+            final String[] ubi = new String[1];
+            final ProgressDialog progress = new ProgressDialog(this);
+            progress.setTitle(getString(R.string.msg_cargando));
+            progress.setMessage(getString(R.string.msg_espera));
+            progress.show();
+            progress.setCancelable(false);
+
+            enableLocationUpdates();
+
+            ubi[0] = getLatLon();
+            Log.d("salida", "Ubicacion anterior: " + ubi[0]);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress.cancel();
+                    disableLocationUpdates();
+                    ubi[0] = getLatLon();
+                    Log.d("salida", "Ubicacion nueva: " + ubi[0]);
+                    seleccionar(indice);
+                }
+            }, 3000);
+
+        }catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.error_ubicacion),e.getMessage());
+            Log.d("salida","Error: "+e.getMessage());
+        }
+    }
+
     public void seleccionar(int indice)
     {
-        try {
-
+        try
+        {
             String consulta, json;
 
             DataTableWS.Clientes dgCliente = bsClientes.get(indice);
@@ -423,20 +423,21 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
             if (Utils.getBool(rc.getCli_invalidafrecuencia_n()))
             {
                 consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS", "{0}");
-                obtenerUbicacion(consulta);
+                BaseLocal.Insert( string.formatSql(consulta, getLatLon())  ,getApplicationContext());
+
             } else if (Utils.getBool(rc.getRut_invalidafrecuencia_n()))
             {
                 consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR SISTEMAS NIVEL RUTA", "{0}");
-                obtenerUbicacion(consulta);
+                BaseLocal.Insert( string.formatSql(consulta, getLatLon()) , getApplicationContext());
             }
             else
             {
                 if (conf.isAuditoria())
                 {
                     consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "INVALIDADO POR AUDITORIA", "{0}");
-                    obtenerUbicacion(consulta);
-                } else {
-
+                    BaseLocal.Insert(string.formatSql(consulta, getLatLon()), getApplicationContext());
+                } else
+                {
                     int diaVisitar = 0;
                     switch (Day) {
                         case "cli_lun_n":
@@ -464,7 +465,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
 
                     if (diaVisitar <= 0) {
                         consulta = string.formatSql(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), String.valueOf(conf.getRuta()), rc.getCli_cve_n(), "VALIDAR FRECUENCIA", "EL CLIENTE NO SE VISITA HOY", "{0}");
-                        obtenerUbicacion(consulta);
+                        BaseLocal.Insert(string.formatSql(consulta, getLatLon()), getApplicationContext());
                         Toast.makeText(getApplicationContext(), getString(R.string.tt_noVisita), Toast.LENGTH_LONG).show();
                         return;
                     }

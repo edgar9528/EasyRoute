@@ -529,7 +529,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 String cli_cveext_n, cli_nombre, cli_especial_n;
 
                 DataTableLC.PedidosClientes r;
-                for (int i = 0; i < dt.size(); i++) {
+                for (int i = 0; i < dt.size(); i++)
+                {
                     r = dt.get(i);
                     l = r.getCli_cveext_str().length() - 6;
 
@@ -1073,6 +1074,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 i=lvClientes.size();
             }
         }
+
         return cli;
     }
 
@@ -1315,7 +1317,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
             boolean especial = detCli.getCli_especial_n().equals("1");
 
-            if (!especial) {
+            if (!especial)
+            {
                 String json = BaseLocal.Select(string.formatSql("Select * from ventas where cli_cve_n={0} " +
                         "and ven_folio_str like '{1}%'", cliente, Utils.FechaLocal().replace("-", "")), getContext());
                 ArrayList<DataTableLC.Venta> dtv = ConvertirRespuesta.getVentaJson(json);

@@ -48,7 +48,7 @@ public class BuscarAdapterRecyclerView extends RecyclerView.Adapter<BuscarAdapte
         buscarViewHolder.ib_selec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buscarClientesActivity.seleccionar(buscarCardView.getIndice());
+                buscarClientesActivity.obtenerUbicacion(buscarCardView.getIndice());
             }
         });
 
