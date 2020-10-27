@@ -139,6 +139,14 @@ public class PagoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        pedidosVM.getDgPagosPrev().observe(getActivity(), new Observer<ArrayList<DataTableLC.DgPagos>>() {
+            @Override
+            public void onChanged(ArrayList<DataTableLC.DgPagos> dgPagosVM) {
+                for(int i=0; i<dgPagosVM.size();i++)
+                    pagosAdapterRecyclerView.agregarItem(dgPagosVM.get(i));
+            }
+        });
+
         pedidosVM.getDgPro2().observe(getActivity(), new Observer<ArrayList<DataTableLC.ProductosPed>>() {
             @Override
             public void onChanged(ArrayList<DataTableLC.ProductosPed> DgProd2) {

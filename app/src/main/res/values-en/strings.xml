@@ -540,4 +540,6 @@
     <string name="msg_preventa">Incomplete presale</string>
     <string name="msg_prev10">There is a pending pre-sale, do you want to exit?</string>
 
+    <string name="err_prev">Error loading credits</string>
+
 </resources>

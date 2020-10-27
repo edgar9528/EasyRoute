@@ -246,13 +246,13 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             if (lvClientes.size() > 0)
             {
                 graficoVisitas(visitas, lvClientes.size());
-                graficoEfectividad(ConVenta, visitas );
+                graficoEfectividad(ConVenta, lvClientes.size() );
                 //et_efectividad.setText((ConVenta / lvClientes.size()) + " %");
             }
             else
             {
                 graficoVisitas(visitas, 0);
-                graficoEfectividad(ConVenta, visitas );
+                graficoEfectividad(ConVenta, 0 );
                 //et_efectividad.setText(ConVenta + "/0");
             }
 
@@ -338,7 +338,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             description.setTextColor(ColorTemplate.rgb("ffffff"));
             description.setTextSize(18);
 
-            pieChartEfectividad.setCenterText(porcentaje + "%");
+            pieChartEfectividad.setCenterText( String.format("%.2f", porcentaje)  + "%");
             pieChartEfectividad.setCenterTextSize(18);
             pieChartEfectividad.setCenterTextColor(ColorTemplate.rgb("ffffff"));
 
@@ -1239,7 +1239,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         {
             try
             {
-                switch (requestCode) {
+                switch (requestCode)
+                {
                     case 0:
                         String cve_cliente = intent.getStringExtra("clave");
                         resultadoBuscar(cve_cliente);
@@ -1310,7 +1311,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         try
         {
             DataTableLC.DtCliVenta detCli = getDetcli(cve_cliente);
-            clienteClick = getPedcli(cve_cliente);
+            clienteClick = getClienteLV(detCli);
             clienteSeleccionado = detCli;
 
             String cliente = detCli.getCli_cve_n();
@@ -1353,6 +1354,107 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
+        }
+
+    }
+
+    private DataTableLC.PedidosLv getClienteLV(DataTableLC.DtCliVenta r)
+    {
+        try
+        {
+            ArrayList<DataTableLC.PedidosVisitas> dtCli;
+            ArrayList<DataTableLC.PedidosVisitas> dtCli2;
+            ArrayList<DataTableLC.PedidosVisPre> dtVisPre;
+            clientesCveExt = new ArrayList<>();
+            clientesCve = new ArrayList<>();
+
+            int l = 0;
+
+            String json = BaseLocal.Select("Select * from visitapreventa", getContext());
+            dtVisPre = ConvertirRespuesta.getPedidosVisPreJson(json);
+
+            if (r != null)
+            {
+                DataTableLC.PedidosLv cliente = null;
+
+                int icono;
+                String cli_cve_n, cli_est;
+                String cli_cveext_n, cli_nombre, cli_especial_n;
+
+                l = r.getCli_cveext_str().length() - 6;
+
+                //if(l>=0)
+                //{
+                cli_cve_n = r.getCli_cve_n();
+                cli_especial_n = r.getCli_especial_n();
+
+                clientesCveExt.add(r.getCli_cveext_str());
+                clientesCve.add( r.getCli_cve_n() );
+
+                if (r.getCli_prospecto_n() == null || r.getCli_prospecto_n().isEmpty())
+                    cli_est = "P";
+                else
+                    cli_est = r.getCli_cveext_str().substring(0, 1);
+
+                cli_cveext_n = String.valueOf(Long.parseLong(r.getCli_cveext_str().replace("PR", "").replace("C", "").replace("P", "").replace("V", "")));
+
+                if (r.getCli_nombrenegocio_str() == null || r.getCli_nombrenegocio_str().isEmpty())
+                    cli_nombre = r.getCli_razonsocial_str();
+                else
+                    cli_nombre = r.getCli_nombrenegocio_str();
+
+                //}
+
+                icono = 0;
+
+                if (r.getEst_cve_str().equals("I"))
+                    icono = 4;
+
+                dtCli = null;
+                json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and " +
+                        "(upper(vis_operacion_str)='CON VENTA' or upper(vis_operacion_str)='CON PREVENTA') order by vis_fecha_dt desc", r.getCli_cve_n()), getContext());
+                dtCli = ConvertirRespuesta.getPedidosVisitasJson(json);
+
+                DataTableLC.PedidosVisPre vp = null;
+                if (dtVisPre != null)
+                    for (int j = 0; j < dtVisPre.size(); j++) {
+                        if (r.getCli_cve_n().equals(dtVisPre.get(j).getCli_cve_n())) {
+                            vp = dtVisPre.get(j);
+                        }
+                    }
+
+                if (vp != null && conf.getPreventa() == 2) {
+                    icono = 5;
+                }
+
+                if (dtCli != null) {
+                    icono = 1;
+                } else {
+                    dtCli2 = null;
+                    json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and vis_operacion_str<>'CON VENTA' order by vis_fecha_dt desc", r.getCli_cve_n()), getContext());
+                    dtCli2 = ConvertirRespuesta.getPedidosVisitasJson(json);
+
+                    if (dtCli2 != null) {
+                        String op = dtCli2.get(0).getVis_operacion_str();
+                        if (op.equals("NO VENTA"))
+                            icono = 3;
+                        if (op.equals("CON VENTA") || op.equals("CON PREVENTA"))
+                            icono = 1;
+                        if (op.equals("SIN VENTA") || op.equals("CON COBRANZA"))
+                            icono = 2;
+                    }
+                }
+
+                return new DataTableLC.PedidosLv(icono, cli_cve_n, cli_est, cli_cveext_n, cli_nombre, cli_especial_n);
+
+            }
+            else
+                return null;
+
+        } catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
+            return null;
         }
 
     }

@@ -2138,7 +2138,7 @@ public class Utils {
             DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
 
             if (usu != null)
-                p += string.formatSql("ASESOR:\n{0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
+                p += string.formatSql("ASESOR: {0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
 
             ArrayList<DataTableWS.Clientes> alCli;
             DataTableWS.Clientes dtc;
@@ -2151,8 +2151,8 @@ public class Utils {
                 dtc = alCli.get(0);
 
                 p += "CLIENTE: " + dtc.getCli_cveext_str() + "\n\n";
-                p += "RAZON SOCIAL: \n" + dtc.getCli_nombrenegocio_str() + "\n\n";
-                p += "NEGOCIO: \n" + dtc.getCli_razonsocial_str() + "\n\n";
+                p += "RAZON SOCIAL: " + dtc.getCli_nombrenegocio_str() + "\n\n";
+                p += "NEGOCIO: " + dtc.getCli_razonsocial_str() + "\n\n";
 
                 ArrayList<DataTableWS.Direcciones> dtd;
                 sql = string.formatSql("Select * from direcciones where cli_cve_n={0}   and dir_cve_n={1}",
@@ -2162,7 +2162,7 @@ public class Utils {
 
                 if (dtd.size() > 0) {
                     DataTableWS.Direcciones r = dtd.get(0);
-                    p += string.formatSql("DIRECCION: \n{0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
+                    p += string.formatSql("DIRECCION: {0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
                             r.getDir_noext_str(), r.getDir_colonia_str(), r.getDir_municipio_str(), r.getDir_estado_str(),
                             r.getDir_codigopostal_str());
                 }
@@ -2197,7 +2197,7 @@ public class Utils {
 
             if (v.getPreventas() != null) {
                 for (Preventa vta : v.getPreventas()) {
-                    p += "FECHA PREVENTA: \n" + Utils.FechaHoraFormato(vta.getPreventa().getPrev_fecha_dt()) + "\n\n";
+                    p += "FECHA PREV: " + Utils.FechaHoraFormato(vta.getPreventa().getPrev_fecha_dt()) + "\n\n";
                     p += "FOLIO: " + vta.getPreventa().getPrev_folio_str() + "\n\n";
 
                     if (vta.getDetalles() != null || vta.getBebidas() != null) {
@@ -2238,7 +2238,7 @@ public class Utils {
                                     SubTotalCvz += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
                                 }
                             }
-                            p += "TOTAL CERVEZA: " + string.FormatoPesos(SubTotalCvz) + "\n\n";
+                            p+= Impresora.DarTamañoDer("TOTAL CERVEZA: ",18) + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalCvz),14)+ "\n\n";
                         }
 
 
@@ -2274,13 +2274,13 @@ public class Utils {
 
                                 }
                             }
-                            p += "TOTAL OTRAS BEBIDAS: " + string.FormatoPesos(SubTotalBeb) + "\n\n";
+                            p+=Impresora.DarTamañoDer("TOTAL OTRAS BEBIDAS: ",20) + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalBeb),12)+ "\n\n";
+
                         }
                         //-------------------- Bebidas ------------------------//
                         SubtotalVenta += SubTotalF;
 
-                        p += "TOTAL FACTURA: " + string.FormatoPesos(SubTotalF) + "\n\n";
-
+                        p+=Impresora.DarTamañoDer("TOTAL FACTURA: ",18) + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalF),14)+ "\n\n";
 
                         if (v.getEnvase() != null) {
                             p += Impresora.Centrar("ENVASE") + "\n";
@@ -2312,8 +2312,8 @@ public class Utils {
                                 }
                             }
 
-                            p += "TOTAL ENVASE PZAS: " + String.format("%.2f", TotPzasEnv) + "\n";
-                            p += "TOTAL ENVASE: " + string.FormatoPesos(SubTotalDE) + "\n\n";
+                            p += Impresora.DarTamañoDer("TOTAL ENVASE PZAS: ",19 )  + Impresora.DarTamañoIzq( String.valueOf((int) TotPzasEnv) ,11) + "\n";
+                            p += Impresora.DarTamañoDer("TOTAL ENVASE: ",19 )  + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalDE),11) + "\n";
                         }
 
                         SubtotalDeudaEnv += SubTotalDE;
@@ -2353,8 +2353,8 @@ public class Utils {
                         }
                     }
 
-                    p += "TOTAL ENVASE PZAS: " + String.format("%.2f", TotPzasEnv) + "\n\n";
-                    p += "TOTAL ENVASE: " + String.format("%.2f", SubTotalDE) + "\n\n";
+                    p += Impresora.DarTamañoDer("TOTAL ENVASE PZAS: ",19 )  + Impresora.DarTamañoIzq( String.valueOf( (int)TotPzasEnv ),11) + "\n\n";
+                    p += Impresora.DarTamañoDer("TOTAL ENVASE: ",19 )  + Impresora.DarTamañoIzq(string.FormatoPesos( SubTotalDE),11)  + "\n\n";
                 }
 
                 SubtotalDeudaEnv += SubTotalDE;
@@ -2471,16 +2471,12 @@ public class Utils {
 
             p += Impresora.Centrar("SALDOS") + "\n\n";
 
-            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
-            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
-            p += "+VENTA DE ENVASE DEL DIA: " + string.FormatoPesos(SubTotalE) + "\n";
-            p += "=SALDO FINAL PREVENTA: " + string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE) + "\n\n";
+            p += Impresora.DarTamañoDer("+SALDO INICIAL: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred),13) + "\n";
+            p += Impresora.DarTamañoDer("+VTA DIA: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(SubtotalVenta),13) + "\n";
+            p += Impresora.DarTamañoDer("+VTA ENV. DIA: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalE),13) + "\n";
 
-            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
-            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
-            p += "+VENTA DE ENVASE DEL DIA: " + string.FormatoPesos(SubTotalE) + "\n";
-            p += "=SALDO FINAL PREVENTA: " + string.FormatoPesos((InicialCred + SubtotalVenta + SubTotalE)) + "\n\n";
-            p += "SALDO EFECTIVO PREV: " + string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE) + "\n\n\n";
+            p += Impresora.DarTamañoDer("=SALDO FIN. PRE: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE),13) + "\n";
+            p += Impresora.DarTamañoDer("SALDO EFEC. PREV: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE),13) + "\n";
 
             return p;
 

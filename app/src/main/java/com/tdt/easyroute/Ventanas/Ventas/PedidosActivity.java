@@ -86,7 +86,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
     ArrayList<DataTableLC.ProductosPed> dtProductos;
     ArrayList<DataTableLC.ProductosPed> dgProd2;
     ArrayList<DataTableLC.CompPrevDet> ListaPrev;
-    ArrayList<DataTableLC.DgAbonos> dgAbonos;
+    ArrayList<DataTableLC.DgPagos> dgAbonos;
     ArrayList<DataTableLC.DgPagos> dgPagos;
     ArrayList<DataTableLC.EnvasesAdeudo> dgDeudaEnv;
 
@@ -248,9 +248,9 @@ public class PedidosActivity extends AppCompatActivity implements         Google
             }
         });
 
-        pedidosVM.getDgAbonos().observe(this, new Observer<ArrayList<DataTableLC.DgAbonos>>() {
+        pedidosVM.getDgAbonos().observe(this, new Observer<ArrayList<DataTableLC.DgPagos>>() {
             @Override
-            public void onChanged(ArrayList<DataTableLC.DgAbonos> dgAbonosNew) {
+            public void onChanged(ArrayList<DataTableLC.DgPagos> dgAbonosNew) {
                 dgAbonos = dgAbonosNew;
             }
         });
@@ -288,6 +288,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
         _tv_adeudoN="$0.00";
         _tv_totAbono="$0.00";
+        _txtSaldoDeudaEnv= string.FormatoPesos("0");
+        _txtKit = string.FormatoPesos("0");
 
         dgPagos = new ArrayList<>();
         dgAbonos = new ArrayList<>();
@@ -800,13 +802,15 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
     private void CargarPreventa()
     {
-        try {
+        try
+        {
             String con = string.formatSql("Select * from visitapreventa where cli_cve_n={0}", rc.getCli_cve_n());
             String json = BaseLocal.Select(con, getApplicationContext());
 
             ArrayList<DataTableWS.VisitaPreventa> dtVisPre = ConvertirRespuesta.getVisitaPreventaJson(json);
 
-            if (dtVisPre != null && dtVisPre.size() > 0) {
+            if (dtVisPre != null && dtVisPre.size() > 0)
+            {
                 FolioVisita = dtVisPre.get(0).getVisp_folio_str();
 
                 String fechaAyerStr = Utils.FechaLocal();
@@ -851,7 +855,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     boolean invf = false;
                     double cantp = 0;
 
-                    for (DataTableLC.PreventaPedidos r : dtPrev) {
+                    for (DataTableLC.PreventaPedidos r : dtPrev)
+                    {
                         invp = false;
                         invf = false;
                         cantp = 0;
@@ -915,17 +920,17 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     if (dtPagPrev != null) {
                         for (DataTableLC.PreventaPagos r : dtPagPrev) {
                             if (Utils.getBool(r.getPpag_cobranza_n())) {
-                                DataTableLC.DgAbonos nc = new DataTableLC.DgAbonos();
+                                DataTableLC.DgPagos nc = new DataTableLC.DgPagos();
 
-                                nc.setNoAbono(String.valueOf(kc));
+                                nc.setNoPago(String.valueOf(kc));
                                 nc.setFpag_cve_n(r.getFpag_cve_n());
                                 nc.setFpag_desc_str(r.getFpag_desc_str());
                                 nc.setFpag_cant_n(r.getFpag_cant_n());
-                                nc.setBancoA("");
+                                nc.setBancoP("");
                                 if (Utils.getBool(r.getFpag_reqbanco_n()) || Utils.getBool(r.getFpag_reqreferencia_n()))
-                                    nc.setBancoA("Falta Ref");
+                                    nc.setBancoP("Falta Ref");
 
-                                nc.setReferenciaA("");
+                                nc.setReferenciaP("");
 
                                 dgAbonos.add(nc);
                                 kc++;
@@ -987,11 +992,11 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                             int sventaPre = 0;
 
                             if (re != null) {
-                                adeudo = Integer.parseInt(re.getAdeudo());
-                                entregado = Integer.parseInt(rea.getEntregado());
+                                adeudo = (int) Float.parseFloat(re.getAdeudo());
+                                entregado = (int) Float.parseFloat(rea.getEntregado());
                                 SaldoTotal = adeudo + entregado;
-                                abonoPre = Integer.parseInt(r.getProd_abono_n());
-                                ventaPre = Integer.parseInt(r.getProd_venta_n());
+                                abonoPre = (int) Float.parseFloat(r.getProd_abono_n());
+                                ventaPre = (int) Float.parseFloat(r.getProd_venta_n());
                                 AbonoTotal = abonoPre + ventaPre;
 
                                 if (SaldoTotal >= AbonoTotal) {
@@ -1048,11 +1053,11 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                         ValidaCredito();
                     }
 
-                    pedidosVM.setDgPro2( dgProd2);
-                    pedidosVM.setDgPagos(dgPagos);
+                    pedidosVM.setDgProPre( dgProd2);
+                    pedidosVM.setDgPagoPrev(dgPagos);
                 }
             } else
-                Toast.makeText(this, getString(R.string.tt_ped12), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.tt_ped12), Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
             Utils.msgError(this, getString(R.string.err_ped15), e.getMessage());
@@ -1065,6 +1070,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
         {
             double calculo = 0;
             double DescKit = 0;
+
             DescKit = Double.parseDouble( string.DelCaracteres(_txtKit) ) ; //decimal.Parse(txtKit.Text.Replace("$", ""));
 
             for (DataTableLC.ProductosPed p : dgProd2)
@@ -1078,7 +1084,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     calculo += Double.parseDouble(p.getSubtotal());
 
 
-            double ventaEA = Double.parseDouble( string.FormatoPesos(_txtSaldoDeudaEnv) ) ; //decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""));
+            double ventaEA = Double.parseDouble( string.DelCaracteres(_txtSaldoDeudaEnv) ) ; //decimal.Parse(txtSaldoDeudaEnv.Text.Replace("$", ""));
             double ContEsp = calculo+ventaEA; //decimal.Parse(calculo.ToString())+ventaEA;
 
             if (ContEsp >= DescKit)
@@ -2443,7 +2449,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     double acumulado = 0;
                     double saldo = 0;
 
-                    for(DataTableLC.DgAbonos rp : dgAbonos)
+                    for(DataTableLC.DgPagos rp : dgAbonos)
                     {
                         abonado = Double.parseDouble(rp.getFpag_cant_n());
                         acumulado = 0;
@@ -2458,8 +2464,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                                     if (saldo <= (abonado - acumulado))
                                     {
                                         sql= string.formatSql2(Querys.Pagos.InsPago, String.valueOf(conf.getId()), r.getCred_referencia_str(),
-                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n() , rp.getReferenciaA(),
-                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
+                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n() , rp.getReferenciaP(),
+                                                rp.getBancoP(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
                                         db.execSQL(sql);
 
                                         acumulado += saldo;
@@ -2468,8 +2474,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                                     {
                                         saldo = (abonado - acumulado);
                                         sql=string.formatSql2(Querys.Pagos.InsPago, String.valueOf(conf.getId()), r.getCred_referencia_str(),
-                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n(), rp.getReferenciaA(),
-                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
+                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n(), rp.getReferenciaP(),
+                                                rp.getReferenciaP(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
                                         db.execSQL(sql);
                                         acumulado += saldo;
                                     }
@@ -2724,7 +2730,7 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                     double acumulado = 0;
                     double saldo = 0;
 
-                    for(DataTableLC.DgAbonos rp: dgAbonos )
+                    for(DataTableLC.DgPagos rp: dgAbonos )
                     {
                         abonado = Double.parseDouble (rp.getFpag_cant_n());
                         acumulado = 0;
@@ -2740,8 +2746,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
 
                                         con = string.formatSql2(
                                                 Querys.Pagos.InsPago, String.valueOf(conf.getId() ),r.getCred_referencia_str(),
-                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n(), rp.getReferenciaA(),
-                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
+                                                String.valueOf(saldo), "0", "0", "null", "null", rp.getFpag_cve_n(), rp.getReferenciaP(),
+                                                rp.getBancoP(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1", coordenada);
                                         db.execSQL(con);
 
                                         acumulado += saldo;
@@ -2751,8 +2757,8 @@ public class PedidosActivity extends AppCompatActivity implements         Google
                                         saldo = (abonado - acumulado);
 
                                         con=string.formatSql2(Querys.Pagos.InsPago, String.valueOf(conf.getId() ), r.getCred_referencia_str(),
-                                                String.valueOf(saldo ), "0","0", "null", "null", rp.getFpag_cve_n() , rp.getReferenciaA(),
-                                                rp.getBancoA(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1",coordenada);
+                                                String.valueOf(saldo ), "0","0", "null", "null", rp.getFpag_cve_n() , rp.getReferenciaP(),
+                                                rp.getBancoP(), noCli, conf.getRutaStr(), conf.getUsuario(), "0", "", "1",coordenada);
                                         db.execSQL(con);
 
                                         acumulado += saldo;

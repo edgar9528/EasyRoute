@@ -207,7 +207,7 @@ public class FamiliavenFragment extends Fragment {
             }
         }catch (Exception e)
         {
-            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
+            Utils.msgError(getContext(), getString(R.string.err_ped23)+" 1", e.getMessage());
         }
     }
 
@@ -233,7 +233,7 @@ public class FamiliavenFragment extends Fragment {
             return cve;
         }catch (Exception e)
         {
-            Utils.msgError(getContext(), getString(R.string.err_ped23) ,e.getMessage());
+            Utils.msgError(getContext(), getString(R.string.err_ped23)+" 2" ,e.getMessage());
             return null;
         }
     }

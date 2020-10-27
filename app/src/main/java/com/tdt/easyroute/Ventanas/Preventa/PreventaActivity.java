@@ -85,7 +85,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
     ArrayList<DataTableLC.ProductosPed> dtProductos;
     ArrayList<DataTableLC.ProductosPed> dgProd2;
     ArrayList<DataTableLC.CompPrevDet> ListaPrev;
-    ArrayList<DataTableLC.DgAbonos> dgAbonos;
+    ArrayList<DataTableLC.DgPagos> dgAbonos;
     ArrayList<DataTableLC.DgPagos> dgPagos;
     ArrayList<DataTableLC.EnvasesAdeudo> dgDeudaEnv;
 
@@ -234,9 +234,9 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
             }
         });
 
-        pedidosVM.getDgAbonos().observe(this, new Observer<ArrayList<DataTableLC.DgAbonos>>() {
+        pedidosVM.getDgAbonos().observe(this, new Observer<ArrayList<DataTableLC.DgPagos>>() {
             @Override
-            public void onChanged(ArrayList<DataTableLC.DgAbonos> dgAbonosNew) {
+            public void onChanged(ArrayList<DataTableLC.DgPagos> dgAbonosNew) {
                 dgAbonos = dgAbonosNew;
             }
         });
@@ -622,69 +622,83 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
         ArrayList<String[]> productosPreventa = new ArrayList<>();
 
-        for(DataTableLC.ProdAlm r : dtpg)
+        if(dtpg!=null)
         {
-            String[] producto = new String[2];
-            producto[0]= r.getProd_sku_str();
-            producto[1]= r.getProd_cant_n();
-            productosPreventa.add(producto);
+            for(DataTableLC.ProdAlm r : dtpg)
+            {
+                String[] producto = new String[2];
+                producto[0]= r.getProd_sku_str();
+                producto[1]= r.getProd_cant_n();
+                productosPreventa.add(producto);
+            }
+            pedidosVM.setProductoPreventa(productosPreventa);
         }
-        pedidosVM.setProductoPreventa(productosPreventa);
 
         //carga abonos
-        for (DataTableLC.PreventaPagos r : dtpag)
+        if(dtpag!=null)
         {
-            if (Utils.getBool( r.getPpag_cobranza_n() ) )
+            for (DataTableLC.PreventaPagos r : dtpag)
             {
-                DataTableLC.DgAbonos rn = new DataTableLC.DgAbonos();
-
-                rn.setNoAbono( r.getPpag_num_n() );
-                rn.setFpag_cve_n( r.getFpag_cve_n() );
-                rn.setFpag_desc_str( r.getFpag_desc_str() );
-                rn.setFpag_cant_n( r.getFpag_cant_n() );
-                dgAbonos.add(rn);
-            }
-        }
-        pedidosVM.setDgAbonosVisitado(dgAbonos);
-
-        //carga pagos
-        for (DataTableLC.PreventaPagos r : dtpag)
-        {
-            if (!Utils.getBool( r.getPpag_cobranza_n() ) )
-            {
-                DataTableLC.DgPagos rn = new DataTableLC.DgPagos();
-
-                rn.setNoPago( r.getPpag_num_n() );
-                rn.setFpag_cve_n( r.getFpag_cve_n() );
-                rn.setFpag_desc_str( r.getFpag_desc_str() );
-                rn.setFpag_cant_n( r.getFpag_cant_n() );
-
-                dgPagos.add(rn);
-            }
-        }
-        pedidosVM.setDgPagosVisitado(dgPagos);
-
-        //Carga Envases
-        for (DataTableLC.PrevEnv r : dtenva)
-        {
-            int indice=-1;
-            for(int i=0; i<dgEnvase.size();i++)
-            {
-                if(dgEnvase.get(i).getProd_cve_n().equals( r.getProd_cve_n() ))
+                if (Utils.getBool( r.getPpag_cobranza_n() ) )
                 {
-                    indice = i;
-                    break;
+                    DataTableLC.DgPagos rn = new DataTableLC.DgPagos();
+
+                    rn.setNoPago( r.getPpag_num_n() );
+                    rn.setFpag_cve_n( r.getFpag_cve_n() );
+                    rn.setFpag_desc_str( r.getFpag_desc_str() );
+                    rn.setFpag_cant_n( r.getFpag_cant_n() );
+                    dgAbonos.add(rn);
                 }
             }
-
-            if(indice!=-1)
-            {
-                dgEnvase.get(indice).setProd_abono_n(  r.getProd_abono_n() );
-                dgEnvase.get(indice).setProd_regalo_n( r.getProd_regalo_n() );
-                dgEnvase.get(indice).setProd_venta_n( r.getProd_venta_n() );
-            }
+            pedidosVM.setDgAbonosVisitado(dgAbonos);
         }
-        pedidosVM.setDgEnvasePrev(dgEnvase);
+
+
+        //carga pagos
+
+        if(dtpag!=null)
+        {
+            for (DataTableLC.PreventaPagos r : dtpag)
+            {
+                if (!Utils.getBool( r.getPpag_cobranza_n() ) )
+                {
+                    DataTableLC.DgPagos rn = new DataTableLC.DgPagos();
+
+                    rn.setNoPago( r.getPpag_num_n() );
+                    rn.setFpag_cve_n( r.getFpag_cve_n() );
+                    rn.setFpag_desc_str( r.getFpag_desc_str() );
+                    rn.setFpag_cant_n( r.getFpag_cant_n() );
+
+                    dgPagos.add(rn);
+                }
+            }
+            pedidosVM.setDgPagosVisitado(dgPagos);
+        }
+
+        //Carga Envases
+        if(dtenva!=null)
+        {
+            for (DataTableLC.PrevEnv r : dtenva)
+            {
+                int indice=-1;
+                for(int i=0; i<dgEnvase.size();i++)
+                {
+                    if(dgEnvase.get(i).getProd_cve_n().equals( r.getProd_cve_n() ))
+                    {
+                        indice = i;
+                        break;
+                    }
+                }
+
+                if(indice!=-1)
+                {
+                    dgEnvase.get(indice).setProd_abono_n(  r.getProd_abono_n() );
+                    dgEnvase.get(indice).setProd_regalo_n( r.getProd_regalo_n() );
+                    dgEnvase.get(indice).setProd_venta_n( r.getProd_venta_n() );
+                }
+            }
+            pedidosVM.setDgEnvasePrev(dgEnvase);
+        }
 
     }
 
@@ -1705,8 +1719,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
                 for (int i = 0; i < dgAbonos.size(); i++ )
                 {
-                    DataTableLC.DgAbonos ri = dgAbonos.get(i);
-                    sql = string.formatSql2(Querys.Preventa.InsPreventaPagos, folio, ri.getNoAbono(),"1", ri.getFpag_cve_n(),  ri.getFpag_cant_n());
+                    DataTableLC.DgPagos ri = dgAbonos.get(i);
+                    sql = string.formatSql2(Querys.Preventa.InsPreventaPagos, folio, ri.getNoPago(),"1", ri.getFpag_cve_n(),  ri.getFpag_cant_n());
                     db.execSQL(sql);
                 }
 
@@ -1897,8 +1911,8 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
                 for (int i = 0; i < dgAbonos.size() ; i++)
                 {
-                    DataTableLC.DgAbonos ri = dgAbonos.get(i);
-                    String sql = string.formatSql2(Querys.Preventa.InsPreventaPagos, folio,  ri.getNoAbono(), "1",  ri.getFpag_cve_n(), ri.getFpag_cant_n());
+                    DataTableLC.DgPagos ri = dgAbonos.get(i);
+                    String sql = string.formatSql2(Querys.Preventa.InsPreventaPagos, folio,  ri.getNoPago(), "1",  ri.getFpag_cve_n(), ri.getFpag_cant_n());
                     db.execSQL(sql);
                 }
 

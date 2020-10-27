@@ -286,5 +286,12 @@ public class BaseLocal {
         return resultSet.toString();
     }
 
+    public static String InsertBooleanWS(String json)
+    {
+        json = json.replace("false","0");
+        json = json.replace("true","1");
+        return json;
+    }
+
 
 }

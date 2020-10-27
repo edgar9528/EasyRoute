@@ -444,7 +444,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
     {
         try
         {
-            //guardar();
+            guardar();
 
             String json = BaseLocal.Select("Select * from sugerido",getContext());
 

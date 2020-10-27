@@ -13,12 +13,14 @@ public class PedidosVM extends ViewModel
 {
     private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dtProductos = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dgPro2 = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<DataTableLC.ProductosPed> > dgProPreventa = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableWS.FormasPago> > formasPago = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.EnvasesAdeudo>> dgDeudaEnv = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.EnvasesPed>> dgEnvase = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.EnvasesPreventa>> dgEnvasePrev = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgPagos = new MutableLiveData<>();
-    private final MutableLiveData< ArrayList<DataTableLC.DgAbonos> > dgAbonos = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgAbonos = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > DgPagoPrev = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.Creditos> > dgCreditos = new MutableLiveData<>();
 
     private final MutableLiveData<String> producto = new MutableLiveData<>();
@@ -39,7 +41,7 @@ public class PedidosVM extends ViewModel
 
     private final MutableLiveData< ArrayList<String[]> > productoPreventa = new MutableLiveData<>();
     private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgPagosVisitado = new MutableLiveData<>();
-    private final MutableLiveData< ArrayList<DataTableLC.DgAbonos> > dgAbonosVisitado = new MutableLiveData<>();
+    private final MutableLiveData< ArrayList<DataTableLC.DgPagos> > dgAbonosVisitado = new MutableLiveData<>();
 
     private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgANormal = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<DataTableLC.AdeudoNormal>> dgAEspecial = new MutableLiveData<>();
@@ -56,6 +58,14 @@ public class PedidosVM extends ViewModel
     }
     public void setDgPro2(ArrayList<DataTableLC.ProductosPed> DgPro2){
         dgPro2.setValue(DgPro2);
+    }
+
+
+    public LiveData<ArrayList<DataTableLC.ProductosPed>> getDgProPre(){
+        return dgProPreventa;
+    }
+    public void setDgProPre(ArrayList<DataTableLC.ProductosPed> DgPro2){
+        dgProPreventa.setValue(DgPro2);
     }
 
     public LiveData<String> getProducto(){
@@ -228,17 +238,24 @@ public class PedidosVM extends ViewModel
         this.dgPagosVisitado.setValue(DgPagosVisitado);
     }
 
-    public LiveData<ArrayList<DataTableLC.DgAbonos>> getDgAbonos(){
+    public LiveData<ArrayList<DataTableLC.DgPagos>> getDgAbonos(){
         return dgAbonos;
     }
-    public void setDgAbonos(ArrayList<DataTableLC.DgAbonos> dgAbonos){
+    public void setDgAbonos(ArrayList<DataTableLC.DgPagos> dgAbonos){
         this.dgAbonos.setValue(dgAbonos);
     }
 
-    public LiveData<ArrayList<DataTableLC.DgAbonos>> getDgAbonosVisitado(){
+    public LiveData<ArrayList<DataTableLC.DgPagos>> getDgPagosPrev(){
+        return DgPagoPrev;
+    }
+    public void setDgPagoPrev(ArrayList<DataTableLC.DgPagos> dgAbonos){
+        this.DgPagoPrev.setValue(dgAbonos);
+    }
+
+    public LiveData<ArrayList<DataTableLC.DgPagos>> getDgAbonosVisitado(){
         return dgAbonosVisitado;
     }
-    public void setDgAbonosVisitado(ArrayList<DataTableLC.DgAbonos> DgAbonos){
+    public void setDgAbonosVisitado(ArrayList<DataTableLC.DgPagos> DgAbonos){
         this.dgAbonosVisitado.setValue(DgAbonos);
     }
 

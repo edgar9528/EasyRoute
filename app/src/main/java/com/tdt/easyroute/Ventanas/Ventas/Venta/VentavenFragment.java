@@ -115,10 +115,11 @@ public class VentavenFragment extends Fragment {
             }
         });
 
-        pedidosVM.getDgPro2().observe(getActivity(), new Observer<ArrayList<DataTableLC.ProductosPed>>() {
+        pedidosVM.getDgProPre().observe(getActivity(), new Observer<ArrayList<DataTableLC.ProductosPed>>() {
             @Override
             public void onChanged(ArrayList<DataTableLC.ProductosPed> DgProd2) {
-                dgProd2 = DgProd2;
+                for(int i=0; i<DgProd2.size();i++)
+                    ventaAdapterRecyclerView.agregarItem(DgProd2.get(i));
             }
         });
 
@@ -155,7 +156,7 @@ public class VentavenFragment extends Fragment {
             }
         }catch (Exception e)
         {
-            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
+            Utils.msgError(getContext(), getString(R.string.err_ped23)+" 3", e.getMessage());
         }
     }
 
@@ -199,7 +200,7 @@ public class VentavenFragment extends Fragment {
             }
         }catch (Exception e)
         {
-            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
+            Utils.msgError(getContext(), getString(R.string.err_ped23)+" 4", e.getMessage());
         }
         return producto;
     }
@@ -292,7 +293,7 @@ public class VentavenFragment extends Fragment {
 
         }catch (Exception e)
         {
-            Utils.msgError(getContext(), getString(R.string.err_ped23), e.getMessage());
+            Utils.msgError(getContext(), getString(R.string.err_ped23)+" 5", e.getMessage());
         }
     }
 

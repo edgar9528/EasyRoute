@@ -166,10 +166,11 @@ public class AbonosFragment extends Fragment {
             }
         });
 
-        pedidosVM.getDgAbonosVisitado().observe(getActivity(), new Observer<ArrayList<DataTableLC.DgAbonos>>() {
+        pedidosVM.getDgAbonosVisitado().observe(getActivity(), new Observer<ArrayList<DataTableLC.DgPagos>>() {
             @Override
-            public void onChanged(ArrayList<DataTableLC.DgAbonos> dgAbonos) {
-
+            public void onChanged(ArrayList<DataTableLC.DgPagos> dgAbonos) {
+                for(DataTableLC.DgPagos d : dgAbonos)
+                    pagosAdapterRecyclerView.agregarItem(d);
             }
         });
 
@@ -197,10 +198,10 @@ public class AbonosFragment extends Fragment {
             for (DataTableLC.DgPagos p : dgPagos)
                 totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
 
-            //total = total - DescKit - totPagos;
+            total = total - totPagos;
 
             tv_saldo.setText(string.FormatoPesos(total));
-            pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
+            pedidosVM.setTxtSaldo( tv_saldo.getText().toString());
 
         }catch (Exception e)
         {
@@ -439,7 +440,7 @@ public class AbonosFragment extends Fragment {
 
             tv_saldo.setText(string.FormatoPesos(tot));
             pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
-            pedidosVM.setDgPagos( dgPagos );
+            pedidosVM.setDgAbonos( dgPagos );
 
         }catch (Exception e)
         {

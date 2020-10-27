@@ -20,14 +20,14 @@ import java.util.ArrayList;
 
 public class CreditosPrevAdapterRecyclerView extends RecyclerView.Adapter<CreditosPrevAdapterRecyclerView.PagosViewHolder> {
 
-    private ArrayList<DataTableLC.DgPagos> pagoCardViews;
+    private ArrayList<DataTableLC.Creditos> pagoCardViews;
     private int resource;
-    private CreditosFragment pagoFragment;
+    private CreditosFragment creditosFragment;
 
-    public CreditosPrevAdapterRecyclerView(ArrayList<DataTableLC.DgPagos> pagoCardViews, int resource, CreditosFragment pagoFragment) {
+    public CreditosPrevAdapterRecyclerView(ArrayList<DataTableLC.Creditos> pagoCardViews, int resource, CreditosFragment creditosFragment) {
         this.pagoCardViews = pagoCardViews;
         this.resource = resource;
-        this.pagoFragment = pagoFragment;
+        this.creditosFragment = creditosFragment;
     }
 
     @NonNull
@@ -36,21 +36,19 @@ public class CreditosPrevAdapterRecyclerView extends RecyclerView.Adapter<Credit
 
         View view = LayoutInflater.from(parent.getContext()).inflate(resource,parent,false);
 
-
-
         return new PagosViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final CreditosPrevAdapterRecyclerView.PagosViewHolder ventaViewHolder, int position) {
-        final DataTableLC.DgPagos pagoCardView = pagoCardViews.get(position);
+        final DataTableLC.Creditos pagoCardView = pagoCardViews.get(position);
 
-        ventaViewHolder.tv_numero.setText( pagoCardView.getNoPago());
-        ventaViewHolder.tv_idPago.setText( pagoCardView.getFpag_cve_n() );
-        ventaViewHolder.tv_forma.setText(pagoCardView.getFpag_desc_str());
-        ventaViewHolder.tv_cantidad.setText( string.FormatoPesos( pagoCardView.getFpag_cant_n() ) );
-        ventaViewHolder.tv_banco.setText(pagoCardView.getBancoP());
-        ventaViewHolder.tv_referencia.setText(pagoCardView.getReferenciaP());
+        ventaViewHolder.tv_saldo.setText( pagoCardView.getCred_referencia_str()  );
+        String s = ventaViewHolder.tv_fecha.getText() + ": "+ string.FormatoPesos( pagoCardView.getCred_saldo_n() );
+        ventaViewHolder.tv_fecha.setText(   s );
+        ventaViewHolder.tv_referencia.setText(pagoCardView.getCred_fecha_dt());
+        ventaViewHolder.tv_abono.setText( string.FormatoPesos( pagoCardView.getCred_abono_n() ) );
+        ventaViewHolder.tv_monto.setText( string.FormatoPesos( pagoCardView.getCred_monto_n() ) );
 
         ventaViewHolder.linearLayout.setVisibility( View.GONE );
 
@@ -95,13 +93,16 @@ public class CreditosPrevAdapterRecyclerView extends RecyclerView.Adapter<Credit
         private LinearLayout linearLayout;
         private ImageButton ib_icono;
 
-        private TextView tv_numero;
-        private TextView tv_cantidad;
-        private TextView tv_forma;
-
-        private TextView tv_idPago;
-        private TextView tv_banco;
+        private TextView tv_saldo;
+        private TextView tv_fecha;
         private TextView tv_referencia;
+
+        private TextView tv_abono;
+        private TextView tv_monto;
+
+        private TextView tv_referencia_title;
+        private TextView tv_abono_title;
+        private TextView tv_monto_title;
 
         public PagosViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,37 +111,27 @@ public class CreditosPrevAdapterRecyclerView extends RecyclerView.Adapter<Credit
             linearLayout = itemView.findViewById(R.id.linearOcultar);
             ib_icono = itemView.findViewById(R.id.ib_icono);
 
-            tv_numero = itemView.findViewById(R.id.tv_numero);
-            tv_cantidad = itemView.findViewById(R.id.tv_cantidad);
-            tv_forma = itemView.findViewById(R.id.tv_formaPago);
+            tv_saldo = itemView.findViewById(R.id.tv_saldo);
+            tv_fecha = itemView.findViewById(R.id.tv_fecha);
 
-            tv_idPago = itemView.findViewById(R.id.tv_idPago);
-            tv_banco = itemView.findViewById(R.id.tv_banco);
             tv_referencia = itemView.findViewById(R.id.tv_referencia);
+            tv_abono = itemView.findViewById(R.id.tv_abono);
+            tv_monto = itemView.findViewById(R.id.tv_monto);
+
+            tv_referencia_title = itemView.findViewById(R.id.tv_referenciaTitle);
+            tv_abono_title = itemView.findViewById(R.id.tv_abonoTitle);
+            tv_monto_title = itemView.findViewById(R.id.tv_montoTitle);
+
+            tv_referencia_title.setText(R.string.tv_fecha);
+            tv_fecha.setText( R.string.tv_saldo );
 
         }
     }
 
-    public void eliminarItem(int indice)
-    {
-        pagoCardViews.remove(indice);
-        notifyItemRemoved(indice);
-        pagoFragment.ActualizarDgPagos(pagoCardViews);
-    }
-
-    public void actualizarItem(int item, String cantidad)
-    {
-        pagoCardViews.get(item).setFpag_cant_n(cantidad);
-        notifyItemChanged(item);
-        pagoFragment.ActualizarDgPagos(pagoCardViews);
-    }
-
-    public void agregarItem(DataTableLC.DgPagos pagoCardView)
+    public void agregarItems( DataTableLC.Creditos  pagoCardView)
     {
         pagoCardViews.add(getItemCount(),pagoCardView);
         notifyItemInserted(getItemCount());
-        pagoFragment.ActualizarDgPagos(pagoCardViews);
     }
-
 
 }

@@ -521,5 +521,6 @@
     <string name="msg_ped15">Si continua los cambios se perderan. ¿Desea cancelarla?</string>
     <string name="msg_preventa">Preventa incompleta</string>
     <string name="msg_prev10">Hay una preventa pendiente, ¿Desea salir?</string>
+    <string name="err_prev">Error al cargar los creditos</string>
 
 </resources>

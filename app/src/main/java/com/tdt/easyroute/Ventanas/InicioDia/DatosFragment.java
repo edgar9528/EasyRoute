@@ -25,6 +25,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
 import com.tdt.easyroute.Clases.ParametrosWS;
@@ -1180,7 +1181,8 @@ public class DatosFragment extends Fragment {
                         {
                             p = al_preventa.get(i);
                             consulta= Querys.Preventa.InsPreventaSinc;
-                            db.execSQL(string.formatSql(consulta, p.getPrev_folio_str(),p.getCli_cve_n(),p.getRut_cve_n(), getDate( p.getPrev_fecha_dt() ), p.getLpre_cve_n(),p.getDir_cve_n(),p.getUsu_cve_str(),p.getPrev_coordenada_str()   ));
+                            String con = string.formatSql(consulta, p.getPrev_folio_str(),p.getCli_cve_n(),p.getRut_cve_n(), getDate( p.getPrev_fecha_dt() ), p.getLpre_cve_n(),p.getDir_cve_n(),p.getUsu_cve_str(),p.getPrev_coordenada_str()  );
+                            db.execSQL(con);
                         }
 
 
@@ -1190,8 +1192,12 @@ public class DatosFragment extends Fragment {
                         {
                             consulta= Querys.Preventa.InsPreventaDet2;
                             pd=al_preventaDet.get(i);
-                            db.execSQL(string.formatSql(consulta, pd.getPrev_folio_str(),pd.getPrev_num_n(),pd.getProd_cve_n(),pd.getProd_sku_str(),pd.getProd_envase_n(),pd.getProd_cant_n(),pd.getLpre_base_n(),
-                                                                  pd.getLpre_cliente_n(),pd.getLpre_promo_n(),pd.getLpre_precio_n(),pd.getProd_promo_n(),pd.getProm_cve_n(),pd.getProd_subtotal_n(),pd.getPrev_kit_n()));
+                            String con = string.formatSql(consulta, pd.getPrev_folio_str(),pd.getPrev_num_n(),pd.getProd_cve_n(),pd.getProd_sku_str(),pd.getProd_envase_n(),pd.getProd_cant_n(),pd.getLpre_base_n(),
+                                    pd.getLpre_cliente_n(),pd.getLpre_promo_n(),pd.getLpre_precio_n(),pd.getProd_promo_n(),pd.getProm_cve_n(),pd.getProd_subtotal_n(),pd.getPrev_kit_n());
+
+                            con = BaseLocal.InsertBooleanWS(con);
+
+                            db.execSQL(con);
                         }
 
                         db.execSQL(Querys.Preventa.DelPreventaEnv);
@@ -1211,7 +1217,9 @@ public class DatosFragment extends Fragment {
                         {
                             pp= al_preventaPagos.get(i);
                             consulta = Querys.Preventa.InsPreventaPagos2;
-                            db.execSQL(string.formatSql(consulta, pp.getPrev_folio_str(),pp.getPpag_num_n(),pp.getPpag_cobranza_n(),pp.getFpag_cve_n(),pp.getFpag_cant_n() ));
+                            String con = string.formatSql(consulta, pp.getPrev_folio_str(),pp.getPpag_num_n(),pp.getPpag_cobranza_n(),pp.getFpag_cve_n(),pp.getFpag_cant_n() );
+                            con = BaseLocal.InsertBooleanWS(con);
+                            db.execSQL(con);
                         }
 
                         Log.d("salida","Agregar preventas");
