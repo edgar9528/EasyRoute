@@ -24,18 +24,21 @@ import com.tdt.easyroute.Ventanas.Preventa.PreventaActivity;
 import com.tdt.easyroute.ViewModel.PedidosVM;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class CreditosFragment extends Fragment {
 
     private PedidosVM pedidosVM;
 
+    private DataTableLC.DtCliVentaNivel rc;
+    private PreventaActivity pedidosActivity;
     private CreditosPrevAdapterRecyclerView creditoAdapter;
-    private ArrayList<DataTableLC.DgPagos> dgPagos;
     private ArrayList<DataTableLC.Creditos>  dgCreditos;
 
-    private TextView tv_kit;
-    private TextView tv_saldo;
+    private TextView tv_limite;
+    private TextView tv_disponible;
+    private double LimCred = 0;
 
     public CreditosFragment() {
         // Required empty public constructor
@@ -54,17 +57,17 @@ public class CreditosFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_creditos, container, false);
 
         try {
+            pedidosActivity = (PreventaActivity) getActivity();
+            rc = pedidosActivity.getRC();
 
-            tv_kit = view.findViewById(R.id.tv_kit);
-            tv_saldo = view.findViewById(R.id.tv_saldo);
+            LimCred = Double.parseDouble(rc.getCli_montocredito_n());
 
+            tv_limite = view.findViewById(R.id.tv_kit);
+            tv_disponible = view.findViewById(R.id.tv_saldo);
 
-            tv_saldo.setText(string.FormatoPesos(0));
-            tv_kit.setText(string.FormatoPesos(0));
+            tv_limite.setText(string.FormatoPesos(0));
+            tv_disponible.setText(string.FormatoPesos(0));
 
-            pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
-
-            dgPagos = new ArrayList<>();
             dgCreditos = new ArrayList<>();
 
             RecyclerView creditosRecyclerView = view.findViewById(R.id.pagosRecycler);
@@ -97,6 +100,7 @@ public class CreditosFragment extends Fragment {
                     dgCreditos = creditos;
                     for(int i=0; i<dgCreditos.size();i++)
                         creditoAdapter.agregarItems(dgCreditos.get(i));
+                    CalcularSaldoCredito();
                 }
             });
 
@@ -105,6 +109,44 @@ public class CreditosFragment extends Fragment {
             Utils.msgError(getContext(), getString(R.string.err_prev) ,e.getMessage());
         }
 
+    }
+
+    private void CalcularSaldoCredito()
+    {
+        try
+        {
+            double Saldo = 0;
+            double Vencido = 0;
+            double Disponible = 0;
+
+            for(int i=0; i< dgCreditos.size();i++)
+            {
+                Saldo += Double.parseDouble(dgCreditos.get(i).getCred_saldo_n());
+            }
+
+            int diascred = 0;
+
+            diascred = Integer.parseInt(rc.getCli_plazocredito_n());
+
+            for(int i=0; i<dgCreditos.size();i++)
+            {
+                Date f1 = Utils.FechaDT( dgCreditos.get(i).getCred_fecha_dt() );
+                Date f2 = Utils.FechaDT( Utils.FechaModificarDias( Utils.FechaLocal(),-diascred ) );
+                if(f1.compareTo(f2)<=0)
+                    Vencido += Double.parseDouble( dgCreditos.get(i).getCred_saldo_n() );
+            }
+
+            Disponible = LimCred - Saldo;
+
+            pedidosVM.setTxtSaldoCredito(string.FormatoPesos(Saldo));
+            pedidosVM.setTxtVencido(string.FormatoPesos(Vencido));
+            tv_disponible.setText(string.FormatoPesos(Disponible));
+
+
+        }catch (Exception e)
+        {
+            Utils.msgError(getContext(), getString(R.string.err_prev) ,e.getMessage());
+        }
     }
 
 }

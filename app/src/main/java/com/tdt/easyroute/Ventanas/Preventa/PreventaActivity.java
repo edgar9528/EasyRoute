@@ -698,6 +698,7 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                 }
             }
             pedidosVM.setDgEnvasePrev(dgEnvase);
+            CalcularEnvase();
         }
 
     }

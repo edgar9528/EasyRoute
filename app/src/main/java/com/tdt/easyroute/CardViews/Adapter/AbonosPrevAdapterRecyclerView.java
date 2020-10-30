@@ -126,21 +126,21 @@ public class AbonosPrevAdapterRecyclerView extends RecyclerView.Adapter<AbonosPr
     {
         pagoCardViews.remove(indice);
         notifyItemRemoved(indice);
-        pagoFragment.ActualizarDgPagos(pagoCardViews);
+        pagoFragment.ActualizardgAbonos(pagoCardViews);
     }
 
     public void actualizarItem(int item, String cantidad)
     {
         pagoCardViews.get(item).setFpag_cant_n(cantidad);
         notifyItemChanged(item);
-        pagoFragment.ActualizarDgPagos(pagoCardViews);
+        pagoFragment.ActualizardgAbonos(pagoCardViews);
     }
 
     public void agregarItem(DataTableLC.DgPagos pagoCardView)
     {
         pagoCardViews.add(getItemCount(),pagoCardView);
         notifyItemInserted(getItemCount());
-        pagoFragment.ActualizarDgPagos(pagoCardViews);
+        pagoFragment.ActualizardgAbonos(pagoCardViews);
     }
 
 

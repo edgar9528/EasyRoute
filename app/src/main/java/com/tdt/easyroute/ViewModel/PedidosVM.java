@@ -33,6 +33,7 @@ public class PedidosVM extends ViewModel
     private final MutableLiveData<String> txtContado = new MutableLiveData<>();
     private final MutableLiveData<String> txtLimCred = new MutableLiveData<>();
     private final MutableLiveData<String> txtVencido = new MutableLiveData<>();
+    private final MutableLiveData<String> txtDisponible = new MutableLiveData<>();
     private final MutableLiveData<String> txtSaldoCredito = new MutableLiveData<>();
     private final MutableLiveData<String> txtSubEnv = new MutableLiveData<>();
     private final MutableLiveData<String> txtVenta = new MutableLiveData<>();
@@ -158,6 +159,13 @@ public class PedidosVM extends ViewModel
     }
     public void setTxtVencido(String txtVencido){
         this.txtVencido.setValue(txtVencido);
+    }
+
+    public LiveData<String> getTxtDisponible(){
+        return txtDisponible;
+    }
+    public void setTxtDisponible(String txtdisponible){
+        this.txtDisponible.setValue(txtdisponible);
     }
 
     public LiveData<ArrayList<DataTableLC.AdeudoNormal>> getDgAEspecial(){

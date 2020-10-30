@@ -38,7 +38,7 @@
         android:id="@+id/tv_kit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/hint_kit"
+        android:text="@string/tv_ejemplo"
         android:textAlignment="textEnd"
         style="@style/tv_titulos.tv_mensajes"
 
@@ -68,7 +68,7 @@
         android:id="@+id/tv_saldo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/tv_saldo"
+        android:text="@string/tv_ejemplo"
         android:textAlignment="textEnd"
         style="@style/tv_titulos.tv_mensajes"
 

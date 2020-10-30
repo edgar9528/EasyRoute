@@ -511,11 +511,9 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             ArrayList<DataTableLC.PedidosVisitas> dtCli;
             ArrayList<DataTableLC.PedidosVisitas> dtCli2;
             ArrayList<DataTableLC.PedidosVisPre> dtVisPre;
+
             clientesCveExt = new ArrayList<>();
             clientesCve = new ArrayList<>();
-
-            int l = 0;
-            String cveext = "";
 
             String json = BaseLocal.Select("Select * from visitapreventa", getContext());
             dtVisPre = ConvertirRespuesta.getPedidosVisPreJson(json);
@@ -532,10 +530,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 for (int i = 0; i < dt.size(); i++)
                 {
                     r = dt.get(i);
-                    l = r.getCli_cveext_str().length() - 6;
 
-                    //if(l>=0)
-                    //{
                     cli_cve_n = r.getCli_cve_n();
                     cli_especial_n = r.getCli_especial_n();
 
@@ -554,14 +549,11 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     else
                         cli_nombre = r.getCli_nombrenegocio_str();
 
-                    //}
-
                     icono = 0;
 
                     if (r.getEst_cve_str().equals("I"))
                         icono = 4;
 
-                    dtCli = null;
                     json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and " +
                             "(upper(vis_operacion_str)='CON VENTA' or upper(vis_operacion_str)='CON PREVENTA') order by vis_fecha_dt desc", r.getCli_cve_n()), getContext());
                     dtCli = ConvertirRespuesta.getPedidosVisitasJson(json);
@@ -581,11 +573,12 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                     if (dtCli != null) {
                         icono = 1;
                     } else {
-                        dtCli2 = null;
+
                         json = BaseLocal.Select(string.formatSql("select * from visitas where cli_cve_n={0} and vis_operacion_str<>'CON VENTA' order by vis_fecha_dt desc", r.getCli_cve_n()), getContext());
                         dtCli2 = ConvertirRespuesta.getPedidosVisitasJson(json);
 
-                        if (dtCli2 != null) {
+                        if (dtCli2 != null)
+                        {
                             String op = dtCli2.get(0).getVis_operacion_str();
                             if (op.equals("NO VENTA"))
                                 icono = 3;

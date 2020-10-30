@@ -1,6 +1,7 @@
 package com.tdt.easyroute.Ventanas.Preventa.Pago;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,15 +48,13 @@ public class AbonosFragment extends Fragment {
 
     private ArrayList<DataTableLC.ProductosPed> dgProd2;
     private ArrayList<DataTableWS.FormasPago> formasPago;
-    private ArrayList<DataTableLC.DgPagos> dgPagos;
+    private ArrayList<DataTableLC.DgPagos> dgAbonos;
     private DataTableLC.DtCliVentaNivel rc;
     private PreventaActivity pedidosActivity;
 
-    private String estadoCredito;
-
-    private TextView tv_credito;
-    private TextView tv_totalVenta;
+    private TextView tv_vencido;
     private TextView tv_saldo;
+    private TextView tv_totalAbonos;
     private double disponible;
     private double AdeudoAct = 0;
     private double _txtSaldoDeudaEnv=0;
@@ -83,19 +82,19 @@ public class AbonosFragment extends Fragment {
             pedidosActivity = (PreventaActivity) getActivity();
 
             rc = pedidosActivity.getRC();
-            tv_credito = view.findViewById(R.id.et_credito);
-            tv_totalVenta = view.findViewById(R.id.et_totalVenta);
+            tv_vencido = view.findViewById(R.id.et_credito);
+            tv_saldo = view.findViewById(R.id.et_totalVenta);
 
-            tv_saldo = view.findViewById(R.id.tv_saldo);
+            tv_totalAbonos = view.findViewById(R.id.tv_saldo);
 
-            tv_totalVenta.setText(string.FormatoPesos(0));
             tv_saldo.setText(string.FormatoPesos(0));
+            tv_totalAbonos.setText(string.FormatoPesos(0));
 
 
-            pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
-            pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
+            pedidosVM.setTxtVenta( tv_saldo.getText().toString() );
+            pedidosVM.setTxtSaldo( tv_totalAbonos.getText().toString() );
 
-            dgPagos = new ArrayList<>();
+            dgAbonos = new ArrayList<>();
             dgProd2 = new ArrayList<>();
 
             RecyclerView pagosRecyclerView = view.findViewById(R.id.pagosRecycler);
@@ -104,7 +103,7 @@ public class AbonosFragment extends Fragment {
 
             pagosRecyclerView.setLayoutManager(linearLayoutManager);
 
-            pagosAdapterRecyclerView = new AbonosPrevAdapterRecyclerView(dgPagos, R.layout.cardview_pagos, this);
+            pagosAdapterRecyclerView = new AbonosPrevAdapterRecyclerView(dgAbonos, R.layout.cardview_pagos, this);
             pagosRecyclerView.setAdapter(pagosAdapterRecyclerView);
 
             PagosSwipeController carritoSwipeController = new PagosSwipeController(new SwipeControllerActions() {
@@ -143,18 +142,24 @@ public class AbonosFragment extends Fragment {
             }
         });
 
+        pedidosVM.getTxtSaldoCredito().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                tv_saldo.setText(s);
+            }
+        });
+
+        pedidosVM.getTxtVencido().observe(getActivity(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                tv_vencido.setText(s);
+            }
+        });
+
         pedidosVM.getFormasPago().observe(getActivity(), new Observer< ArrayList<DataTableWS.FormasPago>  >() {
             @Override
             public void onChanged( ArrayList<DataTableWS.FormasPago>  formas) {
                 formasPago = formas;
-            }
-        });
-
-        pedidosVM.getEstadoCredito().observe(getActivity(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                estadoCredito=s;
-                tv_credito.setText(estadoCredito);
             }
         });
 
@@ -191,17 +196,17 @@ public class AbonosFragment extends Fragment {
 
             total = total + _txtSubEnv+ _txtSaldoDeudaEnv;
 
-            tv_totalVenta.setText(string.FormatoPesos(total));
-            pedidosVM.setTxtVenta( tv_totalVenta.getText().toString() );
+            tv_saldo.setText(string.FormatoPesos(total));
+            pedidosVM.setTxtVenta( tv_saldo.getText().toString() );
 
             double totPagos = 0;
-            for (DataTableLC.DgPagos p : dgPagos)
+            for (DataTableLC.DgPagos p : dgAbonos)
                 totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
 
             total = total - totPagos;
 
-            tv_saldo.setText(string.FormatoPesos(total));
-            pedidosVM.setTxtSaldo( tv_saldo.getText().toString());
+            tv_totalAbonos.setText(string.FormatoPesos(total));
+            pedidosVM.setTxtSaldo( tv_totalAbonos.getText().toString());
 
         }catch (Exception e)
         {
@@ -242,7 +247,7 @@ public class AbonosFragment extends Fragment {
                     reqRef[0] = Utils.getBool( formasPago.get(position).getFpag_reqreferencia_n() );
 
                     if(reqBan[0])
-                        ti_banco.setEnabled(true);
+                        ti_banco.setEnabled(false);
                     else
                     {
                         ti_banco.setEnabled(false);
@@ -251,7 +256,7 @@ public class AbonosFragment extends Fragment {
                     }
 
                     if(reqRef[0])
-                        ti_referencia.setEnabled(true);
+                        ti_referencia.setEnabled(false);
                     else
                     {
                         ti_referencia.setEnabled(false);
@@ -259,7 +264,7 @@ public class AbonosFragment extends Fragment {
                         ti_cantidad.requestFocus();
                     }
 
-                    double cantidad = Double.parseDouble( string.DelCaracteres( tv_saldo.getText().toString() )  );
+                    double cantidad = AdeudoAct -  Double.parseDouble( string.DelCaracteres( tv_totalAbonos.getText().toString() )  );
                     if(cantidad>0)
                         ti_cantidad.setText( String.valueOf(cantidad) );
 
@@ -284,8 +289,10 @@ public class AbonosFragment extends Fragment {
                 }
             });
 
+            double debe = AdeudoAct - Double.parseDouble( string.DelCaracteres(tv_totalAbonos.getText().toString()) );
+
             final AlertDialog dialog = new AlertDialog.Builder(getContext())
-                    .setTitle(getString(R.string.msg_agregarPago)+" "+string.FormatoPesos(AdeudoAct))
+                    .setTitle( getString(R.string.msg_agregarPago)+" "+ string.FormatoPesos(debe))
                     .setView(view)
                     .setPositiveButton(R.string.bt_aceptar, null)
                     .setNegativeButton(R.string.bt_cancelar, null)
@@ -323,6 +330,8 @@ public class AbonosFragment extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.tt_ped19), Toast.LENGTH_LONG).show();
                     return false;
                 }
+                /*
+                Comentado para permitir ingresar una cantidad sin referencia y banco
                 if (ReqRef && string.EsNulo(referencia)) {
                     Toast.makeText(getContext(), getString(R.string.tt_ped16), Toast.LENGTH_LONG).show();
                     return false;
@@ -331,55 +340,27 @@ public class AbonosFragment extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.tt_ped17), Toast.LENGTH_LONG).show();
                     return false;
                 }
+                 */
             } else {
                 Toast.makeText(getContext(), getString(R.string.tt_ped15), Toast.LENGTH_SHORT).show();
                 return false;
             }
 
-            int k = dgPagos.size()+1;
+            int k = dgAbonos.size()+1;
 
-            double ab = 0;
-            DataTableWS.FormasPago r = formasPago.get(indice);
-
-            boolean EsCredito = false;
-            if (r.getFpag_desc_str().toUpperCase().equals("CREDITO"))
-                EsCredito = true;
-            double AdeudoCredito = 0;
-            double AbonosEfectivo = 0;
-            double Contado = 0;
-
-            //Contado = Double.parseDouble(string.DelCaracteres(tv_contadoEsp.getText().toString()));
-
-            AbonosEfectivo = 0;
-            for (DataTableLC.DgPagos p : dgPagos)
-                if (!p.getFpag_desc_str().equals("CREDITO"))
-                    AbonosEfectivo += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
-
-            AdeudoCredito = Double.parseDouble(string.DelCaracteres(tv_totalVenta.getText().toString())) - Contado;
-
-            try {
-                ab = Double.parseDouble(cantidad);
+            double ab = Double.parseDouble( cantidad);
+            try
+            {
                 if (ab <= 0) {
                     Toast.makeText(getContext(), getString(R.string.tt_ped18), Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                if ((ab > AdeudoAct && !EsCredito) || ((ab > AdeudoCredito) && EsCredito)) {
-                    String s = string.formatSql("Los abonos de credito no pueden exceder la cantidad de {0}. Debido a que la cantidad {1} es obligatoria de contado.", String.valueOf(AdeudoCredito), String.valueOf(Contado));
-                    if (EsCredito)
-                        Utils.msgInfo(getContext(), s);
-                    else
-                        Utils.msgInfo(getContext(), "La cantidad de los pagos no puede exceder el saldo de la venta.");
+                if (ab > ( AdeudoAct - Double.parseDouble( string.DelCaracteres( tv_totalAbonos.getText().toString() ) ) ) )
+                {
+                    Utils.msgInfo(getContext(), "La cantidad de los pagos no puede exceder el saldo de la venta.");
                     return false;
                 }
 
-                if (formasPago.get(indice).getFpag_desc_str().equals("CREDITO")) {
-                    if (!Utils.getBool(rc.getCli_eshuix_n())) {
-                        if (ab > disponible) {
-                            Utils.msgInfo(getContext(), string.formatSql("El monto del credito disponible es: {0} y no se puede exceder", String.valueOf(disponible)));
-                            return false;
-                        }
-                    }
-                }
             } catch (Exception ex) {
                 Utils.msgError(getContext(), getString(R.string.err_ped28), ex.getMessage());
                 return false;
@@ -388,11 +369,11 @@ public class AbonosFragment extends Fragment {
             DataTableLC.DgPagos ri = null;
             int rk = -1;
             String pagCve = formasPago.get(indice).getFpag_cve_n();
-            for (int i = 0; i < dgPagos.size(); i++)
-                if (pagCve.equals(dgPagos.get(i).getFpag_cve_n())) {
-                    ri = dgPagos.get(i);
+            for (int i = 0; i < dgAbonos.size(); i++)
+                if (pagCve.equals(dgAbonos.get(i).getFpag_cve_n())) {
+                    ri = dgAbonos.get(i);
                     rk=i;
-                    i = dgPagos.size();
+                    i = dgAbonos.size();
                 }
 
             if (ri != null)
@@ -424,23 +405,17 @@ public class AbonosFragment extends Fragment {
         }
     }
 
-    public void ActualizarDgPagos(ArrayList<DataTableLC.DgPagos> dgRecycler)
+    public void ActualizardgAbonos(ArrayList<DataTableLC.DgPagos> dgRecycler)
     {
         try {
-            dgPagos = dgRecycler;
-
-            double DescKit = 0;//Double.parseDouble(string.DelCaracteres(tv_kit.getText().toString()));
+            dgAbonos = dgRecycler;
 
             double totPagos = 0;
-            for (DataTableLC.DgPagos p : dgPagos)
+            for (DataTableLC.DgPagos p : dgAbonos)
                 totPagos += Double.parseDouble(string.DelCaracteres(p.getFpag_cant_n()));
 
-            double txtVenta = Double.parseDouble(string.DelCaracteres(tv_totalVenta.getText().toString()));
-            double tot = txtVenta - DescKit - totPagos;
-
-            tv_saldo.setText(string.FormatoPesos(tot));
-            pedidosVM.setTxtSaldo( tv_saldo.getText().toString() );
-            pedidosVM.setDgAbonos( dgPagos );
+            tv_totalAbonos.setText(string.FormatoPesos(totPagos));
+            pedidosVM.setDgAbonos( dgAbonos );
 
         }catch (Exception e)
         {
