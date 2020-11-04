@@ -69,6 +69,8 @@ public class VentavenFragment extends Fragment {
             pedidosActivity = (PedidosActivity) getActivity();
             esVenta=pedidosActivity.getEsVenta();
 
+            dgProd2 = new ArrayList<>();
+
             tv_subTotal2 = view.findViewById(R.id.tv_subTotal2);
             tv_subTotal2.setText( string.FormatoPesos(0) );
 
@@ -193,7 +195,8 @@ public class VentavenFragment extends Fragment {
         ArrayList<DataTableLC.ProductosPed> producto = new ArrayList<>();
         try {
             for (int i = 0; i < arrayList.size(); i++) {
-                if (cve.equals(arrayList.get(i).getProd_cve_n())) {
+                if (cve.equals(arrayList.get(i).getProd_cve_n()))
+                {
                     producto.add(arrayList.get(i));
                     i = arrayList.size();
                 }

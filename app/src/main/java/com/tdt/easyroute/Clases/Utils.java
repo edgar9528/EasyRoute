@@ -888,7 +888,7 @@ public class Utils {
             DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
 
             if (usu != null)
-                p += string.formatSql("ASESOR: \n{0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
+                p += string.formatSql("ASESOR: {0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
 
             ArrayList<DataTableWS.Clientes> alCli;
             DataTableWS.Clientes dtc;
@@ -903,8 +903,8 @@ public class Utils {
                 pc = Integer.parseInt(dtc.getCli_plazocredito_n());
 
                 p += "CLIENTE: " + dtc.getCli_cveext_str() + "\n\n";
-                p += "RAZON SOCIAL: \n" + dtc.getCli_nombrenegocio_str() + "\n\n";
-                p += "NEGOCIO: \n" + dtc.getCli_razonsocial_str() + "\n\n";
+                p += "RAZON SOCIAL: " + dtc.getCli_nombrenegocio_str() + "\n\n";
+                p += "NEGOCIO: " + dtc.getCli_razonsocial_str() + "\n\n";
 
                 ArrayList<DataTableWS.Direcciones> dtd;
                 sql = string.formatSql("Select * from direcciones where cli_cve_n={0}   and dir_cve_n={1}",
@@ -914,7 +914,7 @@ public class Utils {
 
                 if (dtd.size() > 0) {
                     DataTableWS.Direcciones r = dtd.get(0);
-                    p += string.formatSql("DIRECCION: \n{0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
+                    p += string.formatSql("DIRECCION: {0} {1} {2} {3} {4} C.P. {5} \n\n", r.getDir_calle_str(),
                             r.getDir_noext_str(), r.getDir_colonia_str(), r.getDir_municipio_str(), r.getDir_estado_str(),
                             r.getDir_codigopostal_str());
                 }
@@ -958,7 +958,7 @@ public class Utils {
 
             if (v.ventas != null) {
                 for (Venta vta : v.ventas) {
-                    p += "FECHA VENTA: " + Utils.FechaHoraFormato(vta.getVenta().getVen_fecha_dt()) + "\n";
+                    p += "FECHA VTA: " + Utils.FechaHoraFormato(vta.getVenta().getVen_fecha_dt()) + "\n";
                     p += "FOLIO: " + vta.getVenta().getVen_folio_str() + "\n\n";
 
                     double descvta = 0;
@@ -1014,7 +1014,7 @@ public class Utils {
                         //-------------------- Bebidas ------------------------//
                         SubtotalVenta += SubTotalF;
 
-                        p += "TOTAL FACTURA: " + string.FormatoPesos(SubTotalF) + "\n\n";
+                        p += "TOTAL FACTURA: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubTotalF), 17 )  + "\n\n";
 
                         if (descvta > 0) {
                             p += "ESTIMADO CLIENTE CON ESTA COMPRA\n";
@@ -1042,16 +1042,16 @@ public class Utils {
 
                                     p += Impresora.DarTamañoDer(vta.getEnvase()[i].getProd_sku_str(), 6) + " ";
                                     p += Impresora.DarTamañoDer(desc, 4) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_cargo_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_abono_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_regalo_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_venta_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_prestamo_n(), 3) + "\n";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_cargo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_abono_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_regalo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_venta_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_prestamo_n(), 3) + "\n";
 
                                     SubTotalE += Double.parseDouble(vta.getEnvase()[i].getVen_prestamo_n()) * Double.parseDouble(vta.getEnvase()[i].getLpre_precio_n());
                                 }
                             }
-                            p += "TOTAL ENVASE: " + string.FormatoPesos( SubTotalE) + "\n\n";
+                            p += "TOTAL ENVASE: " + Impresora.DarTamañoIzq(string.FormatoPesos( SubTotalE), 18 )  + "\n\n";
                         }
 
                         SubtotalVtaEnv += SubTotalE;
@@ -1090,7 +1090,7 @@ public class Utils {
                     SubTotalP += Double.parseDouble(v.pagos[i].getPag_abono_n());
                 }
 
-                p += "TOTAL PAGOS: " + string.FormatoPesos(SubTotalP) + "\n\n";
+                p += "TOTAL PAGOS: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubTotalP), 13 )  + "\n\n";
             } else {
                 p += Impresora.Centrar("SIN PAGOS") + "\n\n";
             }
@@ -1124,7 +1124,7 @@ public class Utils {
                     Cobranza += Double.parseDouble(v.cobranza[i].getPag_abono_n());
                 }
 
-                p += "TOTAL COBRANZA: " + string.FormatoPesos(SubTotalC) + "\n\n";
+                p += "TOTAL COBRANZA: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubTotalC), 16 )  + "\n\n";
 
             } else {
                 p += Impresora.Centrar("SIN COBRANZA") + "\n\n";
@@ -1140,13 +1140,13 @@ public class Utils {
                 for (int i = 0; i < v.devenvase.length; i++) {
                     p += Utils.getBool(v.devenvase[i].getPag_especie_n()) ? "*" : " " + " ";
                     p += Impresora.DarTamañoDer(v.devenvase[i].getProd_sku_str(), 6) + " ";
-                    p += Impresora.DarTamañoDer(v.devenvase[i].getProd_abono_n(), 8) + " ";
+                    p += Impresora.DarTamañoIzq(v.devenvase[i].getProd_abono_n(), 8) + " ";
                     p += Impresora.DarTamañoDer(v.devenvase[i].getPag_referencia_str(), 14) + "\n";
 
                     CantEnvDev += Double.parseDouble(v.devenvase[i].getProd_abono_n());
                 }
 
-                p += "TOTAL DE ENVASE DEVUELTO: " + String.format("%.2f", CantEnvDev);
+                p += "TOTAL DE ENVASE DEVUELTO: " + Impresora.DarTamañoIzq( String.valueOf( (int) CantEnvDev),6 );
             } else {
                 p += Impresora.Centrar("SIN DEVOLUCION DE ENVASE") + "\n\n";
             }
@@ -1185,8 +1185,8 @@ public class Utils {
 
                     p += Impresora.DarTamañoDer(v.creditos[i].getCred_referencia_str(), 14);
                     double salAnt = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n());
-                    p += Impresora.DarTamañoDer(String.format("%.2f", salAnt), 8) + " ";
-                    p += Impresora.DarTamañoDer(String.format("%.2f", saldo), 8) + "\n";
+                    p += Impresora.DarTamañoIzq( String.format("%.2f", salAnt), 8) + " ";
+                    p += Impresora.DarTamañoIzq(String.format("%.2f", saldo), 8) + "\n";
 
                     SubTotalCred += saldo;
 
@@ -1201,7 +1201,7 @@ public class Utils {
                     }
                 }
 
-                p += "TOTAL CREDITOS: " + string.FormatoPesos(SubTotalCred) + "\n\n";
+                p += "TOTAL CREDITOS: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubTotalCred), 16  )  + "\n\n";
 
                 if (vencido) {
                     p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
@@ -1244,8 +1244,8 @@ public class Utils {
 
                     p += Impresora.DarTamañoDer(v.credenv[i].getCred_referencia_str(), 14) + " ";
                     p += Impresora.DarTamañoIzq(String.valueOf(can), 5) + " ";
-                    p += Impresora.DarTamañoIzq(String.valueOf(AboEnvDia), 5) + " ";
-                    p += Impresora.DarTamañoIzq(String.valueOf(saldo), 5) + "\n";
+                    p += Impresora.DarTamañoIzq(String.valueOf((int)AboEnvDia), 5) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf((int)saldo), 5) + "\n";
 
                     SubTotalCredEnv += saldo;
                     SaldoEnv += saldo * Double.parseDouble(v.credenv[i].getProd_precio_n());
@@ -1261,8 +1261,8 @@ public class Utils {
                 }
 
 
-                p += "TOTAL DEUDA ENV CANT: " + SubTotalCredEnv + "\n\n";
-                p += "TOTAL DEUDA ENV: " + SaldoEnv + "\n\n";
+                p += "TOTAL DEUDA ENV CANT: " + Impresora.DarTamañoIzq( String.valueOf((int) SubTotalCredEnv ) , 10 )   + "\n\n";
+                p += "TOTAL DEUDA ENV: " + Impresora.DarTamañoIzq( string.FormatoPesos( SaldoEnv ) , 15 )  + "\n\n";
                 if (vencido) {
                     p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
                 }
@@ -1272,16 +1272,16 @@ public class Utils {
 
             p += Impresora.Centrar("SALDOS") + "\n\n";
 
-            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
-            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
-            p += "-PAGOS: " + string.FormatoPesos(Pagos) + "\n";
-            p += "-ABONOS: " + string.FormatoPesos(Cobranza) + "\n";
-            p += "=SALDO FINAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n\n";
-            p += "SALDO EN EFECTIVO: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n";
-            p += "SALDO EN ENVASE: " + string.FormatoPesos(SaldoEnv) + "\n";
-            p += "SALDO TOTAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv) + "\n";
+            p += "+SALDO INICIAL: " + Impresora.DarTamañoIzq( string.FormatoPesos(InicialCred), 16 )  + "\n";
+            p += "+VENTA DEL DIA: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubtotalVenta), 16 )  + "\n";
+            p += "-PAGOS: " + Impresora.DarTamañoIzq( string.FormatoPesos(Pagos), 24  )  + "\n";
+            p += "-ABONOS: " + Impresora.DarTamañoIzq( string.FormatoPesos(Cobranza), 23 )  + "\n";
+            p += "=SALDO FINAL: " + Impresora.DarTamañoIzq( string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos), 18  )  + "\n\n";
+            p += "SALDO EN EFECTIVO: " + Impresora.DarTamañoIzq( string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos),13  )  + "\n";
+            p += "SALDO EN ENVASE: " + Impresora.DarTamañoIzq( string.FormatoPesos(SaldoEnv), 15 )  + "\n";
+            p += "SALDO TOTAL: " + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv),19)  + "\n";
 
-            p += "\n\n";
+            p += "\n";
 
             return p;
 
@@ -1496,7 +1496,7 @@ public class Utils {
             DataTableWS.Usuarios usu = ConvertirRespuesta.getUsuarioLocal(json);
 
             if (usu != null)
-                p += string.formatSql("ASESOR: \n{0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
+                p += string.formatSql("ASESOR: {0} {1} {2}\n\n", usu.getUsu_nom_str(), usu.getUsu_app_str(), usu.getUsu_apm_str());
 
             ArrayList<DataTableWS.Clientes> alCli;
             DataTableWS.Clientes dtc;
@@ -1566,7 +1566,7 @@ public class Utils {
 
             if (v.ventas != null) {
                 for (Venta vta : v.ventas) {
-                    p += "FECHA VENTA: " + Utils.FechaHoraFormato(vta.getVenta().getVen_fecha_dt()) + "\n";
+                    p += "FECHA VTA: " + Utils.FechaHoraFormato(vta.getVenta().getVen_fecha_dt()) + "\n";
                     p += "FOLIO: " + vta.getVenta().getVen_folio_str() + "\n\n";
 
                     double descvta = 0;
@@ -1615,7 +1615,7 @@ public class Utils {
                                     SubTotalCvz += Double.parseDouble(vta.getDetalles()[i].getProd_subtotal_n());
                                 }
                             }
-                            p += "TOTAL CERVEZA: " + string.FormatoPesos(SubTotalCvz) + "\n\n";
+                            p += "TOTAL CERVEZA: " +Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalCvz),17)   + "\n\n";
                         }
 
                         //-------------------- Bebidas ----------------------------
@@ -1656,12 +1656,13 @@ public class Utils {
 
                                 }
                             }
-                            p += "TOTAL OTRAS BEBIDAS: " + string.FormatoPesos(SubTotalBeb) + "\n\n";
+
+                            p += "TOTAL OTRAS BEBIDAS: " + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalBeb),11)   + "\n\n";
                         }
                         //-------------------- Bebidas ------------------------//
                         SubtotalVenta += SubTotalF;
 
-                        p += "TOTAL FACTURA: " + string.FormatoPesos(SubTotalF) + "\n\n";
+                        p += "TOTAL FACTURA: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubTotalF),17 )   + "\n\n";
 
                         if (descvta > 0) {
                             p += "ESTIMADO CLIENTE CON ESTA COMPRA\n";
@@ -1688,16 +1689,16 @@ public class Utils {
 
                                     p += Impresora.DarTamañoDer(vta.getEnvase()[i].getProd_sku_str(), 6) + " ";
                                     p += Impresora.DarTamañoDer(desc, 4) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_cargo_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_abono_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_regalo_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_venta_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(vta.getEnvase()[i].getVen_prestamo_n(), 3) + "\n";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_cargo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_abono_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_regalo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_venta_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(vta.getEnvase()[i].getVen_prestamo_n(), 3) + "\n";
 
                                     SubTotalE += Double.parseDouble(vta.getEnvase()[i].getVen_prestamo_n()) * Double.parseDouble(vta.getEnvase()[i].getLpre_precio_n());
                                 }
                             }
-                            p += "TOTAL ENVASE: " + string.FormatoPesos( SubTotalE) + "\n\n";
+                            p += "TOTAL ENVASE: " + Impresora.DarTamañoIzq( string.FormatoPesos( SubTotalE), 18  )  + "\n\n";
                         }
 
                         SubtotalVtaEnv += SubTotalE;
@@ -1736,7 +1737,7 @@ public class Utils {
                     SubTotalP += Double.parseDouble(v.pagos[i].getPag_abono_n());
                 }
 
-                p += "TOTAL PAGOS: " + string.FormatoPesos(SubTotalP) + "\n\n";
+                p += "TOTAL PAGOS: " + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalP),19) + "\n\n";
             } else {
                 p += Impresora.Centrar("SIN PAGOS") + "\n\n";
             }
@@ -1770,7 +1771,7 @@ public class Utils {
                     Cobranza += Double.parseDouble(v.cobranza[i].getPag_abono_n());
                 }
 
-                p += "TOTAL COBRANZA: " + string.FormatoPesos(SubTotalC) + "\n\n";
+                p += "TOTAL COBRANZA: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubTotalC),  16)  + "\n\n";
 
             } else {
                 p += Impresora.Centrar("SIN COBRANZA") + "\n\n";
@@ -1786,13 +1787,13 @@ public class Utils {
                 for (int i = 0; i < v.devenvase.length; i++) {
                     p += Utils.getBool(v.devenvase[i].getPag_especie_n()) ? "*" : " " + " ";
                     p += Impresora.DarTamañoDer(v.devenvase[i].getProd_sku_str(), 6) + " ";
-                    p += Impresora.DarTamañoDer(v.devenvase[i].getProd_abono_n(), 8) + " ";
+                    p += Impresora.DarTamañoIzq(v.devenvase[i].getProd_abono_n(), 8) + " ";
                     p += Impresora.DarTamañoDer(v.devenvase[i].getPag_referencia_str(), 14) + "\n";
 
                     CantEnvDev += Double.parseDouble(v.devenvase[i].getProd_abono_n());
                 }
 
-                p += "TOTAL DE ENVASE DEVUELTO: " + String.format("%.2f", CantEnvDev);
+                p += "TOTAL DE ENVASE DEVUELTO: " + (int)  CantEnvDev;
             } else {
                 p += Impresora.Centrar("SIN DEVOLUCION DE ENVASE") + "\n\n";
             }
@@ -1831,8 +1832,8 @@ public class Utils {
 
                     p += Impresora.DarTamañoDer(v.creditos[i].getCred_referencia_str(), 14);
                     double salAnt = Double.parseDouble(v.creditos[i].getCred_monto_n()) - Double.parseDouble(v.creditos[i].getCred_abono_n());
-                    p += Impresora.DarTamañoDer(String.format("%.2f", salAnt), 8) + " ";
-                    p += Impresora.DarTamañoDer(String.format("%.2f", saldo), 8) + "\n";
+                    p += Impresora.DarTamañoIzq(String.format("%.2f", salAnt), 8) + " ";
+                    p += Impresora.DarTamañoIzq(String.format("%.2f", saldo), 8) + "\n";
 
                     SubTotalCred += saldo;
 
@@ -1847,7 +1848,7 @@ public class Utils {
                     }
                 }
 
-                p += "TOTAL CREDITOS: " + string.FormatoPesos(SubTotalCred) + "\n\n";
+                p += "TOTAL CREDITOS: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubTotalCred), 16  )  + "\n\n";
 
                 if (vencido) {
                     p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
@@ -1889,8 +1890,8 @@ public class Utils {
 
                     p += Impresora.DarTamañoDer(v.credenv[i].getCred_referencia_str(), 14) + " ";
                     p += Impresora.DarTamañoIzq(String.valueOf(can), 5) + " ";
-                    p += Impresora.DarTamañoIzq(String.valueOf(AboEnvDia), 5) + " ";
-                    p += Impresora.DarTamañoIzq(String.valueOf(saldo), 5) + "\n";
+                    p += Impresora.DarTamañoIzq(String.valueOf( (int) AboEnvDia), 5) + " ";
+                    p += Impresora.DarTamañoIzq(String.valueOf( (int) saldo), 5) + "\n";
 
                     SubTotalCredEnv += saldo;
                     SaldoEnv += saldo * Double.parseDouble(v.credenv[i].getProd_precio_n());
@@ -1906,8 +1907,8 @@ public class Utils {
                 }
 
 
-                p += "TOTAL DEUDA ENV CANT: " + SubTotalCredEnv + "\n\n";
-                p += "TOTAL DEUDA ENV: " + SaldoEnv + "\n\n";
+                p += "TOTAL DEUDA ENV CANT: " + Impresora.DarTamañoIzq( String.valueOf((int)SubTotalCredEnv)  , 10)   + "\n";
+                p += "TOTAL DEUDA ENV: " + Impresora.DarTamañoIzq( string.FormatoPesos( SaldoEnv ),15 )  + "\n\n";
                 if (vencido) {
                     p += Impresora.Centrar("*SU CUENTA TIENE SALDO VENCIDO*") + "\n\n";
                 }
@@ -1917,16 +1918,16 @@ public class Utils {
 
             p += Impresora.Centrar("SALDOS") + "\n\n";
 
-            p += "+SALDO INICIAL: " + string.FormatoPesos(InicialCred) + "\n";
-            p += "+VENTA DEL DIA: " + string.FormatoPesos(SubtotalVenta) + "\n";
-            p += "-PAGOS: " + string.FormatoPesos(Pagos) + "\n";
-            p += "-ABONOS: " + string.FormatoPesos(Cobranza) + "\n";
-            p += "=SALDO FINAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n\n";
-            p += "SALDO EN EFECTIVO: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos) + "\n";
-            p += "SALDO EN ENVASE: " + string.FormatoPesos(SaldoEnv) + "\n";
-            p += "SALDO TOTAL: " + string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv) + "\n";
+            p += "+SALDO INICIAL: " + Impresora.DarTamañoIzq( string.FormatoPesos(InicialCred), 16 )  + "\n";
+            p += "+VENTA DEL DIA: " + Impresora.DarTamañoIzq( string.FormatoPesos(SubtotalVenta), 16 )  + "\n";
+            p += "-PAGOS: " + Impresora.DarTamañoIzq( string.FormatoPesos(Pagos), 24  )  + "\n";
+            p += "-ABONOS: " + Impresora.DarTamañoIzq( string.FormatoPesos(Cobranza), 23 )  + "\n";
+            p += "=SALDO FINAL: " + Impresora.DarTamañoIzq( string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos), 18  )  + "\n\n";
+            p += "SALDO EN EFECTIVO: " + Impresora.DarTamañoIzq( string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos),13  )  + "\n";
+            p += "SALDO EN ENVASE: " + Impresora.DarTamañoIzq( string.FormatoPesos(SaldoEnv), 15 )  + "\n";
+            p += "SALDO TOTAL: " + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred + SubtotalVenta - Cobranza - Pagos + SaldoEnv),19)  + "\n";
 
-            p += "\n\n";
+            p += "\n";
 
             return p;
 
@@ -2147,7 +2148,8 @@ public class Utils {
             json = BaseLocal.Select(sql, context);
             alCli = ConvertirRespuesta.getClientesJson(json);
 
-            if (alCli.size() > 0) {
+            if (alCli.size() > 0)
+            {
                 dtc = alCli.get(0);
 
                 p += "CLIENTE: " + dtc.getCli_cveext_str() + "\n\n";
@@ -2196,11 +2198,13 @@ public class Utils {
             double TotPzasEnv = 0;
 
             if (v.getPreventas() != null) {
-                for (Preventa vta : v.getPreventas()) {
+                for (Preventa vta : v.getPreventas())
+                {
                     p += "FECHA PREV: " + Utils.FechaHoraFormato(vta.getPreventa().getPrev_fecha_dt()) + "\n\n";
                     p += "FOLIO: " + vta.getPreventa().getPrev_folio_str() + "\n\n";
 
-                    if (vta.getDetalles() != null || vta.getBebidas() != null) {
+                    if (vta.getDetalles() != null || vta.getBebidas() != null)
+                    {
                         double SubTotalF = 0;
                         double SubTotalCvz = 0;
                         double SubTotalBeb = 0;
@@ -2286,7 +2290,6 @@ public class Utils {
                             p += Impresora.Centrar("ENVASE") + "\n";
                             p += "SKU    INI. CAR ABO PRO VTA FIN" + "\n";
 
-                            String desc = "";
                             for (int i = 0; i < v.getEnvase().length; i++) {
                                 DataTableWS.Productos r = null;
 
@@ -2295,15 +2298,14 @@ public class Utils {
                                         r = dtp.get(j);
 
                                 if (r != null) {
-                                    desc = r.getProd_desc_str();
 
                                     p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_sku_str(), 6) + " ";
-                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_inicial_n(), 4) + " ";
-                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_cargo_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_abono_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_regalo_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_venta_n(), 3) + " ";
-                                    p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_final_n(), 3) + "\n";
+                                    p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_inicial_n(), 4) + " ";
+                                    p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_cargo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_abono_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_regalo_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_venta_n(), 3) + " ";
+                                    p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_final_n(), 3) + "\n";
 
                                     SubTotalDE += Double.parseDouble(v.getEnvase()[i].getProd_final_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
                                     SubTotalE += Double.parseDouble(v.getEnvase()[i].getProd_venta_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
@@ -2327,7 +2329,6 @@ public class Utils {
                     p += Impresora.Centrar("ENVASE") + "\n";
                     p += "SKU    INI. CAR ABO PRO VTA FIN" + "\n\n";
 
-                    String desc = "";
                     for (int i = 0; i < v.getEnvase().length; i++) {
                         DataTableWS.Productos r = null;
 
@@ -2336,15 +2337,14 @@ public class Utils {
                                 r = dtp.get(j);
 
                         if (r != null) {
-                            desc = r.getProd_desc_str();
 
                             p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_sku_str(), 6) + " ";
-                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_inicial_n(), 4) + " ";
-                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_cargo_n(), 3) + " ";
-                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_abono_n(), 3) + " ";
-                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_regalo_n(), 3) + " ";
-                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_venta_n(), 3) + " ";
-                            p += Impresora.DarTamañoDer(v.getEnvase()[i].getProd_final_n(), 3) + "\n";
+                            p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_inicial_n(), 4) + " ";
+                            p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_cargo_n(), 3) + " ";
+                            p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_abono_n(), 3) + " ";
+                            p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_regalo_n(), 3) + " ";
+                            p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_venta_n(), 3) + " ";
+                            p += Impresora.DarTamañoIzq(v.getEnvase()[i].getProd_final_n(), 3) + "\n";
 
                             SubTotalDE += Double.parseDouble(v.getEnvase()[i].getProd_final_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
                             SubTotalE += Double.parseDouble(v.getEnvase()[i].getProd_venta_n()) * Double.parseDouble(v.getEnvase()[i].getLpre_precio_n());
@@ -2474,10 +2474,9 @@ public class Utils {
             p += Impresora.DarTamañoDer("+SALDO INICIAL: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred),13) + "\n";
             p += Impresora.DarTamañoDer("+VTA DIA: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(SubtotalVenta),13) + "\n";
             p += Impresora.DarTamañoDer("+VTA ENV. DIA: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(SubTotalE),13) + "\n";
-
             p += Impresora.DarTamañoDer("=SALDO FIN. PRE: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE),13) + "\n";
             p += Impresora.DarTamañoDer("SALDO EFEC. PREV: ",19)  + Impresora.DarTamañoIzq(string.FormatoPesos(InicialCred + SubtotalVenta + SubTotalE),13) + "\n";
-
+            p+="\n\n";
             return p;
 
         }catch (Exception e)
