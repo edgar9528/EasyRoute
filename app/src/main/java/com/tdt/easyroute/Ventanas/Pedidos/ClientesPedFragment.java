@@ -165,10 +165,10 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
             iconos[0] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
             iconos[1] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visselec);
-            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visvenvacia );
+            iconos[2] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_visconcobranza);
             iconos[3] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_noventa);
             iconos[4] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera2);
-            iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_espera);
+            iconos[5] = ContextCompat.getDrawable(getActivity(), R.drawable.icon_esperacarga);
 
             nombreBase = getContext().getString(R.string.nombreBD);
 
@@ -584,7 +584,7 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                                 icono = 3;
                             if (op.equals("CON VENTA") || op.equals("CON PREVENTA"))
                                 icono = 1;
-                            if (op.equals("SIN VENTA") || op.equals("CON COBRANZA"))
+                            if (op.equals("SIN VENTA") || op.equals("CON COBRANZA") || op.equals("COBRANZA"))
                                 icono = 2;
                         }
                     }

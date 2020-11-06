@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
 import com.tdt.easyroute.R;
 
@@ -17,7 +18,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.util.ArrayList;
 
 
-public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
+public class ConexionWS_JSON2 extends AsyncTask<String,Integer,Boolean> {
 
     private Context context;
     private String respuesta;
@@ -28,7 +29,10 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
     public int timeout=0;
     private ProgressDialog progreso;
 
-    public ConexionWS_JSON(Context context, String metodo) {
+    public boolean esperar=false;
+    public String result2="";
+
+    public ConexionWS_JSON2(Context context, String metodo) {
         this.context = context;
         parametrosWS = new ParametrosWS(metodo, context);
     }
@@ -38,6 +42,7 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
         progreso.setMessage(context.getResources().getString(R.string.msg_webservice));
         progreso.setCancelable(false);
         progreso.show();
+        esperar=true;
     }
 
     @Override
@@ -52,7 +57,8 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
             parametrosWS.setTIMEOUT(timeout);
         }
 
-        try {
+        try
+        {
             //Metodo al que se accede
             SoapObject Solicitud = new SoapObject(parametrosWS.getNAMESPACES(), parametrosWS.getMETODO());
 
@@ -78,11 +84,15 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
                 {
                     respuesta = response.toString();
                 }
+                result2 =respuesta;
+                Log.d("salida","Termino web services");
+                //esperar=false;
                 result = true;
 
             } catch (Exception e) {
                 Log.d("salida","error: "+e.getMessage());
                 respuesta = "Error: "+ e.getMessage();
+                esperar=false;
                 result=false;
             }
 
@@ -90,9 +100,10 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
         {
             Log.d("salida","error: "+e.getMessage());
             respuesta = "Error: "+ e.getMessage();
+            esperar=false;
             result=false;
         }
-
+        //onPostExecute(result);
         return result;
     }
 
@@ -105,12 +116,24 @@ public class ConexionWS_JSON extends AsyncTask<String,Integer,Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
+        if(!esperar)
+        {
+            Log.d("salida","ONPOSTEXECUTE2");
+            return;
+        }
+        Log.d("salida","ONPOSTEXECUTE");
+        Log.d("Salida",this.getStatus().toString());
         super.onPostExecute(result);
 
         progreso.dismiss();
 
-        delegate.recibirPeticion(result, respuesta);
-
+        //delegate.recibirPeticion(result, respuesta);
+        if(result)
+            result2=respuesta;
+        else
+            result2="";
+        esperar=false;
+        //((AsyncResponseJSON)context).recibirPeticion(result,respuesta);
     }
 
 }

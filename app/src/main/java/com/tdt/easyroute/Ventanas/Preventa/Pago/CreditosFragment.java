@@ -65,7 +65,7 @@ public class CreditosFragment extends Fragment {
             tv_limite = view.findViewById(R.id.tv_kit);
             tv_disponible = view.findViewById(R.id.tv_saldo);
 
-            tv_limite.setText(string.FormatoPesos(0));
+            tv_limite.setText( string.FormatoPesos( rc.getCli_montocredito_n() ) );
             tv_disponible.setText(string.FormatoPesos(0));
 
             dgCreditos = new ArrayList<>();

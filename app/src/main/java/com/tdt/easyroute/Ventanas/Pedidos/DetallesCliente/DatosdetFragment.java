@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.Utils;
+import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.R;
 import com.tdt.easyroute.ViewModel.DetallesCliVM;
@@ -122,7 +123,7 @@ public class DatosdetFragment extends Fragment {
 
 
             tv_rfc.setText(rc.getCli_rfc_str().equals("null")?"":rc.getCli_rfc_str() );
-            tv_limCred.setText( rc.getCli_montocredito_n().equals("null")?"":rc.getCli_montocredito_n() );
+            tv_limCred.setText(string.FormatoPesos( rc.getCli_montocredito_n().equals("null")?"":rc.getCli_montocredito_n() )  );
             tv_plazo.setText( rc.getCli_plazocredito_n().equals("null")?"":rc.getCli_plazocredito_n() );
             tv_envases.setText( rc.getCli_credenvases_n().equals("null")?"":rc.getCli_credenvases_n() );
             tv_coord.setText( rc.getCli_coordenadaini_str().equals("null")?"":rc.getCli_coordenadaini_str() );

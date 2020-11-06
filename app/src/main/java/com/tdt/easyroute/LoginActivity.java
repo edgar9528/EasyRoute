@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
+import com.tdt.easyroute.Clases.WSEasyRoute;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
 import com.tdt.easyroute.Clases.DatabaseHelper;
@@ -195,9 +196,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
                     } else {
                         almacenarInformacion();
                     }
-
                 }
-
             }
             else
                 Toast.makeText(LoginActivity.this, getString(R.string.tt_camposVacios), Toast.LENGTH_LONG).show();

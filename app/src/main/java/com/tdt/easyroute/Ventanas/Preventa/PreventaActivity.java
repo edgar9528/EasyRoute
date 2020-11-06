@@ -1641,6 +1641,10 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                 if(dgProd2.size()>0)
                     conventa = true;
 
+                //actualizar
+                //if ((dgProd2.DataSource as DataTable).Select("prod_cant_n<>0", "").Count() > 0)
+                //conventa = true;
+
                 int k = 1;
                 for (DataTableLC.ProductosPed ri : dgProd2)
                 {
@@ -1714,6 +1718,13 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
 
                 //MessageBox.Show("insert envase preventa");
                 //PromesasAbono
+
+                for( int i=0; i<dgEnvase.size(); i++)
+                {
+                    if( Float.parseFloat( dgEnvase.get(i).getProd_abono_n() ) > 0  )
+                        concobranza=true;
+                }
+
 
                 if ( dgAbonos.size()>0 )
                     concobranza = true;
@@ -1929,9 +1940,9 @@ public class PreventaActivity extends AppCompatActivity implements         Googl
                 if (!conventa && !concobranza)
                 {
                     result = 0;
-                    db.execSQL(string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), String.valueOf( cliente ) , "SIN VENTA", "VISITA SIN VENTA", ""));
-                    db.execSQL(string.formatSql2(Querys.Trabajo.InsertVisita, conf.getUsuario(), String.valueOf( cliente ), "null", "null", "SIN VENTA", "VISITA SIN VENTA", getLatLon()));
-                    db.execSQL(string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), String.valueOf( cliente ), "CIERRE CLIENTE", "CIERRA SIN VENTA", ""));
+                    db.execSQL(string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), String.valueOf( cliente ) , "SIN PREVENTA", "VISITA SIN PREVENTA", ""));
+                    db.execSQL(string.formatSql2(Querys.Trabajo.InsertVisita, conf.getUsuario(), String.valueOf( cliente ), "null", "null", "SIN PREVENTA", "VISITA SIN PREVENTA", getLatLon()));
+                    db.execSQL(string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), String.valueOf( cliente ), "CIERRE CLIENTE", "CIERRA SIN PREVENTA", ""));
                 }
 
                 if (!conventa && concobranza)
