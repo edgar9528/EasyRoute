@@ -108,21 +108,19 @@ public class ClientesCarFragment extends Fragment {
             dgCartera = ConvertirRespuesta.getClientesSaldoJson(json);
 
             double rs=0.00;
-            String saldoStr;
             if(dgCartera!=null)
             {
                 for(int i=0; i<dgCartera.size();i++)
                 {
                     rs+= dgCartera.get(i).getSaldo();
                 }
-                saldoStr = getResources().getString(R.string.tv_saldoRuta) +" "+  string.FormatoPesos(rs);
-                tv_ruta.setText(saldoStr);
+
+                tv_ruta.setText(string.FormatoPesos(rs));
                 mostrarCartera();
             }
             else
             {
-                saldoStr = getResources().getString(R.string.tv_saldoRuta) +" "+ string.FormatoPesos(rs);
-                tv_ruta.setText(saldoStr);
+                tv_ruta.setText(string.FormatoPesos(rs));
             }
 
 
@@ -224,9 +222,9 @@ public class ClientesCarFragment extends Fragment {
             String rutaDes = BaseLocal.SelectDato(string.formatSql("select rut_desc_str from rutas where rut_cve_n={0}", String.valueOf(conf.getRuta())  ),getContext());
 
             menImp = "RUTA: "+rutaDes+"\n\n";
-            menImp += string.formatSql("ASESOR:\n{0} {1} {2}",user.getNombre(), user.getAppat(), user.getApmat())+"\n\n";
+            menImp += string.formatSql("ASESOR: {0} {1} {2}",user.getNombre(), user.getAppat(), user.getApmat())+"\n\n";
 
-            menImp += "FECHA DE IMPRESION: \n"+ Utils.FechaLocal() + " "+ Utils.HoraLocal()+"\n\n";
+            menImp += "FECHA IMP: "+ Utils.FechaLocal() + " "+ Utils.HoraLocal()+"\n\n";
 
             menImp += Impresora.Centrar( "C A R T E R A" )+"\n\n";
 
@@ -248,7 +246,8 @@ public class ClientesCarFragment extends Fragment {
                 TotCartera+=r.getSaldo();
             }
 
-            menImp+= "\nSaldo Total Ruta: "+ string.FormatoPesos(TotCartera);
+            menImp+= "\nSaldo Total Ruta: ";
+            menImp+= Impresora.DarTamañoIzq( string.FormatoPesos(TotCartera), 14  ) ;
             menImp+= "\n\n";
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(getContext());

@@ -359,7 +359,7 @@ public class ProductosvenFragment extends Fragment {
                 }
 
             ruta = BaseLocal.SelectDato(string.formatSql("Select rut_desc_str from rutas where rut_cve_n={0}", conf.getRutaStr()), getContext());
-            asesor = "ASESOR: \n" + string.formatSql("{0} {1} {2}", user.getNombre(), user.getAppat(), user.getApmat());
+            asesor = "ASESOR: " + string.formatSql("{0} {1} {2}", user.getNombre(), user.getAppat(), user.getApmat());
 
             imp += "RUTA: " + ruta + "\n";
             imp += asesor + "\n";
@@ -384,7 +384,7 @@ public class ProductosvenFragment extends Fragment {
                     TotPza += Double.parseDouble( dtprodvenlist.get(i).getTotal() );
                 }
 
-            imp+= "TOTAL PZAS VENDIDAS: "+ TotPza+"\n\n";
+            imp+=  "TOTAL PZAS VENDIDAS: "+ Impresora.DarTamañoIzq( String.valueOf((int) TotPza), 11  ) +"\n\n";
 
             imp+= Impresora.Centrar("M O V I M I E N T O S" ) +"\n";
             imp+= Impresora.CrearFila("CANTIDAD FORMA",2);
@@ -398,10 +398,10 @@ public class ProductosvenFragment extends Fragment {
                     imp+= Impresora.DarTamañoDer( dtcobros.get(i).getTpago(),16 ) + "\n";
                     Cobranza += Double.parseDouble( dtcobros.get(i).getMonto() );
                 }
-            imp+="TOTAL COBRANZA: "+ string.FormatoPesos(Cobranza) +"\n\n";
+            imp+="TOTAL COBRANZA: "+ Impresora.DarTamañoIzq( string.FormatoPesos(Cobranza) , 16  )  +"\n\n";
 
 
-            imp+= "E N V A S E\n";
+            imp+= Impresora.Centrar("E N V A S E") + "\n";
             fila=string.formatSql("{0}{1}{2}{3}{4}{5}\n", " SKU "," INI "," CAR "," ABO "," VEN "," FIN ");
             imp+= Impresora.CrearFila(fila,6);
 
@@ -461,7 +461,8 @@ public class ProductosvenFragment extends Fragment {
 
     private void imprimirSKU()
     {
-        try {
+        try
+        {
             String imp = "", json, con;
             String ruta;
             String asesor;
@@ -520,13 +521,13 @@ public class ProductosvenFragment extends Fragment {
 
 
             if (conf.getPreventa() ==1)
-                imp+="P R E V E N T A\n";
+                imp+= Impresora.Centrar("P R E V E N T A" )+ "\n";
             else
-                imp+="V E N T A S \n";
+                imp+=Impresora.Centrar("V E N T A S")+"\n";
 
             String fila;
 
-            fila=string.formatSql("{0}{1}{2} \n", "   SKU  ", "        DESCRIPCION       ", " VTA");
+            fila=string.formatSql("{0} {1} {2} \n", "SKU", "DESCRIPCION", "VTA");
 
             imp+= Impresora.CrearFila(fila,3);
 
@@ -540,10 +541,10 @@ public class ProductosvenFragment extends Fragment {
                 imp+= Impresora.CrearFila(fila,3);
                 TotPza += Double.parseDouble( r.getTotal() );
             }
-            imp+="TOTAL PZAS VENDIDAS: "+TotPza+"\n\n";
+            imp+="TOTAL PZAS VENDIDAS: "+ Impresora.DarTamañoIzq( String.valueOf((int) TotPza), 11 )  +"\n\n";
 
 
-            imp+="M O V I M I E N T O S\n";
+            imp+= Impresora.Centrar( "M O V I M I E N T O S" )+"\n";
             fila= string.formatSql("{0} {1}", "  CANTIDAD  ", "      FORMA      \n");
             imp+= Impresora.CrearFila(fila,2);
 
@@ -555,12 +556,13 @@ public class ProductosvenFragment extends Fragment {
                     imp+= Impresora.CrearFila(fila,2);
                     Cobranza += Double.parseDouble( dtcobros.get(i).getMonto() );
                 }
-            imp+="TOTAL COBRANZA: "+ string.FormatoPesos(Cobranza) +"\n\n";
+
+            imp+="TOTAL COBRANZA: "+ Impresora.DarTamañoIzq( string.FormatoPesos(Cobranza), 16 )  +"\n\n";
 
 
 
 
-            imp+= "E N V A S E\n";
+            imp+= Impresora.Centrar( "E N V A S E" )+ "\n";
             fila=string.formatSql("{0}{1}{2}{3}{4}{5}\n", " SKU "," INI "," CAR "," ABO "," VEN "," FIN ");
             imp+= Impresora.CrearFila(fila,6);
 

@@ -21,6 +21,7 @@
         android:maxLines="1"
         android:text="@string/table_suge"
         android:textSize="18sp"
+        android:textAlignment="textEnd"
         android:textColor="@color/colorPrimaryDark"
         />
 
@@ -31,6 +32,7 @@
         android:maxLines="1"
         android:text="@string/table_producto"
         android:textSize="18sp"
+        android:layout_marginStart="@dimen/paddingCardView"
         android:textColor="@color/colorPrimaryDark"
         />
 

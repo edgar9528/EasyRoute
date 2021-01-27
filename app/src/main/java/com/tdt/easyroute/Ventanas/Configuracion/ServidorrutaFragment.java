@@ -119,7 +119,6 @@ public class ServidorrutaFragment extends Fragment implements AsyncResponseJSON 
                     if (!servidor.isEmpty() && !time.isEmpty() && !ruta.isEmpty() && !imp.isEmpty()) {
                         Utils.CreafConfig(servidor, time, empresa, ruta, imp, getActivity().getApplication());
                         Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_LONG).show();
-                        getActivity().finish();
                     } else
                         Toast.makeText(getContext(), getString(R.string.tt_camposVacios), Toast.LENGTH_LONG).show();
                 }

@@ -41,8 +41,9 @@
     </ScrollView>
 
 
+
     <TextView
-        android:id="@+id/tv_ruta"
+        android:id="@+id/tv_rutaPlace"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/tv_saldoRuta"
@@ -55,8 +56,25 @@
         android:layout_marginStart="@dimen/paddingGeneral"
         android:layout_marginEnd="@dimen/paddingGeneral"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_ruta"
+        />
 
+    <TextView
+        android:id="@+id/tv_ruta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_saldoRuta"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textAlignment="textEnd"
+
+        app:layout_constraintBottom_toTopOf="@+id/button_salir"
+
+        android:layout_marginStart="@dimen/paddingGeneral"
+        android:layout_marginEnd="@dimen/paddingGeneral"
+        app:layout_constraintStart_toEndOf="@id/tv_rutaPlace"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
 

@@ -246,7 +246,7 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
 
             mensajeImp += "FECHA: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
 
-            mensajeImp += "S U G E R I D O \n";
+            mensajeImp += Impresora.Centrar( "S U G E R I D O ") +"\n";
 
             mensajeImp += string.formatSql("{0}{1}{2}\n", "SKU", "       PRODUCTO", "         CANT.");
 
@@ -262,13 +262,13 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                     des = r.getProd_desc_str();
                     sug = r.getProd_sug_n();
 
-                    linea = Impresora.DarTamañoDer(sku,7) + Impresora.DarTamañoDer(des.replace(" ","_"),19)+" "+ Impresora.DarTamañoDer(sug,5)+"\n";
+                    linea = Impresora.DarTamañoDer(sku,7) + Impresora.DarTamañoDer(des.replace(" ","_"),19)+" "+ Impresora.DarTamañoIzq(sug,5)+"\n";
 
                     mensajeImp += linea;
                 }
             }
 
-            mensajeImp += "\nE N V A S E\n";
+            mensajeImp += "\n" + Impresora.Centrar( "E N V A S E" ) + "\n";
 
             mensajeImp += string.formatSql("{0} {1} {2} {3}\n", "SKU", "    ENVASE", "     LLENO", "VACIO");
 
@@ -302,12 +302,13 @@ public class SugeridoFragment extends Fragment implements AsyncResponseJSON {
                     for(int k=linea.length(); k<20;k++ )
                         linea+=" ";
 
-                    mensajeImp += linea+ string.formatSql("{2}  {3} \n", String.valueOf(s), "0.0");
+                    mensajeImp += linea + Impresora.DarTamañoIzq( String.valueOf(s),5 ) +" "+ Impresora.DarTamañoIzq( "0.0",5 )+"\n";
+                
                 }
             }
 
-            mensajeImp += "\nTOTAL CERVEZA: " + cerv + "\n";
-            mensajeImp += "TOTAL ENVASE: " + env + "\n\n";
+            mensajeImp += "\nTOTAL CERVEZA: " + Impresora.DarTamañoIzq(  String.valueOf(cerv),17)  + "\n";
+            mensajeImp += "TOTAL ENVASE: " + Impresora.DarTamañoIzq(  String.valueOf(env),18)  + "\n\n";
 
         }catch (Exception e)
         {

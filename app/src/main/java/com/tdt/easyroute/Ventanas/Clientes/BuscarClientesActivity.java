@@ -9,11 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -46,10 +49,12 @@ import com.tdt.easyroute.Clases.BaseLocal;
 import com.tdt.easyroute.Clases.ConexionWS_JSON;
 import com.tdt.easyroute.Clases.Configuracion;
 import com.tdt.easyroute.Clases.ConvertirRespuesta;
+import com.tdt.easyroute.Clases.Impresora;
 import com.tdt.easyroute.Clases.Querys;
 import com.tdt.easyroute.Clases.Utils;
 import com.tdt.easyroute.Clases.string;
 import com.tdt.easyroute.Interface.AsyncResponseJSON;
+import com.tdt.easyroute.Model.DataTableLC;
 import com.tdt.easyroute.Model.DataTableWS;
 import com.tdt.easyroute.R;
 
@@ -271,7 +276,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                 buscarRecyclerView.setLayoutManager(linearLayoutManager);
                 ArrayList<BuscarCardView> buscarCardViews = new ArrayList<>();
 
-                String idExt, negocio, razonSoc;
+                String idExt, negocio, razonSoc,cli_cve;
                 DataTableWS.Clientes c;
 
                 for (int i = 0; i < bsClientes.size(); i++)
@@ -281,6 +286,7 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                     idExt = c.getCli_cveext_str();
                     negocio = c.getCli_nombrenegocio_str();
                     razonSoc = c.getCli_razonsocial_str();
+                    cli_cve = c.getCli_cve_n();
 
                     if (!filtro.equals(""))
                     {
@@ -289,12 +295,12 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
                             negocio.toUpperCase().contains(filtro) ||
                             razonSoc.toUpperCase().contains(filtro)) {
 
-                            buscarCardViews.add(new BuscarCardView(idExt,negocio,razonSoc,i));
+                            buscarCardViews.add(new BuscarCardView(idExt,negocio,razonSoc,i,cli_cve));
                         }
                     }
                     else
                     {
-                        buscarCardViews.add(new BuscarCardView(idExt,negocio,razonSoc,i));
+                        buscarCardViews.add(new BuscarCardView(idExt,negocio,razonSoc,i,cli_cve));
                     }
                 }
 
@@ -305,28 +311,6 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         }catch (Exception e)
         {
             Utils.msgError(this, getString(R.string.error_mostrarInfo), e.getMessage());
-        }
-    }
-
-    public void imprimir(int indice)
-    {
-        try
-        {
-            DataTableWS.Clientes rc= bsClientes.get(indice);
-
-            String cliente = rc.getCli_cve_n();
-            String IdExt = rc.getCli_cveext_str();
-
-            if (conf.getPreventa()==1);
-            //Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(cliente), true, "a s e s o r");
-            //else
-            //Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(cliente), true);
-
-        }
-        catch (Exception e)
-        {
-            Utils.msgError(this, getString(R.string.error_imprimir),e.getMessage());
-            Log.d("salida","Error: "+e.getMessage());
         }
     }
 
@@ -612,6 +596,56 @@ public class BuscarClientesActivity extends AppCompatActivity implements AsyncRe
         return super.onOptionsItemSelected(item);
     }
 
+
+    public void imprimir(BuscarCardView item)
+    {
+        try
+        {
+            if (conf.getPreventa() == 1)
+            {
+                String msg_imp= Utils.ImprimirPreVentaBebidas(Utils.ObtenerVisitaPrevBebidas(Long.parseLong(item.getCli_cve_n()), this), true, "a s e s o r", conf, this);
+                previsualizar(msg_imp, item);
+            }
+            else
+            {
+                String msg_imp= Utils.ImprimirVentaBebidas(Utils.ObtenerVisitaBebidas(Long.parseLong(item.getCli_cve_n()), this), true, this, conf);
+                previsualizar(msg_imp,item);
+            }
+        }
+        catch (Exception e)
+        {
+            Utils.msgError(this, getString(R.string.error_imprimir), e.getMessage());
+        }
+    }
+
+    private void previsualizar(final String msg_imprimir, final BuscarCardView item)
+    {
+        final Context context = this;
+        androidx.appcompat.app.AlertDialog.Builder dialogo1 = new androidx.appcompat.app.AlertDialog.Builder(this);
+        dialogo1.setTitle(getString(R.string.msg_ticket));
+        dialogo1.setMessage(msg_imprimir);
+        dialogo1.setCancelable(false);
+        dialogo1.setPositiveButton(getString(R.string.bt_aceptar), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogo1, int id) {
+                String imprimir = msg_imprimir.replace("\n", "\r");
+                boolean imprimio = Impresora.imprimir(imprimir, context);
+                if(imprimio)
+                {
+                    String sql = string.formatSql2(Querys.Trabajo.InsertBitacoraHHPedido, conf.getUsuario(), conf.getRutaStr(), item.getCli_cve_n(), "TICKET IMPRESO", "TICKET ASESOR COPIA", getLatLon());
+                    BaseLocal.Insert(sql,context);
+                }
+            }
+        });
+        dialogo1.setNegativeButton(getString(R.string.bt_cancelar), null  );
+
+        androidx.appcompat.app.AlertDialog alertDialog = dialogo1.show();
+
+        TextView textView = (TextView) alertDialog.findViewById(android.R.id.message);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            textView.setTextAppearance( R.style.estiloImprimir);
+        }
+    }
 
     //region Obtener ubicación actual
 

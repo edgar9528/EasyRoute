@@ -32,6 +32,7 @@ public class Impresora {
             Log.d("impresora","1 Se mando a llamar a imprimir");
 
             String mma= Utils.LeefConfig("imp",contextImp);
+            mma = "AC:3F:A4:5A:3B:4C";
 
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (!mBluetoothAdapter.isEnabled())

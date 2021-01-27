@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.speech.tts.UtteranceProgressListener;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -73,6 +74,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import okhttp3.internal.Util;
 
 
 public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
@@ -210,9 +213,10 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 if (clienteSeleccionado != null)
                     obtenerUbicacion(1);
                 else
-                    Toast.makeText(getContext(), getString(R.string.tt_ped20), Toast.LENGTH_SHORT).show();
+                    Utils.msgInfo(getContext(), getString(R.string.tt_ped20));
             } else
-                Toast.makeText(getContext(), getString(R.string.tt_ped20), Toast.LENGTH_SHORT).show();
+                Utils.msgInfo(getContext(),  getString(R.string.tt_ped20));
+
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_ped29), e.getMessage());
@@ -769,14 +773,18 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             indiceSeleccionado=indice;
             clienteSeleccionado = getDetcli(item.getCli_cve_n());
 
-            if (item.getIcono() == 1) {
-                Toast.makeText(getContext(), getString(R.string.tt_ped1), Toast.LENGTH_LONG).show();
+            if (item.getIcono() == 1)
+            {
+                Utils.msgInfo(getContext(), getString(R.string.tt_ped1) );
+                //Toast.makeText(getContext(), getString(R.string.tt_ped1), Toast.LENGTH_LONG).show();
                 return;
             } else if (item.getIcono() == 2) {
-                Toast.makeText(getContext(), getString(R.string.tt_ped2), Toast.LENGTH_LONG).show();
+                Utils.msgInfo(getContext(), getString(R.string.tt_ped2) );
+                //Toast.makeText(getContext(), getString(R.string.tt_ped2), Toast.LENGTH_LONG).show();
                 return;
             } else if (item.getIcono() == 3) {
-                Toast.makeText(getContext(), getString(R.string.tt_ped3), Toast.LENGTH_LONG).show();
+                Utils.msgInfo(getContext(), getString(R.string.tt_ped3) );
+                //Toast.makeText(getContext(), getString(R.string.tt_ped3), Toast.LENGTH_LONG).show();
                 return;
             }
             tipo = 1;
@@ -896,7 +904,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
-                    Toast.makeText(getContext(), getString(R.string.tt_ped4), Toast.LENGTH_LONG).show();
+                    Utils.msgInfo(getContext(), getString(R.string.tt_ped4) );
+                    //Toast.makeText(getContext(), getString(R.string.tt_ped4), Toast.LENGTH_LONG).show();
                     return;
                 }
             }
@@ -904,7 +913,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
             {
                 if (!mainActivity.validaDistancia(clienteSeleccionado,false))
                 {
-                    Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
+                    Utils.msgInfo(getContext(), getString(R.string.tt_ped5) );
+                    //Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
                     return;
                 }
             }
@@ -950,7 +960,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
         if (!mainActivity.validaDistancia(clienteSeleccionado,false))
         {
-            Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
+            Utils.msgInfo(getContext(), getString(R.string.tt_ped5) );
+            //Toast.makeText(getContext(), getString(R.string.tt_ped5), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -969,7 +980,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 {
                     if ( item.getIcono()==1)
                     {
-                        Toast.makeText(getContext(), getString(R.string.tt_ped6), Toast.LENGTH_LONG).show();
+                        Utils.msgInfo(getContext(), getString(R.string.tt_ped6) );
+                        //Toast.makeText(getContext(), getString(R.string.tt_ped6), Toast.LENGTH_LONG).show();
                         return;
                     }
                 }
@@ -1014,7 +1026,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
             if (!Carga)
             {
-                Toast.makeText(getContext(), getString(R.string.tt_ped7), Toast.LENGTH_LONG).show();
+                Utils.msgInfo(getContext(), getString(R.string.tt_ped7));
+                //Toast.makeText(getContext(), getString(R.string.tt_ped7), Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -1106,7 +1119,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
                                 BaseLocal.Insert(consulta, getContext());
 
-                                Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_LONG).show();
+                                Utils.msgInfo(getContext(), getString(R.string.tt_infoActu) );
+                                //Toast.makeText(getContext(), getString(R.string.tt_infoActu), Toast.LENGTH_LONG).show();
 
                             } catch (Exception e) {
                                 Log.d("salida", "Error: " + e.getMessage());
@@ -1277,7 +1291,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                         CalcularEfectividad();
                         enviarCambios();
 
-                        Toast.makeText(getContext(), getString(R.string.tt_ped21), Toast.LENGTH_LONG).show();
+                        Utils.msgInfo(getContext(), getString(R.string.tt_ped21) );
+                        //Toast.makeText(getContext(), getString(R.string.tt_ped21), Toast.LENGTH_LONG).show();
 
                         break;
 
@@ -1327,7 +1342,8 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
 
 
                 if (dtv != null && dtv.size() > 0) {
-                    Toast.makeText(getContext(), getString(R.string.tt_ped8), Toast.LENGTH_LONG).show();
+                    Utils.msgInfo(getContext(), getString(R.string.tt_ped8) );
+                    //Toast.makeText(getContext(), getString(R.string.tt_ped8), Toast.LENGTH_LONG).show();
                     return;
                 }
             }
@@ -1567,12 +1583,14 @@ public class ClientesPedFragment extends Fragment implements AsyncResponseJSON {
                 }
                 else
                 {
-                    Toast.makeText(context, getString(R.string.error_almacenar)+" "+ resultado, Toast.LENGTH_LONG).show();
+                    Utils.msgInfo(getContext(), getString(R.string.error_almacenar)+" "+ resultado );
+                    //Toast.makeText(context, getString(R.string.error_almacenar)+" "+ resultado, Toast.LENGTH_LONG).show();
                 }
             }
             else
             {
-                Toast.makeText(context, getString(R.string.error_almacenar)+" "+ resultado, Toast.LENGTH_LONG).show();
+                Utils.msgInfo(getContext(), getString(R.string.error_almacenar)+" "+ resultado );
+                //Toast.makeText(context, getString(R.string.error_almacenar)+" "+ resultado, Toast.LENGTH_LONG).show();
             }
         }
 

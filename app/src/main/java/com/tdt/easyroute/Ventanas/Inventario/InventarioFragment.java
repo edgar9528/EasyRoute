@@ -145,15 +145,14 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     public void onResume() {
         super.onResume();
 
-        if( descarga && !entrarDescarga)
-        {
-            //Utils.RegresarInicio(getActivity());
-        }
+
     }
 
     private void validarProductosMismoDia()
     {
         try {
+
+            Log.d("SALIDA","ENTRA PRODUCTOS MISMO DIA");
 
             float CantVta = 0;
 
@@ -216,6 +215,8 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
 
             verficarDescarga();
 
+            Log.d("SALIDA","SALE PRODUCTOS MISMO DIA");
+
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_inv7), e.getMessage());
@@ -258,6 +259,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     {
         try
         {
+            Log.d("salida","entro aqui -1");
             String[] dias = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
 
             Modelos.Indicadores ip;
@@ -312,9 +314,11 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                     dialogo1.show();
                 }
             }
+            Log.d("salida","entro aqui 0");
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.error_cargarInfo), e.getMessage());
+            Log.d("salida","entro aqui");
         }
     }
 
@@ -322,6 +326,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /*
         if(descarga && !entrarDescarga)
         {
             final Handler handler = new Handler();
@@ -330,8 +335,9 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                 public void run() {
                     Utils.RegresarInicio(getActivity());
                 }
-            }, 300);
+            }, 10000);
         }
+         */
     }
 
     private void ventaAutomatica(String coordenada)
@@ -570,7 +576,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
             mensajeImp += string.formatSql("ASESOR: {0} {1} {2}\r\n", user.getNombre(), user.getAppat(), user.getApmat());
 
             mensajeImp += "FECHA: " + Utils.FechaLocal() + " " + Utils.HoraLocal() + "\n\n";
-            mensajeImp += "I N V E N T A R I O\n\n";
+            mensajeImp +=  Impresora.Centrar("I N V E N T A R I O")+ "\n\n";
 
             ArrayList<DataTableLC.InvP> dgInventario = al_invP;
             ArrayList<DataTableLC.InvP> dtProdAux = new ArrayList<>();
@@ -601,11 +607,7 @@ public class InventarioFragment extends Fragment implements AsyncResponseJSON {
                     prod1= dg.getProd_cant_n();
                     prod2= dg.getProd_cancelado_n();
 
-                    if(prod1.length()<4)
-                        for(int j=prod1.length();j<4;j++)
-                            prod1+=" ";
-
-                    mensajeImp+= linea+prod1+" "+prod2+"\n";
+                    mensajeImp+= linea+ Impresora.DarTamañoIzq(prod1 , 4 ) +" "+ Impresora.DarTamañoIzq(prod2,4) +"\n";
 
                     cerv += Integer.parseInt(dg.getProd_cant_n());
                 }

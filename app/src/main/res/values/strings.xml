@@ -165,8 +165,8 @@
     <string name="msg_noVenta">Motivo de no venta</string>
     <string name="msg_noLectura">Motivo de no lectura</string>
     <string name="bt_actClientes">Actualiza clientes</string>
-    <string name="graf_ventas">Ventas</string>
-    <string name="graf_efectividad">Efectividad</string>
+    <string name="graf_ventas">Efec Vis</string>
+    <string name="graf_efectividad">Efec Ven</string>
     <string name="title_detalles">Detalles</string>
     <string name="msg_error">Algo salio mal</string>
     <string name="table_totalPago">Total pago</string>

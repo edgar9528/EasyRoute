@@ -85,8 +85,10 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponseJSO
             ti_contrasena = findViewById(R.id.TIpassword);
             ImageView iv_logo = findViewById(R.id.imageView);
 
-            ti_usuario.setText("AGUTIERREZ");
-            ti_contrasena.setText("772");
+
+
+            //ti_usuario.setText("AGUTIERREZ");
+            //ti_contrasena.setText("772");
 
             //AGUTIERREZ -  victore
             //772        -  04321

@@ -312,6 +312,7 @@ public class VentavenFragment extends Fragment {
                 total += subtotal;
             }
             tv_subTotal2.setText( string.FormatoPesos(total));
+            pedidosActivity.CalcularEnvase();
         }catch (Exception e)
         {
             Utils.msgError(getContext(), getString(R.string.err_ped24), e.getMessage());
